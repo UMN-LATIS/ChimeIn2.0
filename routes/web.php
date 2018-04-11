@@ -20,64 +20,48 @@ use App\Http\Controllers\PresentController;
 */
 
 // Home Page Routes
-Route::get('/', 'HomeController@index')->middleware('auth');
-Route::get('/api/chime', 'HomeController@getChimes')->middleware('auth');
-Route::post('/api/chime', 'HomeController@createChime')->middleware('auth');
-Route::post('/api/chime/{access_code}',
-    'HomeController@joinChime')->middleware('auth');
-Route::delete('/api/chime/{chime_id}',
-    'HomeController@deleteChime')->middleware('auth');
+// 
+// 
 
-// Chime Page Routes
-Route::get('/chime/{chime_id}', 'ChimeController@index')->middleware('auth');
-Route::get('/api/chime/{chime_id}',
-    'ChimeController@getChime')->middleware('auth');
-Route::get('/api/chime/{chime_id}/response',
-    'ChimeController@getPastResponses')->middleware('auth');
-Route::get('/api/chime/{chime_id}/image/{image_name}',
-    'ChimeController@getImage')->middleware('auth');
-Route::post('/api/chime/{chime_id}/image',
-    'ChimeController@uploadImage')->middleware('auth');
-Route::post('/api/chime/{chime_id}/folder',
-    'ChimeController@createFolder')->middleware('auth');
-Route::delete('/api/chime/{chime_id}/folder/{folder_id}',
-    'ChimeController@deleteFolder')->middleware('auth');
+Route::group(['middleware' => ['auth', 'shibinjection']], function () {
+    Route::get('/', 'HomeController@index')->middleware(['auth', 'shibinjection']);
+    Route::get('/api/chime', 'HomeController@getChimes');
+    Route::post('/api/chime', 'HomeController@createChime');
+    Route::post('/api/chime/{access_code}',
+        'HomeController@joinChime');
+    Route::delete('/api/chime/{chime_id}',
+        'HomeController@deleteChime');
 
-// Response subroutes
-Route::get('/api/chime/{chime_id}/session/{session_id}',
-    'ResponseController@getResponse')->middleware('auth');
-Route::get('/api/chime/{chime_id}/session/{session_id}/question',
-    'ResponseController@getQuestion')->middleware('auth');
-Route::post('/api/chime/{chime_id}/session/{session_id}',
-    'ResponseController@createResponse')->middleware('auth');
-Route::put('/api/chime/{chime_id}/session/{session_id}/response/{response_id}',
-    'ResponseController@updateResponse')->middleware('auth');
+    // Chime Page Routes
+    Route::get('/chime/{chime_id}', 'ChimeController@index');
+    Route::get('/api/chime/{chime_id}', 'ChimeController@getChime');
+    Route::get('/api/chime/{chime_id}/response', 'ChimeController@getPastResponses');
+    Route::get('/api/chime/{chime_id}/image/{image_name}', 'ChimeController@getImage');
+    Route::post('/api/chime/{chime_id}/image', 'ChimeController@uploadImage');
+    Route::post('/api/chime/{chime_id}/folder', 'ChimeController@createFolder');
+    Route::delete('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@deleteFolder');
 
-    // Folder Routes (chime page subroutes)
-Route::get('/api/chime/{chime_id}/folder/{folder_id}', 
-    'FolderController@getQuestions')->middleware('auth');
-Route::post('/api/chime/{chime_id}/folder/{folder_id}',
-    'FolderController@createQuestion')->middleware('auth');
-Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}',
-    'FolderController@updateQuestion')->middleware('auth');
-Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/move_down',
-    'FolderController@moveQuestionDown')->middleware('auth');
-Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}',
-    'FolderController@deleteQuestion')->middleware('auth');
+    // Response subroutes
+    Route::get('/api/chime/{chime_id}/session/{session_id}', 'ResponseController@getResponse');
+    Route::get('/api/chime/{chime_id}/session/{session_id}/question', 'ResponseController@getQuestion');
+    Route::post('/api/chime/{chime_id}/session/{session_id}', 'ResponseController@createResponse');
+    Route::put('/api/chime/{chime_id}/session/{session_id}/response/{response_id}', 'ResponseController@updateResponse');
 
-// Presentation Routes
-Route::get('/chime/{chime_id}/folder/{folder_id}/present',
-    'PresentController@index')->middleware('auth');
-Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}',
-    'PresentController@getSessions')->middleware('auth');
-Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}',
-    'PresentController@getResponses')->middleware('auth');
-Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}',
-    'PresentController@startSession')->middleware('auth');
-Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}',
-    'PresentController@stopSession')->middleware('auth');
+        // Folder Routes (chime page subroutes)
+    Route::get('/api/chime/{chime_id}/folder/{folder_id}',  'FolderController@getQuestions');
+    Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
+    Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion');
+    Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/move_down', 'FolderController@moveQuestionDown');
+    Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
 
-// Auth::routes();
+    // Presentation Routes
+    Route::get('/chime/{chime_id}/folder/{folder_id}/present', 'PresentController@index');
+    Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@getSessions');
+    Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}', 'PresentController@getResponses');
+    Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
+    Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}', 'PresentController@stopSession');
+});
+    // Auth::routes();
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 
