@@ -9,15 +9,13 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'permission_number', 'umndid', 'userType'
-        // 'enrolled_courses'
+        'name', 'email', 'password', 'permission_number', 'umndid'
     ];
 
     /**
@@ -39,6 +37,7 @@ class User extends Authenticatable
         return $this->hasMany(Response::class);
     }
 }
+
 
 User::deleting(function($user) {
     $chimes = $user->chimes()->get();

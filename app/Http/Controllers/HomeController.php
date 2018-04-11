@@ -26,7 +26,6 @@ class HomeController extends Controller
     public function index(Request $req)
     {
 
-        // dd(Auth::user());
         return view('home', ['user' => $req->user()]);
     }
 
