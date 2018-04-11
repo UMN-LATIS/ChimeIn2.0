@@ -40,6 +40,12 @@ class User extends Authenticatable
     }
 }
 
+User::creating(function($user) {
+    if ($user->userType == 'faculty') {
+        $user->permission_number = 300;
+    }
+});
+
 User::deleting(function($user) {
     $chimes = $user->chimes()->get();
 
