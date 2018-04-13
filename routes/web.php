@@ -24,7 +24,7 @@ use App\Http\Controllers\PresentController;
 // 
 
 Route::group(['middleware' => ['auth', 'shibinjection']], function () {
-    Route::get('/', 'HomeController@index')->middleware(['auth', 'shibinjection']);
+    Route::get('/', 'HomeController@index');
     Route::get('/api/chime', 'HomeController@getChimes');
     Route::post('/api/chime', 'HomeController@createChime');
     Route::post('/api/chime/{access_code}',

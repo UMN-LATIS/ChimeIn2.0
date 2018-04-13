@@ -3,7 +3,11 @@
 namespace App\Exceptions;
 
 use Exception;
+use Closure;
+use Auth;
+use App\User;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -49,5 +53,16 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         return parent::render($request, $exception);
+    }
+
+    protected function unauthenticated(
+            $request, AuthenticationException $exception) {
+        $user = User::create(['email' => str_random(10)]);
+
+        if (Auth::attempt(array('email' => $user->email, 'password' => $user->password))) {
+            return redirect($request->path());
+        } else {
+            return redirect('/login');
+        }
     }
 }

@@ -23,7 +23,7 @@ class ShibInjection
         foreach($map as $key=>$value) {
             Auth::user()->$key = $value;
         }
-        dd(Auth::user());
+        // dd(Auth::user());
         return $next($request);
     }
 
@@ -36,18 +36,16 @@ class ShibInjection
                     return $userValues[$variableName];
                 }
             }
+        } else if (Auth::user()->name != 'guest') {
+            $variable = Request::server($variableName);
 
-
+            return (!empty($variable)) ?
+                $variable :
+                Request::server('REDIRECT_' . $variableName);
+        } else {
+            return null;
         }
-
-        $variable = Request::server($variableName);
-
-        return (!empty($variable)) ?
-            $variable :
-            Request::server('REDIRECT_' . $variableName);
     }
-
-
 }
 
 
