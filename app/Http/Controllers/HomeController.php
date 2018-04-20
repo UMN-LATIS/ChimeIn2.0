@@ -74,7 +74,7 @@ class HomeController extends Controller
         $user = $req->user();
         $chime = ($user->chimes()->find($req->route('chime_id')));
         
-        if ($chime->pivot->permission_number >= 300) {
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
             $chime->delete();
         
             return response('Chime Deleted', 200);

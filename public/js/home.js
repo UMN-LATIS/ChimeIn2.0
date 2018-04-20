@@ -58997,7 +58997,7 @@ var app = new Vue({
     created: function created() {
         var self = this;
         axios.get('/api/chime').then(function (res) {
-            console.error('debug', 'Get Chimes:', res);
+            console.log('debug', 'Get Chimes:', res);
             self.chimes = res.data;
             self.viewable_chimes = res.data;
         }).catch(function (err) {

@@ -29,7 +29,7 @@ class FolderController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $questions = $folder->questions()->orderBy('order')->get();
             
@@ -49,7 +49,7 @@ class FolderController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $highest = $folder->questions()->max('order');
             $order_num = 1;
@@ -78,7 +78,7 @@ class FolderController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
             $question->update([
@@ -100,7 +100,7 @@ class FolderController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
             $temp = $question->order;
@@ -132,7 +132,7 @@ class FolderController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $folder->questions()->find($req->route('question_id'))->delete();
         

@@ -1,5 +1,12 @@
 <template>
     <div>
+        <a
+            class="waves-effect waves-light btn-small"
+            id="csv_link"
+            v-on:click="export_csv">
+            Export CSV
+        </a>
+
         <line-chart :question="question" :responses="responses"></line-chart>
         
         <input
@@ -36,6 +43,26 @@ export default {
             } else {
                 this.visible_responses = [];
             }
+        },
+        export_csv: function() {
+            const rows = this.responses.map(r => {
+                return [
+                    r.user.id,
+                    r.user.name,
+                    r.session_id,
+                    r.response_info.choice].join(',')
+            });
+
+            let row_str = 'User Id,User Name,Session Id,Choice\n'
+            row_str += rows.join('\n');
+            
+            console.log(row_str);
+
+            const link = document.getElementById('csv_link');
+            const file = new Blob([row_str], {type: 'text/csv'});
+
+            link.href = URL.createObjectURL(file);
+            link.download = 'question_' + this.question.id + '_responses.csv';
         }
     },
     components: {

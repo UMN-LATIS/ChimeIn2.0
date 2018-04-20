@@ -31,7 +31,7 @@ class PresentController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             return view('present', ['user' => $user]);
         } else {
             return Response('Invalid permissions to view present page', 405);
@@ -46,7 +46,7 @@ class PresentController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
 
@@ -64,7 +64,7 @@ class PresentController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
 
@@ -89,7 +89,7 @@ class PresentController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
             $session = $question->sessions()->find($req->route('session_id'));
@@ -113,7 +113,7 @@ class PresentController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
 
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
             $session = $question->sessions()->find($req->route('session_id'));

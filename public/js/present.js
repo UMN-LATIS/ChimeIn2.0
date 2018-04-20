@@ -78647,6 +78647,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 var VueChartJs = __webpack_require__(58);
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -78668,6 +78675,22 @@ var VueChartJs = __webpack_require__(58);
             } else {
                 this.visible_responses = [];
             }
+        },
+        export_csv: function export_csv() {
+            var rows = this.responses.map(function (r) {
+                return [r.user.id, r.user.name, r.session_id, r.response_info.choice].join(',');
+            });
+
+            var row_str = 'User Id,User Name,Session Id,Choice\n';
+            row_str += rows.join('\n');
+
+            console.log(row_str);
+
+            var link = document.getElementById('csv_link');
+            var file = new Blob([row_str], { type: 'text/csv' });
+
+            link.href = URL.createObjectURL(file);
+            link.download = 'question_' + this.question.id + '_responses.csv';
         }
     },
     components: {
@@ -91512,6 +91535,16 @@ var render = function() {
   return _c(
     "div",
     [
+      _c(
+        "a",
+        {
+          staticClass: "waves-effect waves-light btn-small",
+          attrs: { id: "csv_link" },
+          on: { click: _vm.export_csv }
+        },
+        [_vm._v("\n        Export CSV\n    ")]
+      ),
+      _vm._v(" "),
       _c("line-chart", {
         attrs: { question: _vm.question, responses: _vm.responses }
       }),
@@ -91623,6 +91656,8 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //
@@ -95148,7 +95183,11 @@ var render = function() {
             )
           ])
         })
-      )
+      ),
+      _vm._v(" "),
+      _c("a", { staticClass: "waves-effect waves-light btn right" }, [
+        _vm._v("button")
+      ])
     ],
     1
   )

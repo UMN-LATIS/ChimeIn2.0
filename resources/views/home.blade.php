@@ -17,6 +17,10 @@
         </navbar>
         
         <div class="container">
+            <h4 class="center">
+                Welcome, {{ $user->name ? $user->name : 'Guest '.$user->id }}
+            </h4>
+
             <div class="row">
                 <div class="col s12 m12 l8">
                     <chime-panel

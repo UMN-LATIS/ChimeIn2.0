@@ -34,7 +34,7 @@ class ChimeController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             return view('chime', ['user' => $user]);
         } else {
             return view('chime_student', ['user' => $user]);
@@ -49,7 +49,7 @@ class ChimeController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             return response()->json([
                 'chime' => $chime,
                 'folders' => $chime->folders()->get()
@@ -108,7 +108,7 @@ class ChimeController extends Controller
         $user = $req->user();
         $chime = $user->chimes()->find($req->route('chime_id'));
 
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $path = $req->file('image')->store('image');
             
             return response('/api/chime/'. $chime->id. '/'. $path, 200);
@@ -125,7 +125,7 @@ class ChimeController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
             $new_folder = $chime->folders()->create([
                 'name' => $req->get('folder_name')
             ]);
@@ -144,7 +144,7 @@ class ChimeController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime->pivot->permission_number >= 300) {
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
             $chime->folders()->find($req->route('folder_id'))->delete();
         
             return response('Folder Deleted', 200);

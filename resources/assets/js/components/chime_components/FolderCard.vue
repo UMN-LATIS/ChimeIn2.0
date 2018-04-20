@@ -55,7 +55,7 @@
                     v-on:deletequestion="delete_question">
                 </question>
             </div>
-            <div v-else>
+            <div  class="container" v-else>
                 <question-form
                     :question="{
                         text:'',

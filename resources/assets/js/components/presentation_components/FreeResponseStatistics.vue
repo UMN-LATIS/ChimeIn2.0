@@ -14,6 +14,8 @@
                 {{r.user.name}}: {{r.response_info.text}}
             </li>
         </ul>
+
+        <a class="waves-effect waves-light btn right">button</a>
     </div>
 </template>
 

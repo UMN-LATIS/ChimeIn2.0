@@ -91,7 +91,7 @@ const app = new Vue({
         const self = this;
         axios.get('/api/chime')
         .then(res => {
-            console.error('debug', 'Get Chimes:', res);
+            console.log('debug', 'Get Chimes:', res);
             self.chimes = res.data;
             self.viewable_chimes = res.data;
         })

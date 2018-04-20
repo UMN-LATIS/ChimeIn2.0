@@ -1,5 +1,5 @@
 <template>  
-    <div class="container">
+    <div class="row">
         <div class="row">
             <div class="input-field col s12">
                 <vue-editor
