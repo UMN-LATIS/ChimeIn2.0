@@ -30,8 +30,8 @@
     "query-string": "^5.1.0",
     "set-clustering": "^1.0.1",
     "vue-chartjs": "^3.2.1",
+    "vue-wordcloud": "^1.0.2",
     "vue2-editor": "^2.4.2",
-    "vuewordcloud": "^18.3.4",
     "winston": "^2.4.1"
   }
 }

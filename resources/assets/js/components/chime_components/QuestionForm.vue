@@ -24,7 +24,7 @@
             <li v-for="(r, i) in question_responses"
                 :key="i"
                 class="left-align">
-                {{r}}
+                {{ r }}
                 <span>
                     <i
                         class="material-icons right pointer"

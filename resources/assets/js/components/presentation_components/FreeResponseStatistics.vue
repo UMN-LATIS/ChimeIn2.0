@@ -1,6 +1,35 @@
 <template>
     <div>
-        <line-chart :word-groups="word_groups"></line-chart>
+        <a
+            class="waves-effect waves-light btn-small"
+            id="csv_link"
+            v-on:click="export_csv">
+            Export CSV
+        </a>
+
+        <div class="switch">
+            <label>
+                Feed
+                <input type="checkbox" v-model="show_word_cloud">
+                <span class="lever"></span>
+                Word Cloud
+            </label>
+        </div>
+        
+        <div v-if="show_word_cloud">
+            <!--<line-chart :word-groups="word_groups"></line-chart>-->
+            <word-cloud
+                :data="word_groups"
+                :nameKey="'name'"
+                :valueKey="'value'"></word-cloud>
+        </div>
+        <div v-else>
+            <blockquote
+                v-for="(r, i) in responses.map(r => r.response_info.text).reverse().slice(0, 10)"
+                v-bind:key="i">
+                {{ r }}
+            </blockquote>
+        </div>
 
         <input
             id="response_search_input"
@@ -14,12 +43,11 @@
                 {{r.user.name}}: {{r.response_info.text}}
             </li>
         </ul>
-
-        <a class="waves-effect waves-light btn right">button</a>
     </div>
 </template>
 
 <script>
+const wordcloud = require('vue-wordcloud').default;
 const VueChartJs = require('vue-chartjs');
 const difflib = require('difflib');
 const cluster = require('set-clustering');
@@ -30,7 +58,8 @@ export default {
         return {
             visible_responses: [],
             response_search: '',
-            word_groups: []
+            word_groups: [],
+            show_word_cloud: false
         }
     },
     methods: {
@@ -45,6 +74,57 @@ export default {
         },
         similarity: function(x, y) {
             return (new difflib.SequenceMatcher(null, x, y)).ratio();
+        },
+        export_csv: function() {
+            console.log(this.responses);
+
+            const rows = this.responses.map(r => {
+                return [
+                    r.user.id,
+                    r.user.name,
+                    r.session_id,
+                    r.response_info.text].join(',')
+            });
+
+            let row_str = 'User Id,User Name,Session Id,Text\n'
+            row_str += rows.join('\n');
+            
+            console.log(row_str);
+
+            const link = document.getElementById('csv_link');
+            const file = new Blob([row_str], {type: 'text/csv'});
+
+            link.href = URL.createObjectURL(file);
+            link.download = 'question_' + this.question.id + '_responses.csv';
+        },
+        make_word_groups: function() {
+            const words = (
+                this
+                .responses
+                .map(r => r.response_info.text)
+                .join(' ')
+                .split(' '));
+
+            const groups = words.reduce((acc, w) => {
+                const i = acc.findIndex(e => e.name === w);
+
+                if (i > -1) {
+                    acc[i].value += 1;
+                } else {
+                    acc.push({'name': w, 'value': 1});
+                }
+
+                return acc;
+            }, []);
+
+            /*
+            const groups =  cluster(
+                this.responses.map(r => r.response_info.text),
+                this.similarity).groups(0.9);
+            */
+
+            console.log('word groups:', groups);
+            return groups
         }
     },
     components: {
@@ -75,14 +155,13 @@ export default {
             mounted: function() {
                 this.render_chart();
             }
-        }
+        },
+        'word-cloud': wordcloud
     },
     watch: {
         responses: function() {
             if (this.responses.length > 0) {
-                this.word_groups = cluster(
-                    this.responses.map(r => r.response_info.text),
-                    this.similarity).groups(0.9);
+                this.word_groups = this.make_word_groups();
             } else {
                 this.word_groups = [];
             }
@@ -90,9 +169,7 @@ export default {
     },
     created: function() {
         if (this.responses.length > 0) {
-            this.word_groups = cluster(
-                this.responses.map(r => r.response_info.text),
-                this.similarity).groups(0.9);
+            this.word_groups = this.make_word_groups();
         }
     }
 }
