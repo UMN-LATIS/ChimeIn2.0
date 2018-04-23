@@ -24,11 +24,17 @@
                 :valueKey="'value'"></word-cloud>
         </div>
         <div v-else>
-            <blockquote
-                v-for="(r, i) in responses.map(r => r.response_info.text).reverse().slice(0, 10)"
-                v-bind:key="i">
-                {{ r }}
-            </blockquote>
+            <transition-group name="fade">
+                <div
+                    v-for="(r, i) in responses.map(r => r.response_info.text).reverse().slice(0, 10)"
+                    v-bind:key="i">
+                    <transition name="fade" mode="out-in">
+                        <blockquote v-bind:key="r">
+                            {{ r }}
+                        </blockquote>
+                    </transition>
+                </div>
+            </transition-group>
         </div>
 
         <input
@@ -174,3 +180,15 @@ export default {
     }
 }
 </script>
+
+<style>
+.fade-enter-active, .fade-leave-active {
+    transition: all .25s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+.fade-move {
+    transition: transform 1s;
+}
+</style>
