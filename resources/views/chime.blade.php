@@ -28,13 +28,15 @@
                 v-on:newfolder="create_folder"
                 v-on:filterfolder="filter_folders"></new-folder>
             <div v-if="viewable_folders.length > 0">
-                <folder-card
-                    v-for="folder in viewable_folders"
-                    :folder="folder"
-                    :chime="chime"
-                    :key="folder.id"
-                    v-on:deletefolder="delete_folder">
-                </folder-card>
+                <transition-group name="fade">
+                    <folder-card
+                        v-for="folder in viewable_folders"
+                        :folder="folder"
+                        :chime="chime"
+                        :key="folder.id"
+                        v-on:deletefolder="delete_folder">
+                    </folder-card>
+                </transition-group>
             </div>
             <div v-else>
                 No Folders Yet!

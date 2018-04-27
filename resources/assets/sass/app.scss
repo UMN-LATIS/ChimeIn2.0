@@ -107,3 +107,18 @@ textarea.materialize-textarea:focus:not([readonly]) + label {
 a {
     color:#ffd204;
 }
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 1s;
+    position: absolute;
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-move {
+    transition: transform 1s;
+}

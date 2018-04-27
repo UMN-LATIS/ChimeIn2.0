@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'permission_number', 'umndid'
+        'name', 'email', 'password', 'permission_number', 'umndid', 'userType'
     ];
 
     /**
@@ -48,6 +48,6 @@ User::deleting(function($user) {
     $chimes = $user->chimes()->get();
 
     foreach($chimes as $c) {
-        $c->detach();
+        $c->detach($user);
     }
 });

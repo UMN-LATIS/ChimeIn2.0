@@ -57,7 +57,7 @@ class Handler extends ExceptionHandler
 
     protected function unauthenticated(
             $request, AuthenticationException $exception) {
-        $user = User::create(['email' => str_random(10)]);
+        $user = User::create(['email' => str_random(10), 'userType' => 'guest']);
 
         if (Auth::attempt(array('email' => $user->email, 'password' => $user->password))) {
             return redirect($request->path());

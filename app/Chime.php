@@ -27,6 +27,6 @@ Chime::deleting(function($chime) {
     $users = $chime->users()->get();
 
     foreach($users as $u) {
-        $u->chimes()->detach();
+        $u->chimes()->detach($chime);
     }
 });

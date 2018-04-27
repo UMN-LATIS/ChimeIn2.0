@@ -3,21 +3,24 @@
         <div class="card-content grey lighten-4">
             <span class="card-title">Chimes</span>
             <div v-if="chimes.length > 0">
-                <div
-                    class="card hoverable"
-                    v-for="chime in chimes"
-                    :key="chime.id">
+                <transition-group name="fade">
                     <div
-                        class="card-content"
-                        v-on:click="open_chime(chime.id)">
-                        <span class="card-title">{{ chime.name }}</span>
+                        v-for="chime in chimes"
+                        v-bind:key="chime.id"
+                        class="card hoverable">
+                        <div
+                            class="card-content"
+                            v-on:click="open_chime(chime.id)"
+                            v-bind:key="chime.name">
+                            <span class="card-title">{{ chime.name }}</span>
+                        </div>
+                        <div class="card-action" v-bind:key="chime.id">
+                            <a href="#" v-on:click="delete_chime(chime)">
+                                <i class="material-icons right">delete</i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="card-action">
-                        <a href="#" v-on:click="delete_chime(chime)">
-                            <i class="material-icons right">delete</i>
-                        </a>
-                    </div>
-                </div>
+                </transition-group>
             </div>
             <div v-else>
                 <p>No Chimes Yet!</p>
@@ -64,6 +67,17 @@
 <style>
     .hoverable {
         cursor: pointer;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: all 1s;
+        position: absolute;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+    .fade-move {
+        transition: transform 1s;
     }
 </style>
 

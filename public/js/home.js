@@ -11470,8 +11470,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 15 */,
-/* 16 */
+/* 15 */
 /***/ (function(module, exports) {
 
 /*
@@ -11553,7 +11552,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -11781,6 +11780,7 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
+/* 17 */,
 /* 18 */,
 /* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -59068,7 +59068,7 @@ var content = __webpack_require__(189);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(17)("65341242", content, false, {});
+var update = __webpack_require__(16)("65341242", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -59087,12 +59087,12 @@ if(false) {
 /* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(16)(false);
+exports = module.exports = __webpack_require__(15)(false);
 // imports
 
 
 // module
-exports.push([module.i, "\n.hoverable {\n    cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "\n.hoverable {\n    cursor: pointer;\n}\n.fade-enter-active, .fade-leave-active {\n    -webkit-transition: all 1s;\n    transition: all 1s;\n    position: absolute;\n}\n.fade-enter, .fade-leave-to {\n    opacity: 0;\n}\n.fade-move {\n    -webkit-transition: -webkit-transform 1s;\n    transition: -webkit-transform 1s;\n    transition: transform 1s;\n    transition: transform 1s, -webkit-transform 1s;\n}\n", ""]);
 
 // exports
 
@@ -59103,6 +59103,9 @@ exports.push([module.i, "\n.hoverable {\n    cursor: pointer;\n}\n", ""]);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
 //
 //
 //
@@ -59181,49 +59184,57 @@ var render = function() {
       _vm.chimes.length > 0
         ? _c(
             "div",
-            _vm._l(_vm.chimes, function(chime) {
-              return _c(
-                "div",
-                { key: chime.id, staticClass: "card hoverable" },
-                [
-                  _c(
+            [
+              _c(
+                "transition-group",
+                { attrs: { name: "fade" } },
+                _vm._l(_vm.chimes, function(chime) {
+                  return _c(
                     "div",
-                    {
-                      staticClass: "card-content",
-                      on: {
-                        click: function($event) {
-                          _vm.open_chime(chime.id)
-                        }
-                      }
-                    },
+                    { key: chime.id, staticClass: "card hoverable" },
                     [
-                      _c("span", { staticClass: "card-title" }, [
-                        _vm._v(_vm._s(chime.name))
+                      _c(
+                        "div",
+                        {
+                          key: chime.name,
+                          staticClass: "card-content",
+                          on: {
+                            click: function($event) {
+                              _vm.open_chime(chime.id)
+                            }
+                          }
+                        },
+                        [
+                          _c("span", { staticClass: "card-title" }, [
+                            _vm._v(_vm._s(chime.name))
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { key: chime.id, staticClass: "card-action" }, [
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                _vm.delete_chime(chime)
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "material-icons right" }, [
+                              _vm._v("delete")
+                            ])
+                          ]
+                        )
                       ])
                     ]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "card-action" }, [
-                    _c(
-                      "a",
-                      {
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            _vm.delete_chime(chime)
-                          }
-                        }
-                      },
-                      [
-                        _c("i", { staticClass: "material-icons right" }, [
-                          _vm._v("delete")
-                        ])
-                      ]
-                    )
-                  ])
-                ]
+                  )
+                })
               )
-            })
+            ],
+            1
           )
         : _c("div", [_c("p", [_vm._v("No Chimes Yet!")])])
     ]),
