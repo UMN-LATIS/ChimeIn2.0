@@ -1,41 +1,33 @@
 <template>
     <div>
-        <a
-            class="waves-effect waves-light btn-small"
-            id="csv_link"
-            v-on:click="export_csv">
-            Export CSV
-        </a>
+        <div v-if="responses.length > 0">
+            <a
+                class="waves-effect waves-light btn-small"
+                id="csv_link"
+                v-on:click="export_csv">
+                Export CSV
+            </a>
 
-        <div class="switch">
-            <label>
-                Feed
-                <input type="checkbox" v-model="show_word_cloud">
-                <span class="lever"></span>
-                Word Cloud
-            </label>
-        </div>
-        
-        <div v-if="show_word_cloud">
-            <!--<line-chart :word-groups="word_groups"></line-chart>-->
             <word-cloud
                 :data="word_groups"
                 :nameKey="'name'"
-                :valueKey="'value'"></word-cloud>
-        </div>
-        <div v-else>
+                :valueKey="'value'">
+            </word-cloud>
+
+            <br/>
+
             <transition-group name="fade">
                 <div
                     v-for="(r, i) in responses.map(r => r.response_info.text).reverse().slice(0, 10)"
                     v-bind:key="i">
-                    <transition name="fade" mode="out-in">
-                        <blockquote v-bind:key="r">
-                            {{ r }}
-                        </blockquote>
-                    </transition>
+                    <blockquote v-bind:key="r">
+                        {{ r }}
+                    </blockquote>
                 </div>
             </transition-group>
         </div>
+
+        <div v-else>No Responses Yet!</div>
 
         <input
             id="response_search_input"
@@ -64,8 +56,7 @@ export default {
         return {
             visible_responses: [],
             response_search: '',
-            word_groups: [],
-            show_word_cloud: false
+            word_groups: []
         }
     },
     methods: {

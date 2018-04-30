@@ -104,8 +104,20 @@ textarea.materialize-textarea:focus:not([readonly]) + label {
   padding: 14px 16px;
 }
 
+.tabs .indicator {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: #790018;
+    will-change: left, right;
+}
+
 a {
     color:#ffd204;
+}
+
+.input-field a {
+    color: black;
 }
 
 .fade-enter-active,

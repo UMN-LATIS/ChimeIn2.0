@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     Route::get('/api/chime/{chime_id}/image/{image_name}', 'ChimeController@getImage');
     Route::post('/api/chime/{chime_id}/image', 'ChimeController@uploadImage');
     Route::post('/api/chime/{chime_id}/folder', 'ChimeController@createFolder');
+    Route::put('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@editFolder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@deleteFolder');
 
     // Response subroutes
@@ -51,7 +52,7 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     Route::get('/api/chime/{chime_id}/folder/{folder_id}',  'FolderController@getQuestions');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion');
-    Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/move_down', 'FolderController@moveQuestionDown');
+    Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
 
     // Presentation Routes

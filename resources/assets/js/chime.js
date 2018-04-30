@@ -55,6 +55,23 @@ const app = new Vue({
                 });
             }
         },
+        edit_folder: function(folder_id, folder_name) {
+            const self = this;
+            axios.put('/api/chime/' + this.chime.id + '/folder/' + folder_id, {
+                folder_name: folder_name
+            })
+            .then(res => {
+                console.log(res);
+                const i = self.folders.findIndex(e => e.id === folder_id);
+
+                if (i > -1) {
+                    self.folders.splice(i, 1, res.data);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        },
         delete_folder: function(folder) {
             const confirm = window.confirm(
                 'Delete Folder ' + folder.name + '?');

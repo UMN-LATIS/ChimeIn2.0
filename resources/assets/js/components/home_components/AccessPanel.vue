@@ -9,7 +9,7 @@
                 v-model="access_code">
         </div>
         <div class="card-action white">
-            <a href="#" v-on:click="submit_code">Submit</a>
+            <a href="#" v-on:click="submit_code">Join</a>
         </div>
     </div>
 </template>

@@ -34,6 +34,7 @@
                         :folder="folder"
                         :chime="chime"
                         :key="folder.id"
+                        v-on:editfolder="edit_folder"
                         v-on:deletefolder="delete_folder">
                     </folder-card>
                 </transition-group>

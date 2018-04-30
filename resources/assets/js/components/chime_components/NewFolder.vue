@@ -2,14 +2,24 @@
     <div class="row">
         <h4>Access Code: {{ chime.access_code }}</h4>
         <div class="input-field col s12">
+            
+        </div>
+        <div class="input-field col s10">
             <input
                 id="name"
                 v-model="folder_name"
                 type="text"
                 @keyup.enter="new_folder"
-                v-on:keyup="filter_folder"
-                class="validate">
+                v-on:keyup="filter_folder">
             <label for="name">Folder Name</label>
+        </div>
+        <div class="input-field col s2">
+            <button
+                class="waves-effect waves-light btn"
+                v-on:click="new_folder"
+                type="button">
+                Create
+            </button>
         </div>
     </div>
 </template>
@@ -24,11 +34,13 @@ export default {
     },
     methods: {
         filter_folder: function() {
-            this.$emit('filterfolder', this.folder_name);
+            // NOTE Filter folder mechanic muted
+            // this.$emit('filterfolder', this.folder_name);
         },
         new_folder: function() {
             this.$emit('newfolder', this.folder_name);
             this.folder_name = '';
+            document.activeElement.blur(); 
         }
     }
 }

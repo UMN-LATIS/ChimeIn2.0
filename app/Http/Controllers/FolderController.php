@@ -92,7 +92,7 @@ class FolderController extends Controller
         }
     }
     
-    public function moveQuestionDown(Request $req) {
+    public function saveOrder(Request $req) {
         $user = $req->user();
         $chime = (
             $user
@@ -102,23 +102,28 @@ class FolderController extends Controller
         
         if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
-            $question = $folder->questions()->find($req->route('question_id'));
-            $temp = $question->order;
-            $next_question = (
-                $folder
-                ->questions()
-                ->where('order', '>', $question->order)
-                ->first()
-            );
+            /*
+            $folder = $chime->folders()->find($req->route('folder_id'));
 
-            if ($next_question == null) {
-                $next_question = $folder->questions()->orderBy('order')->first();
+            $q1 = $folder->questions->find($req->get('q1'));
+            $q1Order = $q1->order;
+
+            $q2 = $folder->questions->find($req->get('q2'));
+            $q2Order = $q2->order;
+
+            $q1->update(['order' => $q2Order]);
+            $q2->update(['order' => $q1Order]);
+
+            return response('Question Ordering Saved', 200);
+            */
+            $question_orders = $req->get('question_order');
+            
+            foreach($question_orders as $qo) {
+                $question = $folder->questions()->find($qo['id']);
+                $question->update(['order' => (int)$qo['order']]);
             }
 
-            $question->update(['order' => $next_question->order]);
-            $next_question->update(['order' => $temp]);
-                    
-            return response()->json([$question, $next_question]);
+            return response('Question Ordering Saved', 200);
         } else {
             return response('Invalid Permissions to Move Question', 403);
         }

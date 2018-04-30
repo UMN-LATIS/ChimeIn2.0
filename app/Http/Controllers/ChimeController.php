@@ -136,6 +136,25 @@ class ChimeController extends Controller
         }
     }
 
+    public function editFolder(Request $req) {
+        $user = $req->user();
+        $chime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $req->route('chime_id'))
+            ->first());
+        
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
+            $folder = $chime->folders()->find($req->route('folder_id'));
+            $folder->name = $req->get('folder_name');
+            $folder->save();
+        
+            return response()->json($folder);
+        } else {
+            return response('Invalid Permissions to Delete Folder', 403);
+        }
+    }
+
     public function deleteFolder(Request $req) {
         $user = $req->user();
         $chime = (

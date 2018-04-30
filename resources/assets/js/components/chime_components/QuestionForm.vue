@@ -47,7 +47,7 @@
             <a
                 class="waves-effect waves-light btn right"
                 v-on:click="submit">
-                Submit
+                Save
             </a>
         </div>
     </div> 

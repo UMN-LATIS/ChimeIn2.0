@@ -59143,22 +59143,96 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['chimes'],
     data: function data() {
         return {
             chime_name: ''
+            // show_add_instructor: false,
+            // new_instructor_email: ''
         };
     },
 
     methods: {
+        /*
+        toggle_add_instructor() {
+            new_instructor_email = '';
+            this.show_add_instructor = (this.show_add_instructor ? false : true);
+        },
+        add_instructor(chime_id) {
+            axios.post('/api/chime/' + chime_id + '/add_instructor', {
+                email: this.new_instructor_email
+            })
+            .then(res => {
+                console.log(res);
+                this.toggle_add_instructor();
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        },
+        */
         filter_chime: function filter_chime() {
-            this.$emit('filterchime', this.chime_name);
+            // NOTE mechanic to filter chimes muted
+            // this.$emit('filterchime', this.chime_name);
         },
         new_chime: function new_chime() {
             this.$emit('newchime', this.chime_name);
             this.chime_name = '';
+            document.activeElement.blur();
         },
         open_chime: function open_chime(id) {
             window.location.href = '/chime/' + id;
@@ -59240,41 +59314,58 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "card-action" }, [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.chime_name,
-            expression: "chime_name"
-          }
-        ],
-        attrs: { id: "chime_name_input", type: "text" },
-        domProps: { value: _vm.chime_name },
-        on: {
-          keyup: [
-            _vm.filter_chime,
-            function($event) {
-              if (
-                !("button" in $event) &&
-                _vm._k($event.keyCode, "enter", 13, $event.key)
-              ) {
-                return null
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "input-field col s10" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.chime_name,
+                expression: "chime_name"
               }
-              _vm.new_chime($event)
+            ],
+            staticClass: "materalize-textarea",
+            attrs: { id: "chime_name_input", type: "text" },
+            domProps: { value: _vm.chime_name },
+            on: {
+              keyup: [
+                _vm.filter_chime,
+                function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key)
+                  ) {
+                    return null
+                  }
+                  _vm.new_chime($event)
+                }
+              ],
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.chime_name = $event.target.value
+              }
             }
-          ],
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.chime_name = $event.target.value
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("label", { attrs: { for: "chime_name_input" } }, [
-        _vm._v("Chime Name")
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "chime_name_input" } }, [
+            _vm._v("Chime Name")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "input-field col s2" }, [
+          _c(
+            "button",
+            {
+              staticClass: "waves-effect waves-light btn",
+              attrs: { type: "button" },
+              on: { click: _vm.new_chime }
+            },
+            [_vm._v("\n                    Create\n                ")]
+          )
+        ])
       ])
     ])
   ])
@@ -59418,7 +59509,7 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "card-action white" }, [
       _c("a", { attrs: { href: "#" }, on: { click: _vm.submit_code } }, [
-        _vm._v("Submit")
+        _vm._v("Join")
       ])
     ])
   ])
