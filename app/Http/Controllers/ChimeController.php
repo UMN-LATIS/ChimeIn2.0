@@ -108,7 +108,7 @@ class ChimeController extends Controller
         $user = $req->user();
         $chime = $user->chimes()->find($req->route('chime_id'));
 
-        if ($chime != null && $chime->pivot->permission_number >= 200) {
+        if ($chime != null) {
             $path = $req->file('image')->store('image');
             
             return response('/api/chime/'. $chime->id. '/'. $path, 200);

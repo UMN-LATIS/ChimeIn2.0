@@ -21,7 +21,11 @@
             </multiple-choice-display>
             
             <div v-else>
-                Free Response
+                {{ question.question_info.question_type
+                    .split('_')
+                    .map(e => e[0]
+                    .toUpperCase() + e.slice(1))
+                    .join(' ') }}
             </div>
         </div>
         <div class="card-content" v-else>

@@ -19,6 +19,8 @@ Vue.component('multiple-choice-display',
     require('./components/questions/display/MultipleChoice.vue'));
 Vue.component('multiple-choice-statistics',
     require('./components/presentation_components/MultipleChoiceStatistics.vue'));
+Vue.component('image-response-statistics',
+    require('./components/presentation_components/ImageResponseStatistics.vue'));
 Vue.component('free-response-statistics',
     require('./components/presentation_components/FreeResponseStatistics.vue'));
 Vue.component('actions',

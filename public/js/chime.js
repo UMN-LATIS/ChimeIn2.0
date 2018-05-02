@@ -62244,6 +62244,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //
 //
 //
+//
 
 
 
@@ -62414,6 +62415,10 @@ var render = function() {
             _vm._v(" "),
             _c("option", { attrs: { value: "free_response" } }, [
               _vm._v("Free Response")
+            ]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "image_response" } }, [
+              _vm._v("Image Response")
             ])
           ]
         ),

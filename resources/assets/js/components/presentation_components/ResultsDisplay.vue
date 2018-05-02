@@ -48,6 +48,11 @@
                 :responses="responses"
                 :question="question">
             </multiple-choice-statistics>
+            <image-response-statistics
+                v-else-if="question.question_info.question_type === 'image_response'"
+                :responses="responses"
+                :question="question">
+            </image-response-statistics>
             <free-response-statistics
                 v-else
                 :responses="responses"

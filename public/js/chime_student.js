@@ -58957,7 +58957,8 @@ Vue.component('actions', __webpack_require__(221));
 Vue.component('prompt', __webpack_require__(224));
 Vue.component('response', __webpack_require__(229));
 Vue.component('multiple-choice-question', __webpack_require__(232));
-Vue.component('free-response-question', __webpack_require__(235));
+Vue.component('image-response-question', __webpack_require__(235));
+Vue.component('free-response-question', __webpack_require__(238));
 
 var app = new Vue({
     el: '#app',
@@ -59299,6 +59300,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['session'],
@@ -59391,14 +59398,19 @@ var render = function() {
                   attrs: { question: _vm.question, response: _vm.response },
                   on: { recordresponse: _vm.record_response }
                 })
-              : _c("free-response-question", {
-                  attrs: {
-                    question: _vm.question,
-                    response: _vm.response,
-                    disabled: false
-                  },
-                  on: { recordresponse: _vm.record_response }
-                })
+              : _vm.question.question_info.question_type === "image_response"
+                ? _c("image-response-question", {
+                    attrs: { question: _vm.question, response: _vm.response },
+                    on: { recordresponse: _vm.record_response }
+                  })
+                : _c("free-response-question", {
+                    attrs: {
+                      question: _vm.question,
+                      response: _vm.response,
+                      disabled: false
+                    },
+                    on: { recordresponse: _vm.record_response }
+                  })
           ],
           1
         )
@@ -59509,6 +59521,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['response', 'question']
@@ -59545,13 +59563,21 @@ var render = function() {
                     response: _vm.response
                   }
                 })
-              : _c("free-response-question", {
-                  attrs: {
-                    question: _vm.question,
-                    response: _vm.response,
-                    disabled: true
-                  }
-                })
+              : _vm.question.question_info.question_type === "image_response"
+                ? _c("image-response-question", {
+                    attrs: {
+                      question: _vm.question,
+                      response: _vm.response,
+                      disabled: true
+                    }
+                  })
+                : _c("free-response-question", {
+                    attrs: {
+                      question: _vm.question,
+                      response: _vm.response,
+                      disabled: true
+                    }
+                  })
           ],
           1
         )
@@ -59741,6 +59767,187 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
+Component.options.__file = "resources\\assets\\js\\components\\questions\\response\\ImageResponse.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-94a039f2", Component.options)
+  } else {
+    hotAPI.reload("data-v-94a039f2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 236 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['question', 'response', 'disabled'],
+    methods: {
+        record_response: function record_response(event) {
+            var _this = this;
+
+            var self = this;
+            var file = event.target.files[0];
+            console.log(file);
+
+            var form_data = new FormData();
+            form_data.append('image', file);
+
+            axios.post('/api/chime/' + window.location.pathname.split('/')[2] + '/image', form_data).then(function (res) {
+                console.log(res);
+                // self.image = res.data;
+
+                /*
+                const response_text = document.getElementById(
+                    'question_' + this.question.id + '_response').value;
+                              const response = {
+                    question_type: 'free_response',
+                    image: response_text
+                }
+                */
+
+                var response = {
+                    question_type: 'image_response',
+                    image: res.data,
+                    image_name: file.name
+                };
+
+                _this.$emit('recordresponse', response);
+            }).catch(function (err) {
+                console.log(err.response);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 237 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _vm.response.response_info
+      ? _c("div", [
+          _c("img", {
+            staticClass: "responsive-img",
+            attrs: { src: _vm.response.response_info.image }
+          })
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "file-field input-field" }, [
+      _c("div", { staticClass: "btn" }, [
+        _c("span", [_vm._v("Image")]),
+        _vm._v(" "),
+        _c("input", {
+          attrs: {
+            type: "file",
+            disabled: _vm.disabled,
+            id: "question_" + _vm.question.id + "_response"
+          },
+          on: {
+            change: function($event) {
+              _vm.record_response($event)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "file-path-wrapper" }, [
+        _c("input", {
+          staticClass: "file-path",
+          attrs: { disabled: _vm.disabled, type: "text" },
+          domProps: {
+            value: _vm.response.response_info
+              ? _vm.response.response_info.image_name
+              : ""
+          }
+        })
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-94a039f2", module.exports)
+  }
+}
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(239)
+/* template */
+var __vue_template__ = __webpack_require__(240)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
 Component.options.__file = "resources\\assets\\js\\components\\questions\\response\\FreeResponse.vue"
 
 /* hot reload */
@@ -59763,7 +59970,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 236 */
+/* 239 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59802,7 +60009,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 237 */
+/* 240 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {

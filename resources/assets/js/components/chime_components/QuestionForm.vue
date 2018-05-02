@@ -16,6 +16,7 @@
                 <select id="question_type" v-model="question_type">
                     <option value="multiple_choice">Multiple Choice</option>
                     <option value="free_response">Free Response</option>
+                    <option value="image_response">Image Response</option>
                 </select>
                 <label for="question_type">Question Type</label>
             </div>

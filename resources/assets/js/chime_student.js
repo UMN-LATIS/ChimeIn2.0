@@ -19,6 +19,8 @@ Vue.component('response',
     require('./components/chime_student_components/Response.vue'));
 Vue.component('multiple-choice-question',
     require('./components/questions/response/MultipleChoice.vue'));
+Vue.component('image-response-question',
+    require('./components/questions/response/ImageResponse.vue'));
 Vue.component('free-response-question',
     require('./components/questions/response/FreeResponse.vue'));
 

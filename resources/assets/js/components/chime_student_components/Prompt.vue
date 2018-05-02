@@ -16,6 +16,12 @@
                 :response="response"
                 v-on:recordresponse="record_response">
             </multiple-choice-question>
+            <image-response-question
+                v-else-if="question.question_info.question_type === 'image_response'"
+                :question="question"
+                :response="response"
+                v-on:recordresponse="record_response">
+            </image-response-question>
             <free-response-question
                 v-else
                 :question="question"
