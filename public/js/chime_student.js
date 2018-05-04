@@ -59255,7 +59255,7 @@ exports = module.exports = __webpack_require__(15)(false);
 
 
 // module
-exports.push([module.i, "\nli {\n    font-size: 1.5em;\n}\n", ""]);
+exports.push([module.i, "\nli {\n    font-size: 1.5em;\n}\n.col.s12 > .btn {\n    width: 100%;\n}\n", ""]);
 
 // exports
 
@@ -59991,6 +59991,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['question', 'response', 'disabled'],
@@ -60044,7 +60055,21 @@ var render = function() {
       "label",
       { attrs: { for: "question_" + _vm.question.id + "_response" } },
       [_vm._v("\n        Response\n    ")]
-    )
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "input-field col s12" }, [
+        _c(
+          "button",
+          {
+            staticClass: "waves-effect waves-light btn",
+            attrs: { type: "button" },
+            on: { click: _vm.record_response }
+          },
+          [_vm._v("\n                Submit\n            ")]
+        )
+      ])
+    ])
   ])
 }
 var staticRenderFns = []

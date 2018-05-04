@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Response;
 use App\Question;
+use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -64,6 +65,81 @@ class ChimeController extends Controller
         }
     }
 
+    public function getUsers(Request $req) {
+        $user = $req->user();
+        $chime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $req->route('chime_id'))
+            ->first());
+        
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
+            $users = $chime->users()->get();
+            $ids = $users->map(function($u) {
+                return [
+                    'name' => $u->name,
+                    'email' => $u->email,
+                    'id' => $u->id,
+                    'permission_number' => $u->pivot->permission_number];
+            });
+
+            return response()->json([
+                'users' => $ids
+            ]);
+        } else {
+            return response('Invalid Permissions to get Users', 403);
+        }
+    }
+
+    public function addUser(Request $req) {
+        $user = $req->user();
+        $newUser = User::where('email', $req->get('email'))->first();
+        $chime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $req->route('chime_id'))
+            ->first());
+        $pn = $chime->pivot->permission_number;
+        
+        if ($chime != null && $newUser != null && $pn >= 300 && $newUser->permission_number < $pn) {
+            $newUser->chimes()->attach($chime, [
+                'permission_number' => $newUser->permission_number
+            ]);
+
+            return response()->json([
+                'new_user' => $newUser
+            ]);
+        } else {
+            return response('Cannot add user', 403);
+        }
+    }
+
+    public function changePermission(Request $req) {
+        $user = $req->user();
+        $chime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $req->route('chime_id'))
+            ->first());
+
+        $pn = $chime->pivot->permission_number;
+        $changingUser = $chime->users()->find($req->route('user_id'));
+        $newPN = $req->get('permission_number');
+        
+        if ($chime != null && $changingUser != null && $pn >= 300 && $newPN < $pn) {
+            $changingUser->pivot->update(['permission_number' => $newPN]);
+
+            return response()->json([
+                'name' => $changingUser->name,
+                'id' => $changingUser->id,
+                'email' => $changingUser->email,
+                'permission_number' => $changingUser->pivot->permission_number,
+            ]);
+        } else {
+            return response('Cannot change user permissions', 403);
+        }
+    }
+
     public function getOpenSessions(Request $req) {
         $user = $req->user();
         $chime = (
@@ -113,7 +189,7 @@ class ChimeController extends Controller
             
             return response('/api/chime/'. $chime->id. '/'. $path, 200);
         } else {
-            return response('Invalid Permissions to Upload Image', 403);
+            return response('Chime not found', 400);
         }
     }
 

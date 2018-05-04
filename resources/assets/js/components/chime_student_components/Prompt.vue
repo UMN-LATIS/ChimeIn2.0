@@ -136,4 +136,8 @@ export default {
     li {
         font-size: 1.5em;
     }
+
+    .col.s12 > .btn {
+        width: 100%;
+    }
 </style>

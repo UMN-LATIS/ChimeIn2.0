@@ -59206,9 +59206,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['chime'],
@@ -59240,8 +59237,6 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
     _c("h4", [_vm._v("Access Code: " + _vm._s(_vm.chime.access_code))]),
-    _vm._v(" "),
-    _c("div", { staticClass: "input-field col s12" }),
     _vm._v(" "),
     _c("div", { staticClass: "input-field col s10" }, [
       _c("input", {
@@ -59509,7 +59504,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -59561,24 +59555,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         swap_question: function swap_question(event, originalEvent) {
-            /*
-            console.log(element);
-            const url = (
-                '/api/chime/' + this.folder.chime_id +
-                '/folder/' + this.folder.id + '/swap_question');
-            const self = this;
-              axios.put(url, {
-                q1: self.questions[old_i].id,
-                q1: self.questions[new_i].id})
-            .then(res => {
-                console.log(res);
-                self.questions[new_i], self.questions[old_i] = self.questions[old_i], self.questions[new_i];
-                self.questions = self.questions.map(e => e);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-            */
             console.log(this.questions);
             var newOrder = Array.from(this.questions.entries()).map(function (e) {
                 return {
@@ -61804,7 +61780,6 @@ var render = function() {
                       },
                       on: {
                         editquestion: _vm.update_question,
-                        movedown: _vm.swap_question,
                         deletequestion: _vm.delete_question
                       }
                     })
@@ -61993,11 +61968,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['folder', 'question', 'chime'],
@@ -62010,9 +61980,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         edit_question: function edit_question(edited_question) {
             this.$emit('editquestion', edited_question);
             this.show_edit = false;
-        },
-        move_down: function move_down() {
-            this.$emit('movedown', this.question);
         },
         delete_question: function delete_question() {
             this.$emit('deletequestion', this.question.id);
@@ -62103,10 +62070,6 @@ var render = function() {
           )
         ]
       ),
-      _vm._v(" "),
-      _c("a", { staticClass: "pointer", on: { click: _vm.move_down } }, [
-        _vm._v("\n            Move Down\n        ")
-      ]),
       _vm._v(" "),
       _c("a", { staticClass: "pointer", on: { click: _vm.delete_question } }, [
         _vm._v("\n            Delete\n        ")

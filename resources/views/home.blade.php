@@ -25,6 +25,7 @@
                 <div class="col s12 m12 l8">
                     <chime-panel
                         :chimes="viewable_chimes"
+                        :user="{{ $user }}"
                         v-on:newchime="create_chime"
                         v-on:filterchime="filter_chimes"
                         v-on:deletechime="delete_chime">

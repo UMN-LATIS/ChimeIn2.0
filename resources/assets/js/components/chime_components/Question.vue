@@ -40,11 +40,6 @@
             </a>
             <a 
                 class="pointer"
-                v-on:click="move_down">
-                Move Down
-            </a>
-            <a 
-                class="pointer"
                 v-on:click="delete_question">
                 Delete
             </a>
@@ -64,9 +59,6 @@ export default {
         edit_question: function(edited_question) {
             this.$emit('editquestion', edited_question);
             this.show_edit = false;
-        },
-        move_down: function() {
-            this.$emit('movedown', this.question);
         },
         delete_question: function() {
             this.$emit('deletequestion', this.question.id);

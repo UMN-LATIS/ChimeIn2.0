@@ -83,7 +83,6 @@
                         :chime="chime"
                         :question="q"
                         v-on:editquestion="update_question"
-                        v-on:movedown="swap_question"
                         v-on:deletequestion="delete_question">
                     </question>
                 </draggable>
@@ -164,25 +163,6 @@ export default {
             });
         },
         swap_question(event, originalEvent) {
-            /*
-            console.log(element);
-            const url = (
-                '/api/chime/' + this.folder.chime_id +
-                '/folder/' + this.folder.id + '/swap_question');
-            const self = this;
-
-            axios.put(url, {
-                q1: self.questions[old_i].id,
-                q1: self.questions[new_i].id})
-            .then(res => {
-                console.log(res);
-                self.questions[new_i], self.questions[old_i] = self.questions[old_i], self.questions[new_i];
-                self.questions = self.questions.map(e => e);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-            */
             console.log(this.questions);
             const newOrder = Array.from(this.questions.entries()).map(e => {
                 return {

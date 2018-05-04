@@ -35,6 +35,10 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     // Chime Page Routes
     Route::get('/chime/{chime_id}', 'ChimeController@index');
     Route::get('/api/chime/{chime_id}', 'ChimeController@getChime');
+    Route::get('/api/chime/{chime_id}/users', 'ChimeController@getUsers');
+    Route::post('/api/chime/{chime_id}/users', 'ChimeController@addUser');
+    Route::put('/api/chime/{chime_id}/users/{user_id}', 'ChimeController@changePermission');
+    Route::delete('/api/chime/{chime_id}/users/{user_id}', 'ChimeController@removeUser');
     Route::get('/api/chime/{chime_id}/response', 'ChimeController@getPastResponses');
     Route::get('/api/chime/{chime_id}/image/{image_name}', 'ChimeController@getImage');
     Route::post('/api/chime/{chime_id}/image', 'ChimeController@uploadImage');

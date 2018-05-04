@@ -1,9 +1,6 @@
 <template>
     <div class="row">
         <h4>Access Code: {{ chime.access_code }}</h4>
-        <div class="input-field col s12">
-            
-        </div>
         <div class="input-field col s10">
             <input
                 id="name"

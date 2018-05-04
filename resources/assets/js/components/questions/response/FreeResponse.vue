@@ -11,6 +11,17 @@
         <label v-bind:for="'question_' + question.id + '_response'">
             Response
         </label>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <button
+                    class="waves-effect waves-light btn"
+                    v-on:click="record_response"
+                    type="button">
+                    Submit
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
