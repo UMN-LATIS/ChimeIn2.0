@@ -9,7 +9,7 @@
         </div>
         <div class="card-action" v-bind:key="chime.id">
             <div v-if="show_users">
-                <table>
+                <table class="responsive-table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -34,6 +34,9 @@
                                 v-on:click="toggle_permission(u.id, u.permission_number)">
                                 {{ u.permission_number }}
                             </td>
+                            <td class="action-row" v-on:click="remove_user(u.id)">
+                                <i class="material-icons right">clear</i>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -43,7 +46,7 @@
                     v-if="!editing_permission.id"
                     v-model="new_member_email"
                     type="text"
-                    @keyup.enter="add_member">
+                    @keyup.enter="add_user">
                 <label for="new_member_input" v-if="!editing_permission.id">
                     New Member Email
                 </label>
@@ -148,6 +151,19 @@ export default {
                 console.error(err);
             });
         },
+        remove_user(uid) {
+            const self = this;
+
+            axios.delete('/api/chime/' + this.chime.id + '/users/' + uid)
+            .then(res => {
+                console.log(res);
+                const i = self.users.findIndex(u => u.id === uid);
+                self.users.splice(i, 1);
+            })
+            .catch(err => {
+                console.error(err.response);
+            });
+        },
         open_chime() {
             window.location.href = '/chime/' + this.chime.id;
         },
@@ -158,5 +174,13 @@ export default {
 <style>
     th, td {
         text-align: center;
+    }
+
+    .action-column {
+        width: 20px;
+    }
+
+    .material-icons {
+        color: #ffd204;
     }
 </style>

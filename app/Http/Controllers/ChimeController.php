@@ -101,7 +101,13 @@ class ChimeController extends Controller
             ->first());
         $pn = $chime->pivot->permission_number;
         
-        if ($chime != null && $newUser != null && $pn >= 300 && $newUser->permission_number < $pn) {
+        if (
+            $chime != null 
+            && $newUser != null 
+            && $pn >= 300 
+            && $newUser->permission_number < $pn
+            && !$chime->users->contains($newUser->id)
+            ) {
             $newUser->chimes()->attach($chime, [
                 'permission_number' => $newUser->permission_number
             ]);
@@ -110,7 +116,7 @@ class ChimeController extends Controller
                 'new_user' => $newUser
             ]);
         } else {
-            return response('Cannot add user', 403);
+            return response('Cannot add user', 400);
         }
     }
 
@@ -136,7 +142,23 @@ class ChimeController extends Controller
                 'permission_number' => $changingUser->pivot->permission_number,
             ]);
         } else {
-            return response('Cannot change user permissions', 403);
+            return response('Cannot change user permissions', 400);
+        }
+    }
+
+    public function removeUser(Request $req) {
+        $user = $req->user();
+        $chime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $req->route('chime_id'))
+            ->first());
+        
+        if ($chime != null && $user->id != ($req->route('user_id')) && $chime->pivot->permission_number >= 300) {
+            $chime->users()->detach($req->route('user_id'));
+            return response('User removed', 200);
+        } else {
+            return response('Cannot remove user', 400);
         }
     }
 
