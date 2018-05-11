@@ -34,8 +34,14 @@
                                 v-on:click="toggle_permission(u.id, u.permission_number)">
                                 {{ u.permission_number }}
                             </td>
-                            <td class="action-row" v-on:click="remove_user(u.id)">
+                            <td
+                                v-if="editing_permission.id == u.id"
+                                class="action-row"
+                                v-on:click="toggle_permission()">
                                 <i class="material-icons right">clear</i>
+                            </td>
+                            <td v-else v-on:click="remove_user(u.id)">
+                                <i class="material-icons right">delete</i>
                             </td>
                         </tr>
                     </tbody>
@@ -54,14 +60,8 @@
             <a href="#" v-on:click="delete_chime(chime)">
                 <i class="material-icons right">delete</i>
             </a>
-            <a href="#" v-on:click="toggle_users(chime)">
+            <a href="#" v-on:click="toggle_users(chime)" v-if="user.permission_number >= 300">
                 <i class="material-icons right">people</i>
-            </a>
-            <a
-                href="#"
-                v-on:click="toggle_permission()"
-                v-if="editing_permission.id">
-                <i class="material-icons right">clear</i>
             </a>
             <a
                 href="#"
@@ -75,7 +75,7 @@
 
 <script>
 export default {
-    props: ['chime'],
+    props: ['chime', 'user'],
     data: function() {
         return {
             show_users: false,
@@ -167,6 +167,9 @@ export default {
         open_chime() {
             window.location.href = '/chime/' + this.chime.id;
         },
+        delete_chime(chime) {
+            this.$emit('deletechime', chime);
+        }
     }
 }
 </script>

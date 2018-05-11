@@ -59146,6 +59146,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['chimes', 'user'],
@@ -59193,7 +59195,8 @@ var render = function() {
                 _vm._l(_vm.chimes, function(chime) {
                   return _c("chime-card", {
                     key: chime.id,
-                    attrs: { chime: chime }
+                    attrs: { chime: chime, user: _vm.user },
+                    on: { deletechime: _vm.delete_chime }
                   })
                 })
               )
@@ -59446,7 +59449,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['chime'],
+    props: ['chime', 'user'],
     data: function data() {
         return {
             show_users: false,
@@ -59533,6 +59536,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         open_chime: function open_chime() {
             window.location.href = '/chime/' + this.chime.id;
+        },
+        delete_chime: function delete_chime(chime) {
+            this.$emit('deletechime', chime);
         }
     }
 });
@@ -59657,22 +59663,38 @@ var render = function() {
                           ]
                         ),
                     _vm._v(" "),
-                    _c(
-                      "td",
-                      {
-                        staticClass: "action-row",
-                        on: {
-                          click: function($event) {
-                            _vm.remove_user(u.id)
-                          }
-                        }
-                      },
-                      [
-                        _c("i", { staticClass: "material-icons right" }, [
-                          _vm._v("clear")
-                        ])
-                      ]
-                    )
+                    _vm.editing_permission.id == u.id
+                      ? _c(
+                          "td",
+                          {
+                            staticClass: "action-row",
+                            on: {
+                              click: function($event) {
+                                _vm.toggle_permission()
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "material-icons right" }, [
+                              _vm._v("clear")
+                            ])
+                          ]
+                        )
+                      : _c(
+                          "td",
+                          {
+                            on: {
+                              click: function($event) {
+                                _vm.remove_user(u.id)
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "material-icons right" }, [
+                              _vm._v("delete")
+                            ])
+                          ]
+                        )
                   ])
                 })
               )
@@ -59731,33 +59753,20 @@ var render = function() {
         [_c("i", { staticClass: "material-icons right" }, [_vm._v("delete")])]
       ),
       _vm._v(" "),
-      _c(
-        "a",
-        {
-          attrs: { href: "#" },
-          on: {
-            click: function($event) {
-              _vm.toggle_users(_vm.chime)
-            }
-          }
-        },
-        [_c("i", { staticClass: "material-icons right" }, [_vm._v("people")])]
-      ),
-      _vm._v(" "),
-      _vm.editing_permission.id
+      _vm.user.permission_number >= 300
         ? _c(
             "a",
             {
               attrs: { href: "#" },
               on: {
                 click: function($event) {
-                  _vm.toggle_permission()
+                  _vm.toggle_users(_vm.chime)
                 }
               }
             },
             [
               _c("i", { staticClass: "material-icons right" }, [
-                _vm._v("clear")
+                _vm._v("people")
               ])
             ]
           )

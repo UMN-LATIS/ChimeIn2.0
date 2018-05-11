@@ -59349,6 +59349,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log(err.response);
                 });
             }
+
+            document.activeElement.blur();
         }
     },
     created: function created() {

@@ -7,7 +7,9 @@
                     <chime-card
                         v-for="chime in chimes"
                         :key="chime.id"
-                        :chime="chime">
+                        :chime="chime"
+                        :user="user"
+                        v-on:deletechime="delete_chime">
                     </chime-card>
                 </transition-group>
             </div>

@@ -93,6 +93,8 @@ export default {
                     console.log(err.response);
                 });
             }
+
+            document.activeElement.blur();
         }
     },
     created: function() {
