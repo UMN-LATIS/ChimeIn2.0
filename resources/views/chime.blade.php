@@ -44,6 +44,8 @@
             </div>
         </div>
     </div>
+    <script>window.pusherKey = '{{ env('PUSHER_APP_KEY') }}'</script>
     <script src="{{ mix('js/chime.js') }}"></script>
+
 </body>
 </html>

@@ -46,6 +46,7 @@
             </div>
         </div>
     </div>
+    <script>window.pusherKey = '{{ env('PUSHER_APP_KEY') }}'</script>
     <script src="{{ mix('js/present.js') }}"></script>
 </body>
 </html>

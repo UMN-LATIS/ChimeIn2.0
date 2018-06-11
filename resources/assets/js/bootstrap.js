@@ -54,7 +54,7 @@ window.Pusher = require('pusher-js');
 // when curl permissions are updated for encryption, reset cache (php artisan config:cache)
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: '527f891d84f24cfb2701',
+    key: window.pusherKey,
     cluster: 'us2',
     encrypted: false
 });
