@@ -7,7 +7,6 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
 const queryString = require('query-string');
 
 Vue.component('navbar', require('./components/Navbar.vue'));
@@ -29,7 +28,8 @@ Vue.component('actions',
 const app = new Vue({
     el: '#app',
     data: {
-        chime_id: window.location.pathname.split('/')[2],
+        chime_id: null,
+        folder_id: window.location.pathname.split('/')[4],
         questions: [],
         sessions: [],
         current_question: null,
@@ -42,7 +42,7 @@ const app = new Vue({
                 const self = this;
                 const url = (
                     '/api/chime/'
-                    + window.location.pathname.split('/')[2]
+                    + this.chime_id
                     + '/folder/'
                     + window.location.pathname.split('/')[4]
                     + '/question/'
@@ -65,9 +65,9 @@ const app = new Vue({
                 const self = this;
                 const url = (
                     '/api/chime/'
-                    + window.location.pathname.split('/')[2]
+                    + this.chime_id
                     + '/folder/'
-                    + window.location.pathname.split('/')[4]
+                    + this.folder_id
                     + '/question/'
                     + this.current_question.id
                     + '/session/'
@@ -102,9 +102,9 @@ const app = new Vue({
                 const self = this;
                 const url = (
                     '/api/chime/'
-                    + window.location.pathname.split('/')[2]
+                    + this.chime_id
                     + '/folder/'
-                    + window.location.pathname.split('/')[4]
+                    + this.folder_id
                     + '/question/'
                     +  this.current_question.id);
                 
@@ -136,12 +136,13 @@ const app = new Vue({
         }
     },
     created: function () {
+        this.chime_id = this.getCurrentChime();
         const self = this;
         const url = (
             '/api/chime/'
-            + window.location.pathname.split('/')[2]
+            + this.chime_id
             + '/folder/'
-            + window.location.pathname.split('/')[4]
+            + this.folder_id
         );
 
         axios.get(url)
@@ -172,8 +173,7 @@ const app = new Vue({
         .catch(err => {
             console.log(err);
         });
-
-        Echo.private('start-session.' + window.location.pathname.split('/')[2])
+        Echo.private('start-session.' + this.chime_id)
             .listen('StartSession', m => {
                 console.log(m);
                 self.sessions.push(m.session);

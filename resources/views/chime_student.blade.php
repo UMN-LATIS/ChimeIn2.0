@@ -56,6 +56,6 @@
             </div>
         </div>
     </div>
-    <script src="../js/chime_student.js" charset="utf-8"></script>
+    <script src="{{ mix('js/chime_student.js') }}"></script>
 </body>
 </html>

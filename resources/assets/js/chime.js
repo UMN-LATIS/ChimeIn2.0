@@ -7,8 +7,6 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
-
 Vue.component('navbar', require('./components/Navbar.vue'));
 Vue.component('new-folder',
     require('./components/chime_components/NewFolder.vue'));
@@ -104,7 +102,7 @@ const app = new Vue({
     },
     created: function () {
         const self = this;
-        axios.get('/api/chime/' + window.location.pathname.split('/')[2])
+        axios.get('/api/chime/' + this.getCurrentChime())
         .then(res => {
             console.log(res);
             self.chime = res.data.chime;

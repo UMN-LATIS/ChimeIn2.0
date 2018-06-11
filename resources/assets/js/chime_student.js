@@ -7,8 +7,6 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
-
 Vue.component('navbar',
     require('./components/Navbar.vue'));
 Vue.component('actions',
@@ -58,7 +56,7 @@ const app = new Vue({
 
             axios.get(
                 '/api/chime/'
-                + window.location.pathname.split('/')[2]
+                + this.getCurrentChime()
                 + '/response')
             .then(res => {
                 res.data.forEach(e => {
@@ -77,7 +75,7 @@ const app = new Vue({
     created: function () {
         const self = this;
         
-        axios.get('/api/chime/' + window.location.pathname.split('/')[2])
+        axios.get('/api/chime/' + this.getCurrentChime())
         .then(res => {
             console.log('debug', 'chime:', res);
             self.chime = res.data.chime;
@@ -102,7 +100,8 @@ const app = new Vue({
             console.error('error getting sessions:', err.response);
         });
 
-        Echo.private('start-session.' + window.location.pathname.split('/')[2])
+
+        Echo.private('start-session.' + this.getCurrentChime())
             .listen('StartSession', m => {
                 console.log('debug', 'message:', m);
                 self.sessions.push(m.session);

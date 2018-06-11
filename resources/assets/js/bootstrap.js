@@ -42,6 +42,10 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+
+window.Vue = require('vue');
+
+
 window.axios = require('axios');
 window.Pusher = require('pusher-js');
 
@@ -50,7 +54,7 @@ window.Pusher = require('pusher-js');
 // when curl permissions are updated for encryption, reset cache (php artisan config:cache)
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: 'c89c663dd1cc127cfbee',
+    key: '527f891d84f24cfb2701',
     cluster: 'us2',
     encrypted: false
 });
@@ -70,6 +74,13 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+Vue.mixin({
+  methods: {
+    getCurrentChime: () => window.location.pathname.split('/')[2]
+  }
+})
+
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

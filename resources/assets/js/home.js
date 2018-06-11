@@ -7,7 +7,6 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
 
 Vue.component('navbar',
     require('./components/Navbar.vue'));

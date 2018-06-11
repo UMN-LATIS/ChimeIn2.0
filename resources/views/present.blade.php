@@ -46,6 +46,6 @@
             </div>
         </div>
     </div>
-    <script src="../../../../js/present.js" charset="utf-8"></script>
+    <script src="{{ mix('js/present.js') }}"></script>
 </body>
 </html>
