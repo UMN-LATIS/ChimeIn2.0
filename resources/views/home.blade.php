@@ -10,43 +10,9 @@
 </head>
 <body>
     <div id="app">
-        <navbar
-            :title="'Home'"
-            :user="{{ $user }}"
-            :link="'/'">
-        </navbar>
-        
-        <div class="container">
-            <h4 class="center">
-                Welcome, {{ $user->name ? $user->name : 'Guest '.$user->id }}
-            </h4>
-
-            <div class="row">
-                <div class="col s12 m12 l8">
-                    <chime-panel
-                        :chimes="viewable_chimes"
-                        :user="{{ $user }}"
-                        v-on:newchime="create_chime"
-                        v-on:filterchime="filter_chimes"
-                        v-on:deletechime="delete_chime">
-                    </chime-panel>
-                </div>
-                <div class="col s12 m12 l4">
-                    <div class="row">
-                        <div class="col s12">
-                            <access-panel
-                                v-on:submitcode="join_chime">
-                            </access-panel>
-                        </div>
-                        <div class="col s12">
-                            <info-panel></info-panel>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <Home :user="{{$user}}"></Home>
     </div>
     <script>window.pusherKey = '{{ env('PUSHER_APP_KEY') }}'</script>
-    <script src="{{ mix('js/home.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

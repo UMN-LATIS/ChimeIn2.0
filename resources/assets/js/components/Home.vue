@@ -1,30 +1,51 @@
+<template>
+    <div>
+        <navbar
+            :title="'Home'"
+            :user="user"
+            :link="'/'">
+        </navbar>
+        
+        <div class="container">
+            <h4 class="center">
+                Welcome, {{ user.name }}
+            </h4>
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+            <div class="row">
+                <div class="col s12 m12 l8">
+                    <chime-panel
+                        :chimes="viewable_chimes"
+                        :user="user"
+                        v-on:newchime="create_chime"
+                        v-on:filterchime="filter_chimes"
+                        v-on:deletechime="delete_chime">
+                    </chime-panel>
+                </div>
+                <div class="col s12 m12 l4">
+                    <div class="row">
+                        <div class="col s12">
+                            <access-panel
+                                v-on:submitcode="join_chime">
+                            </access-panel>
+                        </div>
+                        <div class="col s12">
+                            <info-panel></info-panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-require('./bootstrap');
+</template>
 
-
-Vue.component('navbar',
-    require('./components/Navbar.vue'));
-Vue.component('chime-panel',
-    require('./components/home_components/ChimePanel.vue'));
-Vue.component('chime-card',
-    require('./components/home_components/ChimeCard.vue'));
-Vue.component('access-panel',
-    require('./components/home_components/AccessPanel.vue'));
-Vue.component('info-panel',
-    require('./components/home_components/InfoPanel.vue'));
-
-const app = new Vue({
-    el: '#app',
+<script>
+export default {
     data: {
         chimes: [],
         viewable_chimes: []
     },
+    props: ['user'],
     methods: {
         create_chime(chime_name) {
             if (this.chimes.filter(e => e.name === chime_name).length < 1) {
@@ -101,4 +122,5 @@ const app = new Vue({
                 'error', 'Error in get chimes:', err.response);
         });
     }
-});
+};
+</script>

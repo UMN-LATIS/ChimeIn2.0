@@ -137,6 +137,7 @@ const app = new Vue({
     },
     created: function () {
         this.chime_id = this.getCurrentChime();
+        
         const self = this;
         const url = (
             '/api/chime/'
