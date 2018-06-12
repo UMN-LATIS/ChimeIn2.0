@@ -41,9 +41,11 @@
 
 <script>
 export default {
-    data: {
+    data() {
+        return {
         chimes: [],
         viewable_chimes: []
+        };
     },
     props: ['user'],
     methods: {

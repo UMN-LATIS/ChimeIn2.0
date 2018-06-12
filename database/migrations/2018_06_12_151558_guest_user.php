@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChimesTable extends Migration
+class GuestUser extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateChimesTable extends Migration
      */
     public function up()
     {
-        Schema::create('chimes', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('access_code')->unique();
-            $table->timestamps();
-            $table->string('name');
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('guest_user')->default(false);
         });
     }
 
@@ -28,6 +25,8 @@ class CreateChimesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chimes');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn("guest_user");
+        });
     }
 }

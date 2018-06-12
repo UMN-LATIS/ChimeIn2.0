@@ -1,32 +1,47 @@
+<template>
+    <div>
+     <navbar
+     :title="chime.name"
+     :user="user"
+     :link="'/'">
+ </navbar>
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+ <br />
 
-require('./bootstrap');
+ <div class="container center-align">
+    <new-folder
+    :chime="chime"
+    v-on:newfolder="create_folder"
+    v-on:filterfolder="filter_folders"></new-folder>
+    <div v-if="viewable_folders.length > 0">
+        <transition-group name="fade">
+            <folder-card
+            v-for="folder in viewable_folders"
+            :folder="folder"
+            :chime="chime"
+            :key="folder.id"
+            v-on:editfolder="edit_folder"
+            v-on:deletefolder="delete_folder">
+        </folder-card>
+    </transition-group>
+</div>
+<div v-else>
+    No Folders Yet!
+</div>
+</div>
+</div>
+</template>
 
-Vue.component('navbar', require('./components/Navbar.vue'));
-Vue.component('new-folder',
-    require('./components/chime_components/NewFolder.vue'));
-Vue.component('folder-card',
-    require('./components/chime_components/FolderCard.vue'));
-Vue.component('question',
-    require('./components/chime_components/Question.vue'));
-Vue.component('multiple-choice-display',
-    require('./components/questions/display/MultipleChoice.vue'));
-Vue.component('question-form',
-    require('./components/chime_components/QuestionForm.vue'));
-
-
-const app = new Vue({
-    el: '#app',
-    data: {
-        chime: {},
-        folders: [],
-        viewable_folders: []
+<script>
+export default {
+    data() {
+        return {
+            chime: {},
+            folders: [],
+            viewable_folders: []
+        };
     },
+    props: ['user'],
     methods: {
         filter_folders: function(folder_name) {
             if (folder_name === '') {
@@ -77,7 +92,7 @@ const app = new Vue({
             if (confirm) {
                 const url = (
                     '/api/chime/' + this.chime.id + /folder/ + folder.id
-                );
+                    );
 
                 axios.delete(url)
                 .then(res => {
@@ -114,4 +129,5 @@ const app = new Vue({
             console.log(err);
         });
     }
-});
+};
+</script>

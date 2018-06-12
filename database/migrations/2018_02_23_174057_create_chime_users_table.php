@@ -18,8 +18,8 @@ class CreateChimeUsersTable extends Migration
             $table->timestamps();
             $table->integer('user_id')->unsigned();
             $table->integer('chime_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
-            $table->foreign('chime_id')->references('id')->on('chime')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('chime_id')->references('id')->on('chimes')->onDelete('cascade');
             $table->integer('permission_number')->unsigned();
         });
     }

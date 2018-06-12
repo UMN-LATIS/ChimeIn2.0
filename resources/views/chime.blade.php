@@ -14,35 +14,7 @@
 </head>
 <body>
     <div id="app">
-        <navbar
-            :title="chime.name"
-            :user="{{ $user }}"
-            :link="'/'">
-        </navbar>
-
-        <br />
-        
-        <div class="container center-align">
-            <new-folder
-                :chime="chime"
-                v-on:newfolder="create_folder"
-                v-on:filterfolder="filter_folders"></new-folder>
-            <div v-if="viewable_folders.length > 0">
-                <transition-group name="fade">
-                    <folder-card
-                        v-for="folder in viewable_folders"
-                        :folder="folder"
-                        :chime="chime"
-                        :key="folder.id"
-                        v-on:editfolder="edit_folder"
-                        v-on:deletefolder="delete_folder">
-                    </folder-card>
-                </transition-group>
-            </div>
-            <div v-else>
-                No Folders Yet!
-            </div>
-        </div>
+        <Chime :user="{{$user}}"></Chime>
     </div>
     <script>window.pusherKey = '{{ env('PUSHER_APP_KEY') }}'</script>
     <script src="{{ mix('js/app.js') }}"></script>

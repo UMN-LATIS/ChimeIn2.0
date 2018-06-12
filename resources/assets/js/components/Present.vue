@@ -1,33 +1,44 @@
+<template>
+    <div>
+        <navbar
+            :title="'Present'"
+            :user="user"
+            :link="'/chime/' + chime_id">
+        </navbar>
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+        <br />
 
-require('./bootstrap');
+        <div class="row">
+            <div class="col s12 m8 l8">
+                <results-display
+                    v-if="show_results"
+                    :sessions="sessions"
+                    :session="current_session"
+                    :question="current_question">
+                </results-display>
+                <presentation-prompt
+                    v-else
+                    :question="current_question"
+                    :session="current_session">
+                </presentation-prompt>
+            </div>
+            <div class="col s12 m4 l4">
+            <presentation-actions
+                v-on:nextquestion="next_question"
+                v-on:startsession="start_session"
+                v-on:stopsession="stop_session"
+                v-on:viewresults="view_results">
+            </presentation-actions>
+            </div>
+        </div>
+    </div>
 
-const queryString = require('query-string');
+</template>
 
-Vue.component('navbar', require('./components/Navbar.vue'));
-Vue.component('prompt',
-    require('./components/presentation_components/Prompt.vue'));
-Vue.component('results-display',
-    require('./components/presentation_components/ResultsDisplay.vue'));
-Vue.component('multiple-choice-display',
-    require('./components/questions/display/MultipleChoice.vue'));
-Vue.component('multiple-choice-statistics',
-    require('./components/presentation_components/MultipleChoiceStatistics.vue'));
-Vue.component('image-response-statistics',
-    require('./components/presentation_components/ImageResponseStatistics.vue'));
-Vue.component('free-response-statistics',
-    require('./components/presentation_components/FreeResponseStatistics.vue'));
-Vue.component('actions',
-    require('./components/presentation_components/Actions.vue'));
-
-const app = new Vue({
-    el: '#app',
-    data: {
+<script>
+export default {
+    data() {
+        return {
         chime_id: null,
         folder_id: window.location.pathname.split('/')[4],
         questions: [],
@@ -35,7 +46,9 @@ const app = new Vue({
         current_question: null,
         current_session: null,
         show_results: false
+        };
     },
+    props: ['user'],
     methods: {
         start_session: function() {
             if (!this.current_session || !this.current_session.in_progress) {
@@ -186,4 +199,5 @@ const app = new Vue({
                 }
             });
     }
-});
+};
+</script>

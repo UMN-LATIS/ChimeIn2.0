@@ -1,30 +1,65 @@
+<template>
+    <div>
+        <navbar
+            :title="chime.name"
+            :user="user"
+            :link="'/'">
+        </navbar>
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+        <br />
+        
+        <div class="container center-align">
+            <student-actions
+                v-on:selectcurrentquestions="() => {show = 'current_questions'}"
+                v-on:selectpastresponses="() => {show = 'past_responses'}"
+            ></student-actions>
+            
+            <br />
 
-require('./bootstrap');
+            <div v-if="show === 'current_questions'">
+                <transition-group name="fade">
+                <div v-if="sessions.length < 1" key='none'>
+                    <h3>No Open Sessions!</h3>
+                </div>
+                <student-prompt
+                    v-else
+                    v-for="s in sessions"
+                    :session="s"
+                    :key="s.id">
+                </student-prompt>
+                </transition-group>
+            </div>
 
-Vue.component('navbar',
-    require('./components/Navbar.vue'));
-Vue.component('actions',
-    require('./components/chime_student_components/Actions.vue'));
-Vue.component('prompt',
-    require('./components/chime_student_components/Prompt.vue'));
-Vue.component('response',
-    require('./components/chime_student_components/Response.vue'));
-Vue.component('multiple-choice-question',
-    require('./components/questions/response/MultipleChoice.vue'));
-Vue.component('image-response-question',
-    require('./components/questions/response/ImageResponse.vue'));
-Vue.component('free-response-question',
-    require('./components/questions/response/FreeResponse.vue'));
+            <div v-if="show === 'past_responses'">
+                <div v-if="responses.length < 1">
+                    <h3>No Responses Yet!</h3>
+                </div>
+                <response
+                    v-else
+                    v-for="(r, i) in responses"
+                    :question="r.question"
+                    :response="r.response"
+                    :key="i">
+                </response>
+            </div>
+        </div>
+    </div>
 
-const app = new Vue({
-    el: '#app',
-    data: function() {
+</template>
+
+<style>
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>
+
+<script>
+export default {
+    data() {
         return {
             show: 'current_questions',
             chime: {},
@@ -32,17 +67,15 @@ const app = new Vue({
             responses: []
         };
     },
+    props: ['user'],
     methods: {
         add_session_listeners: function(session_id) {
             const self = this;
 
             Echo.private('session-status.'+ session_id)
                 .listen('ChangeSessionStatus', m => {
-                    console.log('debug', 'message:', m)
+                    console.log('debug', 'ChangeSessionStatus:', m)
                     let session = m.session;
-                    session.in_progress = (
-                        m.session.in_progress !== '0' ? true : false
-                    );
 
                     const i = self.sessions.findIndex(e => e.id === session.id);
                     self.sessions[i] = session;
@@ -59,10 +92,10 @@ const app = new Vue({
                 + this.getCurrentChime()
                 + '/response')
             .then(res => {
-                res.data.forEach(e => {
-                    e.question.question_info = JSON.parse(e.question.question_info);
-                    e.response.response_info = JSON.parse(e.response.response_info);
-                });
+                // res.data.forEach(e => {
+                //     e.question.question_info = JSON.parse(e.question.question_info);
+                //     e.response.response_info = JSON.parse(e.response.response_info);
+                // });
                 
                 self.responses = res.data;
                 console.log('debug', 'past responses:', self.responses);
@@ -82,18 +115,9 @@ const app = new Vue({
             document.title = self.chime.name;
             self.sessions = res.data.sessions;
             console.log('debug', 'self.sessions', self.sessions);
-    
+            
             self.sessions.forEach((e, i) => {
-                Echo.private('session-status.'+ e.id)
-                .listen('ChangeSessionStatus', m => {
-                    e = m.session;
-                    e.in_progress = (
-                        m.session.in_progress !== '0' ? true : false
-                    );
-    
-                    self.sessions[i] = e;
-                    self.sessions = self.sessions.filter(s => s.in_progress);
-                });
+                self.add_session_listeners(e.id);
             });
         })
         .catch(err => {
@@ -110,4 +134,5 @@ const app = new Vue({
 
         this.get_past_responses();
     }
-});
+};
+</script>

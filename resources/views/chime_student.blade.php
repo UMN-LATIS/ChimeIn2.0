@@ -14,47 +14,7 @@
 </head>
 <body>
     <div id="app">
-        <navbar
-            :title="chime.name"
-            :user="{{ $user }}"
-            :link="'/'">
-        </navbar>
-
-        <br />
-        
-        <div class="container center-align">
-            <actions
-                v-on:selectcurrentquestions="() => {show = 'current_questions'}"
-                v-on:selectpastresponses="() => {show = 'past_responses'}"
-            ></actions>
-
-            <br />
-
-            <div v-if="show === 'current_questions'">
-                <div v-if="sessions.length < 1">
-                    <h3>No Open Sessions!</h3>
-                </div>
-                <prompt
-                    v-else
-                    v-for="s in sessions"
-                    :session="s"
-                    :key="s.id">
-                </prompt>
-            </div>
-
-            <div v-if="show === 'past_responses'">
-                <div v-if="responses.length < 1">
-                    <h3>No Responses Yet!</h3>
-                </div>
-                <response
-                    v-else
-                    v-for="(r, i) in responses"
-                    :question="r.question"
-                    :response="r.response"
-                    :key="i">
-                </response>
-            </div>
-        </div>
+        <ChimeStudent :user="{{$user}}"></ChimeStudent>
     </div>
     <script>window.pusherKey = '{{ env('PUSHER_APP_KEY') }}'</script>
     <script src="{{ mix('js/app.js') }}"></script>

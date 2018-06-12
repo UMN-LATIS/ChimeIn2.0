@@ -2,7 +2,7 @@
     <div class="card hoverable">
         <div
             class="card-content"
-            v-if="question"
+            v-if="question.question_info.question_type"
             v-bind:class="{in_progress: response.id}">
             <div class="card">
                 <div class="card-content">
@@ -23,18 +23,18 @@
                 v-on:recordresponse="record_response">
             </image-response-question>
             <free-response-question
-                v-else
+                v-else-if="question.question_info.question_type === 'free_response'"
                 :question="question"
                 :response="response"
                 :disabled="false"
                 v-on:recordresponse="record_response"
             ></free-response-question>
         </div>
-        <div class="card-content" v-else>
+        <!-- <div class="card-content" v-else>
             <span class="card-title">
                 <h4>'No Question Yet!'</h4>
             </span>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -110,8 +110,6 @@ export default {
         axios.get(url)
         .then(res => {
             console.log('debug', 'question:', res);
-            res.data.question_info = (
-                JSON.parse(res.data.question_info));
             self.question = res.data;
         })
         .catch(err => {
@@ -124,7 +122,6 @@ export default {
             + '/session/'
             + this.session.id)
         .then(res => {
-            res.data.response_info = JSON.parse(res.data.response_info);
             self.response = res.data;
         })
         .catch(err => {

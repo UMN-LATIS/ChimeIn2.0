@@ -8,6 +8,10 @@ class Response extends Model
 {
     protected $fillable = ['response_info', 'user_id'];
     
+    protected $casts = [
+        'response_info' => 'array',
+    ];
+
     public function session() {
         return $this->belongsTo(Session::class);
     }
