@@ -1,0 +1,18 @@
+#umnhf-h.umnhf, #umnhf-f.umnhf, #umnhf-alt.umnhf, #umnhf-uf.umnhf, #umnhf-h-ma.umnhf, #umn-main { width: 100%; max-width: 1152px; }
+
+#umnhf-h-mast { float: left; width: 50%; }
+
+#umnhf-h-logo span { display: none; }
+
+#umnhf-h-cl { width: 100%; }
+#umnhf-h-cl li { padding-right: 10px; padding-left: 10px; }
+
+#umnhf-h-ql { position: relative; top: auto; left: 4px; height: 30px; padding-right: 54px; }
+#umnhf-h-ql li { float: left; width: 100%; margin-left: 20px; }
+
+#umnhf-h-search { position: relative; top: auto; right: auto; float: right; height: 30px; margin-top: 20px; margin-right: 54px; }
+
+#umnhf-f.umnhf { padding-right: 0; padding-left: 0; }
+#umnhf-f.umnhf .umnhf-f-cl { width: 50%; padding-left: 20px; border: none; }
+#umnhf-f.umnhf .umnhf-f-cl.f-last { display: block; width: 100%; max-width: 1152px; }
+#umnhf-f.umnhf .umnhf-f-cl.f-last small { text-align: center; }

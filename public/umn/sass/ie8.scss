@@ -1,0 +1,68 @@
+@import "helpers/_colors";
+@import "helpers/_mixins";
+@import "twin-cities/_config";
+
+#umnhf-h.umnhf,
+#umnhf-f.umnhf,
+#umnhf-alt.umnhf,
+#umnhf-uf.umnhf,
+#umn-main {
+  width: 100%;
+  max-width: $max-width;
+}
+
+#umnhf-h-ql {
+  position: relative;
+  top: auto;
+  right: auto;
+  float: right;
+  height: 30px;
+  margin-top: 20px;
+  padding-right: 54px;
+  li {
+    float: left;
+    margin-left: 20px;
+  }
+}
+
+#umnhf-h-search {
+  position: relative;
+  top: auto;
+  right: auto;
+  float: right;
+  height: 30px;
+  margin-right: 54px;
+}
+
+#umnhf-uf {
+  overflow: auto;
+  min-height: 150px;
+}
+
+#umnhf-uf-ci,
+#umnhf-uf-sm {
+  float: left;
+  width: 50%;
+}
+
+#umnhf-uf-ul {
+  float: right;
+  width: 50%;
+}
+
+#umnhf-uf-ul {
+  ul {
+    width: 100%;
+    margin-left: 54px;
+    text-align: right;
+  }
+}
+
+@if $vertical {
+  #umnhf-alt-n {
+    width: 350px;
+  }
+  #umnhf-alt-sn {
+    width: 500px;
+  }
+}

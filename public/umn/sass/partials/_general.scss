@@ -1,0 +1,156 @@
+div,
+header,
+footer,
+section,
+address,
+nav,
+main {
+  box-sizing: border-box;
+}
+
+// Prevent iOS text size adjust after orientation change, without disabling user zoom.
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0 none;
+}
+
+#umnhf-h.umnhf,
+#umnhf-f.umnhf,
+#umnhf-alt.umnhf,
+#umnhf-uf.umnhf,
+#umnhf-h-ma,
+#umn-main {
+  position: static;
+  z-index: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  visibility: visible;
+  float: none;
+  clear: none;
+  overflow: visible;
+  width: $max-width;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
+  white-space: normal;
+  text-decoration: none;
+  text-indent: 0;
+  letter-spacing: normal;
+  text-transform: none;
+  border: none;
+  background: none;
+  font: normal normal normal 14px/20px Helvetica, "Helvetica Neue", "Futura", Verdana, "Geneva", sans-serif;
+  line-height: 20px;
+}
+
+// Hidden on screens
+.printer {
+  display: none;
+}
+
+// Hide skip to content links
+#skipLinks {
+  a { 
+    position: absolute; 
+    left: -10000px; 
+    top: auto; 
+    width: 1px; 
+    height: 1px; 
+    overflow: hidden;
+    color: $maroon;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    &:focus {
+      width: 110px; 
+      height: auto;
+      background-color: white;
+      border-bottom-right-radius: 0.4em;
+      border-bottom-left-radius: 0.4em;
+      padding: 0.2em;
+      border: 1px solid $black;
+      border-top: none;
+      position: fixed;
+      top: 0;
+      left: 50%;
+      margin-left: -55px;
+      text-align: center;
+      z-index: 9999;
+    }
+  }
+}
+
+@include desktop-max-1152 {
+  #umnhf-h.umnhf,
+  #umnhf-f.umnhf,
+  #umnhf-alt.umnhf,
+  #umnhf-uf.umnhf,
+  #umnhf-h-ma,
+  #umn-main {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@include print {
+  #umnhf-h.umnhf,
+  #umnhf-f.umnhf,
+  #umnhf-alt.umnhf,
+  #umnhf-uf.umnhf,
+  #umnhf-h-ma,
+  #umn-main {
+    width: 100%;
+    margin: 0;
+  }
+  // General print header styles. Shared across both alt and traditional header.
+  #umnhf-h {
+    .umnhf {
+      padding: 0 15px;
+      background-color: $white;
+    }
+  }
+  .printer {
+    display: block;
+    width: 100%;
+    background-color: $white;
+    .right {
+      padding-bottom: 10px;
+      text-align: right;
+    }
+    .left {
+      float: left;
+      &:after {
+        @if $driven {
+            content: url(../img/sprites/tc/D2D-print.png);
+        }
+        @else {
+            content: url(../img/sprites/tc/M-print.png);
+        }
+      }
+    }
+  }
+  #umnhf-h .umnhf {
+    display: none;
+  }
+}

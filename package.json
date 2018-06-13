@@ -11,29 +11,30 @@
   },
   "devDependencies": {
     "axios": "^0.17",
-    "bootstrap-sass": "^3.3.7",
-    "cross-env": "^5.1",
+    "cross-env": "^5.1.6",
     "jquery": "^3.2",
     "laravel-mix": "^1.0",
-    "lodash": "^4.17.4",
-    "vue": "^2.5.7"
+    "lodash": "^4.17.10",
+    "vue": "^2.5.16"
   },
   "dependencies": {
+    "bootstrap": "^4.1.1",
     "chart.js": "^2.7.2",
     "difflib": "^0.2.4",
     "dotenv": "^5.0.1",
     "fs": "0.0.1-security",
-    "laravel-echo": "^1.3.5",
-    "materialize-css": "^0.100.2",
-    "npm": "^5.8.0",
+    "laravel-echo": "^1.4.0",
+    "npm": "^5.10.0",
+    "popper.js": "^1.14.3",
     "pusher-js": "^4.2.2",
-    "query-string": "^5.1.0",
+    "query-string": "^5.1.1",
     "set-clustering": "^1.0.1",
     "vue-carousel": "^0.7.3",
-    "vue-chartjs": "^3.2.1",
+    "vue-chartjs": "^3.3.1",
+    "vue-template-compiler": "^2.5.16",
     "vue-wordcloud": "^1.0.2",
-    "vue2-editor": "^2.4.2",
+    "vue2-editor": "^2.5.0",
     "vuedraggable": "^2.16.0",
-    "winston": "^2.4.1"
+    "winston": "^2.4.3"
   }
 }

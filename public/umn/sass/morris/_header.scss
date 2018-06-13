@@ -1,0 +1,414 @@
+/* Header Styles */
+#umnhf-h {
+  zoom: 1;
+  &.umnhf {
+    position: relative;
+    background-color: $header_color;
+  }
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+  }
+  &:after {
+    clear: both;
+  }
+  a {
+    &.umnhf {
+      &:link,
+      &:visited,
+      &:hover,
+      &:active {
+        text-decoration: underline;
+        color: $maroon;
+      }
+      &:hover {
+        color: $dark-blue;
+      }
+    }
+  }
+}
+
+#umnhf-h-cl {
+  position: relative;
+  top: -10px;
+  left: 55px;
+  float: left;
+  clear: both;
+  width: 362px;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  li {
+    display: inline-block;
+    padding: 0 0.5rem;
+    text-align: center;
+    &:first-child {
+      padding-left: 0;
+    }
+  }
+  a {
+    &:link,
+    &:visited,
+    &:active {
+      text-decoration: none;
+      color: $white;
+      font-weight: 300;
+    }
+    &:hover {
+      text-decoration: underline;
+    }
+    &.umnhf.home {
+      text-decoration: none;
+      color: $white;
+      font-weight: 600;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+#umnhf-h-mast {
+  position: relative;
+  min-height: 75px;
+  margin: 0 auto;
+  background: $header_color;
+}
+
+#umnhf-h-logo {
+  display: block;
+  float: left;
+  overflow: hidden;
+  width: 360px;
+  height: 35px;
+  margin: 10px 10px 17px 54px;
+  white-space: nowrap;
+  text-indent: 100%;
+  background: transparent url("../img/sprites/mo/M-gld-wht-h.png") 0 0 no-repeat;
+  background-size: 356px auto;
+
+  @include retina {
+    background: transparent url("../img/sprites/mo/M-gld-wht-h@2x.png") 0 0 no-repeat;
+    background-size: 356px auto;
+    height: 34px;
+  }
+}
+
+#umnhf-h-ql {
+  position: absolute;
+  top: 16px;
+  right: 54px;
+  width: auto;
+  margin: 0;
+  list-style-type: none;
+  color: $white;
+  li {
+    margin: 0;
+    font-weight: 100;
+    float: left;
+    margin: 0 0 0 20px;
+    a {
+      text-decoration: none;
+      font-weight: 100;
+      @if $header_color == #7a0019 {
+        color: $white;
+      }
+      @else {
+        color: $slate;
+      }
+      &:hover,
+      &:active,
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+  }
+  span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    @if $header_color == #7a0019 {
+      background: transparent url("../img/sprites/lock-search-wht.png") 0 0 no-repeat;
+
+      @include retina {
+        background: transparent url("../img/sprites/lock-search-wht@2x.png") 0 0 no-repeat;
+        background-size: 22px 34px;
+      }
+    }
+    @else {
+      background: transparent url("../img/sprites/lock-search-g.png") 0 0 no-repeat;
+    }
+  }
+}
+
+@if $dropdown {
+  #umnhf-m-search {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+  }
+}
+@else {
+  #umnhf-m-search {
+    display: none;
+  }
+}
+
+#umnhf-h-search {
+  position: absolute;
+  top: 39px;
+  right: 54px;
+  width: 249px;
+  height: 22px;
+  label {
+    &.umnhf {
+      display: none;
+    }
+  }
+}
+
+.mobile input[type="text"] {
+  -webkit-appearance: none;
+  @include border-radius(0);
+}
+
+#umnhf-h-st {
+  position: absolute;
+  right: 30px;
+  width: 175px;
+  height: 22px;
+  padding-left: 3px;
+  cursor: text;
+  color: $dark-gray;
+  border: 0;
+  background-color: $white;
+  font-size: 12px;
+  line-height: 18px;
+
+  -webkit-appearance: none;
+  @include border-radius(0);
+}
+
+#umnhf-h-sb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: #7a0019;
+  border: 0;
+  font: bold 0.925em/1.35em arial,helvetica,clean,sans-serif;
+  @if $header_color == #7a0019 {
+    background: transparent url("../img/sprites/lock-search-wht.png") 0 -12px no-repeat;
+
+    @include retina {
+      background: transparent url("../img/sprites/lock-search-wht@2x.png") 0 0 no-repeat;
+      background-position: 0 -12px;
+      background-size: 22px 34px;
+    }
+  }
+  @else {
+    background: transparent url("../img/sprites/lock-search-g.png") 0 -12px no-repeat;
+  }
+}
+
+@include desktop-max-1152 {
+  #umnhf-h-logo {
+    margin-left: 27px
+  }
+  #umnhf-h-cl {
+    left: 27px;
+  }
+  #umnhf-h-ql,
+  #umnhf-h-search   {
+    right: 27px;
+  }
+}
+
+@include tablet-max-775 {
+  #umnhf-h-mast  {
+    min-height: 50px;
+  }
+  #umnhf-h-logo {
+    margin-left: 17px;
+    height: 37px;
+    background: transparent url("../img/sprites/mo/M-gld-wht.png") 0 0 no-repeat;
+    background-size: 288px auto;
+
+    @include retina {
+      background: transparent url("../img/sprites/mo/M-gld-wht@2x.png") 0 0 no-repeat;
+      background-size: 288px auto;
+      height: 37px;
+    }
+  }
+  #umnhf-h-cl {
+    display: none;
+  }
+  #umnhf-h-ql {
+    display: none;
+  }
+  #umnhf-h-search {
+    top: 20px;
+    right: 17px;
+  }
+}
+
+@include tablet-max-674 {
+  #umnhf-h-search {
+    width: 184px;
+  }
+}
+
+@include tablet-max-609 {
+  #umnhf-h-cl,
+  #umnhf-h-ql {
+    display: none;
+  }
+  @if $dropdown == true {
+    #umnhf-h-search,
+    #umnhf-h-sb {
+      display: none;
+    }
+  }
+  @else {
+    #umnhf-h-search {
+      position: relative;
+      top: auto;
+      right: auto;
+      display: block;
+      width: 226px;
+      margin: 10px 0 10px 27px;
+    }
+  }
+  #umnhf-h-mast {
+    position: relative;
+    height: 50px;
+    background-position: left bottom;
+  }
+  #umnhf-h-logo {
+    display: block;
+    width: 279px;
+    height: 29px;
+    background-position: 0 -38px;
+
+  }
+  #umnhf-h-search.mobile {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: block;
+    width: 225px;
+    height: 30px;
+    margin: 10px 0 5px 17px;
+  }
+  @if $dropdown {
+    #umnhf-m-search {
+      position: absolute;
+      top: 17px;
+      right: 25px;
+      display: block;
+      clip: auto;
+      width: auto;
+      height: auto;
+      padding: 5px 6px 4px;
+      cursor: pointer;
+      text-align: left;
+      white-space: nowrap;
+      font: bold 0.925em/1.35em arial, helvetica, clean, sans-serif;
+
+      @include border-radius(4px);
+      @if $header_color == #7a0019 {
+        color: $maroon;
+        background-color: $gold;
+      }
+      @else {
+        color: $gold;
+        background-color: $maroon;
+      }
+    }
+    #umnhf-m-search.mobile {
+      display: none;
+    }
+  }
+  #umnhf-h {
+    .umnhf-m-cancel {
+      color: $slate;
+    }
+  }
+  #umnhf-h-st {
+    display: block;
+    width: 192px;
+  }
+  #umnhf-h-sb {
+    right: 0;
+    display: block;
+  }
+}
+
+@include phone-max-380 {
+  #umnhf-m-search {
+    .mobile {
+      position: absolute;
+      top: 13px;
+      right: 10px;
+      left: auto;
+      width: auto;
+      height: auto;
+
+      @include border-radius(4px);
+    }
+  }
+  #umnhf-h-logo,
+  #umnhf-h-search.mobile {
+    margin-left: 10px;
+  }
+  #umnhf-m-search {
+    right: 10px;
+  }
+}
+
+@include print {
+  #umnhf-h.umnhf,
+  #umnhf-f.umnhf,
+  #umnhf-alt.umnhf,
+  #umnhf-uf.umnhf,
+  #umnhf-h-ma,
+  #umn-main {
+    width: 100%;
+    margin: 0;
+  }
+  // General print header styles. Shared across both alt and traditional header.
+  #umnhf-h {
+    .umnhf {
+      padding: 0 15px;
+      background-color: $white;
+    }
+  }
+  .printer {
+    display: block;
+    width: 100%;
+    background-color: $white;
+    .right {
+      padding-bottom: 10px;
+      text-align: right;
+    }
+    .left {
+      float: left;
+      &:after {
+        content: url(../img/sprites/mo/M-mrn-blk-alt.png);
+      }
+    }
+  }
+  #umnhf-h .umnhf {
+    display: none;
+  }
+}

@@ -1,0 +1,15 @@
+#umnhf-h.umnhf, #umnhf-f.umnhf, #umnhf-alt.umnhf, #umnhf-uf.umnhf, #umnhf-h-ma.umnhf, #umn-main { width: 100%; max-width: 1152px; }
+
+#umnhf-h-ql { position: relative; top: auto; right: auto; float: right; height: 30px; margin-top: 0; padding-right: 54px; }
+#umnhf-h-ql li { float: left; margin-left: 20px; line-height: auto; }
+
+#umnhf-h-search { position: relative; top: auto; right: auto; float: right; height: 30px; margin-right: 54px; }
+
+#umnhf-h-ma div.umnhf-alt-logo { width: 555px; }
+
+#umnhf-h-ma nav.nav-campuses ul { left: -40px; }
+
+#umnhf-f.umnhf { padding-right: 0; padding-left: 0; }
+#umnhf-f.umnhf .umnhf-f-cl { width: 50%; }
+#umnhf-f.umnhf .umnhf-f-cl.f-last { display: block; width: 100%; max-width: 1152px; }
+#umnhf-f.umnhf .umnhf-f-cl.f-last small { text-align: center; }

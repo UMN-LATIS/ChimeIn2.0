@@ -1,124 +1,13 @@
 
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 // Variables
 @import "variables";
 
 // CSS libraries
-// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
-@import "~materialize-css/dist/css/materialize";
+@import '~bootstrap/scss/bootstrap';
 
-.card .card-action a:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating) {
-    color: #ffd204;
-}
-
-nav, .page-footer {
-    background-color: #790018;
-}
-
-.btn, .btn-large {
-    background-color: #0b3c4c;
-}
-
-.btn:hover, .btn-large:hover {
-    background-color: #14556b;
-}
-
-.tabs .tab a, .indicator {
-    color: rgba(121, 0, 25, 0.7);
-}
-
-.tabs .tab a:hover,
-.tabs .tab a.active {
-  background-color: transparent;
-  color: #790018;
-}
-
-.tabs .tab.disabled a,
-.tabs .tab.disabled a:hover {
-  color: rgba(121, 0, 25, 0.7);
-  cursor: default;
-}
-
-.pagination li.active {
-    background-color: #0b3c4c;
-}
-
-.in_progress {
-    border: 10px solid #0b3c4c;
-}
-
-input:not([type]):focus:not([readonly]),
-input[type=text]:not(.browser-default):focus:not([readonly]),
-input[type=password]:not(.browser-default):focus:not([readonly]),
-input[type=email]:not(.browser-default):focus:not([readonly]),
-input[type=url]:not(.browser-default):focus:not([readonly]),
-input[type=time]:not(.browser-default):focus:not([readonly]),
-input[type=date]:not(.browser-default):focus:not([readonly]),
-input[type=datetime]:not(.browser-default):focus:not([readonly]),
-input[type=datetime-local]:not(.browser-default):focus:not([readonly]),
-input[type=tel]:not(.browser-default):focus:not([readonly]),
-input[type=number]:not(.browser-default):focus:not([readonly]),
-input[type=search]:not(.browser-default):focus:not([readonly]),
-textarea.materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid #0b3c4c;;
-  -webkit-box-shadow: 0 1px 0 0 #0b3c4c;;
-  box-shadow: 0 1px 0 0 #0b3c4c;;
-}
-
-input:not([type]):focus:not([readonly]) + label,
-input[type=text]:not(.browser-default):focus:not([readonly]) + label,
-input[type=password]:not(.browser-default):focus:not([readonly]) + label,
-input[type=email]:not(.browser-default):focus:not([readonly]) + label,
-input[type=url]:not(.browser-default):focus:not([readonly]) + label,
-input[type=time]:not(.browser-default):focus:not([readonly]) + label,
-input[type=date]:not(.browser-default):focus:not([readonly]) + label,
-input[type=datetime]:not(.browser-default):focus:not([readonly]) + label,
-input[type=datetime-local]:not(.browser-default):focus:not([readonly]) + label,
-input[type=tel]:not(.browser-default):focus:not([readonly]) + label,
-input[type=number]:not(.browser-default):focus:not([readonly]) + label,
-input[type=search]:not(.browser-default):focus:not([readonly]) + label,
-textarea.materialize-textarea:focus:not([readonly]) + label {
-  color: #0b3c4c;
-}
-
-[type="radio"]:checked + label:after,
-[type="radio"].with-gap:checked + label:before,
-[type="radio"].with-gap:checked + label:after {
-  border: 2px solid #0b3c4c;
-}
-
-[type="radio"]:checked + label:after,
-[type="radio"].with-gap:checked + label:after {
-  background-color: #0b3c4c;
-}
-
-.dropdown-content li > a,
-.dropdown-content li > span {
-  font-size: 16px;
-  color: #0b3c4c;
-  display: block;
-  line-height: 22px;
-  padding: 14px 16px;
-}
-
-.tabs .indicator {
-    position: absolute;
-    bottom: 0;
-    height: 2px;
-    background-color: #790018;
-    will-change: left, right;
-}
-
-a {
-    color:#ffd204;
-}
-
-.input-field a i {
-    color: black;
-}
 
 .fade-enter-active,
 .fade-leave-active {

@@ -1,0 +1,50 @@
+// Use the options below to customize your header a footer.
+// UofM—Duluth
+
+// HEADER COLOR
+// Determines whether the header is maroon or gold.
+// Options:
+// 	   $maroon
+//     $gold
+$header_color: $maroon;
+
+// DRIVEN TO DISCOVER
+// Use logo with 'Driven to Discover' text?
+//		true => Include 'Driven to Discover'
+// 		false => Do not include 'Driven to Discover'
+$driven: true;
+
+// MAX WIDTH
+// Choose between two possible maximum widths:
+// 		960px
+// 		1152px
+$max_width: 1152px;
+
+// CAMPUS LINKS
+// Choose to include styles for campus links beneath University logo
+// 		true => Include styles
+// 		false or delete variable => Exclude styles
+$campus_links: true;
+
+// HEADER SEARCH STYLE
+// Dropdown: The search bar will collapse into a "Search" button on mobile devices. 
+// Two-Tiered: The search bar will drop below the University of Minnesota logo on mobile devices.
+// 		true => Dropdown
+// 		false => Two-Tiered
+$dropdown: true;
+
+// ALTERNATE HEADER
+// Chooose to include styles for an alternate header or not.
+// Remove this section from your template if you do not wish to use an alternate header.
+// 		true => Vertical
+// 		false => Horizontal
+// 
+// To disclude styles for the alternate header, delete this section altogether.
+$vertical: true;
+
+// UNIT FOOTER
+// Choose to include the styles for the unit footer or not.
+// If false, remove this section from your template.
+// 		true => Will include styles for the unit footer
+// 		false => Will not include styles for the unit footer
+$unit_f: true;

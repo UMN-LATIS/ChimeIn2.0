@@ -11,29 +11,7 @@ window._ = require('lodash');
 
 try {
     window.$ = window.jQuery = require('jquery');
-    // redifine console behavior if needed
-    /*
-    console = (function (oldCons) {
-        return {
-            log: function () {
-                oldCons.log(...arguments);
-            },
-            info: function () {
-                oldCons.info(...arguments);
-            },
-            warn: function () {
-                oldCons.warn(...arguments);
-            },
-            error: function () {
-                oldCons.error(...arguments);
-            }
-        };
-    }(console));
-    */
-    
-
-    // require('bootstrap-sass');
-    require('materialize-css');
+    require('bootstrap');
 } catch (e) {}
 
 /**

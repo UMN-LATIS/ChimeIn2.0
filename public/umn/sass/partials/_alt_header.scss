@@ -1,0 +1,208 @@
+/* Alternate Header Styles */
+@if variable-exists(vertical) {
+  #umnhf-alt.umnhf {
+    min-height: 184px;
+    #umnhf-alt-sn {
+      float: left;
+    }
+  }
+
+  #umnhf-alt-sn {
+    width: 70%;
+    padding-left: 54px;
+    h2 {
+      margin: 35px 0 0 0 ;
+      padding: 0;
+      color: $slate;
+      font: normal normal normal 30px/40px Helvetica, "Helvetica Neue", "Futura", Verdana, "Geneva", sans-serif;
+    }
+    p {
+      margin: 0 0 15px 0;
+      padding: 0;
+      color: $dark-gray;
+      font: normal normal normal 20px/26px Helvetica, "Helvetica Neue", "Futura", Verdana, "Geneva", sans-serif;
+    }
+  }
+
+  // Vertical link styles
+  @if $vertical == true {
+    #umnhf-alt-n {
+      float: right;
+      width: 30%;
+      height: 184px;
+      padding-right: 54px;
+      ul {
+        height: 184px;
+        padding: 0;
+        list-style-type: none;
+        text-align: right;
+        font-weight: 300;
+      }
+      li {
+        display: inline-block;
+        width: 50%;
+        text-align: left;
+      }
+      a {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 100%;
+        font-weight: 300;
+        padding: 0.5em;
+        line-height: 20px;
+        &:link,
+        &:active,
+        &:visited {
+          -webkit-transition: background-color 0.3s,border-color 0.3s;
+                  transition: background-color 0.3s,border-color 0.3s;
+          text-decoration: none;
+          color: $slate;
+          border-bottom: none;
+          font-size: 16px;
+        }
+        &:hover,
+        &:focus {
+          background-color: $gray;
+        }
+        &.active {
+          color: $maroon;
+          font-weight: 500;
+          background-color: $light-gray;
+          &:hover {
+            background-color: $gray;
+          }
+        }
+      }
+    }
+  }
+  // Horizontal link styles
+  @else {
+    #umnhf-alt-sn {
+      width: 100%;
+      padding-left: 17px;
+      p {
+        margin: 0 0 35px 0;
+      }
+    }
+    #umnhf-alt-n {
+      display: block;
+      width: 100%;
+      background-color: $light-gray;
+      ul {
+        display: table;
+        margin: 0;
+        padding: 0;
+        table-layout: fixed;
+        list-style-type: none;
+        text-align: center;
+        li {
+          display: inline-block;
+          display: table-cell;
+          width: 2%;
+        }
+        a {
+          display: inline-block;
+          box-sizing: border-box;
+          width: 100%;
+          font-weight: 300;
+          padding: 0 0.5em;
+          line-height: 36px;
+          &:link,
+          &:active {
+            -webkit-transition: background-color 0.3s,border-color 0.3s;
+                    transition: background-color 0.3s,border-color 0.3s;
+            text-decoration: none;
+            color: $slate;
+            border-bottom: none;
+            font-size: 16px;
+          }
+          &:visited {
+            color: $slate;
+          }
+          &:hover,
+          &:focus {
+            background-color: $gray;
+          }
+          &.active {
+            color: $maroon;
+            font-weight: 500;
+            background-color: $light-gray;
+            &:hover {
+              background-color: $gray;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .display-after-menu-collapse.umnhf {
+    display: none;
+
+    @include tablet-max-775 {
+      display: block;
+      width: 100%;
+      cursor: pointer;
+      text-align: center;
+      color: $white;
+      background-color: $slate;
+      font: 300 normal normal 28px/50px Helvetica, "Helvetica Neue", "Futura", Verdana, "Geneva", sans-serif;
+    }
+  }
+
+  @include desktop-max-1152 {
+    #umnhf-alt.umnhf {
+      width: 100%;
+      padding: 0;
+    }
+    @if $vertical {
+      #umnhf-alt-sn {
+        width: 60%;
+      }
+      #umnhf-alt-n {
+        width: 40%;
+      }
+    }
+    @else {
+      #umnhf-alt-sn,
+      #umnhf-alt-n {
+        width: 100%;
+      }
+    }
+  }
+
+  @include tablet-max-775 {
+    #umnhf-alt {
+      &.umnhf {
+        min-height: auto;
+      }
+    }
+    #umnhf-alt-sn {
+      padding-left: 17px;
+      width: 100%;
+    }
+    #umnhf-alt-n {
+      display: none;
+      float: none;
+      width: 100%;
+      height: auto;
+      padding: 0;
+      ul {
+        width: 100%;
+        height: auto;
+        margin: 0;
+        li {
+          display: block;
+          width: 100%;
+          text-align: center;
+          &:nth-child(odd) {
+            background-color: $lightest-gray;
+          }
+        }
+        a {
+          line-height: 40px;
+        }
+      }
+    }
+  }
+}

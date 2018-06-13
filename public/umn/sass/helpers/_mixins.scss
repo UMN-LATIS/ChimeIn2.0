@@ -1,0 +1,79 @@
+@mixin desktop-max-1152 {
+	@media screen and (max-width: $max-width) {
+		@content;
+	}
+}
+
+@mixin desktop-mw-776 {
+	@media screen and (min-width: 776px) {
+		@content;
+	}
+}
+
+@mixin tablet-max-775 {
+	@media (max-width: 775px) {
+		@content;
+	}
+}
+
+@mixin tablet-max-750 {
+	@media screen and (max-width: 750px) {
+		@content;
+	}
+}
+
+@mixin tablet-mw-660-max-979 {
+	@media screen and (min-width:660px) and (max-width:979px) {
+		@content;
+	}
+}
+
+@mixin tablet-max-674 {
+	@media screen and (max-width: 674px) {
+		@content;
+	}
+}
+
+@mixin tablet-max-659 {
+	@media screen and (max-width: 659px) {
+		@content;
+	}
+}
+
+@mixin tablet-max-609 {
+	@media all and (max-width:609px) {
+		@content;
+	}
+}
+
+@mixin phone-max-380 {
+	@media all and (max-width: 380px) {
+		@content;
+	}
+}
+
+@mixin print {
+	@media print {
+		@content;
+	}
+}
+
+@mixin retina {
+	@media only screen and (-webkit-min-device-pixel-ratio: 1.25),
+(min-resolution: 192dpi) {
+	    @content;
+	}
+}
+
+// Border radius
+@mixin border-radius($radius) {
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+// Opacity with IE support
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie); //IE8
+}
