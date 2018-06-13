@@ -1,8 +1,9 @@
 <template>
-    <div class="card">
-        <div class="card-content grey lighten-4">
+    <div class="row">
+        <div class="card col-12">
+        <div class="card-body">
             <a href="#" v-on:click="delete_folder">
-                <i class="material-icons right">delete</i>
+                <i class="material-icons float-right">delete</i>
             </a>
             <div v-if="show_edit_folder">
                 <br/>
@@ -37,33 +38,20 @@
                 <h4>{{ folder.name }}</h4>
             </div>
         </div>
-        <div class="card-tabs">
-            <ul class="tabs tabs-fixed-width">
-                <li class="tab">
-                    <a
-                        v-on:click="content = 'present'"
-                        class="pointer"
-                        v-bind:class="{ 'active': content === 'present' }">
-                    Present</a>
-                </li>
-                <li class="tab">
-                    <a
-                        v-on:click="content = 'questions'"
-                        class="pointer"
-                        v-bind:class="{ 'active': content === 'questions' }">
-                    Questions</a>
-                </li>
-                <li class="tab">
-                    <a
-                        v-on:click="content = 'new_question'"
-                        class="pointer"
-                        v-bind:class="{ 'active': content === 'present' }">
-                    New Question</a>
-                </li>
-            </ul>
-        </div>
-        <div class="card-content">
-            <div v-if="content === 'present'">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" id="present-tab" data-toggle="tab" href="#present" role="tab" aria-controls="present" aria-selected="true">Present</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="false">Questions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#newquestion" role="tab" aria-controls="newquestion" aria-selected="false">New Question</a>
+          </li>
+         
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div  class="tab-pane fade show active" id="present" role="tabpanel" aria-labelledby="present-tab">
                 <a
                     class="waves-effect waves-light btn-large"
                     v-bind:href="
@@ -74,7 +62,7 @@
                     Start Presentation
                 </a>
             </div>
-            <div v-else-if="content === 'questions'">
+            <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
                 <draggable v-model="questions" @end=swap_question>
                     <question
                         v-for="q in questions"
@@ -87,7 +75,7 @@
                     </question>
                 </draggable>
             </div>
-            <div  class="container" v-else>
+            <div  class="tab-pane fade" id="newquestion" role="tabpanel" aria-labelledby="newquestion-tab">
                 <question-form
                     :question="{
                         text:'',
@@ -102,6 +90,7 @@
                 </question-form>
             </div>
         </div>
+    </div>
     </div>
 </template>
 

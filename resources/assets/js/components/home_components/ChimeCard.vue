@@ -2,14 +2,14 @@
     <div
         class="card hoverable">
         <div
-            class="card-content"
+            class="card-body"
             v-on:click="open_chime(chime.id)"
             v-bind:key="chime.name">
-            <span class="card-title">{{ chime.name }}</span>
+            <h2 class="card-title">{{ chime.name }}</h2>
         </div>
-        <div class="card-action" v-bind:key="chime.id">
+        <div class="card-body" v-bind:key="chime.id">
             <div v-if="show_users">
-                <table class="responsive-table">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Name</th>

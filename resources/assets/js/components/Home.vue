@@ -1,18 +1,10 @@
 <template>
-    <div>
-        <navbar
-            :title="'Home'"
-            :user="user"
-            :link="'/'">
-        </navbar>
-        
-        <div class="container">
-            <h4 class="center">
-                Welcome, {{ user.name }}
-            </h4>
-
+    <div class="container">
+         <div class="col-sm-12">
+            <h1 class="display-3 center">Welcome, {{ user.name }}</h1>
+            
             <div class="row">
-                <div class="col s12 m12 l8">
+                <div class="col-12 col-md-9 order-sm-last order-last order-md-first">
                     <chime-panel
                         :chimes="viewable_chimes"
                         :user="user"
@@ -21,16 +13,19 @@
                         v-on:deletechime="delete_chime">
                     </chime-panel>
                 </div>
-                <div class="col s12 m12 l4">
-                    <div class="row">
-                        <div class="col s12">
-                            <access-panel
-                                v-on:submitcode="join_chime">
+                <div class="col-12 col-md-3 order-md-last order-sm-first order-first">
+                    <div class="card">
+                        <div class="card-body">
+                            <access-panel v-on:submitcode="join_chime">
                             </access-panel>
                         </div>
-                        <div class="col s12">
+
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
                             <info-panel></info-panel>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -50,19 +45,17 @@ export default {
     props: ['user'],
     methods: {
         create_chime(chime_name) {
-            if (this.chimes.filter(e => e.name === chime_name).length < 1) {
-                const self = this;
-                axios.post('/api/chime', {'chime_name': chime_name})
-                .then(res => {
-                    console.log('debug', 'Chime Created:', res);
-                    self.chimes.push(res.data);
-                    self.viewable_chimes = self.chimes.map(e => e);
-                })
-                .catch(err => {
-                    console.log(
-                        'error', 'Error in create chime:', err.response);
-                });
-            }
+            const self = this;
+            axios.post('/api/chime', {'chime_name': chime_name})
+            .then(res => {
+                console.log('debug', 'Chime Created:', res);
+                self.chimes.push(res.data);
+                self.viewable_chimes = self.chimes.map(e => e);
+            })
+            .catch(err => {
+                console.log(
+                    'error', 'Error in create chime:', err.response);
+            });
         },
         filter_chimes(chime_name) {
             if (chime_name === '') {

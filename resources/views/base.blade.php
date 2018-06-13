@@ -13,6 +13,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Itim" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	    <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css">
 			@yield('header')
 		</head>
