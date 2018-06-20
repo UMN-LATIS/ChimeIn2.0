@@ -47,7 +47,7 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@deleteFolder');
 
     // Response subroutes
-    Route::get('/api/chime/{chime_id}/session/{session_id}', 'ResponseController@getResponse');
+    Route::get('/api/chime/{chime_id}/responses', 'ResponseController@getResponse');
     Route::get('/api/chime/{chime_id}/session/{session_id}/question', 'ResponseController@getQuestion');
     Route::post('/api/chime/{chime_id}/session/{session_id}', 'ResponseController@createResponse');
     Route::put('/api/chime/{chime_id}/session/{session_id}/response/{response_id}', 'ResponseController@updateResponse');
@@ -64,7 +64,7 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@getSessions');
     Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}', 'PresentController@getResponses');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
-    Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}', 'PresentController@stopSession');
+    Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
 });
     // Auth::routes();
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

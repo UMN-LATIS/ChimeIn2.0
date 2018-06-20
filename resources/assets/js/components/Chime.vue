@@ -1,36 +1,52 @@
 <template>
     <div>
-     <navbar
-     :title="chime.name"
-     :user="user"
-     :link="'/'">
- </navbar>
+        <div class="row">
+            <div class="col-12">
 
- <br />
+                        <p><h1>{{ chime.name }}<div class="float-right">
 
- <div class="container center-align">
-    <new-folder
-    :chime="chime"
-    v-on:newfolder="create_folder"
-    v-on:filterfolder="filter_folders"></new-folder>
-    <div v-if="viewable_folders.length > 0">
-        <transition-group name="fade">
-            <folder-card
-            v-for="folder in viewable_folders"
-            :folder="folder"
+                            
+                            <b-btn v-b-toggle.collapse1 variant="outline-primary" class="align-items-center d-flex"><span class="material-icons">edit</span>Edit Chime</b-btn>
+                        </div></h1>
+
+                            
+                        </p>
+                        
+                    <b-collapse id="collapse1" class="mt-2">
+                <ChimeManagement :chime="chime"></ChimeManagement>
+            </b-collapse>
+            </div>
+            
+
+        </div>
+
+        <div class="container center-align">
+            <new-folder
             :chime="chime"
-            :key="folder.id"
-            v-on:editfolder="edit_folder"
-            v-on:deletefolder="delete_folder">
-        </folder-card>
-    </transition-group>
-</div>
-<div v-else>
-    No Folders Yet!
-</div>
-</div>
+            v-on:newfolder="create_folder"
+            v-on:filterfolder="filter_folders"></new-folder>
+            <div v-if="viewable_folders.length > 0">
+                <transition-group name="fade">
+                    <folder-card
+                    v-for="folder in viewable_folders"
+                    :folder="folder"
+                    :chime="chime"
+                    :key="folder.id"
+                    v-on:editfolder="edit_folder"
+                    v-on:deletefolder="delete_folder">
+                </folder-card>
+            </transition-group>
+        </div>
+        <div v-else>
+            No Folders Yet!
+        </div>
+    </div>
 </div>
 </template>
+
+<style>
+
+</style>
 
 <script>
 export default {
@@ -38,20 +54,11 @@ export default {
         return {
             chime: {},
             folders: [],
-            viewable_folders: []
+            viewable_folders: [],
         };
     },
     props: ['user'],
     methods: {
-        filter_folders: function(folder_name) {
-            if (folder_name === '') {
-                this.viewable_folders = this.folders.map(e => e);
-            } else {
-                this.viewable_folders = (
-                    this.viewable_folders.filter(
-                        folder => folder.name.indexOf(folder_name) > -1));
-            }
-        },
         create_folder: function(folder_name) {
             if (this.folders.filter(e => e.name === folder_name).length < 1) {
                 const self = this;
@@ -120,8 +127,8 @@ export default {
         axios.get('/api/chime/' + this.getCurrentChime())
         .then(res => {
             console.log(res);
-            self.chime = res.data.chime;
-            self.folders = res.data.folders;
+            self.chime = res.data;
+            self.folders = self.chime.folders;
             self.viewable_folders = res.data.folders;
             document.title = self.chime.name;
         })

@@ -50,17 +50,37 @@ class ChimeController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
+        $chime->load("folders");
+
         if ($chime != null && $chime->pivot->permission_number >= 200) {
-            return response()->json([
-                'chime' => $chime,
-                'folders' => $chime->folders()->get()
-            ]);
+            return response()->json($chime);
         } else {
-            $open_sessions = $chime->sessions()->where('in_progress', true);
-    
+            
+            // TODO : this should be its own method 
+            // 
+            // 
+            // $questions = \App\Question::whereNotNull("current_session")->whereHas('folder', function($f) use ($chime) {
+            //     $f->whereHas("chime", function($c) use ($chime) {
+            //         $c->where("id", $chime->id);
+            //     });
+            // })->get();
+
+
+            $questions = \App\Question::whereNotNull("current_session_id")->whereHas('folder.chime', function($c) use ($chime) {
+                $c->where("id", $chime->id);
+            })->get();
+            $sessions = [];
+
+
+            foreach($questions as $question) {
+                $question->current_session->load("question");
+                $sessions[] = $question->current_session;
+            }
+            // dd($questions);
+
             return response()->json([
                 'chime' => $chime,
-                'sessions' => $open_sessions->get()
+                'sessions' => $sessions
             ]);
         }
     }
@@ -132,7 +152,7 @@ class ChimeController extends Controller
         $changingUser = $chime->users()->find($req->route('user_id'));
         $newPN = $req->get('permission_number');
         
-        if ($chime != null && $changingUser != null && $pn >= 300 && $newPN < $pn) {
+        if ($chime != null && $changingUser != null && $pn >= 300 && $newPN <= $pn) {
             $changingUser->pivot->update(['permission_number' => $newPN]);
 
             return response()->json([
@@ -178,21 +198,21 @@ class ChimeController extends Controller
         if ((int)$req->route('chime_id') <= 0) {
             return response('Chime ID must be an integer', 400);
         } else {
-            $ids = DB::select(
-                'SELECT DISTINCT r.id AS response_id, q.id AS question_id'
-                . ' FROM responses r, sessions s, questions q'
-                . ' WHERE r.user_id = ' . $req->user()->id
-                . ' AND r.session_id = s.id'
-                . ' AND s.question_id = q.id'
-                . ' AND s.in_progress = "0"'
-                . ' AND s.chime_id = ' .  $req->route('chime_id'));
+            // $ids = DB::select(
+            //     'SELECT DISTINCT r.id AS response_id, q.id AS question_id'
+            //     . ' FROM responses r, sessions s, questions q'
+            //     . ' WHERE r.user_id = ' . $req->user()->id
+            //     . ' AND r.session_id = s.id'
+            //     . ' AND s.question_id = q.id'
+            //     // . ' AND s.in_progress = "0"'
+            //     . ' AND s.chime_id = ' .  $req->route('chime_id'));
     
-            foreach ($ids as $id) {
-                $id->response = Response::find($id->response_id);
-                $id->question = Question::find($id->question_id);
-            }
+            // foreach ($ids as $id) {
+            //     $id->response = Response::find($id->response_id);
+            //     $id->question = Question::find($id->question_id);
+            // }
         
-            return response()->json($ids);
+            return response()->json([]);
         }
     }
 

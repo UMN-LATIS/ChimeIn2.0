@@ -1,37 +1,19 @@
 <template>
     <div>
         <navbar
-            :title="'Present'"
-            :user="user"
-            :link="'/chime/' + chime_id">
-        </navbar>
+        :title="'Present'"
+        :user="user"
+        :link="'/chime/' + chime_id">
+    </navbar>
 
-        <br />
 
-        <div class="row">
-            <div class="col s12 m8 l8">
-                <results-display
-                    v-if="show_results"
-                    :sessions="sessions"
-                    :session="current_session"
-                    :question="current_question">
-                </results-display>
-                <presentation-prompt
-                    v-else
-                    :question="current_question"
-                    :session="current_session">
-                </presentation-prompt>
-            </div>
-            <div class="col s12 m4 l4">
-            <presentation-actions
-                v-on:nextquestion="next_question"
-                v-on:startsession="start_session"
-                v-on:stopsession="stop_session"
-                v-on:viewresults="view_results">
-            </presentation-actions>
-            </div>
-        </div>
-    </div>
+
+    
+        <template v-for="(question,index) in questions">
+            <present-question :question="question" :chime_id="chime_id" :folder_id="folder_id" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question()" @sessionUpdated="load_questions">
+            </present-question>
+        </template>
+</div>
 
 </template>
 
@@ -39,165 +21,74 @@
 export default {
     data() {
         return {
-        chime_id: null,
-        folder_id: window.location.pathname.split('/')[4],
-        questions: [],
-        sessions: [],
-        current_question: null,
-        current_session: null,
-        show_results: false
+            chime_id: null,
+            folder_id: window.location.pathname.split('/')[4],
+            questions: [],
+            show_results: false,
+            current_question: 0,
         };
     },
     props: ['user'],
     methods: {
-        start_session: function() {
-            if (!this.current_session || !this.current_session.in_progress) {
-                const self = this;
-                const url = (
-                    '/api/chime/'
-                    + this.chime_id
-                    + '/folder/'
-                    + window.location.pathname.split('/')[4]
-                    + '/question/'
-                    + this.current_question.id);
+        next_question: function() {
+            var target = 0;
 
-                axios.post(url, {})
-                .then(res => {
-                    console.log(res);
-                    self.current_session = res.data;
-                    self.add_session_listeners(self.current_session.id);
-                })
-                .catch(err => {
-                    console.log(err.response);
-                });
+
+            if(this.questions.length > this.current_question + 1) {
+                target = this.current_question + 1;
             }
+            this.$router.replace({ name: 'present', params: { id: target }})
         },
-        stop_session: function() {
-            console.log(this.current_session.in_progress);
-            if (this.current_session && this.current_session.in_progress) {
-                const self = this;
-                const url = (
-                    '/api/chime/'
-                    + this.chime_id
-                    + '/folder/'
-                    + this.folder_id
-                    + '/question/'
-                    + this.current_question.id
-                    + '/session/'
-                    + this.current_session.id
+        previous_question: function() {
+            var target = this.current_question - 1;
+            if(this.current_question - 1 < 0) {
+                target = this.questions.length - 1;
+            }
+            this.$router.replace({ name: 'present', params: { id: target }})  
+        },
+        load_questions: function() {
+            const url = (
+                '/api/chime/'
+                + this.chime_id
+                + '/folder/'
+                + this.folder_id
                 );
 
-                axios.put(url, {})
-                .then(res => {
-                    console.log(res);
-                    self.current_session = res.data;
-                    self.add_session_listeners(self.current_session.id);
-                })
-                .catch(err => {
-                    console.log(err.response);
-                });
-            }
-        },
-        view_results: function() {
-            this.show_results = this.show_results ? false : true;
-        },
-        next_question: function() {
-            const current_index = this.questions.findIndex(
-                e => e.id === this.current_question.id);
-
-            this.current_question = (
-                this.questions[(current_index + 1) % this.questions.length]);
-            
-            this.populate_question_sessions();
-        },
-        populate_question_sessions: function() {
-            if (this.current_question) {
-                const self = this;
-                const url = (
-                    '/api/chime/'
-                    + this.chime_id
-                    + '/folder/'
-                    + this.folder_id
-                    + '/question/'
-                    +  this.current_question.id);
-                
-                axios.get(url)
-                .then(res => {
-                    self.sessions = res.data;
-
-                    self.current_session = (
-                        self.sessions.find(e => e.in_progress === "1"));
-                    
-                    self.add_session_listeners(self.current_session.id);
-                })
-                .catch(err => {
-                    console.log(err.response);
-                })
-            }
-        },
-        add_session_listeners: function(session_id) {
-            const self = this;
-
-            Echo.private('session-status.'+ session_id)
-                .listen('ChangeSessionStatus', m => {
-                    console.log(m);
-                    self.current_session = m.session;
-                    self.current_session.in_progress = (
-                        m.session.in_progress !== '0' ? true : false
-                    );
-                });
+            axios.get(url)
+            .then(res => {                
+                this.questions = res.data;
+                console.log(this.questions);
+            })
+            .catch(err => {
+                console.log(err);
+            });
         }
     },
-    created: function () {
+    watch: {
+        '$route' (to, from) {
+            this.current_question = parseInt(to.params.id);
+        }
+    },
+    mounted: function () {
         this.chime_id = this.getCurrentChime();
-        
-        const self = this;
-        const url = (
-            '/api/chime/'
-            + this.chime_id
-            + '/folder/'
-            + this.folder_id
-        );
+        this.current_question = parseInt(this.$route.params.id) || 0;
 
-        axios.get(url)
-        .then(res => {
-            new Promise((resolve) => {
-                res.data.questions.forEach((e) => {
-                    e.question_info = JSON.parse(e.question_info);
-                });
+        this.load_questions();
 
-                resolve(res.data.questions);
-            })
-            .then((formatted_questions) => {
-                const question_id = (
-                    queryString.parse(location.search).question_id);
-                self.current_question = (
-                    formatted_questions.find(
-                        e => parseInt(e.id) === parseInt(question_id)));
-                
-                self.questions = formatted_questions;
-                
-                if (!self.current_question && self.questions.length > 0) {
-                    self.current_question = self.questions[0];
-                }
+        var self=this;
 
-                self.populate_question_sessions();
-            });
+        Echo.private('session-status.' + this.chime_id)
+        .listen('StartSession', m => {
+            self.load_questions();
         })
-        .catch(err => {
-            console.log(err);
-        });
-        Echo.private('start-session.' + this.chime_id)
-            .listen('StartSession', m => {
-                console.log(m);
-                self.sessions.push(m.session);
+         .listen('EndSession', m => {
+            this.load_questions();
+        });;
 
-                if (m.session.question_id == self.current_question.id) {
-                    console.log('match')
-                    self.current_session = m.session;
-                    self.add_session_listeners(self.current_session.id);
-                }
-            });
+        Echo.private('session-response.'+ this.chime_id)
+        .listen('SubmitResponse', m => {
+            console.log(m);
+        });
     }
 };
 </script>

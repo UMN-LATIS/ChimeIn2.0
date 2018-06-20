@@ -60,41 +60,7 @@ export default {
     },
     props: ['user'],
     methods: {
-        add_session_listeners: function(session_id) {
-            const self = this;
 
-            Echo.private('session-status.'+ session_id)
-                .listen('ChangeSessionStatus', m => {
-                    console.log('debug', 'ChangeSessionStatus:', m)
-                    let session = m.session;
-
-                    const i = self.sessions.findIndex(e => e.id === session.id);
-                    self.sessions[i] = session;
-                    self.sessions = self.sessions.filter(s => s.in_progress);
-
-                    self.get_past_responses();
-                });
-        },
-        get_past_responses: function() {
-            const self = this;
-
-            axios.get(
-                '/api/chime/'
-                + this.getCurrentChime()
-                + '/response')
-            .then(res => {
-                // res.data.forEach(e => {
-                //     e.question.question_info = JSON.parse(e.question.question_info);
-                //     e.response.response_info = JSON.parse(e.response.response_info);
-                // });
-                
-                self.responses = res.data;
-                console.log('debug', 'past responses:', self.responses);
-            })
-            .catch(err => {
-                console.error('error getting past responses', err.response);
-            });
-        }
     },
     created: function () {
         const self = this;
@@ -105,25 +71,30 @@ export default {
             self.chime = res.data.chime;
             document.title = self.chime.name;
             self.sessions = res.data.sessions;
-            console.log('debug', 'self.sessions', self.sessions);
-            
-            self.sessions.forEach((e, i) => {
-                self.add_session_listeners(e.id);
-            });
+
         })
         .catch(err => {
             console.error('error getting sessions:', err.response);
         });
 
+        axios.get('/api/chime/' + this.getCurrentChime() + "/responses")
+        .then(res => {
+            console.log('debug', 'Response:', res);
+            self.responses= res.data;
 
-        Echo.private('start-session.' + this.getCurrentChime())
+        })
+
+
+        Echo.private('session-status.' + this.getCurrentChime())
             .listen('StartSession', m => {
                 console.log('debug', 'message:', m);
                 self.sessions.push(m.session);
-                self.add_session_listeners(m.session.id);
+            })
+            .listen('EndSession', m => {
+                var removeIndex = self.sessions.findIndex(session => session.id == m.session.id);
+                self.sessions.splice(removeIndex, 1);
             });
 
-        this.get_past_responses();
     }
 };
 </script>

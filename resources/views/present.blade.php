@@ -1,5 +1,5 @@
 @extends('base')
 
 @section('content')
-<Present :user="{{$user}}"></Present>
+<router-view :user="{{$user}}"></router-view>
 @endsection

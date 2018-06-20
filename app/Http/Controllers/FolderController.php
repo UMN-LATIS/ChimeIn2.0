@@ -32,10 +32,9 @@ class FolderController extends Controller
         if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $questions = $folder->questions()->orderBy('order')->get();
-            
-            return response()->json([
-                'questions' => $questions
-            ]);
+            $questions->load("sessions");
+            $questions->load("sessions.responses");
+            return response()->json($questions);
         } else {
             return response('Invalid Permissions to Get Questions', 403);
         }
@@ -61,7 +60,7 @@ class FolderController extends Controller
             $new_question = $folder->questions()->create([
                 'text' => $req->get('question_text'),
                 'order' => $order_num,
-                'question_info' => json_encode($req->get('question_info'))
+                'question_info' => $req->get('question_info')
             ]);
                     
             return response()->json($new_question);
@@ -83,7 +82,7 @@ class FolderController extends Controller
             $question = $folder->questions()->find($req->route('question_id'));
             $question->update([
                 'text' => $req->get('question_text'),
-                'question_info' => json_encode($req->get('question_info'))
+                'question_info' => $req->get('question_info')
             ]);
                     
             return response()->json($question);

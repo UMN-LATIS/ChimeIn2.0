@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Session extends Model
 {
-    protected $fillable = ['in_progress', 'chime_id'];
+    protected $fillable = [];
     public function question() {
         return $this->belongsTo(Question::class);
     }

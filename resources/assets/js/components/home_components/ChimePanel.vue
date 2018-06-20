@@ -10,7 +10,7 @@
                         :key="chime.id"
                         :chime="chime"
                         :user="user"
-                        v-on:deletechime="delete_chime">
+                        v-on:updatedChime="get_chimes">
                     </chime-card>
                 </transition-group>
             </div>
@@ -19,57 +19,51 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="" v-if="parseInt(user.permission_number) >= 300">
-            <div class="input-field col-12">
-                <input
-                id="chime_name_input"
-                class="materalize-textarea"
-                type="text"
-                v-model="chime_name"
-                v-on:keyup="filter_chime"
-                @keyup.enter="new_chime"/>
-                <label for="chime_name_input">Chime Name</label>
-            </div>
-            <div class="input-field col-12">
-                <button
-                class="waves-effect waves-light btn"
-                v-on:click="new_chime"
-                type="button">
-                Create
-            </button>
-        </div>
-    </div>
+    
 </div>
 </div>
 </template>
 
 <script>
+
+import { EventBus } from '../../event-bus.js';
+
+
 export default {
-    props: ['chimes', 'user'],
+    props: ['user'],
     data() {
         return {
-            chime_name: '',
+            chimes: [],
         }
     },
     methods: {
-        filter_chime() {
-                // NOTE mechanic to filter chimes muted
-                // this.$emit('filterchime', this.chime_name);
-            },
-            new_chime() {
-                this.$emit('newchime', this.chime_name);
-                this.chime_name = '';
-                document.activeElement.blur(); 
-            },
-            delete_chime(chime) {
-                this.$emit('deletechime', chime);
-            }
+        get_chimes() {
+
+            axios.get('/api/chime')
+            .then(res => {
+                console.log('debug', 'Get Chimes:', res);
+                this.chimes = res.data;
+            })
+            .catch(err => {
+                console.error(
+                    'error', 'Error in get chimes:', err.response);
+            });
+        },
+        delete_chime(chime) {
+            this.$emit('deletechime', chime);
         }
+    },
+    created: function () {
+        this.get_chimes();
+        var self = this;
+        EventBus.$on('chimesChanged', function () {
+            self.get_chimes();
+     });
     }
-    </script>
+}
+</script>
 
-    <style>
+<style>
 
-    </style>
+</style>
 

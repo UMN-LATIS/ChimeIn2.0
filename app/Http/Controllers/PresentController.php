@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Events\StartSession;
+use App\Events\EndSession;
 use App\Events\ChangeSessionStatus;
 
 class PresentController extends Controller
@@ -47,10 +48,12 @@ class PresentController extends Controller
             ->first());
         
         if ($chime != null && $chime->pivot->permission_number >= 200) {
-            $folder = $chime->folders()->find($req->route('folder_id'));
-            $question = $folder->questions()->find($req->route('question_id'));
 
-            return response()->json($question->sessions()->get());
+            $folder = $chime->folders()->find($req->route('folder_id'));
+            $question = $folder->questions()->where("id", $req->route('question_id'))->with('sessions.responses')->first();
+
+
+            return response()->json($question);
         } else {
             return response('Invalid Permissions to Get Sessions', 403);
         }
@@ -68,11 +71,11 @@ class PresentController extends Controller
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
 
-            $new_session = $question->sessions()->create([
-                'in_progress' => true,
-                'chime_id' => $chime->id
-            ]);
+            $new_session = $question->sessions()->create();
 
+            $question->current_session()->associate($new_session);
+            $question->save();
+            // $question->save();
             event(new StartSession($chime, $new_session));
 
             return response()->json($new_session);
@@ -91,14 +94,14 @@ class PresentController extends Controller
         
         if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
+            
             $question = $folder->questions()->find($req->route('question_id'));
-            $session = $question->sessions()->find($req->route('session_id'));
+            $currentSession = $question->current_session;
+            $question->current_session()->dissociate();
+            $question->save();
+            event(new EndSession($chime, $currentSession));
 
-            $session->update(['in_progress' => false]);
-
-            event(new ChangeSessionStatus($session));
-
-            return response()->json($session);
+            return response()->json($question);
         } else {
             return response('Invalid Permissions to Stop Session', 403);
         }

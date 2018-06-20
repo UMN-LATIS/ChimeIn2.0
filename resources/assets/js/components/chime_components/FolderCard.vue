@@ -1,97 +1,84 @@
 <template>
-    <div class="row">
-        <div class="card col-12">
-        <div class="card-body">
-            <a href="#" v-on:click="delete_folder">
-                <i class="material-icons float-right">delete</i>
-            </a>
-            <div v-if="show_edit_folder">
-                <br/>
-                <div class="row">
-                    <div class="input-field col s10">
+    <b-row>
+        <b-col>
+            <b-row>
+                <template v-if="show_edit_folder">
+                    <b-col sm="8">
                         <input
-                            id="edit-folder-input"
-                            v-model="new_folder_name"
-                            type="text"
-                            @keyup.esc="toggle_edit_folder"
-                            @keyup.enter="edit_folder">
-                    </div>
-                    <br/>
-                    <div class="input-field col s1">
+                        id="edit-folder-input"
+                        v-model="new_folder_name"
+                        type="text"
+                        @keyup.esc="toggle_edit_folder"
+                        @keyup.enter="edit_folder">
+                    </b-col>
+                    <b-col sm="1">
                         <a
-                            class="btn-small waves-effect waves-light"
-                            v-on:click="toggle_edit_folder">
-                            <i class="material-icons">clear</i>
-                        </a>
-                    </div>
-                    <div class="input-field col s1">
+                        class="btn-small waves-effect waves-light"
+                        v-on:click="toggle_edit_folder">
+                        <i class="material-icons">clear</i></a>
+                    </b-col>
+                    <b-col sm="1">
                         <a
-                            class="btn-small waves-effect waves-light"
-                            v-on:click="edit_folder">
-                            <i class="material-icons">save</i>
+                        class="btn-small waves-effect waves-light"
+                        v-on:click="edit_folder">
+                        <i class="material-icons">save</i></a>
+                    </b-col>
+                </template>
+                <template v-else v-on:click="toggle_edit_folder">
+
+                    <b-col sm="9">
+                        <a href="#" v-on:click="show_questions = !show_questions" v-if="questions.length > 0">
+                            <i class="material-icons float-left" v-if="show_questions">expand_less</i>
+                            <i class="material-icons float-left" v-if="!show_questions">expand_more</i>
                         </a>
-                    </div>
-                </div>
-                
-            </div>
-            <div v-else v-on:click="toggle_edit_folder">
-                <h4>{{ folder.name }}</h4>
-            </div>
-        </div>
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a class="nav-link active" id="present-tab" data-toggle="tab" href="#present" role="tab" aria-controls="present" aria-selected="true">Present</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="false">Questions</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#newquestion" role="tab" aria-controls="newquestion" aria-selected="false">New Question</a>
-          </li>
-         
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div  class="tab-pane fade show active" id="present" role="tabpanel" aria-labelledby="present-tab">
-                <a
-                    class="waves-effect waves-light btn-large"
-                    v-bind:href="
-                        '/chime/' + folder.chime_id
-                        + '/folder/' + folder.id
-                        + '/present'">
-                    <i class="material-icons left">play_arrow</i>
-                    Start Presentation
-                </a>
-            </div>
-            <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
-                <draggable v-model="questions" @end=swap_question>
-                    <question
-                        v-for="q in questions"
-                        :key="q.id"
-                        :folder="folder"
-                        :chime="chime"
-                        :question="q"
-                        v-on:editquestion="update_question"
-                        v-on:deletequestion="delete_question">
-                    </question>
-                </draggable>
-            </div>
-            <div  class="tab-pane fade" id="newquestion" role="tabpanel" aria-labelledby="newquestion-tab">
-                <question-form
-                    :question="{
-                        text:'',
-                        question_info: {
-                            question_type:'multiple_choice',
-                            question_responses: []
-                        }
-                    }"
-                    v-on:submitquestion="create_question"
-                    :folder="folder"
-                    :chime="chime">
-                </question-form>
-            </div>
-        </div>
-    </div>
-    </div>
+                        <h4 @click="show_edit_folder = true">{{ folder.name }}</h4>
+                    </b-col>
+                    <b-col sm="3" class="text-right">
+                        <a href="#" v-on:click="delete_folder">
+                            <i class="material-icons">delete</i>
+                        </a>
+
+                        <a class="" v-bind:href="'/chime/' + folder.chime_id + '/folder/' + folder.id + '/present'">
+                            <i class="material-icons">play_arrow</i>
+                        </a>
+
+                        <a href="#" v-on:click="">
+                            <i class="material-icons" @click="showModal = true">add</i>
+                        </a>
+
+                    </b-col>
+                </template>
+
+
+            <question-form :show="showModal" @close="showModal = false; load_questions();"
+            :question="{
+            text:'',
+            question_info: {
+            question_type:'multiple_choice',
+            question_responses: []
+        }
+    }"
+    :folder="folder"
+    :chime="chime"
+    controlType="create">
+</question-form>
+</b-row> 
+<vue-slide-up-down :active="show_questions" :duration="500">
+    <draggable v-model="questions" @end=swap_question>
+            <question
+            v-for="q in questions"
+            :key="q.id"
+            :folder="folder"
+            :chime="chime"
+            :question="q"
+            v-on:editquestion="update_question"
+            v-on:deletequestion="delete_question">
+        </question>
+    </draggable>
+</vue-slide-up-down> 
+  
+    </b-col>
+</b-row>
 </template>
 
 <script>
@@ -101,37 +88,17 @@ export default {
     props: ['folder', 'chime'],
     data() {
         return {
+            showModal: false,
             content: 'present',
             questions: [],
             show_edit_folder: false,
+            show_questions: false,
             new_folder_name: this.folder.name
         }
     },
     methods: {
         toggle_edit_folder: function() {
             this.show_edit_folder = (this.show_edit_folder ? false : true);
-        },
-        create_question(question) {
-            const url = (
-                '/api/chime/' + this.folder.chime_id +
-                '/folder/' + this.folder.id);
-            const self = this;
-
-            console.log('question:', question)
-
-            axios.post(url, {
-                question_text: question.text,
-                question_info: question.question_info,
-            })
-            .then(res => {
-                console.log(res);
-                res.data.question_info = JSON.parse(res.data.question_info)
-                self.questions.push(res.data);
-                self.content = 'questions';
-            })
-            .catch(err => {
-                console.log(err.response);
-            });
         },
         update_question(question) {
             const url = (
@@ -167,7 +134,7 @@ export default {
                 + '/folder/'
                 + this.folder.id
                 + '/save_order'
-            )
+                )
 
             axios.put(url, {
                 question_order: newOrder
@@ -202,28 +169,26 @@ export default {
         },
         delete_folder() {
             this.$emit('deletefolder', this.folder);
+        },
+        load_questions() {
+            const url = (
+                '/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id);
+            const self = this;
+
+            axios.get(url)
+            .then(res => {
+                self.questions = res.data;
+                console.log('questions:', self.questions);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
         }
     },
     created: function() {
-        const url = (
-            '/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id);
-        const self = this;
-
-        axios.get(url)
-        .then(res => {
-            self.questions = res.data.questions;
-            self.questions.forEach(e => {
-                e.question_info = JSON.parse(e.question_info);
-            });
-            console.log('questions:', self.questions);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-
-        $(document).ready(function(){
-            $('.tabs').tabs();
-        });
+        this.load_questions();
+        
     },
     components: {
         draggable
@@ -232,11 +197,11 @@ export default {
 </script>
 
 <style>
-    .pointer {
-        cursor: pointer;
-    }
-    
-    li {
-        font-size: 1.5em;
-    }
+.pointer {
+    cursor: pointer;
+}
+
+li {
+    font-size: 1.5em;
+}
 </style>

@@ -3,6 +3,17 @@ require('./bootstrap');
 
 window.queryString = require('query-string');
 
+
+import EventBus from './event-bus';
+
+
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+
+Vue.component('modal',
+    require('./components/modal.vue'));
+
 Vue.component('home',
     require('./components/Home.vue'));
 
@@ -12,8 +23,7 @@ Vue.component('chime',
 Vue.component('Chimestudent',
     require('./components/Chime_student.vue'));
 
-Vue.component('Present',
-    require('./components/Present.vue'));
+
 
 Vue.component('navbar',
     require('./components/Navbar.vue'));
@@ -21,15 +31,13 @@ Vue.component('chime-panel',
     require('./components/home_components/ChimePanel.vue'));
 Vue.component('chime-card',
     require('./components/home_components/ChimeCard.vue'));
-Vue.component('access-panel',
-    require('./components/home_components/AccessPanel.vue'));
-Vue.component('info-panel',
-    require('./components/home_components/InfoPanel.vue'));
 
 Vue.component('new-folder',
     require('./components/chime_components/NewFolder.vue'));
 Vue.component('folder-card',
     require('./components/chime_components/FolderCard.vue'));
+Vue.component('ChimeManagement',
+    require('./components/chime_components/ChimeManagement.vue'));
 Vue.component('question',
     require('./components/chime_components/Question.vue'));
 Vue.component('multiple-choice-display',
@@ -37,9 +45,6 @@ Vue.component('multiple-choice-display',
 Vue.component('question-form',
     require('./components/chime_components/QuestionForm.vue'));
 
-
-Vue.component('presentation-actions',
-    require('./components/presentation_components/Presentation_Actions.vue'));
 
 Vue.component('student-actions',
     require('./components/chime_student_components/Student_Actions.vue'));
@@ -53,6 +58,10 @@ Vue.component('image-response-question',
     require('./components/questions/response/ImageResponse.vue'));
 Vue.component('free-response-question',
     require('./components/questions/response/FreeResponse.vue'));
+
+
+Vue.component('present-question',
+    require('./components/presentation_components/Present_Question.vue'));
 
 Vue.component('presentation-prompt',
     require('./components/presentation_components/Presentation_Prompt.vue'));
@@ -68,7 +77,12 @@ Vue.component('free-response-statistics',
     require('./components/presentation_components/FreeResponseStatistics.vue'));
 
 
-
+const router = new VueRouter({
+  routes: [
+    { path: '/:id?', name: "present", component: require('./components/Present.vue')}
+  ]
+})
 
 const app = new Vue({
+    router
 }).$mount('#app')

@@ -1,22 +1,13 @@
 <template>
     <div class="row">
-        <h4>Access Code: {{ chime.access_code }}</h4>
-        <div class="input-field col s10">
-            <input
-                id="name"
-                v-model="folder_name"
-                type="text"
-                @keyup.enter="new_folder"
-                v-on:keyup="filter_folder">
-            <label for="name">Folder Name</label>
-        </div>
-        <div class="input-field col s2">
-            <button
-                class="waves-effect waves-light btn"
-                v-on:click="new_folder"
-                type="button">
-                Create
-            </button>
+        <div class="col-12">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="createFolder">New Folder: </label>
+                    <input type="text" class="form-control" v-model="folder_name" @keyup.enter="new_folder" name="createFolder" id="createFolder" placeholder="Folder Name">
+                </div>
+                <button type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>
+            </form>
         </div>
     </div>
 </template>

@@ -18,4 +18,8 @@ class Question extends Model
     public function sessions() {
         return $this->hasMany(Session::class);
     }
+
+    public function current_session() {
+        return $this->belongsTo('\App\Session', 'current_session_id');
+    }
 }

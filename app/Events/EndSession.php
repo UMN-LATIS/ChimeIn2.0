@@ -12,7 +12,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Chime;
 use App\Session;
 
-class StartSession implements ShouldBroadcast
+class EndSession implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

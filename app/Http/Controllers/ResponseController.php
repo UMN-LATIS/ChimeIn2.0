@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Events\SubmitResponse;
 use App\Question;
+use DB;
 
 class ResponseController extends Controller
 {
@@ -25,24 +26,15 @@ class ResponseController extends Controller
      */
     public function getResponse(Request $req) {
         $user = $req->user();
-        $chime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-        $session = (
-            $chime
-            ->sessions()
-            ->where('in_progress', true)
-            ->find($req->route('session_id')));
 
-        $found_response = (
-            $session
-            ->responses()
-            ->where('user_id', $user->id)
-            ->first());
 
-        return response()->json($found_response);
+        // get all of the user's existing responses for this chime
+
+        $responses = DB::table('responses')->where("user_id", $user->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->join('chimes', 'folders.chime_id', '=', 'chimes.id')->where('chimes.id', $req->route('chime_id'))->get();
+
+        $responseModels = \App\Response::hydrate($responses->toArray()); 
+
+        return response()->json($responseModels);
     }
 
     public function getQuestion(Request $req) {
@@ -67,7 +59,7 @@ class ResponseController extends Controller
             'user_id' => $user->id
         ]);
 
-        event(new SubmitResponse($session, $new_response));
+        event(new SubmitResponse($chime, $session, $new_response));
 
         return response()->json($new_response);
     }
@@ -91,7 +83,7 @@ class ResponseController extends Controller
             'response_info' => json_encode($req->get('response_info'))
         ]);
 
-        event(new SubmitResponse($session, $found_response));
+        event(new SubmitResponse($chime, $session, $found_response));
 
         return response()->json($found_response);
     }

@@ -98,35 +98,15 @@ export default {
         }
     },
     created: function() {
-        const self = this;
-        const url = (
-            '/api/chime/'
-            + this.session.chime_id
-            + '/session/'
-            + this.session.id
-            + '/question'
-        );
-
-        axios.get(url)
-        .then(res => {
-            console.log('debug', 'question:', res);
-            self.question = res.data;
-        })
-        .catch(err => {
-            console.error('error getting question:', err.response);
-        });
-
-        axios.get(
-            '/api/chime/'
-            + this.session.chime_id
-            + '/session/'
-            + this.session.id)
-        .then(res => {
-            self.response = res.data;
-        })
-        .catch(err => {
-            console.error('error getting response:', err.response);
-        })
+        this.question = this.session.question;
+        // axios.get(
+        //     '/api/chime/'
+        //     + this.session.chime_id
+        //     + '/session/'
+        //     + this.session.id)
+        // .then(res => {
+        //     self.response = res.data;
+        // })
     }
 }
 </script>

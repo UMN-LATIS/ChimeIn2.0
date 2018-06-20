@@ -1,6 +1,10 @@
 <template>  
-    <div class="row">
-        <div class="row">
+     <modal :show="show" @close="close">
+        <div class="modal-header">
+            <h3>Add Question</h3>
+        </div>
+      <div class="modal-body">
+    
             <div class="input-field col s12">
                 <vue-editor
                     v-model="question_text"
@@ -44,14 +48,16 @@
                 <label for="choice_text">Choice Text</label>
             </div>
         </div>
-        <div class="row">
-            <a
-                class="waves-effect waves-light btn right"
-                v-on:click="submit">
+     <div class="modal-footer text-right">
+            <button class="btn btn-secondary" @click="close">
+                Cancel
+            </button>
+            <button class="btn btn-primary" @click="savePost">
                 Save
-            </a>
+            </button>
+            
         </div>
-    </div> 
+    </modal>
 </template>
 
 <script>
@@ -80,7 +86,7 @@ ImageBlot.tagName = 'img';
 Quill.register(ImageBlot);
 
 export default {
-    props: ['question', 'chime'],
+    props: ['question', 'chime', 'show', 'folder', 'controlType'],
     data: function() {
         return {
             choice_text: '',
@@ -94,22 +100,48 @@ export default {
         }
     },
     methods: {
-        remove: function(response_index) {
-            console.log(response_index);
-            this.question_responses.splice(response_index, 1);
+        close: function () {
+            this.$emit('close');
+            if(this.controlType == "create") {
+                this.choice_text = "";
+                this.question_text = "";
+                this.question_type = "multiple_choice";
+                this.question_responses = [];    
+            }
+            
         },
-        add_choice: function() {
-            this.question_responses.push(this.choice_text);
-            this.choice_text = '';
-        },
-        submit: function() {
-            this.question.text = this.question_text;
-            this.question.question_info = {
+        savePost: function () {
+             const url = (
+                '/api/chime/' + this.folder.chime_id +
+                '/folder/' + this.folder.id);
+            console.log('question:', question)
+
+            var question = {};
+            question.text = this.question_text;
+            question.question_info = {
                 question_type: this.question_type,
                 question_responses: this.question_responses
             };
 
-            this.$emit('submitquestion', this.question);
+            axios.post(url, {
+                question_text: question.text,
+                question_info: question.question_info,
+            })
+            .then(res => {
+                console.log(res);
+                this.close();
+            })
+            .catch(err => {
+                console.log(err.response);
+            });
+      
+        },
+        remove: function(response_index) {
+            this.$delete(this.question_responses, response_index);
+        },
+        add_choice: function() {
+            this.question_responses.push(this.choice_text);
+            this.choice_text = '';
         },
         handle_image_added: function(file, editor, cursor, reset) {
             console.log('file:', file);
@@ -129,15 +161,6 @@ export default {
                 console.log(err.response)
             });
         }
-    },
-    mounted: function() {
-        window.$('#question_type').material_select();
-
-        const self = this;
-
-        window.$('#question_type').on('change', function() {
-            self.question_type = this.value;
-        });
     }
 }
 </script>

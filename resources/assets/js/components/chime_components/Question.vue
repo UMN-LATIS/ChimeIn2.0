@@ -1,50 +1,36 @@
 <template>
-    <div class="card hoverable">
-        <div class="card-content">
-            <div class="container" v-if="show_edit">
-                <div class="input-field col s12">
-                    <question-form
-                        :question="question"
-                        :chime="chime"
-                        v-on:submitquestion="edit_question"
-                    ></question-form>
-                </div>
-            </div>
-            <div v-else>
-                <div class="card">
-                    <div class="card-content">
-                        <p class="flow-text" v-html="question.text"></p>
-                    </div>
-                </div>
-
-                <multiple-choice-display
-                    v-if="question.question_info.question_type === 'multiple_choice'"
-                    :question="question">
-                </multiple-choice-display>
-            </div>
-        </div>
-        <div class="card-action">
-            <a
-                class="pointer"
-                v-bind:href="
-                    '/chime/' + folder.chime_id
-                    + '/folder/' + question.folder_id
-                    + '/present'
-                    + '?question_id=' + question.id">
-                Present
-            </a>
-            <a 
-                class="pointer"
-                v-on:click="show_edit ? show_edit = false : show_edit = true">
-                {{ show_edit ? 'Back' : 'Edit'}}
-            </a>
-            <a 
-                class="pointer"
-                v-on:click="delete_question">
-                Delete
-            </a>
-        </div>
+    <b-row>
+        <b-col sm=9>
+            <question-form :show="show_edit" @close="show_edit = false;"
+            :question="question"
+            :folder="folder"
+            :chime="chime"
+            controlType="edit">
+        </question-form>
+        <div>
+            <p class="flow-text" v-html="question.text"></p>
+            <multiple-choice-display
+            v-if="question.question_info.question_type === 'multiple_choice'"
+            :question="question">
+        </multiple-choice-display>
     </div>
+</b-col>
+<b-col sm=3>
+    <div class="float-right">
+        <a 
+        class="pointer"
+        v-on:click="show_edit = !show_edit">
+        <i class="material-icons">edit</i>
+    </a>
+    <a 
+    class="pointer"
+    v-on:click="delete_question">
+    <i class="material-icons ">delete</i>
+</a>
+</div>
+</b-col>
+
+</b-row>
 </template>
 
 <script>
@@ -68,10 +54,10 @@ export default {
 </script>
 
 <style>
-    .card-title {
-        margin: 0 auto;
-        max-width: 500px;
-    }
+.card-title {
+    margin: 0 auto;
+    max-width: 500px;
+}
 </style>
 
 

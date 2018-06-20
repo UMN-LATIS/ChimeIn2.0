@@ -11,10 +11,6 @@ class Chime extends Model
     public function folders() {
         return $this->hasMany(Folder::class);
     }
-
-    public function sessions() {
-        return $this->hasMany(Session::class);
-    }
     
     public function users() {
         return $this->belongsToMany(User::class)

@@ -1,5 +1,8 @@
 import Echo from "laravel-echo";
 
+import BootstrapVue from 'bootstrap-vue'
+
+
 
 window._ = require('lodash');
 
@@ -11,7 +14,7 @@ window._ = require('lodash');
 
 try {
     window.$ = window.jQuery = require('jquery');
-    require('bootstrap');
+    // require('bootstrap');
 } catch (e) {}
 
 /**
@@ -23,7 +26,7 @@ try {
 
 window.Vue = require('vue');
 
-
+Vue.use(BootstrapVue);
 window.axios = require('axios');
 window.Pusher = require('pusher-js');
 
@@ -59,6 +62,9 @@ Vue.mixin({
   }
 })
 
+
+import SlideUpDown from 'vue-slide-up-down'
+Vue.component('vue-slide-up-down', SlideUpDown)
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

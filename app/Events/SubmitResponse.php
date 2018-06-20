@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Chime;
 use App\Session;
 use App\Response;
 
@@ -21,8 +22,9 @@ class SubmitResponse implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Session $session, Response $response)
+    public function __construct(Chime $chime, Session $session, Response $response)
     {
+        $this->chime = $chime;
         $this->session = $session;
         $this->response = $response;
     }
@@ -34,9 +36,10 @@ class SubmitResponse implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('session-response.' .$this->session->id);
+        return new PrivateChannel('session-response.' .$this->chime->id);
     }
 
+    public $chime;
     public $session;
     public $response;
 }

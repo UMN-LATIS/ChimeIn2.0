@@ -1,14 +1,19 @@
 <template>
     <div
         class="card hoverable">
-        <div
-            class="card-body"
-            v-on:click="open_chime(chime.id)"
-            v-bind:key="chime.name">
-            <h2 class="card-title">{{ chime.name }}</h2>
+        <div class="card-body" v-on:click="open_chime">
+            <h2  class="float-left card-title">{{ chime.name }}</h2>
+            <div class="float-right">
+                <a href="#" v-on:click.stop="delete_chime()">
+                    <i class="material-icons right">delete</i>
+                </a>
+                <a href="#" v-on:click.stop="toggle_users()" v-if="chime.pivot.permission_number >= 300">
+                    <i class="material-icons right">people</i>
+                </a>
+            </div>
         </div>
-        <div class="card-body" v-bind:key="chime.id">
-            <div v-if="show_users">
+        <div class="card-body" v-if="show_users">
+            <div >
                 <table class="table">
                     <thead>
                         <tr>
@@ -46,7 +51,7 @@
                         </tr>
                     </tbody>
                 </table>
-
+                <!-- TOOD: dropdown -->
                 <input
                     id="new_member_input"
                     v-if="!editing_permission.id"
@@ -56,22 +61,30 @@
                 <label for="new_member_input" v-if="!editing_permission.id">
                     New Member Email
                 </label>
-            </div>
-            <a href="#" v-on:click="delete_chime(chime)">
-                <i class="material-icons right">delete</i>
-            </a>
-            <a href="#" v-on:click="toggle_users(chime)" v-if="user.permission_number >= 300">
-                <i class="material-icons right">people</i>
-            </a>
-            <a
+                <a
                 href="#"
                 v-on:click="general_save"
                 v-if="editing_permission.id || this.new_member_email">
                 <i class="material-icons right">save</i>
             </a>
+            </div>
+
+            
         </div>
     </div>
 </template>
+
+<style>
+
+
+.hoverable:hover {
+    cursor:pointer;
+    transition: 0.2s;
+    box-shadow: 2px 2px 18px lightgray;
+}
+
+</style>
+
 
 <script>
 export default {
@@ -88,15 +101,14 @@ export default {
         }
     },
     methods: {
-        toggle_users(chime) {
+        toggle_users() {
             this.show_users = (this.show_users ? false : true);
 
-            const self = this;
 
             axios.get('/api/chime/' + this.chime.id + '/users')
             .then(res => {
                 console.log(res);
-                self.users = res.data.users;
+                this.users = res.data.users;
             })
             .catch(err => {
                 console.log(err);
@@ -167,23 +179,24 @@ export default {
         open_chime() {
             window.location.href = '/chime/' + this.chime.id;
         },
-        delete_chime(chime) {
-            this.$emit('deletechime', chime);
+        delete_chime() {
+            const confirmation = window.confirm(
+                'Delete Chime: ' + this.chime.name + ' ?');
+            
+            if (confirmation) {
+
+                axios.delete('/api/chime/' + this.chime.id)
+                .then(res => {
+                   this.$emit('updatedChime');
+                })
+                .catch(err => {
+                    console.error(
+                        'error', 'Error in delete chime:', err.response);
+                });
+            }
+            
         }
     }
 }
 </script>
 
-<style>
-    th, td {
-        text-align: center;
-    }
-
-    .action-column {
-        width: 20px;
-    }
-
-    .material-icons {
-        color: #ffd204;
-    }
-</style>
