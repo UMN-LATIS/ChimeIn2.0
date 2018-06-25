@@ -87,7 +87,43 @@ export default {
 
         Echo.private('session-response.'+ this.chime_id)
         .listen('SubmitResponse', m => {
-            console.log(m);
+
+
+            // none of this code is right but I'm having trouble thinking of the right way to do it.
+
+            var targetSession = null;
+            this.questions.forEach(question => {
+                question.sessions.forEach(session => {
+                    if(session.id == m.session.id) {
+                        targetSession = session;
+                    }
+                })
+            });
+
+
+
+            if(!targetSession) {
+                console.log("Session does not exist.  Weird");
+            }
+
+            if(!targetSession.hasOwnProperty('responses')) {
+                targetSession.responses = new Array();
+            }
+
+            var updateInPlace = false;
+            if(m.isEdit) {
+                targetSession.responses.forEach(response => {
+                    if(response.id == m.response.id) {
+                        // response = m.response;
+                        updateInPlace = true;
+                    }
+                });
+    
+            }
+            
+            if(!updateInPlace) {
+                targetSession.responses.push(m.response);    
+            }
         });
     }
 };

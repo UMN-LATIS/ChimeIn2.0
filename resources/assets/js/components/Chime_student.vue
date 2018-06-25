@@ -1,49 +1,45 @@
 <template>
     <div>
         <navbar
-            :title="chime.name"
-            :user="user"
-            :link="'/'">
-        </navbar>
+        :title="chime.name"
+        :user="user"
+        :link="'/'">
+    </navbar>
 
-        <br />
-        
-        <div class="container center-align">
-            <student-actions
-                v-on:selectcurrentquestions="() => {show = 'current_questions'}"
-                v-on:selectpastresponses="() => {show = 'past_responses'}"
-            ></student-actions>
-            
-            <br />
 
-            <div v-if="show === 'current_questions'">
-                <transition-group name="fade">
+    <div class="row">
+        <b-tabs class="col-12">
+            <b-tab title="Current Questions" active>
+               <transition-group name="fade">
                 <div v-if="sessions.length < 1" key='none'>
                     <h3>No Open Sessions!</h3>
                 </div>
                 <student-prompt
-                    v-else
-                    v-for="s in sessions"
-                    :session="s"
-                    :key="s.id">
-                </student-prompt>
+                v-else
+                v-for="s in sessions"
+                v-on:updateResponse="updateResponse"
+                :session="s"
+                :chime="chime"
+                :responses="responses"
+                :key="s.id">
+                    </student-prompt>
                 </transition-group>
-            </div>
-
-            <div v-if="show === 'past_responses'">
+            </b-tab>
+            <b-tab title="Past Responses">
                 <div v-if="responses.length < 1">
                     <h3>No Responses Yet!</h3>
                 </div>
                 <response
-                    v-else
-                    v-for="(r, i) in responses"
-                    :question="r.question"
-                    :response="r.response"
-                    :key="i">
+                v-else
+                v-for="response, i in responses"
+                :chime="chime"
+                :response="response"
+                :key="i">
                 </response>
-            </div>
-        </div>
+            </b-tab>
+        </b-tabs>
     </div>
+</div>
 
 </template>
 
@@ -52,7 +48,6 @@
 export default {
     data() {
         return {
-            show: 'current_questions',
             chime: {},
             sessions: [],
             responses: []
@@ -60,7 +55,19 @@ export default {
     },
     props: ['user'],
     methods: {
+        updateResponse: function(newResponse) {
+            var updateInPlace = false;
+            this.responses.forEach((response, index) => {    
+                if(response.id == newResponse.id) {
+                    updateInPlace = true;
+                    Vue.set(this.responses, index, newResponse);
+                }
+            })
+            if(!updateInPlace) {
+                this.responses.push(newResponse);
+            }
 
+        }
     },
     created: function () {
         const self = this;
@@ -86,14 +93,14 @@ export default {
 
 
         Echo.private('session-status.' + this.getCurrentChime())
-            .listen('StartSession', m => {
-                console.log('debug', 'message:', m);
-                self.sessions.push(m.session);
-            })
-            .listen('EndSession', m => {
-                var removeIndex = self.sessions.findIndex(session => session.id == m.session.id);
-                self.sessions.splice(removeIndex, 1);
-            });
+        .listen('StartSession', m => {
+            console.log('debug', 'message:', m);
+            self.sessions.push(m.session);
+        })
+        .listen('EndSession', m => {
+            var removeIndex = self.sessions.findIndex(session => session.id == m.session.id);
+            self.sessions.splice(removeIndex, 1);
+        });
 
     }
 };

@@ -46,8 +46,6 @@ Vue.component('question-form',
     require('./components/chime_components/QuestionForm.vue'));
 
 
-Vue.component('student-actions',
-    require('./components/chime_student_components/Student_Actions.vue'));
 Vue.component('student-prompt',
     require('./components/chime_student_components/Student_Prompt.vue'));
 Vue.component('response',

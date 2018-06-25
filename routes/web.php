@@ -49,8 +49,7 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     // Response subroutes
     Route::get('/api/chime/{chime_id}/responses', 'ResponseController@getResponse');
     Route::get('/api/chime/{chime_id}/session/{session_id}/question', 'ResponseController@getQuestion');
-    Route::post('/api/chime/{chime_id}/session/{session_id}', 'ResponseController@createResponse');
-    Route::put('/api/chime/{chime_id}/session/{session_id}/response/{response_id}', 'ResponseController@updateResponse');
+    Route::put('/api/chime/{chime}/session/{session}/response/{response?}', 'ResponseController@createOrUpdateResponse');
 
         // Folder Routes (chime page subroutes)
     Route::get('/api/chime/{chime_id}/folder/{folder_id}',  'FolderController@getQuestions');

@@ -22,11 +22,12 @@ class SubmitResponse implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Chime $chime, Session $session, Response $response)
+    public function __construct(Chime $chime, Session $session, Response $response, $isEdit=false)
     {
         $this->chime = $chime;
         $this->session = $session;
         $this->response = $response;
+        $this->isEdit = $isEdit;
     }
 
     /**
@@ -42,4 +43,5 @@ class SubmitResponse implements ShouldBroadcast
     public $chime;
     public $session;
     public $response;
+    public $isEdit;
 }

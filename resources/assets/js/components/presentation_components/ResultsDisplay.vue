@@ -118,34 +118,9 @@ export default {
                 });
             }
         },
-        listen_for_responses: function() {
-            if (this.current_session) {
-                const self = this;
-
-                Echo.private('session-response.' + this.current_session.id)
-                    .listen('SubmitResponse', m => {
-                        console.log('response submitted:', m);
-                        m.response.response_info = (
-                            JSON.parse(m.response.response_info));
-
-                        const response_index = (
-                            self.responses.findIndex(
-                                e => e.id === m.response.id));
-
-                        if (response_index > -1) {
-                            self.responses[response_index] = m.response;
-                            self.responses = self.responses.map(
-                                e => e);
-                        } else {
-                            self.responses.push(m.response);
-                        }
-                    });
-            }
-        }
     },
     created: function() {
         this.get_session_responses();
-        this.listen_for_responses();
     },
     watch: {
         sessions: function() {
@@ -166,7 +141,6 @@ export default {
         },
         current_session: function() {
             this.get_session_responses();
-            this.listen_for_responses();
         }
     }
 }

@@ -1,25 +1,24 @@
 <template>
-    <div class="card hoverable">
+    <div class="row questionContainer">
         <div
-            class="card-content"
+            class="col-12"
             v-if="question.question_info.question_type"
             v-bind:class="{in_progress: response.id}">
-            <div class="card">
-                <div class="card-content">
-                    <p class="flow-text" v-html="question.text"></p>
-                </div>
-            </div>
+            
+            <p class="quesiton-text" v-html="question.text"></p>
             
             <multiple-choice-question
                 v-if="question.question_info.question_type === 'multiple_choice'"
                 :question="question"
                 :response="response"
+                :disabled="false"
                 v-on:recordresponse="record_response">
             </multiple-choice-question>
             <image-response-question
                 v-else-if="question.question_info.question_type === 'image_response'"
                 :question="question"
                 :response="response"
+                :disabled="false"
                 v-on:recordresponse="record_response">
             </image-response-question>
             <free-response-question
@@ -38,77 +37,71 @@
     </div>
 </template>
 
+<style>
+
+.questionContainer {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+</style>
+
 <script>
 export default {
-    props: ['session'],
+    props: ['session', 'chime', 'responses'],
     data: function() {
         return {
             question: {
                 question_info: ''
             },
-            response: {}
+        }
+    },
+    computed: {
+        response: function(){
+            if(this.responses.length > 0 && this.session) {
+                var foundResponse;
+                this.responses.forEach(response=> {
+                    if(response.session_id == this.session.id) {
+                        foundResponse = response
+                    }
+                });  
+                return foundResponse;  
+            }
+            
+            return {};
         }
     },
     methods: {
         record_response: function(response) {
             const self = this;
 
+            var url = '/api/chime/'
+                + this.chime.id
+                + '/session/'
+                + this.session.id
+                + '/response';
+
             if (this.response.id) {
-                const url = (
-                    '/api/chime/'
-                    + this.session.chime_id
-                    + '/session/'
-                    + this.session.id
-                    + '/response/'
-                    + this.response.id
-                );
-
-                axios.put(url, {'response_info': response})
-                .then(res => {
-                    console.log('debug', 'response recorded:', res);
-                    res.data.response_info = JSON.parse(res.data.response_info);
-                    self.response = res.data;
-                    console.log('debug', 'edited reponse:', self.response);
-                })
-                .catch(err => {
-                    console.error(
-                        'error', 'error recording response', err.response);
-                });
-            } else {
-                const url = (
-                    '/api/chime/'
-                    + this.session.chime_id
-                    + '/session/'
-                    + this.session.id
-                );
-
-                axios.post(url, {'response_info': response})
-                .then(res => {
-                    console.log('debug', 'response recorded:', res);
-                    res.data.response_info = JSON.parse(res.data.response_info);
-                    self.response = res.data;
-                    console.log('debug', 'new reponse:', self.response);
-                })
-                .catch(err => {
-                    console.log(err.response);
-                });
+                url = url + "/" + this.response.id
             }
 
+            axios.put(url, {'response_info': response})
+            .then(res => {
+                console.log('debug', 'response recorded:', res);
+                this.$emit('updateResponse', res.data);
+            })
+            .catch(err => {
+                console.error(
+                    'error', 'error recording response', err.response);
+            });
             document.activeElement.blur();
         }
     },
     created: function() {
         this.question = this.session.question;
-        // axios.get(
-        //     '/api/chime/'
-        //     + this.session.chime_id
-        //     + '/session/'
-        //     + this.session.id)
-        // .then(res => {
-        //     self.response = res.data;
-        // })
     }
-}
+};
 </script>
 
 <style>

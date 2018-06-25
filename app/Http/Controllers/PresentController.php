@@ -75,6 +75,7 @@ class PresentController extends Controller
 
             $question->current_session()->associate($new_session);
             $question->save();
+
             // $question->save();
             event(new StartSession($chime, $new_session));
 

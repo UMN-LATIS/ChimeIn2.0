@@ -1,43 +1,43 @@
 <template>
-    <div class="card hoverable">
+    <div class="row responseContainer">
         <div
-            class="card-content"
-            v-if="question">
-            <div class="card">
-                <div class="card-content">
-                    <p class="flow-text" v-html="question.text"></p>
-                </div>
-            </div>
-
+            class="col-12"
+            v-if="response.session.question">
+            <p class="questionText" v-html="response.session.question.text"></p>
             <multiple-choice-question
-                v-if="question.question_info.question_type === 'multiple_choice'"
-                :question="question"
+                v-if="response.session.question.question_info.question_type === 'multiple_choice'"
+                :question="response.session.question"
                 :disabled="true"
                 :response="response">
             </multiple-choice-question>
             <image-response-question
-                v-else-if="question.question_info.question_type === 'image_response'"
-                :question="question"
+                v-else-if="response.session.question.question_info.question_type === 'image_response'"
+                :question="response.session.question"
                 :response="response"
                 :disabled="true"
             ></image-response-question>
             <free-response-question
-                v-else
-                :question="question"
+                v-else-if="response.session.question.question_info.question_type === 'free_response'"
+                :question="response.session.question"
                 :response="response"
                 :disabled="true"
             ></free-response-question>
         </div>
-        <div class="card-content" v-else>
-            <span class="card-title">
-                <h4>'No Question Yet!'</h4>
-            </span>
-        </div>
     </div>
 </template>
 
+
+<style>
+.responseContainer {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+</style>
+
 <script>
 export default {
-    props: ['response', 'question']
-}
+    props: ['response']
+};
 </script>
