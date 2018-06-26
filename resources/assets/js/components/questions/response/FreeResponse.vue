@@ -1,46 +1,58 @@
 <template>
     <div>
-        <input
-            type="text"
-            v-bind:id="'question_' + question.id + '_response'"
-            class="materialize-textarea"
-            v-on:keyup.enter="record_response"
-            v-bind:disabled="disabled"
-            v-bind:value="
-                response.response_info ? response.response_info.text : ''"/>
-        <label v-bind:for="'question_' + question.id + '_response'">
-            Response
-        </label>
-
-        <div class="row">
-            <div class="input-field col s12">
-                <button
-                    class="waves-effect waves-light btn"
-                    v-on:click="record_response"
-                    type="button">
-                    Submit
-                </button>
-            </div>
-        </div>
+        <col>
+        <b-form-textarea 
+                     v-model="response_text"
+                     placeholder="Type your response"
+                     :rows="3"
+                     :disabled="disabled"
+                     :max-rows="6">
+        </b-form-textarea>
+        </col>
+        <col>
+            <b-button v-if="(!disabled && !response.id) || create_new_response" type="button" variant="primary" @click="record_response">Save</b-button>
+            <b-button v-if="!disabled && response.id && !create_new_response" type="button" variant="primary" @click="record_response">Update</b-button>
+            <b-button v-if="!disabled && response.id && !create_new_response" type="button" variant="primary" @click="new_response">+ New Response</b-button>
+        </col>
     </div>
 </template>
 
 <script>
 export default {
     props: ['question', 'response', 'disabled'],
-    methods: {
-        record_response: function() {
-            const response_text = document.getElementById(
-                'question_' + this.question.id + '_response').value;
+    data() {
+        return {
+            response_text: "",
+            create_new_response: false
+        }
+    },
+    watch: {
+        response: function(value) {
+            if(this.response && this.response.response_info) {
+                this.response_text = this.response.response_info.text;    
+            }
             
+        }
+    },
+    methods: {
+        record_response: function() {            
             const response = {
                 question_type: 'free_response',
-                text: response_text
+                text: this.response_text
             }
 
-
-            this.$emit('recordresponse', response);
+            this.$emit('recordresponse', response, this.create_new_response);
+            this.create_new_response = false;
         },
+        new_response: function() {
+            this.create_new_response = true;
+            this.response_text = "";
+        }
+    },
+    mounted() {
+        if(this.response && this.response.hasOwnProperty('response_info') && this.response.response_info.hasOwnProperty('text')) {
+            this.response_text = this.response.response_info.text;
+        }
     }
-}
+};
 </script>

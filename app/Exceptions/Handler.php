@@ -52,6 +52,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof PostTooLargeException) {
+            return response()->json(["error" => "maxSizeExceeded"]);
+        }
         return parent::render($request, $exception);
     }
 

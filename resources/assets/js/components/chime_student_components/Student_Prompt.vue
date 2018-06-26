@@ -3,7 +3,7 @@
         <div
             class="col-12"
             v-if="question.question_info.question_type"
-            v-bind:class="{in_progress: response.id}">
+            >
             
             <p class="quesiton-text" v-html="question.text"></p>
             
@@ -19,6 +19,7 @@
                 :question="question"
                 :response="response"
                 :disabled="false"
+                :chime="chime"
                 v-on:recordresponse="record_response">
             </image-response-question>
             <free-response-question
@@ -60,20 +61,24 @@ export default {
     computed: {
         response: function(){
             if(this.responses.length > 0 && this.session) {
-                var foundResponse;
+                var foundResponse = null;
                 this.responses.forEach(response=> {
                     if(response.session_id == this.session.id) {
                         foundResponse = response
                     }
                 });  
-                return foundResponse;  
+                if(foundResponse) {
+                    return foundResponse;      
+                }
+                
             }
-            
+
             return {};
         }
     },
     methods: {
-        record_response: function(response) {
+        record_response: function(response, newResponse=false) {
+
             const self = this;
 
             var url = '/api/chime/'
@@ -82,7 +87,8 @@ export default {
                 + this.session.id
                 + '/response';
 
-            if (this.response.id) {
+
+            if (this.response.id && !newResponse) {
                 url = url + "/" + this.response.id
             }
 

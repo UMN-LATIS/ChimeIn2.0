@@ -9,6 +9,8 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Validator;
+use Auth;
 
 class ChimeController extends Controller
 {
@@ -223,13 +225,36 @@ class ChimeController extends Controller
     }
 
     public function uploadImage(Request $req) {
-        $user = $req->user();
+        $user = Auth::user();
         $chime = $user->chimes()->find($req->route('chime_id'));
 
+        $validator = Validator::make($req->all(), [
+             'image'  => 'required|max:2048',
+         ]);
+
+         if ($validator->fails()) {
+            return response()->json(['sizeError' => $validator->errors()->getMessages()], 400);
+         }
+
         if ($chime != null) {
-            $path = $req->file('image')->store('image');
-            
-            return response('/api/chime/'. $chime->id. '/'. $path, 200);
+            $image = $req->file('image');
+            if(!$image) {
+                return response()->json(["error" => "unableToStore"]);
+            }
+
+            $image_resize = Image::make($image);
+            $image_resize->resize(2048, 2048, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $image_resize->save();
+            $path = $image->store('public');
+
+            if(!$path) {
+                return response()->json(["error" => "unableToStore"]);
+            }
+
+            return response()->json(["image" => basename($path)]);
         } else {
             return response('Chime not found', 400);
         }

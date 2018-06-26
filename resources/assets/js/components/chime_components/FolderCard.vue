@@ -173,12 +173,12 @@ export default {
         load_questions() {
             const url = (
                 '/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id);
-            const self = this;
+
 
             axios.get(url)
             .then(res => {
-                self.questions = res.data;
-                console.log('questions:', self.questions);
+                this.questions = res.data;
+                console.log('questions:', this.questions);
             })
             .catch(err => {
                 console.log(err);
