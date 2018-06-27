@@ -95,8 +95,6 @@ export default {
 
                 var session = this.question.sessions.find(s => s.id == this.question.current_session_id);
                 console.log(this.question.sessions);
-                console.log("current session:", this.question.current_session_id);
-                console.log("session", session);
                 return session;
 
             }

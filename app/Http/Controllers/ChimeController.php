@@ -38,9 +38,9 @@ class ChimeController extends Controller
             ->first());
         
         if ($chime != null && $chime->pivot->permission_number >= 200) {
-            return view('chime', ['user' => $user]);
+            return view('chime', ['user' => $user, 'chime'=>$chime]);
         } else {
-            return view('chime_student', ['user' => $user]);
+            return view('chime_student', ['user' => $user, 'chime'=>$chime]);
         }
     }
 
@@ -78,6 +78,14 @@ class ChimeController extends Controller
                 $question->current_session->load("question");
                 $sessions[] = $question->current_session;
             }
+
+            usort($sessions, function($a, $b) {
+                if(strtotime($a->updated_at) == strtotime($b->updated_at)) {
+                    return 0;
+                }
+                return strtotime($a->updated_at)<strtotime($b->updated_at)?-1:1;
+            });
+
             // dd($questions);
 
             return response()->json([

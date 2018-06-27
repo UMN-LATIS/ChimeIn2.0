@@ -1,37 +1,72 @@
 <template>
     <div>
         <a
-            class="waves-effect waves-light btn-small"
-            id="csv_link"
-            v-on:click="export_csv">
-            Export CSV
-        </a>
+        class="waves-effect waves-light btn-small"
+        id="csv_link"
+        v-on:click="export_csv">
+        Export CSV
+    </a>
+:question="question" :responses="responses"
+    <reactive-bar-chart :chart-data="chartData" :options="options"></reactive-bar-chart>
 
-        <line-chart :question="question" :responses="responses"></line-chart>
-        
-        <input
-            id="response_search_input"
-            type="text"
-            v-model="response_search"
-            v-on:keyup="filter_responses">
-        <label for="response_search_input">Student Name</label>
+    <input
+    id="response_search_input"
+    type="text"
+    v-model="response_search"
+    v-on:keyup="filter_responses">
+    <label for="response_search_input">Student Name</label>
 
-        <ul>
-            <li v-for="r in visible_responses" :key="r.id">
-                {{r.user.name}}: {{r.response_info.choice}}
-            </li>
-        </ul>
-    </div>
+    <ul>
+        <li v-for="r in visible_responses" :key="r.id">
+            {{r.user.name}}: {{r.response_info.choice}}
+        </li>
+    </ul>
+</div>
 </template>
 
 <script>
-const VueChartJs = require('vue-chartjs');
+
+
+import ReactiveBarChart from "../../ReactiveBarChart.js";
+
 export default {
     props: ['responses', 'question'],
+    components: {
+        ReactiveBarChart
+    },
     data: function() {
         return {
             visible_responses: [],
-            response_search: ''
+            response_search: '',
+            options: { 
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            userCallback: function(label, index, labels) {
+                                if (Math.floor(label) === label) {return label;}
+                            }
+                        }
+                    }]
+                }, 
+                responsive: true, 
+                maintainAspectRatio: false
+            }
+        }
+    },
+    computed: {
+        chartData: function() {
+            return {labels: this.question.question_info.question_responses,
+                datasets: [
+                    {
+                    label: 'Number of Responses',
+                        backgroundColor: '#0b3c4c',
+                        data:  this.question.question_info.question_responses.map(
+                            q => this.responses.filter(r => q === r.response_info.choice).length
+                        )
+                    }
+                ]
+            };
         }
     },
     methods: {
@@ -47,10 +82,10 @@ export default {
         export_csv: function() {
             const rows = this.responses.map(r => {
                 return [
-                    r.user.id,
-                    r.user.name,
-                    r.session_id,
-                    r.response_info.choice].join(',')
+                r.user.id,
+                r.user.name,
+                r.session_id,
+                r.response_info.choice].join(',')
             });
 
             let row_str = 'User Id,User Name,Session Id,Choice\n'
@@ -63,45 +98,6 @@ export default {
 
             link.href = URL.createObjectURL(file);
             link.download = 'question_' + this.question.id + '_responses.csv';
-        }
-    },
-    components: {
-        'line-chart': {
-            props: ['responses', 'question'],
-            extends: VueChartJs.Bar,
-            methods: {
-                render_chart: function() {
-                    this.renderChart({
-                    labels: this.question.question_info.question_responses,
-                    datasets: [
-                        {
-                        label: 'Number of Responses',
-                        backgroundColor: '#0b3c4c',
-                        data:  this
-                                .question
-                                .question_info
-                                .question_responses
-                                .map(q => (
-                                        this
-                                        .responses
-                                        .filter(
-                                            r => q === r.response_info.choice)
-                                        .length
-                                    )
-                                )
-                        }
-                    ]
-                    }, {responsive: true, maintainAspectRatio: false})
-                }
-            },
-            watch: {
-                responses: function() {
-                    this.render_chart();
-                }
-            },
-            mounted: function() {
-                this.render_chart();
-            }
         }
     }
 }

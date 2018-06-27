@@ -7,15 +7,22 @@
                 v-on:click="export_csv">
                 Export CSV
             </a>
-
+            <fullscreen ref="fullscreen" @change="fullscreenChange">
             <word-cloud
                 :data="word_groups"
                 :nameKey="'name'"
-                :valueKey="'value'">
+                :valueKey="'value'"
+                :rotate="rotation"
+                :margin="margin"
+                :wordPadding="1"
+                style="width: 100%; height:600px"
+                :fontSize="fontSize"
+                >
             </word-cloud>
+            
+            </fullscreen>
 
-            <br/>
-
+<button type="button" @click="toggle" >Fullscreen</button>
             <transition-group name="fade">
                 <div
                     v-for="(r, i) in responses.map(r => r.response_info.text).reverse().slice(0, 10)"
@@ -29,7 +36,7 @@
 
         <div v-else>No Responses Yet!</div>
 
-        <input
+<!--         <input
             id="response_search_input"
             type="text"
             v-model="response_search"
@@ -40,13 +47,12 @@
             <li v-for="r in visible_responses" :key="r.id">
                 {{r.user.name}}: {{r.response_info.text}}
             </li>
-        </ul>
+        </ul> -->
     </div>
 </template>
 
 <script>
 const wordcloud = require('vue-wordcloud').default;
-const VueChartJs = require('vue-chartjs');
 const difflib = require('difflib');
 const cluster = require('set-clustering');
 
@@ -54,12 +60,22 @@ export default {
     props: ['responses', 'question'],
     data: function() {
         return {
+            fontSize: [20, 120],
+            fullscreen: false,
             visible_responses: [],
             response_search: '',
-            word_groups: []
+            rotation: {from: 0, to: 0, numOfOrientation: 1 },
+            margin: {top: 0, bottom: 0, left: 0, right: 0}
         }
     },
     methods: {
+        toggle () {
+        this.$refs['fullscreen'].toggle() // recommended
+        // this.fullscreen = !this.fullscreen // deprecated
+      },
+      fullscreenChange (fullscreen) {
+        this.fullscreen = fullscreen
+      },
         filter_responses: function() {
             if (this.response_search) {
                 this.visible_responses = this.responses.filter(r => {
@@ -93,8 +109,13 @@ export default {
 
             link.href = URL.createObjectURL(file);
             link.download = 'question_' + this.question.id + '_responses.csv';
-        },
-        make_word_groups: function() {
+        }
+    },
+    components: {
+        'word-cloud': wordcloud
+    },
+    computed: {
+        word_groups: function() {
             const words = (
                 this
                 .responses
@@ -102,7 +123,9 @@ export default {
                 .join(' ')
                 .split(' '));
 
-            const groups = words.reduce((acc, w) => {
+            var wordsWithoutStops = sw.removeStopwords(words)
+
+            const groups = wordsWithoutStops.reduce((acc, w) => {
                 const i = acc.findIndex(e => e.name === w);
 
                 if (i > -1) {
@@ -123,53 +146,8 @@ export default {
             console.log('word groups:', groups);
             return groups
         }
-    },
-    components: {
-        'line-chart': {
-            props: ['wordGroups'],
-            extends: VueChartJs.Bar,
-            methods: {
-                render_chart: function() {
-                    console.log('word groups:', this.wordGroups);
-
-                    this.renderChart({
-                    labels: this.wordGroups.map(g => g[0]),
-                    datasets: [
-                        {
-                        label: 'Number of Responses',
-                        backgroundColor: '#0b3c4c',
-                        data: this.wordGroups.map(g => g.length)
-                        }
-                    ]
-                    }, {responsive: true, maintainAspectRatio: false})
-                }
-            },
-            watch: {
-                wordGroups: function() {
-                    this.render_chart();
-                }
-            },
-            mounted: function() {
-                this.render_chart();
-            }
-        },
-        'word-cloud': wordcloud
-    },
-    watch: {
-        responses: function() {
-            if (this.responses.length > 0) {
-                this.word_groups = this.make_word_groups();
-            } else {
-                this.word_groups = [];
-            }
-        }
-    },
-    created: function() {
-        if (this.responses.length > 0) {
-            this.word_groups = this.make_word_groups();
-        }
     }
-}
+};
 </script>
 
 <style>
@@ -182,4 +160,5 @@ export default {
 .fade-move {
     transition: transform 1s;
 }
+
 </style>

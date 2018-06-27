@@ -1,6 +1,8 @@
 
 require('./bootstrap');
 
+window.sw = require('stopword')
+
 window.queryString = require('query-string');
 
 
@@ -10,6 +12,11 @@ import EventBus from './event-bus';
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+import fullscreen from 'vue-fullscreen'
+
+Vue.use(fullscreen)
+
+// import ReactiveBarChart from "./ReactiveBarChart.js";
 
 Vue.component('modal',
     require('./components/modal.vue'));

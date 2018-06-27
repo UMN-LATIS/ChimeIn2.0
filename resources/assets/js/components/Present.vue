@@ -70,7 +70,7 @@ export default {
         }
     },
     mounted: function () {
-        this.chime_id = this.getCurrentChime();
+        this.chime_id = window.chime;
         this.current_question = parseInt(this.$route.params.id) || 0;
 
         this.load_questions();
@@ -112,9 +112,9 @@ export default {
 
             var updateInPlace = false;
             if(m.isEdit) {
-                targetSession.responses.forEach(response => {
+                targetSession.responses.forEach((response, index) => {
                     if(response.id == m.response.id) {
-                        // response = m.response;
+                        Vue.set(targetSession.responses, index, m.response);
                         updateInPlace = true;
                     }
                 });

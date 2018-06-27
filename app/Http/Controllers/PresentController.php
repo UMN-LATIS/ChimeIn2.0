@@ -33,7 +33,7 @@ class PresentController extends Controller
             ->first());
         
         if ($chime != null && $chime->pivot->permission_number >= 200) {
-            return view('present', ['user' => $user]);
+            return view('present', ['user' => $user, 'chime'=>$chime]);
         } else {
             return Response('Invalid permissions to view present page', 405);
         }

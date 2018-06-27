@@ -17,7 +17,7 @@
             <span class="card-title truncate" v-bind:title="question.text">
                 <h6>Session:</h6>
             </span>
-
+<!-- 
             <ul class="pagination center">
                 <li v-bind:class="
                     [starting_index === 0 ? 'disabled' : 'waves-effect']">
@@ -42,10 +42,10 @@
                     </a>
                 </li>
             </ul>
-
+ -->
             <multiple-choice-statistics
                 v-if="question.question_info.question_type === 'multiple_choice'"
-                :responses="responses"
+                :responses="current_session.responses"
                 :question="question">
             </multiple-choice-statistics>
             <image-response-statistics
@@ -55,7 +55,7 @@
             </image-response-statistics>
             <free-response-statistics
                 v-else
-                :responses="responses"
+                :responses="current_session.responses"
                 :question="question">
             </free-response-statistics>
         </div>
@@ -68,8 +68,8 @@ export default {
     data: function() {
         return {
             starting_index: 0,
-            visible_sessions: this.sessions.slice(0, 10),
-            current_session: this.session || this.sessions[0],
+            visible_sessions: this.question.sessions.slice(0, 10),
+            // current_session: this.question.session || this.question.sessions[0],
             responses: []
         }
     },
@@ -81,66 +81,52 @@ export default {
                 this.starting_index = 0;
             }
             
-            this.visible_sessions = this.sessions.slice(
+            this.visible_sessions = this.question.sessions.slice(
                 this.starting_index, this.starting_index+10);
         },
         next_session_block: function() {
-            if (this.starting_index < this.sessions.length - 10) {
+            if (this.starting_index < this.question.sessions.length - 10) {
                 this.starting_index += 10;
             }
 
-            this.visible_sessions = this.sessions.slice(
+            this.visible_sessions = this.question.sessions.slice(
                 this.starting_index, this.starting_index+10);
         },
-        get_session_responses: function() {
-            if (this.current_session) {
-                const self = this;
-                const url = (
-                    '/api/chime/'
-                    + window.location.pathname.split('/')[2]
-                    + '/folder/'
-                    + window.location.pathname.split('/')[4]
-                    + '/question/'
-                    + this.question.id
-                    + '/session/'
-                    + this.current_session.id);
+        
+    },
+    computed: {
+        current_session: function() {
+            if(this.question.current_session_id) {
 
-                axios.get(url)
-                .then(res => {
-                    console.log('session responses:', res);
-                    self.responses = res.data;
-                    self.responses.forEach(r => {
-                        r.response_info = JSON.parse(r.response_info);
-                    })
-                })
-                .catch(err => {
-                    console.log(err.response);
-                });
+                var session = this.question.sessions.find(s => s.id == this.question.current_session_id);
+                console.log(this.question.sessions);
+                return session;
+
             }
-        },
+            else {
+                return false;
+            }
+        }
     },
     created: function() {
-        this.get_session_responses();
+
     },
     watch: {
         sessions: function() {
-            this.visible_sessions = this.sessions.slice(0, 10);
+            this.visible_sessions = this.question.sessions.slice(0, 10);
         },
         session: function() {
-            if (this.session) {
-                const sessions_index = this.sessions.findIndex(
-                    e => e.id === this.session.id);
+            if (this.question.session) {
+                const sessions_index = this.question.sessions.findIndex(
+                    e => e.id === this.question.session.id);
 
-                this.current_session = this.session;
+                this.current_session = this.question.session;
                 this.starting_index = sessions_index - 5;
-                this.visible_sessions = this.sessions.slice(
+                this.visible_sessions = this.question.sessions.slice(
                     this.starting_index, this.starting_index+10);
             } else {
-                this.current_session = this.sessions[0];
+                this.current_session = this.question.sessions[0];
             }
-        },
-        current_session: function() {
-            this.get_session_responses();
         }
     }
 }

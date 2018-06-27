@@ -124,7 +124,7 @@ export default {
     },
     created: function () {
         const self = this;
-        axios.get('/api/chime/' + this.getCurrentChime())
+        axios.get('/api/chime/' + window.chime)
         .then(res => {
             console.log(res);
             self.chime = res.data;

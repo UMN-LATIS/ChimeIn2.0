@@ -10,13 +10,19 @@
         <div>
             <p class="flow-text" v-html="question.text"></p>
             <multiple-choice-display
-            v-if="question.question_info.question_type === 'multiple_choice'"
-            :question="question">
-        </multiple-choice-display>
+                v-if="question.question_info.question_type === 'multiple_choice'"
+                :question="question">
+            </multiple-choice-display>
     </div>
 </b-col>
 <b-col sm=3>
     <div class="float-right">
+
+        <a 
+        class="pointer"
+        v-bind:href="'/chime/' + folder.chime_id + '/folder/' + folder.id + '/present/#/' + (question.order - 1)">
+        <i class="material-icons">play_arrow</i>
+    </a>
         <a 
         class="pointer"
         v-on:click="show_edit = !show_edit">

@@ -72,7 +72,7 @@ export default {
     created: function () {
         const self = this;
         
-        axios.get('/api/chime/' + this.getCurrentChime())
+        axios.get('/api/chime/' + window.chime)
         .then(res => {
             console.log('debug', 'chime:', res);
             self.chime = res.data.chime;
@@ -84,7 +84,7 @@ export default {
             console.error('error getting sessions:', err.response);
         });
 
-        axios.get('/api/chime/' + this.getCurrentChime() + "/responses")
+        axios.get('/api/chime/' + window.chime + "/responses")
         .then(res => {
             console.log('debug', 'Response:', res);
             self.responses= res.data;
@@ -92,7 +92,7 @@ export default {
         })
 
 
-        Echo.private('session-status.' + this.getCurrentChime())
+        Echo.private('session-status.' + window.chime)
         .listen('StartSession', m => {
             console.log('debug', 'message:', m);
             self.sessions.push(m.session);

@@ -1,5 +1,7 @@
 @extends('base')
 
+
+
 @section('content')
 <navbar
     :title="'Home'"
