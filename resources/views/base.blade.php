@@ -45,11 +45,7 @@
 
 		<a name="main-nav"></a>
 		<a name="main-content"></a>
-		@if (Auth::user() && Auth::user()->guest_user)
-				<p class="pull-right login">{{ HTML::linkAction('BoardController@login', "Log In", [$board->unit]) }}</p>
-				@endif
 		<main id="umn-main" role="main">
-
 
 			<div class="home" id="app">
 				

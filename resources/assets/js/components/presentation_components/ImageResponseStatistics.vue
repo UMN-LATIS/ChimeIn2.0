@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div v-if="responses.length > 0">
+        <div v-if="responses.length > 0" class="row">
+            <div class="col">
             <a
                 class="waves-effect waves-light btn-small"
                 id="csv_link"
@@ -8,51 +9,62 @@
                 Export CSV
             </a>
 
-            <carousel :autoplay="true" :perPage="2" :autoplayHoverPause="true">
-                <slide v-for="r in responses" :key="r.id">
-                    <img class="responsive-img" :src="r.response_info.image">
-                </slide>
-            </carousel>
+           <lightbox
+                v-bind:id="'lightbox' + question.id "
+                :images="images"
+                :image_class=" 'img-responsive img-rounded' "
+                :options="options">
+            </lightbox>
+            </div>
         </div>
 
         <div v-else>No Responses Yet!</div>
+        <div class="row">
+            <input
+                id="response_search_input"
+                type="text"
+                v-model="response_search"
+                v-on:keyup="filter_responses">
+            <label for="response_search_input">Student Name</label>
 
-        <input
-            id="response_search_input"
-            type="text"
-            v-model="response_search"
-            v-on:keyup="filter_responses">
-        <label for="response_search_input">Student Name</label>
-
-        <ul>
-            <li v-for="r in visible_responses" :key="r.id">
-                {{r.user.name}}: <img class="responsive-img" :src="r.response_info.image">
-            </li>
-        </ul>
+            <ul>
+                <li v-for="r in visible_responses" :key="r.id">
+                    {{r.user.name}}: <img class="responsive-img" v-bind:src="'/storage/' + r.response_info.image">
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
+<style>
+
+
+</style>
+
 <script>
-import { Carousel, Slide } from 'vue-carousel';
+
+import Lightbox from 'vue-simple-lightbox'
 
 export default {
+    components: {
+      Lightbox
+    },
     props: ['responses', 'question'],
     data: function() {
         return {
             visible_responses: [],
             response_search: '',
-            word_groups: []
+            options : {
+                closeText : 'X'
+            }
+        }
+    },
+    computed: {
+        images: function() {
+            return this.responses.map(elem => { return {"src": '/storage/' + elem.response_info.image, "title":""} });
         }
     },
     methods: {
-        shuffle: function(a) {
-            for (let i = a.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
-            }
-
-            return a;
-        },
         filter_responses: function() {
             if (this.response_search) {
                 this.visible_responses = this.responses.filter(r => {
@@ -86,19 +98,5 @@ export default {
             link.download = 'question_' + this.question.id + '_responses.csv';
         }
     },
-    created: function() {
-        $(document).ready(function(){
-            $('.carousel').carousel();
-        });
-    },
-    watch: {
-        responses: function() {
-            this.shuffle(this.responses);
-        }
-    },
-    components: {
-        Carousel,
-        Slide
-    }
 }
 </script>

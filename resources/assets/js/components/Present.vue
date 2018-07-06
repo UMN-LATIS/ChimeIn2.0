@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div  class="container">
         <navbar
         :title="'Present'"
         :user="user"
@@ -9,7 +9,7 @@
 
 
     
-        <template v-for="(question,index) in questions">
+        <template v-for="(question,index) in questions"x>
             <present-question :question="question" :chime_id="chime_id" :folder_id="folder_id" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question()" @sessionUpdated="load_questions">
             </present-question>
         </template>
@@ -32,8 +32,6 @@ export default {
     methods: {
         next_question: function() {
             var target = 0;
-
-
             if(this.questions.length > this.current_question + 1) {
                 target = this.current_question + 1;
             }

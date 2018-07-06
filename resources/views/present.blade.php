@@ -8,5 +8,5 @@
 @endsection
 @section('content')
 
-<router-view :user="{{$user}}"></router-view>
+<router-view class="container" :user="{{$user}}"></router-view>
 @endsection

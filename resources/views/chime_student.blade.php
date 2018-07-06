@@ -5,5 +5,5 @@
 </script>
 @endsection
 @section('content')
-<ChimeStudent :user="{{$user}}"></ChimeStudent>
+<ChimeStudent class="container" :user="{{$user}}"></ChimeStudent>
 @endsection

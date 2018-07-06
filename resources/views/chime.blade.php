@@ -13,5 +13,5 @@
     :link="'/'">
 </navbar>
 
-<Chime :user="{{$user}}"></Chime>
+<Chime class="container" :user="{{$user}}"></Chime>
 @endsection

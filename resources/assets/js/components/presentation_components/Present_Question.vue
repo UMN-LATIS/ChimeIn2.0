@@ -29,7 +29,12 @@ Stop Session
 class="btn btn-outline-primary"
 v-on:click="show_results = !show_results">
 <i class="material-icons left">zoom_in</i>
-View Results
+    <span v-if="show_results">
+        Hide Results
+    </span>
+    <span v-else>
+    View Results
+    </span>
 </button>
 <button
 class="btn btn-outline-primary" @click="$emit('nextQuestion')">

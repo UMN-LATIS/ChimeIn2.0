@@ -52,7 +52,11 @@
 </template>
 
 <script>
-const wordcloud = require('vue-wordcloud').default;
+
+import wordcloud from 'vue-wordcloud/src/components/WordCloud'
+
+const stemmer = require('stemmer');
+// const wordcloud = require('vue-wordcloud').default;
 const difflib = require('difflib');
 const cluster = require('set-clustering');
 
@@ -121,17 +125,20 @@ export default {
                 .responses
                 .map(r => r.response_info.text)
                 .join(' ')
-                .split(' '));
+                .match(/\w+/g));
 
             var wordsWithoutStops = sw.removeStopwords(words)
-
+            // var wordsStemmed = wordsWithoutStops.map(word => stemmer(word).toLowerCase());
             const groups = wordsWithoutStops.reduce((acc, w) => {
-                const i = acc.findIndex(e => e.name === w);
+                if(w.length < 2 || !isNaN(w)) {
+                    return acc;
+                }
+                const i = acc.findIndex(e => e.stem === stemmer(w.toLowerCase()));
 
                 if (i > -1) {
                     acc[i].value += 1;
                 } else {
-                    acc.push({'name': w, 'value': 1});
+                    acc.push({'name': w, 'value': 1, 'stem': stemmer(w)});
                 }
 
                 return acc;

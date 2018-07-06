@@ -8,5 +8,5 @@
     :user="{{$user}}"
     :link="'/'">
 </navbar>
-<Home :user="{{$user}}"></Home>
+<Home class="container" :user="{{$user}}"></Home>
 @endsection
