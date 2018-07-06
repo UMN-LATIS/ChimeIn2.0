@@ -25,15 +25,14 @@ use App\Http\Controllers\PresentController;
 
 Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     Route::get('/', 'HomeController@index');
+    
+
     Route::get('/api/chime', 'HomeController@getChimes');
     Route::post('/api/chime', 'HomeController@createChime');
-    Route::post('/api/chime/{access_code}',
-        'HomeController@joinChime');
-    Route::delete('/api/chime/{chime_id}',
-        'HomeController@deleteChime');
+    Route::post('/api/chime/{access_code}', 'HomeController@joinChime');
+    Route::delete('/api/chime/{chime_id}', 'HomeController@deleteChime');
 
     // Chime Page Routes
-    Route::get('/chime/{chime_id}', 'ChimeController@index');
     Route::get('/api/chime/{chime_id}', 'ChimeController@getChime');
     Route::get('/api/chime/{chime_id}/users', 'ChimeController@getUsers');
     Route::post('/api/chime/{chime_id}/users', 'ChimeController@addUser');
@@ -59,14 +58,15 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
 
     // Presentation Routes
-    Route::get('/chime/{chime_id}/folder/{folder_id}/present', 'PresentController@index');
-    Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@getSessions');
-    Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}', 'PresentController@getResponses');
+    // Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@getSessions');
+    // Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}', 'PresentController@getResponses');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
 });
     // Auth::routes();
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+
 
 
 
@@ -86,3 +86,6 @@ if (config('shibboleth.emulate_idp') ) {
         Route::name('shibboleth-logout')->get('/shibboleth-logout', '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@destroy');
     });
 }
+
+
+Route::any('{all}','HomeController@index')->where(['all' => '.*']);

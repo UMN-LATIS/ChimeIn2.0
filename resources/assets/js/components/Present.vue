@@ -1,18 +1,19 @@
 <template>
-    <div  class="container">
+    <div>
         <navbar
         :title="'Present'"
         :user="user"
-        :link="'/chime/' + chime_id">
+        :link="{name:'chime', params:{chimeId: chimeId}}">
     </navbar>
 
 
-
+        <div class="container">
     
         <template v-for="(question,index) in questions"x>
-            <present-question :question="question" :chime_id="chime_id" :folder_id="folder_id" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question()" @sessionUpdated="load_questions">
+            <present-question :question="question" :chimeId="chimeId" :folderId="folderId" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question()" @sessionUpdated="load_questions">
             </present-question>
         </template>
+        </div>
 </div>
 
 </template>
@@ -21,35 +22,33 @@
 export default {
     data() {
         return {
-            chime_id: null,
-            folder_id: window.location.pathname.split('/')[4],
             questions: [],
             show_results: false,
             current_question: 0,
         };
     },
-    props: ['user'],
+    props: ['user', 'chimeId', 'folderId', 'questionId'],
     methods: {
         next_question: function() {
             var target = 0;
             if(this.questions.length > this.current_question + 1) {
                 target = this.current_question + 1;
             }
-            this.$router.replace({ name: 'present', params: { id: target }})
+            this.$router.replace({ name: 'present', params: { chimeId: this.chimeId, folderId: this.folderId, questionId: target }})
         },
         previous_question: function() {
             var target = this.current_question - 1;
             if(this.current_question - 1 < 0) {
                 target = this.questions.length - 1;
             }
-            this.$router.replace({ name: 'present', params: { id: target }})  
+            this.$router.replace({ name: 'present', params: { chimeId: this.chimeId, folderId: this.folderId, questionId: target }});
         },
         load_questions: function() {
             const url = (
                 '/api/chime/'
-                + this.chime_id
+                + this.chimeId
                 + '/folder/'
-                + this.folder_id
+                + this.folderId
                 );
 
             axios.get(url)
@@ -64,18 +63,17 @@ export default {
     },
     watch: {
         '$route' (to, from) {
-            this.current_question = parseInt(to.params.id);
+            this.current_question = parseInt(to.params.questionId);
         }
     },
     mounted: function () {
-        this.chime_id = window.chime;
-        this.current_question = parseInt(this.$route.params.id) || 0;
+        this.current_question = parseInt(this.$route.params.questionId) || 0;
 
         this.load_questions();
 
         var self=this;
 
-        Echo.private('session-status.' + this.chime_id)
+        Echo.private('session-status.' + this.chimeId)
         .listen('StartSession', m => {
             self.load_questions();
         })
@@ -83,7 +81,7 @@ export default {
             this.load_questions();
         });;
 
-        Echo.private('session-response.'+ this.chime_id)
+        Echo.private('session-response.'+ this.chimeId)
         .listen('SubmitResponse', m => {
 
 

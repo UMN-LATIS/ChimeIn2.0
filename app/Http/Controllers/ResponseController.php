@@ -14,15 +14,7 @@ use Auth;
 
 class ResponseController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+
 
     /**
      * Show the application dashboard.
@@ -40,14 +32,6 @@ class ResponseController extends Controller
         $responseModels = \App\Response::hydrate($responses->toArray()); 
         $responseModels->load("session.question");
         return response()->json($responseModels);
-    }
-
-    public function getQuestion(Request $req) {
-        $user = $req->user();
-        $chime = $user->chimes()->find($req->route('chime_id'));
-        $session = $chime->sessions->find($req->route('session_id'));
-        $question = $session->question()->get()->first();
-        return response()->json($question);
     }
 
     public function createOrUpdateResponse(Chime $chime, Session $session, Response $response = null, Request $request) {
@@ -79,27 +63,4 @@ class ResponseController extends Controller
         return response()->json($response->load("session.question"));
     }
 
-    public function updateResponse(Request $req) {
-        $user = $req->user();
-        $chime = $user->chimes()->find($req->route('chime_id'));
-        $session = (
-            $chime
-            ->sessions()
-            ->where('in_progress', true)
-            ->find($req->route('session_id')));
-
-        $found_response = (
-            $session
-            ->responses()
-            ->where('user_id', $user->id)
-            ->first());
-
-        $found_response->update([
-            'response_info' => json_encode($req->get('response_info'))
-        ]);
-
-        event(new SubmitResponse($chime, $session, $found_response));
-
-        return response()->json($found_response);
-    }
 }

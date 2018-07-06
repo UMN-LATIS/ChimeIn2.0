@@ -14,35 +14,6 @@ use Auth;
 
 class ChimeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $req) {
-        $user = $req->user();
-        $chime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-        
-        if ($chime != null && $chime->pivot->permission_number >= 200) {
-            return view('chime', ['user' => $user, 'chime'=>$chime]);
-        } else {
-            return view('chime_student', ['user' => $user, 'chime'=>$chime]);
-        }
-    }
 
     public function getChime(Request $req) {
         $user = $req->user();
@@ -192,40 +163,8 @@ class ChimeController extends Controller
         }
     }
 
-    public function getOpenSessions(Request $req) {
-        $user = $req->user();
-        $chime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-        $open_sessions = $chime->sessions()->where('in_progress', true);
-    
-        return response()->json($open_sessions->get());
-    }
 
-    public function getPastResponses(Request $req) {
-        if ((int)$req->route('chime_id') <= 0) {
-            return response('Chime ID must be an integer', 400);
-        } else {
-            // $ids = DB::select(
-            //     'SELECT DISTINCT r.id AS response_id, q.id AS question_id'
-            //     . ' FROM responses r, sessions s, questions q'
-            //     . ' WHERE r.user_id = ' . $req->user()->id
-            //     . ' AND r.session_id = s.id'
-            //     . ' AND s.question_id = q.id'
-            //     // . ' AND s.in_progress = "0"'
-            //     . ' AND s.chime_id = ' .  $req->route('chime_id'));
-    
-            // foreach ($ids as $id) {
-            //     $id->response = Response::find($id->response_id);
-            //     $id->question = Question::find($id->question_id);
-            // }
-        
-            return response()->json([]);
-        }
-    }
-
+  
     public function getImage(Request $req) {
         $path = Storage::get('image/'. $req->route('image_name'));
 

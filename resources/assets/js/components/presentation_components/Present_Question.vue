@@ -52,7 +52,7 @@ Previous Question
 
 <script>
 export default {
-    props: ['question', 'chime_id', 'folder_id'],
+    props: ['question', 'chimeId', 'folderId'],
     data() {
         return {
             show_results: false,
@@ -62,9 +62,9 @@ export default {
         start_session: function() {
             const url = (
                 '/api/chime/'
-                + this.chime_id
+                + this.chimeId
                 + '/folder/'
-                + window.location.pathname.split('/')[4]
+                + this.folderId
                 + '/question/'
                 + this.question.id);
 
@@ -79,9 +79,9 @@ export default {
         stop_session: function() {
             const url = (
                 '/api/chime/'
-                + this.chime_id
+                + this.chimeId
                 + '/folder/'
-                + this.folder_id
+                + this.folderId
                 + '/question/'
                 + this.question.id
                 + '/stopSession/'

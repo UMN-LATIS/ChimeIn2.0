@@ -27,24 +27,20 @@
                 <template v-else v-on:click="toggle_edit_folder">
 
                     <b-col sm="9">
-                        <a href="#" v-on:click="show_questions = !show_questions" v-if="questions.length > 0">
+                        <a v-on:click="show_questions = !show_questions" v-if="questions.length > 0">
                             <i class="material-icons float-left" v-if="show_questions">expand_less</i>
                             <i class="material-icons float-left" v-if="!show_questions">expand_more</i>
                         </a>
                         <h4 @click="show_edit_folder = true">{{ folder.name }}</h4>
                     </b-col>
                     <b-col sm="3" class="text-right">
-                        <a href="#" v-on:click="delete_folder">
-                            <i class="material-icons">delete</i>
-                        </a>
+                        <i class="material-icons" v-on:click="delete_folder">delete</i>
 
-                        <a class="" v-bind:href="'/chime/' + folder.chime_id + '/folder/' + folder.id + '/present'">
+                        <router-link :to="{ name: 'present', params: {chimeId: chime.id, folderId: folder.id} }">
                             <i class="material-icons">play_arrow</i>
-                        </a>
+                        </router-link>
 
-                        <a href="#" v-on:click="">
-                            <i class="material-icons" @click="showModal = true">add</i>
-                        </a>
+                        <i class="material-icons" @click="showModal = true">add</i>
 
                     </b-col>
                 </template>

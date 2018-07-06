@@ -60,7 +60,7 @@ export default {
 
             axios.post(
                 '/api/chime/'
-                + window.location.pathname.split('/')[2]
+                + this.chime.id
                 + '/image', form_data)
             .then(res => {
                 console.log(res);

@@ -177,7 +177,13 @@ export default {
             });
         },
         open_chime() {
-            window.location.href = '/chime/' + this.chime.id;
+            if(this.chime.pivot.permission_number >= 200) {
+                this.$router.push({ name: 'chime', params: { chimeId: this.chime.id }})    
+            }
+            else {
+                this.$router.push({ name: 'chimeStudent', params: { chimeId: this.chime.id }})
+            }
+            
         },
         delete_chime() {
             const confirmation = window.confirm(

@@ -8,7 +8,7 @@ use Auth;
 class ShibInjection
 {
     /**
-     * Handle an incoming request.
+     * Inject shib parameters onto the user object (this avoids having to archive them to the DB)
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next

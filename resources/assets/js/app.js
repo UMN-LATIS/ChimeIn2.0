@@ -21,15 +21,18 @@ Vue.use(fullscreen)
 Vue.component('modal',
     require('./components/modal.vue'));
 
-Vue.component('home',
-    require('./components/Home.vue'));
+import Home from './components/Home.vue';
+Vue.component('home', Home);
 
-Vue.component('chime',
-    require('./components/Chime.vue'));
+import Chime from './components/Chime.vue';
+Vue.component('chime', Chime);
 
-Vue.component('Chimestudent',
-    require('./components/Chime_student.vue'));
+import ChimeStudent from './components/Chime_student.vue';
+Vue.component('ChimeStudent', ChimeStudent);
 
+
+import Present from './components/Present.vue';
+Vue.component('Present', Present);
 
 
 Vue.component('navbar',
@@ -83,8 +86,13 @@ Vue.component('free-response-statistics',
 
 
 const router = new VueRouter({
+    mode: 'history',
   routes: [
-    { path: '/:id?', name: "present", component: require('./components/Present.vue')}
+    { path: "/", component: Home },
+    { path: "/chime/:chimeId", name:'chime', component: Chime, props: true },
+    { path: "/chimeStudent/:chimeId", name:'chimeStudent', component: ChimeStudent, props: true },
+    { path: "/chime/:chimeId/folder/:folderId/present/:questionId?", name:'present', component: Present, props: true }
+    // { path: '/:id?', name: "present", component: require('./components/Present.vue')}
   ]
 })
 

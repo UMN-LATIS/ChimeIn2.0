@@ -1,5 +1,11 @@
 <template>
     <div>
+        <navbar
+        title="Home"
+        :user="user"
+        :link="'/'">
+    </navbar>
+        <div class="container">
         <div class="row">
             <div class="col-12">
 
@@ -20,11 +26,10 @@
 
         </div>
 
-        <div class="container center-align">
+        <div class="center-align">
             <new-folder
             :chime="chime"
-            v-on:newfolder="create_folder"
-            v-on:filterfolder="filter_folders"></new-folder>
+            v-on:newfolder="create_folder"></new-folder>
             <div v-if="viewable_folders.length > 0">
                 <transition-group name="fade">
                     <folder-card
@@ -40,6 +45,7 @@
         <div v-else>
             No Folders Yet!
         </div>
+    </div>
     </div>
 </div>
 </template>
@@ -57,7 +63,7 @@ export default {
             viewable_folders: [],
         };
     },
-    props: ['user'],
+    props: ['user', 'chimeId'],
     methods: {
         create_folder: function(folder_name) {
             if (this.folders.filter(e => e.name === folder_name).length < 1) {
@@ -124,7 +130,7 @@ export default {
     },
     created: function () {
         const self = this;
-        axios.get('/api/chime/' + window.chime)
+        axios.get('/api/chime/' + this.chimeId)
         .then(res => {
             console.log(res);
             self.chime = res.data;

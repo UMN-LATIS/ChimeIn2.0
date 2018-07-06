@@ -3,10 +3,6 @@
 
 
 @section('content')
-<navbar
-    :title="'Home'"
-    :user="{{$user}}"
-    :link="'/'">
-</navbar>
-<Home class="container" :user="{{$user}}"></Home>
+<router-view :user="{{$user}}"></router-view>
+{{-- <Home class="container" :user="{{$user}}"></Home> --}}
 @endsection

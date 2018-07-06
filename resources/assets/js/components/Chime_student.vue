@@ -7,7 +7,7 @@
     </navbar>
 
 
-    <div class="row">
+    <div class="container">
         <b-tabs class="col-12">
             <b-tab title="Current Questions" active>
                <transition-group name="fade">
@@ -53,7 +53,7 @@ export default {
             responses: []
         };
     },
-    props: ['user'],
+    props: ['user', 'chimeId'],
     methods: {
         updateResponse: function(newResponse) {
             var updateInPlace = false;
@@ -72,7 +72,7 @@ export default {
     created: function () {
         const self = this;
         
-        axios.get('/api/chime/' + window.chime)
+        axios.get('/api/chime/' + this.chimeId)
         .then(res => {
             console.log('debug', 'chime:', res);
             self.chime = res.data.chime;
@@ -84,7 +84,7 @@ export default {
             console.error('error getting sessions:', err.response);
         });
 
-        axios.get('/api/chime/' + window.chime + "/responses")
+        axios.get('/api/chime/' + this.chimeId + "/responses")
         .then(res => {
             console.log('debug', 'Response:', res);
             self.responses= res.data;
@@ -92,7 +92,7 @@ export default {
         })
 
 
-        Echo.private('session-status.' + window.chime)
+        Echo.private('session-status.' + this.chimeId)
         .listen('StartSession', m => {
             console.log('debug', 'message:', m);
             self.sessions.push(m.session);

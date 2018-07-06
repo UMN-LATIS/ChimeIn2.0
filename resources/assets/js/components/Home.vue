@@ -1,34 +1,41 @@
 <template>
+    <div>
+        <navbar
+        title=""
+        :user="user"
+        :link="'/'">
+    </navbar>
     <div class="container">
-       <div class="col-sm-12">
+
+     <div class="col-sm-12">
         <h1 class="display-3 center">Welcome, {{ user.name }}</h1>
 
         <div class="row">
             <div class="col-12 col-md-9 order-sm-last order-last order-md-first">
                 <chime-panel :user="user">
                 </chime-panel>
-             <div class="row">
-                <div class="">
-                    <div class="input-field col-12">
-                    <input
-                        id="chime_name_input"
-                        class="materalize-textarea"
-                        type="text"
-                        v-model="chime_name"
-                        @keyup.enter="create_chime"/>
-                        <label for="chime_name_input">Chime Name</label>
+                <div class="row">
+                    <div class="">
+                        <div class="input-field col-12">
+                            <input
+                            id="chime_name_input"
+                            class="materalize-textarea"
+                            type="text"
+                            v-model="chime_name"
+                            @keyup.enter="create_chime"/>
+                            <label for="chime_name_input">Chime Name</label>
+                        </div>
+                        <div class="input-field col-12">
+                            <button
+                            class="waves-effect waves-light btn"
+                            v-on:click="create_chime"
+                            type="button">
+                            Create
+                        </button>
                     </div>
-                    <div class="input-field col-12">
-                        <button
-                        class="waves-effect waves-light btn"
-                        v-on:click="create_chime"
-                        type="button">
-                        Create
-                    </button>
                 </div>
             </div>
         </div>
-    </div>
         <div class="col-12 col-md-3 order-md-last order-sm-first order-first">
             <div class="card">
                 <div class="card-body">
@@ -47,6 +54,7 @@
             
         </div>
     </div>
+</div>
 </div>
 </div>
 
