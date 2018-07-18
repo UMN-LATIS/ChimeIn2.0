@@ -6,21 +6,7 @@
         v-on:click="export_csv">
         Export CSV
     </a>
-:question="question" :responses="responses"
     <reactive-bar-chart :chart-data="chartData" :options="options"></reactive-bar-chart>
-
-    <input
-    id="response_search_input"
-    type="text"
-    v-model="response_search"
-    v-on:keyup="filter_responses">
-    <label for="response_search_input">Student Name</label>
-
-    <ul>
-        <li v-for="r in visible_responses" :key="r.id">
-            {{r.user.name}}: {{r.response_info.choice}}
-        </li>
-    </ul>
 </div>
 </template>
 
@@ -70,15 +56,6 @@ export default {
         }
     },
     methods: {
-        filter_responses: function() {
-            if (this.response_search) {
-                this.visible_responses = this.responses.filter(r => {
-                    return r.user.name.indexOf(this.response_search) > -1
-                });
-            } else {
-                this.visible_responses = [];
-            }
-        },
         export_csv: function() {
             const rows = this.responses.map(r => {
                 return [

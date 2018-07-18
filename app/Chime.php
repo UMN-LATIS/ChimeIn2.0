@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chime extends Model
 {
-    protected $fillable = ['name', 'access_code'];
+    protected $fillable = ['name', 'access_code', 'require_login'];
 
     public function folders() {
         return $this->hasMany(Folder::class);

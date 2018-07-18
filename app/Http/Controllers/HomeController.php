@@ -23,7 +23,6 @@ class HomeController extends Controller
         $chimes = $req->user()->chimes()->get();
         return response()->json($chimes);
     }
-
     public function createChime(Request $req) {
         $user = $req->user();
 
@@ -44,19 +43,33 @@ class HomeController extends Controller
     }
 
     public function joinChime(Request $req) {
-        $user = $req->user();
 
-        if ($user->permission_number < 300) {
-            $chime = (Chime::where('access_code', strtolower($req->route('access_code')))
+        $chime = (Chime::where('access_code', strtolower($req->route('access_code')))
                 ->first());
         
-            $user->chimes()->attach($chime, [
-                'permission_number' => $user->permission_number
+        if(!$chime) {
+            return response()->json(["chimeNotFound"=>true], 401);
+        }
+
+        if($chime->require_login && Auth::user()->guest_user) {
+            if($req->ajax()) {
+                return response()->json(["requiresLogin"=>true], 401);
+            }
+            return redirect()->guest('login');
+        }
+
+        if(!Auth::user()->chimes->contains($chime)) {
+            Auth::user()->chimes()->attach($chime, [
+                'permission_number' => 100
             ]);
+        }
         
+
+        if($req->ajax()) {
             return response()->json($chime);
-        } else {
-            return response('Invalid Permissions to Join Chime', 403);
+        }
+        else {
+            return redirect("/");
         }
     }
 

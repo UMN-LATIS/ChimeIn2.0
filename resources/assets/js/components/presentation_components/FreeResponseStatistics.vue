@@ -25,10 +25,10 @@
 <button type="button" @click="toggle" >Fullscreen</button>
             <transition-group name="fade">
                 <div
-                    v-for="(r, i) in responses.map(r => r.response_info.text).reverse().slice(0, 10)"
+                    v-for="(r, i) in responses.reverse().slice(0, 30)"
                     v-bind:key="i">
-                    <blockquote v-bind:key="r">
-                        {{ r }}
+                    <blockquote v-bind:key="i">
+                        {{ r.response_info.text }}
                     </blockquote>
                 </div>
             </transition-group>

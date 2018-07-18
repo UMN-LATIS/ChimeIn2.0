@@ -31,9 +31,10 @@
                             <i class="material-icons float-left" v-if="show_questions">expand_less</i>
                             <i class="material-icons float-left" v-if="!show_questions">expand_more</i>
                         </a>
-                        <h4 @click="show_edit_folder = true">{{ folder.name }}</h4>
+                        <h4>{{ folder.name }}</h4>
                     </b-col>
                     <b-col sm="3" class="text-right">
+                        <i class="material-icons" v-on:click="show_edit_folder = true">edit</i>
                         <i class="material-icons" v-on:click="delete_folder">delete</i>
 
                         <router-link :to="{ name: 'present', params: {chimeId: chime.id, folderId: folder.id} }">
@@ -59,7 +60,7 @@
     controlType="create">
 </question-form>
 </b-row> 
-<vue-slide-up-down :active="show_questions" :duration="500">
+<vue-slide-up-down :active="show_questions" :duration="500" ref="slideup">
     <draggable v-model="questions" @end=swap_question>
             <question
             v-for="q in questions"
@@ -154,6 +155,9 @@ export default {
                 const question_index = self.questions.findIndex(
                     e => e.id === questionId);
                 self.questions.splice(question_index, 1);
+                 this.$nextTick(function () {
+                    this.$refs.slideup.layout();    
+                });
             })
             .catch(err => {
                 console.log(err.response);
@@ -175,10 +179,19 @@ export default {
             .then(res => {
                 this.questions = res.data;
                 console.log('questions:', this.questions);
+                if(this.$refs.slideup) {
+                    // redraw the vue slide on the next draw loop
+                    this.$nextTick(function () {
+                        this.$refs.slideup.layout();    
+                    });
+                    
+                }
             })
             .catch(err => {
                 console.log(err);
             });
+
+            
 
         }
     },
@@ -189,7 +202,7 @@ export default {
     components: {
         draggable
     }
-}
+};
 </script>
 
 <style>
@@ -198,6 +211,6 @@ export default {
 }
 
 li {
-    font-size: 1.5em;
+    // font-size: 1.5em;
 }
 </style>

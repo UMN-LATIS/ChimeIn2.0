@@ -3,7 +3,7 @@
         <div class="col-12">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="createFolder">New Folder: </label>
+                    <label for="createFolder">Add a folder: </label>
                     <input type="text" class="form-control" v-model="folder_name" @keyup.enter="new_folder" name="createFolder" id="createFolder" placeholder="Folder Name">
                 </div>
                 <button type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>

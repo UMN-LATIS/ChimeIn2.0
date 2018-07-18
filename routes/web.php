@@ -23,19 +23,20 @@ use App\Http\Controllers\PresentController;
 // 
 // 
 
-Route::group(['middleware' => ['auth', 'shibinjection']], function () {
+Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/', 'HomeController@index');
     
 
     Route::get('/api/chime', 'HomeController@getChimes');
     Route::post('/api/chime', 'HomeController@createChime');
-    Route::post('/api/chime/{access_code}', 'HomeController@joinChime');
+    Route::get('/join/{access_code}', 'HomeController@joinChime');
+    Route::post('/join/{access_code}', 'HomeController@joinChime');
     Route::delete('/api/chime/{chime_id}', 'HomeController@deleteChime');
 
     // Chime Page Routes
     Route::get('/api/chime/{chime_id}', 'ChimeController@getChime');
     Route::get('/api/chime/{chime_id}/users', 'ChimeController@getUsers');
-    Route::post('/api/chime/{chime_id}/users', 'ChimeController@addUser');
+    Route::put('/api/chime/{chime}/users', 'ChimeController@syncUsers');
     Route::put('/api/chime/{chime_id}/users/{user_id}', 'ChimeController@changePermission');
     Route::delete('/api/chime/{chime_id}/users/{user_id}', 'ChimeController@removeUser');
     Route::get('/api/chime/{chime_id}/response', 'ChimeController@getPastResponses');
@@ -44,6 +45,9 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     Route::post('/api/chime/{chime_id}/folder', 'ChimeController@createFolder');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@editFolder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@deleteFolder');
+
+
+    Route::patch('/api/chime/{chime}', 'ChimeController@updateChime');
 
     // Response subroutes
     Route::get('/api/chime/{chime_id}/responses', 'ResponseController@getResponse');
@@ -64,10 +68,9 @@ Route::group(['middleware' => ['auth', 'shibinjection']], function () {
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
 });
     // Auth::routes();
+
+
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
-
-
-
 
 
 if (config('shibboleth.emulate_idp') ) {

@@ -2,52 +2,38 @@
     <b-row>
         <b-col sm="12" md="10">
 
-            <results-display
-            v-if="show_results"
-            :question="question">
-        </results-display>
-        <presentation-prompt
-        v-if="!show_results"
-        :question="question">
-    </presentation-prompt>
-</b-col>
-<b-col sm="12" md="2">
-<p>Responses: {{ current_session()?current_session().responses.length:0 }}</p>
-    <button
-    class="btn btn-outline-primary"
-    v-on:click="start_session" v-if="!current_session()">
-    <i class="material-icons left">play_arrow</i>
-    Start Session
-</button>
-<button
-class="btn btn-outline-primary"
-v-on:click="stop_session" v-else>
-<i class="material-icons left">stop</i>
-Stop Session
-</button>
-<button
-class="btn btn-outline-primary"
-v-on:click="show_results = !show_results">
-<i class="material-icons left">zoom_in</i>
-    <span v-if="show_results">
-        Hide Results
-    </span>
-    <span v-else>
-    View Results
-    </span>
-</button>
-<button
-class="btn btn-outline-primary" @click="$emit('nextQuestion')">
-<i class="material-icons left">arrow_right</i>
-Next Question
-</button>
-<button
-class="btn btn-outline-primary" @click="$emit('previousQuestion')">
-<i class="material-icons left">arrow_left</i>
-Previous Question
-</button>
-</b-col>
-</b-row>
+            <results-display v-if="show_results" :question="question"></results-display>
+            <presentation-prompt v-if="!show_results" :question="question"></presentation-prompt>
+        </b-col>
+        <b-col sm="12" md="2" v-bind:class="{ openSession: current_session() }">
+            <p>Responses: {{ current_session()?current_session().responses.length:0 }}</p>
+            <button class="btn btn-outline-primary" v-on:click="start_session" v-if="!current_session()">
+                <i class="material-icons left">play_arrow</i>
+                Start Session
+            </button>
+            <button class="btn btn-outline-primary" v-on:click="stop_session" v-else>
+                <i class="material-icons left">stop</i>
+                Stop Session
+            </button>
+            <button class="btn btn-outline-primary" v-on:click="show_results = !show_results">
+                <i class="material-icons left">zoom_in</i>
+                <span v-if="show_results">
+                    Hide Results
+                </span>
+                <span v-else>
+                    View Results
+                </span>
+            </button>
+            <button class="btn btn-outline-primary" @click="$emit('nextQuestion')">
+                <i class="material-icons left">arrow_right</i>
+                Next Question
+            </button>
+            <button class="btn btn-outline-primary" @click="$emit('previousQuestion')">
+                <i class="material-icons left">arrow_left</i>
+                Previous Question
+            </button>
+        </b-col>
+    </b-row>
 </template>
 
 <script>
@@ -114,6 +100,10 @@ export default {
 </script>
 
 <style>
+
+.openSession {
+    border: 3px solid green;
+}
 
 </style>
 

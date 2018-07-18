@@ -19,20 +19,7 @@
         </div>
 
         <div v-else>No Responses Yet!</div>
-        <div class="row">
-            <input
-                id="response_search_input"
-                type="text"
-                v-model="response_search"
-                v-on:keyup="filter_responses">
-            <label for="response_search_input">Student Name</label>
-
-            <ul>
-                <li v-for="r in visible_responses" :key="r.id">
-                    {{r.user.name}}: <img class="responsive-img" v-bind:src="'/storage/' + r.response_info.image">
-                </li>
-            </ul>
-        </div>
+       
     </div>
 </template>
 
@@ -65,15 +52,6 @@ export default {
         }
     },
     methods: {
-        filter_responses: function() {
-            if (this.response_search) {
-                this.visible_responses = this.responses.filter(r => {
-                    return r.user.name.indexOf(this.response_search) > -1
-                });
-            } else {
-                this.visible_responses = [];
-            }
-        },
         export_csv: function() {
             console.log(this.responses);
 

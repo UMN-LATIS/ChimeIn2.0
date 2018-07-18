@@ -3,6 +3,7 @@
         <div class="row">
             <div class="col-12">
                 <span class="card-title">Chimes</span>
+
                 <div v-if="chimes.length > 0">
                     <transition-group name="fade">
                         <chime-card
@@ -13,10 +14,11 @@
                         v-on:updatedChime="get_chimes">
                     </chime-card>
                 </transition-group>
-            </div>
-            <div v-else>
-                <p>No Chimes Yet!</p>
-            </div>
+                </div>
+                <div v-else>
+                    <p  v-if="user.guest_user">You're currently browsing as a guest.  If you have a Chime access code, you can enter it on the right.  Otherwise, <a href="/login">log in</a> to get started.</p>
+                    <p v-else>You don't currently have any Chimes.</p>
+                </div>
         </div>
     </div>
     

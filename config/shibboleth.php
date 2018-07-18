@@ -79,7 +79,7 @@ return array(
         'email'       => 'eppn',
         'umndid' => 'umnDID',
         'name' => 'displayName',
-        'enrolled_courses'=>'https://www.umn.edu/shibboleth/attributes/umnCourse',
+        // 'enrolled_courses'=>'https://www.umn.edu/shibboleth/attributes/umnCourse',
         'userType' => 'eduPersonAffiliation'
     ],
 

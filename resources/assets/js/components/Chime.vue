@@ -19,7 +19,7 @@
                         </p>
                         
                     <b-collapse id="collapse1" class="mt-2">
-                <ChimeManagement :chime="chime"></ChimeManagement>
+                <ChimeManagement :chime="chime" v-on:requireLoginChange="requireLoginChange"></ChimeManagement>
             </b-collapse>
             </div>
             
@@ -27,9 +27,6 @@
         </div>
 
         <div class="center-align">
-            <new-folder
-            :chime="chime"
-            v-on:newfolder="create_folder"></new-folder>
             <div v-if="viewable_folders.length > 0">
                 <transition-group name="fade">
                     <folder-card
@@ -41,6 +38,9 @@
                     v-on:deletefolder="delete_folder">
                 </folder-card>
             </transition-group>
+            <new-folder
+            :chime="chime"
+            v-on:newfolder="create_folder"></new-folder>
         </div>
         <div v-else>
             No Folders Yet!
@@ -65,6 +65,21 @@ export default {
     },
     props: ['user', 'chimeId'],
     methods: {
+        requireLoginChange: function(newValue) {
+            this.chime.require_login = newValue;
+            this.saveChime();
+        },
+        saveChime: function() {
+
+            axios.patch('/api/chime/' + this.chime.id, this.chime)
+            .then(res => {
+                this.reloadChime();
+            })
+            .catch(err => {
+                console.log(err.response);
+            });
+
+        },
         create_folder: function(folder_name) {
             if (this.folders.filter(e => e.name === folder_name).length < 1) {
                 const self = this;
@@ -126,21 +141,23 @@ export default {
                     console.log(err.response);
                 });
             }
+        },
+        reloadChime: function() {
+            axios.get('/api/chime/' + this.chimeId)
+            .then(res => {
+                console.log(res);
+                this.chime = res.data;
+                this.folders = this.chime.folders;
+                this.viewable_folders = res.data.folders;
+                document.title = this.chime.name;
+            })
+            .catch(err => {
+                console.log(err);
+            });
         }
     },
     created: function () {
-        const self = this;
-        axios.get('/api/chime/' + this.chimeId)
-        .then(res => {
-            console.log(res);
-            self.chime = res.data;
-            self.folders = self.chime.folders;
-            self.viewable_folders = res.data.folders;
-            document.title = self.chime.name;
-        })
-        .catch(err => {
-            console.log(err);
-        });
+        this.reloadChime();
     }
 };
 </script>

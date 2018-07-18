@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Response;
 use App\Question;
 use App\User;
+use App\Chime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -66,6 +67,13 @@ class ChimeController extends Controller
         }
     }
 
+    public function updateChime(Chime $chime, Request $req) {
+        
+        $chime->fill($req->all());
+        $chime->save();
+        return response()->json(["success"=>true]);
+    }
+
     public function getUsers(Request $req) {
         $user = $req->user();
         $chime = (
@@ -81,15 +89,29 @@ class ChimeController extends Controller
                     'name' => $u->name,
                     'email' => $u->email,
                     'id' => $u->id,
+                    'editPermission' => false,
                     'permission_number' => $u->pivot->permission_number];
             });
 
-            return response()->json([
-                'users' => $ids
-            ]);
+            return response()->json($ids);
         } else {
             return response('Invalid Permissions to get Users', 403);
         }
+    }
+
+    public function syncUsers(Chime $chime, Request $req) {
+        $user = Auth::user();
+        // check perm
+
+        $users = $req->get('users');
+        $mappedUsers = array_reduce($users, function($result, $u) {
+            $result[$u['id']] = ["permission_number" => $u['permission_number']];
+            return $result;
+        });        
+
+        $chime->users()->sync($mappedUsers);
+        $chime->save();
+        return response()->json(["success"=>true]);
     }
 
     public function addUser(Request $req) {
@@ -121,49 +143,7 @@ class ChimeController extends Controller
         }
     }
 
-    public function changePermission(Request $req) {
-        $user = $req->user();
-        $chime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-
-        $pn = $chime->pivot->permission_number;
-        $changingUser = $chime->users()->find($req->route('user_id'));
-        $newPN = $req->get('permission_number');
-        
-        if ($chime != null && $changingUser != null && $pn >= 300 && $newPN <= $pn) {
-            $changingUser->pivot->update(['permission_number' => $newPN]);
-
-            return response()->json([
-                'name' => $changingUser->name,
-                'id' => $changingUser->id,
-                'email' => $changingUser->email,
-                'permission_number' => $changingUser->pivot->permission_number,
-            ]);
-        } else {
-            return response('Cannot change user permissions', 400);
-        }
-    }
-
-    public function removeUser(Request $req) {
-        $user = $req->user();
-        $chime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-        
-        if ($chime != null && $user->id != ($req->route('user_id')) && $chime->pivot->permission_number >= 300) {
-            $chime->users()->detach($req->route('user_id'));
-            return response('User removed', 200);
-        } else {
-            return response('Cannot remove user', 400);
-        }
-    }
-
-
+   
   
     public function getImage(Request $req) {
         $path = Storage::get('image/'. $req->route('image_name'));
