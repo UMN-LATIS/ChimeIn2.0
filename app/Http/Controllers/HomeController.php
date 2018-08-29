@@ -29,7 +29,7 @@ class HomeController extends Controller
         if ($user->permission_number >= 300) {
             $new_chime = Chime::create([
                 'name' => $req->get('chime_name'),
-                'access_code' => str_to_lower(str_random(6))
+                'access_code' => strtolower(str_random(6))
             ]);
         
             $user->chimes()->attach($new_chime, [
