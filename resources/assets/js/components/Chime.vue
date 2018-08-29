@@ -38,14 +38,15 @@
                     v-on:deletefolder="delete_folder">
                 </folder-card>
             </transition-group>
-            <new-folder
-            :chime="chime"
-            v-on:newfolder="create_folder"></new-folder>
+
         </div>
         <div v-else>
             No Folders Yet!
         </div>
-    </div>
+             <new-folder
+            :chime="chime"
+            v-on:newfolder="create_folder"></new-folder>   
+            </div>
     </div>
 </div>
 </template>
