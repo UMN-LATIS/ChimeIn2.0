@@ -1,6 +1,6 @@
 <template>
     <div
-        class="card hoverable">
+        class="card hoverable mb-2">
         <div class="card-body" v-on:click="open_chime">
             <div class="float-left">
             <h5  class="card-title">{{ chime.name }}</h5>

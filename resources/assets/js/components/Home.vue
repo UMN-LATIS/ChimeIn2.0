@@ -6,7 +6,7 @@
         :link="'/'">
     </navbar>
     <div class="container">
-
+        <div class="row">
        <div class="col-sm-12">
         <h1 class="display-4 center" v-if="!user.guest_user">Welcome, {{ user.name }}</h1>
         <h1 class="display-4 center" v-else="!user.guest_user">Welcome, guest user</h1>
@@ -15,6 +15,29 @@
             <div class="col-12 col-md-9 order-sm-last order-last order-md-first">
                 <chime-panel :user="user">
                 </chime-panel>
+<<<<<<< HEAD
+=======
+                
+                <div class="row"  v-if="!user.guest_user">
+                    <div class="">
+                        <div class="form-inline col-12">
+                            <label for="chime_name_input" class="mr-2" >Chime Name</label>
+                            <input
+                            id="chime_name_input"
+                            class="form-control mr-2 input-field"
+                            type="text"
+                            v-model="chime_name"
+                            @keyup.enter="create_chime"/>
+                            <button
+                            class="btn btn-primary"
+                            v-on:click="create_chime"
+                            type="button">
+                            Create
+                            </button>
+                        </div>
+                    </div>
+                </div>
+>>>>>>> 090e33a... Chime homepage spacing and layout
             </div>
             
         <div class="col-12 col-md-3 order-md-last order-sm-first order-first">
@@ -35,6 +58,7 @@
             
         </div>
     </div>
+    </div>
 </div>
 </div>
 </div>
@@ -42,9 +66,10 @@
 </template>
 
 <script>
-import { EventBus } from '../event-bus.js';
+import { EventBus } from "../event-bus.js";
 
 export default {
+<<<<<<< HEAD
     data() {
         return {
             access_code: "",
@@ -75,6 +100,49 @@ export default {
             });
         },
         
+=======
+  data() {
+    return {
+      access_code: "",
+      chime_name: "",
+      requires_login: false,
+      chime_not_found: false
+    };
+  },
+  props: ["user"],
+  methods: {
+    create_chime() {
+      axios
+        .post("/api/chime", { chime_name: this.chime_name })
+        .then(res => {
+          console.log("debug", "Chime Created:", res);
+          EventBus.$emit("chimesChanged");
+        })
+        .catch(err => {
+          console.log("error", "Error in create chime:", err.response);
+        });
+    },
+    join_chime() {
+      console.log(this.access_code);
+      this.requires_login = false;
+      this.chime_not_found = false;
+      axios
+        .post("/join/" + this.access_code)
+        .then(res => {
+          this.access_code = "";
+          EventBus.$emit("chimesChanged");
+        })
+        .catch(err => {
+          if (err.response.data.requiresLogin) {
+            this.requires_login = true;
+          }
+          if (err.response.data.chimeNotFound) {
+            this.chime_not_found = true;
+          }
+          console.error("error", "Error in join chime:", err.response);
+        });
+>>>>>>> 090e33a... Chime homepage spacing and layout
     }
+  }
 };
 </script>
