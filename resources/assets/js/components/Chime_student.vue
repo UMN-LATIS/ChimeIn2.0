@@ -12,7 +12,7 @@
             <b-tab title="Current Questions" active>
                <transition-group name="fade">
                 <div v-if="sessions.length < 1" key='none'>
-                    <h3>No Open Sessions!</h3>
+                    <h1 class="mt-1">No Open Sessions!</h1>
                 </div>
                 <student-prompt
                 v-else
@@ -27,7 +27,7 @@
             </b-tab>
             <b-tab title="Past Responses">
                 <div v-if="responses.length < 1">
-                    <h3>No Responses Yet!</h3>
+                    <h1 class="mt-1">No Responses Yet!</h1>
                 </div>
                 <response
                 v-else

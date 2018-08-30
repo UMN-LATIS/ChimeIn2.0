@@ -1,11 +1,13 @@
 <template>
-    <div class="row questionContainer">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-2 border-secondary">
         <div
-            class="col-12"
+            class="card-body"
             v-if="question.question_info.question_type"
             >
             
-            <p class="quesiton-text" v-html="question.text"></p>
+            <p class="card-title" v-html="question.text"></p>
             
             <multiple-choice-question
                 v-if="question.question_info.question_type === 'multiple_choice'"
@@ -30,11 +32,9 @@
                 v-on:recordresponse="record_response"
             ></free-response-question>
         </div>
-        <!-- <div class="card-content" v-else>
-            <span class="card-title">
-                <h4>'No Question Yet!'</h4>
-            </span>
-        </div> -->
+            </div>
+        </div>
+
     </div>
 </template>
 
