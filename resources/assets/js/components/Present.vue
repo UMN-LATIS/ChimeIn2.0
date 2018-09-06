@@ -9,9 +9,8 @@
 
         <div class="container-fluid">
     
-        <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
-        <template v-for="(question,index) in questions"x>
-            <present-question :question="question" :chimeId="chimeId" :folderId="folderId" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle">
+        <template v-for="(question,index) in questions">
+            <present-question :question="question" :chimeId="chimeId" :folderId="folderId" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question()" @sessionUpdated="load_questions">
             </present-question>
         </template>
         </fullscreen>

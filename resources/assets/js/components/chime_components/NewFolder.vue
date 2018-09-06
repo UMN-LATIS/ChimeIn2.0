@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <div class="card">
         <div class="card-body">
                 <div class="">
@@ -11,6 +12,14 @@
                         <button type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>
                     </div>
                     </div>  
+=======
+    <div class="row">
+        <div class="col-12">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="createFolder" class="mr-2">Add a folder: </label>
+                    <input type="text" class="form-control mr-2" v-model="folder_name" @keyup.enter="new_folder" name="createFolder" id="createFolder" placeholder="Folder Name">
+>>>>>>> 3fdc53d... Fix vue linting errors
                 </div>
                 
         </div>

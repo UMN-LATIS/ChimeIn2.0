@@ -2,7 +2,6 @@
     <div>
         <div class="row">
             <div class="col-12">
-<<<<<<< HEAD
                 <p>You have access to {{ chimes.length }} chimes</p>
                 <button class="btn btn-outline-primary align-items-center d-flex" @click="showAdd = !showAdd"><span class="material-icons">add</span>Add a Chime</button>
                 <transition name="fade">
@@ -34,10 +33,8 @@
                     </div>
                 </div>
             </transition>
-=======
                 <h2>Chimes</h2>
 
->>>>>>> 090e33a... Chime homepage spacing and layout
                 <div v-if="chimes.length > 0">
                     <transition-group name="fade">
                         <chime-card
@@ -64,7 +61,6 @@
 import { EventBus } from "../../event-bus.js";
 
 export default {
-<<<<<<< HEAD
     props: ['user'],
     data() {
         return {
@@ -113,28 +109,6 @@ export default {
         EventBus.$on('chimesChanged', function () {
             self.get_chimes();
      });
-=======
-  props: ["user"],
-  data() {
-    return {
-      chimes: []
-    };
-  },
-  methods: {
-    get_chimes() {
-      axios
-        .get("/api/chime")
-        .then(res => {
-          console.log("debug", "Get Chimes:", res);
-          this.chimes = res.data;
-        })
-        .catch(err => {
-          console.error("error", "Error in get chimes:", err.response);
-        });
-    },
-    delete_chime(chime) {
-      this.$emit("deletechime", chime);
->>>>>>> 090e33a... Chime homepage spacing and layout
     }
   },
   created: function() {

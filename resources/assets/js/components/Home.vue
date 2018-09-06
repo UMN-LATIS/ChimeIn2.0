@@ -15,8 +15,6 @@
             <div class="col-12 col-md-9 order-sm-last order-last order-md-first">
                 <chime-panel :user="user">
                 </chime-panel>
-<<<<<<< HEAD
-=======
                 
                 <div class="row"  v-if="!user.guest_user">
                     <div class="">
@@ -37,7 +35,6 @@
                         </div>
                     </div>
                 </div>
->>>>>>> 090e33a... Chime homepage spacing and layout
             </div>
             
         <div class="col-12 col-md-3 order-md-last order-sm-first order-first">
@@ -69,38 +66,6 @@
 import { EventBus } from "../event-bus.js";
 
 export default {
-<<<<<<< HEAD
-    data() {
-        return {
-            access_code: "",
-            requires_login: false,
-            chime_not_found: false
-        };
-    },
-    props: ['user'],
-    methods: {
-        join_chime() {
-            console.log(this.access_code);
-            this.requires_login = false;
-            this.chime_not_found = false;
-            axios.post('/join/' + this.access_code)
-            .then(res => {
-                this.access_code = "";
-                EventBus.$emit('chimesChanged');
-            })
-            .catch(err => {
-                if(err.response.data.requiresLogin) {
-                    this.requires_login = true;
-                }
-                if(err.response.data.chimeNotFound) {
-                    this.chime_not_found = true;
-                }
-                console.error(
-                    'error', 'Error in join chime:', err.response);
-            });
-        },
-        
-=======
   data() {
     return {
       access_code: "",
@@ -141,7 +106,6 @@ export default {
           }
           console.error("error", "Error in join chime:", err.response);
         });
->>>>>>> 090e33a... Chime homepage spacing and layout
     }
   }
 };

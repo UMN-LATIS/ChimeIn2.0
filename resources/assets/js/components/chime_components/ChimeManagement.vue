@@ -42,7 +42,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </a>
         </b-row>
     </div>
 </template>
@@ -56,77 +55,79 @@ ul li {
 
 <script>
 export default {
-    props: ['chime'],
-    data: function() {
-        return {
-            requireLogin: 0,
-            users: [],
-        }
+  props: ["chime"],
+  data: function() {
+    return {
+      requireLogin: 0,
+      users: []
+    };
+  },
+  computed: {
+    join_url: function() {
+      return (
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        "/join/" +
+        this.chime.access_code
+      );
     },
-    computed: {
-        join_url: function() {
-            return window.location.protocol + "//" + window.location.host + "/join/" + this.chime.access_code;
-        },
-        sorted_users: function() {
-            return this.users.sort((a, b) => { 
-                var n =  b.permission_number - a.permission_number;
-                if (n !== 0) {
-                    return n;
-                }
-                if (a.email < b.email) {
-                    return -1;
-                }
-                if (a.email > b.email) {
-                    return 1;
-                }
-                return 0;
-            });
+    sorted_users: function() {
+      return this.users.sort((a, b) => {
+        var n = b.permission_number - a.permission_number;
+        if (n !== 0) {
+          return n;
         }
-    },
-    methods: {
-        deleteUser: function(key) {
-            if(confirm("Are you sure you want to remove this user?")) {
-                this.$delete(this.users, key);
-                this.saveUsers();
-            }
-        },
-        requireLoginChange: function(newValue) {
-            this.$emit('requireLoginChange', newValue);
-        },
-        saveUsers: function() {
-
-            const url = (
-                '/api/chime/' + this.chime.id + '/users');
-
-
-            axios.put(url, { users: this.users })
-            .then(res => {
-                console.log(res);
-                this.loadUsers();
-            })
-            .catch(err => {
-                console.error(err.response);
-            });
-        },
-        loadUsers: function() {
-            const url = (
-                '/api/chime/' + this.chime.id + '/users');
-            axios.get(url)
-            .then(res => {
-                this.users = res.data;
-            })
-            .catch(err => {
-                console.log(err);
-            });
-
+        if (a.email < b.email) {
+          return -1;
         }
-    },
-    watch: {
-       chime: function() {
-            this.requireLogin = this.chime.require_login;
-            this.loadUsers();
-       }
+        if (a.email > b.email) {
+          return 1;
+        }
+        return 0;
+      });
     }
+  },
+  methods: {
+    deleteUser: function(key) {
+      if (confirm("Are you sure you want to remove this user?")) {
+        this.$delete(this.users, key);
+        this.saveUsers();
+      }
+    },
+    requireLoginChange: function(newValue) {
+      this.$emit("requireLoginChange", newValue);
+    },
+    saveUsers: function() {
+      const url = "/api/chime/" + this.chime.id + "/users";
 
-}
+      axios
+        .put(url, { users: this.users })
+        .then(res => {
+          console.log(res);
+          this.loadUsers();
+        })
+        .catch(err => {
+          console.error(err.response);
+        });
+    },
+    loadUsers: function() {
+      const url = "/api/chime/" + this.chime.id + "/users";
+      axios
+        .get(url)
+        .then(res => {
+          this.users = res.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  },
+  watch: {
+    chime: function() {
+      this.requireLogin = this.chime.require_login;
+      this.loadUsers();
+    }
+  }
+};
 </script>
