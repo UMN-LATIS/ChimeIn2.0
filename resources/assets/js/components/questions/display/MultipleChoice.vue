@@ -1,6 +1,6 @@
 <template>
     <ol type="A">
-        <li v-for="question in question.question_info.question_responses">
+        <li class="questionDisplay" v-for="question in question.question_info.question_responses">
             {{question}}
         </li>
     </ol>
@@ -11,3 +11,10 @@ export default {
     props: ['question']
 };
 </script>
+
+
+<style>
+
+
+
+</style>

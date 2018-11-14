@@ -8,35 +8,13 @@
     <div class="container">
 
        <div class="col-sm-12">
-        <h1 class="display-3 center" v-if="!user.guest_user">Welcome, {{ user.name }}</h1>
-        <h1 class="display-3 center" v-else="!user.guest_user">Welcome, guest user</h1>
+        <h1 class="display-4 center" v-if="!user.guest_user">Welcome, {{ user.name }}</h1>
+        <h1 class="display-4 center" v-else="!user.guest_user">Welcome, guest user</h1>
 
         <div class="row">
             <div class="col-12 col-md-9 order-sm-last order-last order-md-first">
                 <chime-panel :user="user">
                 </chime-panel>
-                
-                <div class="row"  v-if="!user.guest_user">
-                    <div class="">
-                        <div class="input-field col-12">
-                            <input
-                            id="chime_name_input"
-                            class="materalize-textarea"
-                            type="text"
-                            v-model="chime_name"
-                            @keyup.enter="create_chime"/>
-                            <label for="chime_name_input">Chime Name</label>
-                        </div>
-                        <div class="input-field col-12">
-                            <button
-                            class="waves-effect waves-light btn"
-                            v-on:click="create_chime"
-                            type="button">
-                            Create
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
             
         <div class="col-12 col-md-3 order-md-last order-sm-first order-first">
@@ -70,25 +48,12 @@ export default {
     data() {
         return {
             access_code: "",
-            chime_name: "",
             requires_login: false,
             chime_not_found: false
         };
     },
     props: ['user'],
     methods: {
-        create_chime() {
-
-            axios.post('/api/chime', {'chime_name': this.chime_name})
-            .then(res => {
-                console.log('debug', 'Chime Created:', res);
-                EventBus.$emit('chimesChanged');
-            })
-            .catch(err => {
-                console.log(
-                    'error', 'Error in create chime:', err.response);
-            });
-        },
         join_chime() {
             console.log(this.access_code);
             this.requires_login = false;

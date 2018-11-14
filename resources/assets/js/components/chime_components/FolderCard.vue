@@ -1,6 +1,6 @@
 <template>
-    <b-row>
-        <b-col>
+    <div class="card">
+        <div class="card-body">
             <b-row>
                 <template v-if="show_edit_folder">
                     <b-col sm="8">
@@ -8,18 +8,17 @@
                         id="edit-folder-input"
                         v-model="new_folder_name"
                         type="text"
+                        class="form-control"
                         @keyup.esc="toggle_edit_folder"
                         @keyup.enter="edit_folder">
                     </b-col>
-                    <b-col sm="1">
+                    <b-col sm="1" class="align-items-center d-flex">
                         <a
-                        class="btn-small waves-effect waves-light"
+                        class="pointer"
                         v-on:click="toggle_edit_folder">
                         <i class="material-icons">clear</i></a>
-                    </b-col>
-                    <b-col sm="1">
                         <a
-                        class="btn-small waves-effect waves-light"
+                        class="pointer"
                         v-on:click="edit_folder">
                         <i class="material-icons">save</i></a>
                     </b-col>
@@ -27,55 +26,60 @@
                 <template v-else v-on:click="toggle_edit_folder">
 
                     <b-col sm="9">
-                        <a v-on:click="show_questions = !show_questions" v-if="questions.length > 0">
+                        <a v-on:click="show_questions = !show_questions" class="pointer" v-if="questions.length > 0">
                             <i class="material-icons float-left" v-if="show_questions">expand_less</i>
                             <i class="material-icons float-left" v-if="!show_questions">expand_more</i>
                         </a>
                         <h4>{{ folder.name }}</h4>
                     </b-col>
                     <b-col sm="3" class="text-right">
-                        <i class="material-icons" v-on:click="show_edit_folder = true">edit</i>
-                        <i class="material-icons" v-on:click="delete_folder">delete</i>
 
                         <router-link :to="{ name: 'present', params: {chimeId: chime.id, folderId: folder.id} }">
                             <i class="material-icons">play_arrow</i>
                         </router-link>
+                        <i class="material-icons pointer" v-on:click="show_edit_folder = true">edit</i>
+                        <i class="material-icons pointer" v-on:click="delete_folder">delete</i>
 
-                        <i class="material-icons" @click="showModal = true">add</i>
+
+                        <i class="material-icons pointer" @click="showModal = true">add</i>
 
                     </b-col>
                 </template>
 
 
-            <question-form :show="showModal" @close="showModal = false; load_questions();"
-            :question="{
-            text:'',
-            question_info: {
-            question_type:'multiple_choice',
-            question_responses: []
-        }
-    }"
-    :folder="folder"
-    :chime="chime"
-    controlType="create">
-</question-form>
+                <question-form :show="showModal" @close="showModal = false; load_questions();"
+                :question="{
+                text:'',
+                question_info: {
+                question_type:'multiple_choice',
+                question_responses: []
+            }
+        }"
+        :folder="folder"
+        :chime="chime"
+        controlType="create">
+    </question-form>
 </b-row> 
 <vue-slide-up-down :active="show_questions" :duration="500" ref="slideup">
-    <draggable v-model="questions" @end=swap_question>
+
+    <ul>
+        <draggable v-model="questions" @end=swap_question>
             <question
             v-for="q in questions"
             :key="q.id"
             :folder="folder"
             :chime="chime"
             :question="q"
-            v-on:editquestion="update_question"
+            v-on:editquestion="load_questions"
             v-on:deletequestion="delete_question">
         </question>
     </draggable>
+</ul>
+
 </vue-slide-up-down> 
-  
-    </b-col>
-</b-row>
+
+</div>
+</div>
 </template>
 
 <script>
@@ -96,24 +100,6 @@ export default {
     methods: {
         toggle_edit_folder: function() {
             this.show_edit_folder = (this.show_edit_folder ? false : true);
-        },
-        update_question(question) {
-            const url = (
-                '/api/chime/' + this.folder.chime_id +
-                '/folder/' + this.folder.id + '/question/' + question.id);
-            const self = this;
-            console.log(question)
-
-            axios.put(url, {
-                question_text: question.text,
-                question_info: question.question_info,
-            })
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.log(err);
-            });
         },
         swap_question(event, originalEvent) {
             console.log(this.questions);
@@ -155,7 +141,7 @@ export default {
                 const question_index = self.questions.findIndex(
                     e => e.id === questionId);
                 self.questions.splice(question_index, 1);
-                 this.$nextTick(function () {
+                this.$nextTick(function () {
                     this.$refs.slideup.layout();    
                 });
             })
@@ -205,12 +191,14 @@ export default {
 };
 </script>
 
-<style>
+<style >
 .pointer {
     cursor: pointer;
 }
-
-li {
-    // font-size: 1.5em;
+</style>
+<style scoped>
+ul li {
+    list-style: none;
 }
+
 </style>

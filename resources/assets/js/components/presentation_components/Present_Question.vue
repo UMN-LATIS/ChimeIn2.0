@@ -1,21 +1,23 @@
 <template>
-    <b-row>
+
+    <b-row v-bind:class="{ in_progress: current_session, not_in_progress: !current_session }">
         <b-col sm="12" md="10">
 
             <results-display v-if="show_results" :question="question"></results-display>
-            <presentation-prompt v-if="!show_results" :question="question"></presentation-prompt>
+            <presentation-prompt v-if="!show_results" :session="current_session" :question="question"></presentation-prompt>
         </b-col>
-        <b-col sm="12" md="2" v-bind:class="{ openSession: current_session() }">
-            <p>Responses: {{ current_session()?current_session().responses.length:0 }}</p>
-            <button class="btn btn-outline-primary" v-on:click="start_session" v-if="!current_session()">
+        <b-col sm="12" md="2" class="presentationControls" >
+           <b-card title="Presentation Controls" >
+            <p>Responses: {{ current_session?current_session.responses.length:0 }}</p>
+            <button class="btn btn-outline-primary align-items-center d-flex" v-on:click="start_session" v-if="!current_session">
                 <i class="material-icons left">play_arrow</i>
-                Start Session
+                Open Question
             </button>
-            <button class="btn btn-outline-primary" v-on:click="stop_session" v-else>
+            <button v-bind:class="{ openSession: current_session }" class="btn btn-outline-primary align-items-center d-flex" v-on:click="stop_session" v-else>
                 <i class="material-icons left">stop</i>
-                Stop Session
+                Close Question
             </button>
-            <button class="btn btn-outline-primary" v-on:click="show_results = !show_results">
+            <button class="btn btn-outline-primary align-items-center d-flex" v-on:click="show_results = !show_results">
                 <i class="material-icons left">zoom_in</i>
                 <span v-if="show_results">
                     Hide Results
@@ -24,19 +26,25 @@
                     View Results
                 </span>
             </button>
-            <button class="btn btn-outline-primary" @click="$emit('nextQuestion')">
+            <button class="btn btn-outline-primary align-items-center d-flex" @click="$emit('nextQuestion')">
                 <i class="material-icons left">arrow_right</i>
                 Next Question
             </button>
-            <button class="btn btn-outline-primary" @click="$emit('previousQuestion')">
+            <button class="btn btn-outline-primary align-items-center d-flex" @click="$emit('previousQuestion')">
                 <i class="material-icons left">arrow_left</i>
                 Previous Question
             </button>
-        </b-col>
-    </b-row>
+            <button class="btn btn-outline-primary align-items-center d-flex" @click="toggle">
+                <i class="material-icons left">fullscreen</i>
+                Fullscreen
+            </button>
+        </b-card>
+    </b-col>
+</b-row>
 </template>
 
 <script>
+
 export default {
     props: ['question', 'chimeId', 'folderId'],
     data() {
@@ -44,43 +52,7 @@ export default {
             show_results: false,
         };
     },
-    methods: {
-        start_session: function() {
-            const url = (
-                '/api/chime/'
-                + this.chimeId
-                + '/folder/'
-                + this.folderId
-                + '/question/'
-                + this.question.id);
-
-            axios.post(url, {})
-            .then(res => {
-
-            })
-            .catch(err => {
-                console.log(err.response);
-            });
-        },
-        stop_session: function() {
-            const url = (
-                '/api/chime/'
-                + this.chimeId
-                + '/folder/'
-                + this.folderId
-                + '/question/'
-                + this.question.id
-                + '/stopSession/'
-                );
-
-            axios.put(url, {})
-            .then(res => {
-
-            })
-            .catch(err => {
-                console.log(err.response);
-            });
-        },
+    computed: {
         current_session: function() {
             if(this.question.current_session_id) {
 
@@ -95,15 +67,98 @@ export default {
             
 
         }
-    }
+    },
+    methods: {
+        toggle () {
+        this.$emit('toggle');
+        // this.fullscreen = !this.fullscreen // deprecated
+      },
+      start_session: function() {
+        const url = (
+            '/api/chime/'
+            + this.chimeId
+            + '/folder/'
+            + this.folderId
+            + '/question/'
+            + this.question.id);
+
+        axios.post(url, {})
+        .then(res => {
+
+        })
+        .catch(err => {
+            console.log(err.response);
+        });
+    },
+    stop_session: function() {
+        const url = (
+            '/api/chime/'
+            + this.chimeId
+            + '/folder/'
+            + this.folderId
+            + '/question/'
+            + this.question.id
+            + '/stopSession/'
+            );
+
+        axios.put(url, {})
+        .then(res => {
+
+        })
+        .catch(err => {
+            console.log(err.response);
+        });
+    },
+
+}
 };
 </script>
 
 <style>
 
-.openSession {
-    border: 3px solid green;
+
+.questionDisplay {
+    font-size: 1.8em;
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
 }
+
+.in_progress {
+    border-top: 10px solid green;
+}
+
+.not_in_progress {
+    border-top: 10px solid transparent;
+}
+
+.openSession {
+    color: green;
+    border-color: green;
+}
+.openSession:hover {
+    background-color: green;
+    color: white;
+}
+
+.presentationControls {
+    margin-top :5px;
+}
+
+.presentationControls .card-title {
+    font-size: 1.4em;
+}
+
+.presentationControls .btn {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+.fullscreen .row {
+    padding: 30px;
+}
+
 
 </style>
 

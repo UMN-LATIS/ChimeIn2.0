@@ -1,18 +1,20 @@
 <template>
     <div>
         <navbar
-        :title="'Present'"
+        :title="this.questions[0].folder.name"
         :user="user"
         :link="{name:'chime', params:{chimeId: chimeId}}">
     </navbar>
 
 
-        <div class="container">
+        <div class="container-fluid">
     
+        <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
         <template v-for="(question,index) in questions"x>
-            <present-question :question="question" :chimeId="chimeId" :folderId="folderId" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question()" @sessionUpdated="load_questions">
+            <present-question :question="question" :chimeId="chimeId" :folderId="folderId" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle">
             </present-question>
         </template>
+        </fullscreen>
         </div>
 </div>
 
@@ -25,10 +27,18 @@ export default {
             questions: [],
             show_results: false,
             current_question: 0,
+            fullscreen: false
         };
     },
     props: ['user', 'chimeId', 'folderId', 'questionId'],
     methods: {
+           toggle () {
+        this.$refs['fullscreen'].toggle() // recommended
+        // this.fullscreen = !this.fullscreen // deprecated
+      },
+        fullscreenChange (fullscreen) {
+            this.fullscreen = fullscreen
+        },
         next_question: function() {
             var target = 0;
             if(this.questions.length > this.current_question + 1) {

@@ -1,9 +1,10 @@
 <template>
     <div>
         <a
-        class="waves-effect waves-light btn-small"
+        href="#"
+        class="btn btn-outline-primary"
         id="csv_link"
-        v-on:click="export_csv">
+        v-on:click.stop="export_csv">
         Export CSV
     </a>
     <reactive-bar-chart :chart-data="chartData" :options="options"></reactive-bar-chart>

@@ -1,21 +1,11 @@
 <template>
-    <div class="card">
-        <div
-            class="card-content"
-            v-if="question"
-            v-bind:class="{
-                in_progress: (
-                    session
-                    && (session.in_progress && session.in_progress != '0')
-                    && session.question_id == question.id)
-            }">
-            <div class="card">
-                <div class="card-content">
-                    <p class="flow-text" v-html="question.text"></p>
-                </div>
-            </div>
 
-            <multiple-choice-display
+    <div class="questionContent">
+        <div
+            v-if="question"
+            >
+        <h1 v-html="question.text"></h1>
+        <multiple-choice-display
                 v-if="question.question_info.question_type === 'multiple_choice'"
                 :question="question">
             </multiple-choice-display>
@@ -28,11 +18,12 @@
                     .join(' ') }}
             </div>
         </div>
-        <div class="card-content" v-else>
-            <span class="card-title">
-                <h4>'No Question Yet!'</h4>
+        <div v-else>
+            <span>
+                <h4>No Question Yet!</h4>
             </span>
         </div>
+
     </div>
 </template>
 
@@ -43,8 +34,11 @@ export default {
 </script>
 
 <style>
-    li {
-        font-size: 1.5em;
-    }
-</style>
 
+
+.questionContent {
+    margin-left: 5%;
+    margin-top: 2em;
+}
+
+</style>

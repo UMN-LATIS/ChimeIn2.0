@@ -13,8 +13,8 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 import fullscreen from 'vue-fullscreen'
-
 Vue.use(fullscreen)
+
 
 // import ReactiveBarChart from "./ReactiveBarChart.js";
 

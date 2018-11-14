@@ -1,7 +1,8 @@
 <template>
+    <li>
     <b-row>
         <b-col sm=9>
-            <question-form :show="show_edit" @close="show_edit = false;"
+            <question-form :show="show_edit" @edited="edit_question" @close="show_edit = false;"
             :question="question"
             :folder="folder"
             :chime="chime"
@@ -9,10 +10,6 @@
         </question-form>
         <div>
             <p class="flow-text" v-html="question.text"></p>
-            <multiple-choice-display
-                v-if="question.question_info.question_type === 'multiple_choice'"
-                :question="question">
-            </multiple-choice-display>
     </div>
 </b-col>
 <b-col sm=3>
@@ -37,6 +34,7 @@
 </b-col>
 
 </b-row>
+</li>
 </template>
 
 <script>
@@ -48,8 +46,8 @@ export default {
         }
     },
     methods: {
-        edit_question: function(edited_question) {
-            this.$emit('editquestion', edited_question);
+        edit_question: function() {
+            this.$emit('editquestion');
             this.show_edit = false;
         },
         delete_question: function() {
@@ -59,7 +57,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.pointer {
+    cursor: pointer;
+}
 .card-title {
     margin: 0 auto;
     max-width: 500px;

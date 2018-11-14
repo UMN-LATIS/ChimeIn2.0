@@ -2,12 +2,41 @@
     <div>
         <div class="row">
             <div class="col-12">
-                <span class="card-title">Chimes</span>
-
+                <p>You have access to {{ chimes.length }} chimes</p>
+                <button class="btn btn-outline-primary align-items-center d-flex" @click="showAdd = !showAdd"><span class="material-icons">add</span>Add a Chime</button>
+                <transition name="fade">
+                <div class="card"  v-if="!user.guest_user && showAdd">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="chime_name_input" class="col-sm-2 col-form-label">Chime Name</label>
+                            <div class="col-sm-8">
+                            <input
+                            id="chime_name_input"
+                            class="form-control"
+                            type="text"
+                            v-model="chime_name"
+                            @keyup.enter="create_chime"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                
+                            
+                            <button
+                            class="btn btn-primary"
+                            v-on:click="create_chime"
+                            type="button">
+                            Create
+                            </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
                 <div v-if="chimes.length > 0">
                     <transition-group name="fade">
                         <chime-card
-                        v-for="chime in chimes"
+                        v-for="chime in orderedChimes"
                         :key="chime.id"
                         :chime="chime"
                         :user="user"
@@ -36,9 +65,23 @@ export default {
     data() {
         return {
             chimes: [],
+            showAdd: false,
+            chime_name: "",
         }
     },
     methods: {
+        create_chime() {
+
+            axios.post('/api/chime', {'chime_name': this.chime_name})
+            .then(res => {
+                console.log('debug', 'Chime Created:', res);
+                EventBus.$emit('chimesChanged');
+            })
+            .catch(err => {
+                console.log(
+                    'error', 'Error in create chime:', err.response);
+            });
+        },
         get_chimes() {
 
             axios.get('/api/chime')
@@ -54,6 +97,11 @@ export default {
         delete_chime(chime) {
             this.$emit('deletechime', chime);
         }
+    },
+    computed: {
+        orderedChimes: function () {
+            return _.orderBy(this.chimes, 'created_at', ['desc'])
+        },
     },
     created: function () {
         this.get_chimes();

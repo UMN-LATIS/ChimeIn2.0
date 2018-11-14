@@ -3,7 +3,7 @@
         <div class="col">
             <div class="row">
                 <div class="col">
-                    <p class="flow-text" v-html="question.text"></p>
+                    <h1 v-html="question.text"></h1>
                 </div>
             </div>
 
@@ -43,12 +43,12 @@ export default {
     },
     methods: {
         updateSelected() {
-             if(this.question.current_session_id) {
-                this.selected = this.question.current_session_id;
-            }
-            else if(this.question.sessions.length > 0) {
-                this.selected = this.question.sessions.slice(-1).pop().id;
-            }
+             // if(this.question.current_session_id) {
+                // this.selected = this.question.current_session_id;
+            // }
+            // else if(this.question.sessions.length > 0) {
+                this.selected = 0;
+            // }
         }
     },
     computed: {

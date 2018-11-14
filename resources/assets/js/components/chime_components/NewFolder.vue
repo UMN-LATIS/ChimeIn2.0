@@ -1,13 +1,18 @@
 <template>
-    <div class="row">
-        <div class="col-12">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="createFolder">Add a folder: </label>
-                    <input type="text" class="form-control" v-model="folder_name" @keyup.enter="new_folder" name="createFolder" id="createFolder" placeholder="Folder Name">
+    <div class="card">
+        <div class="card-body">
+                <div class="">
+                    <label for="createFolder" class="text-right col-form-label">Add a folder</label>
+                    <div class="row">
+                    <div class="col-8">
+                        <input type="text" class="form-control" v-model="folder_name" @keyup.enter="new_folder" name="createFolder" id="createFolder" placeholder="Folder Name">
+                    </div>
+                    <div class="col-2">
+                        <button type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>
+                    </div>
+                    </div>  
                 </div>
-                <button type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>
-            </form>
+                
         </div>
     </div>
 </template>

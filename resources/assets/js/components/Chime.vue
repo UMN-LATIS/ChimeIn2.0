@@ -5,54 +5,57 @@
         :user="user"
         :link="'/'">
     </navbar>
-        <div class="container">
+    <div class="container">
         <div class="row">
             <div class="col-12">
 
-                        <p><h1>{{ chime.name }}<div class="float-right">
+                <p><h1>{{ chime.name }}<div class="float-right">
 
-                            
-                            <b-btn v-b-toggle.collapse1 variant="outline-primary" class="align-items-center d-flex"><span class="material-icons">edit</span>Edit Chime</b-btn>
-                        </div></h1>
+                    
+                    <b-btn v-b-toggle.collapse1 variant="outline-primary" class="align-items-center d-flex"><span class="material-icons">edit</span>Edit Chime</b-btn>
+                </div></h1>
 
-                            
-                        </p>
-                        
-                    <b-collapse id="collapse1" class="mt-2">
+                
+            </p>
+            
+            <b-collapse id="collapse1" class="mt-2">
                 <ChimeManagement :chime="chime" v-on:requireLoginChange="requireLoginChange"></ChimeManagement>
             </b-collapse>
-            </div>
-            
-
         </div>
+        
 
-        <div class="center-align">
-            <div v-if="viewable_folders.length > 0">
-                <transition-group name="fade">
-                    <folder-card
-                    v-for="folder in viewable_folders"
-                    :folder="folder"
-                    :chime="chime"
-                    :key="folder.id"
-                    v-on:editfolder="edit_folder"
-                    v-on:deletefolder="delete_folder">
-                </folder-card>
-            </transition-group>
-
-        </div>
-        <div v-else>
-            No Folders Yet!
-        </div>
-             <new-folder
-            :chime="chime"
-            v-on:newfolder="create_folder"></new-folder>   
-            </div>
     </div>
+
+    <div class="center-align">
+        <div v-if="viewable_folders.length > 0">
+            <transition-group name="fade">
+                <folder-card
+                v-for="folder in viewable_folders"
+                :folder="folder"
+                :chime="chime"
+                :key="folder.id"
+                v-on:editfolder="edit_folder"
+                v-on:deletefolder="delete_folder">
+            </folder-card>
+        </transition-group>
+
+    </div>
+    <div v-else>
+        No Folders Yet!
+    </div>
+    <new-folder
+    :chime="chime"
+    v-on:newfolder="create_folder"></new-folder>   
+</div>
+</div>
 </div>
 </template>
 
-<style>
-
+<style scoped>
+.card {
+    margin-top: 5px;
+    margin-bottom:5px;
+}
 </style>
 
 <script>

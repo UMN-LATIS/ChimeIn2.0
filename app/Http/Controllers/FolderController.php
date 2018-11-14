@@ -23,6 +23,7 @@ class FolderController extends Controller
         if ($chime != null && $chime->pivot->permission_number >= 200) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $questions = $folder->questions()->orderBy('order')->get();
+            $questions->load("folder");
             $questions->load("sessions");
             $questions->load("sessions.responses");
             return response()->json($questions);
@@ -61,6 +62,7 @@ class FolderController extends Controller
     }
 
     public function updateQuestion(Request $req) {
+
         $user = $req->user();
         $chime = (
             $user
@@ -69,13 +71,15 @@ class FolderController extends Controller
             ->first());
         
         if ($chime != null && $chime->pivot->permission_number >= 200) {
+
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
+            
             $question->update([
                 'text' => $req->get('question_text'),
                 'question_info' => $req->get('question_info')
             ]);
-                    
+
             return response()->json($question);
         } else {
             return response('Invalid Permissions to Update Question', 403);
