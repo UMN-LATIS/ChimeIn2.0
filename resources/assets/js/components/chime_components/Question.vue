@@ -9,6 +9,7 @@
             controlType="edit">
         </question-form>
         <div>
+            <p class="response_label">{{ total_responses }}</p>
             <p class="flow-text" v-html="question.text"></p>
     </div>
 </b-col>
@@ -53,6 +54,17 @@ export default {
         delete_question: function() {
             this.$emit('deletequestion', this.question.id);
         }
+    },
+    computed: {
+        total_responses: function() {
+            if(this.question.sessions.length == 0) {
+                return 0;
+            }
+            return this.question.sessions.reduce(function (accumulator, session) {
+
+                return accumulator + parseInt(session.responses.length);
+            }, 0);
+        }
     }
 }
 </script>
@@ -64,6 +76,18 @@ export default {
 .card-title {
     margin: 0 auto;
     max-width: 500px;
+}
+
+.response_label {
+    display: inline-block;
+    border-radius: 10px;
+    background-color: lightblue;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.flow-text {
+    display: inline-block;
 }
 </style>
 

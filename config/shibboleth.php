@@ -16,7 +16,7 @@ return array(
     'idp_login'     => '/Shibboleth.sso/Login',
     'idp_logout'    => '/Shibboleth.sso/Logout?return=https%3a%2f%2flogin.umn.edu%2fidp%2fLogoutUMN',
     'authenticated' => '/',
-    'authfield'     => 'umndid',
+    'authfield'     => 'emplid',
     /*
     |--------------------------------------------------------------------------
     | Emulate an IdP
@@ -79,6 +79,7 @@ return array(
         'email'       => 'eppn',
         'umndid' => 'umnDID',
         'name' => 'displayName',
+        'emplid'  => 'umnEmplId',
         // 'enrolled_courses'=>'https://www.umn.edu/shibboleth/attributes/umnCourse',
         'userType' => 'eduPersonAffiliation'
     ],

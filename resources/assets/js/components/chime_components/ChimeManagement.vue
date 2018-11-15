@@ -47,6 +47,13 @@
     </div>
 </template>
 
+<style scoped>
+ul li {
+    list-style: none;
+}
+
+</style>
+
 <script>
 export default {
     props: ['chime'],

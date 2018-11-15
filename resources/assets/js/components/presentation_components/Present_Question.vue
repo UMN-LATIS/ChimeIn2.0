@@ -8,7 +8,8 @@
         </b-col>
         <b-col sm="12" md="2" class="presentationControls" >
            <b-card title="Presentation Controls" >
-            <p>Responses: {{ current_session?current_session.responses.length:0 }}</p>
+            <p v-if="current_session">Session Responses: {{ current_session?current_session.responses.length:0 }}</p>
+            <p v-else>Total Responses: {{ total_responses }}</p>
             <button class="btn btn-outline-primary align-items-center d-flex" v-on:click="start_session" v-if="!current_session">
                 <i class="material-icons left">play_arrow</i>
                 Open Question
@@ -66,6 +67,15 @@ export default {
             }
             
 
+        },
+        total_responses: function() {
+            if(this.question.sessions.length == 0) {
+                return 0;
+            }
+            return this.question.sessions.reduce(function (accumulator, session) {
+
+                return accumulator + parseInt(session.responses.length);
+            }, 0);
         }
     },
     methods: {
