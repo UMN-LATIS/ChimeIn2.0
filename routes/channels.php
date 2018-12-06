@@ -22,12 +22,14 @@ Broadcast::channel('session-response.{chime_id}', function ($user, $chime_id) {
                 ->users()
                 ->where('user_id', $user->id)
                 ->first()
+                ->pivot
                 ->permission_number) >= 200;
 });
 
 Broadcast::channel('session-status.{chime_id}', function ($user, $chime_id) {
     // Session start events can be received by all members of chime
     $chime = App\Chime::find($chime_id);
+
     return ($chime
         ->users()
         ->where('user_id', $user->id)

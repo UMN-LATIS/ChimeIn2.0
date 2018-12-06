@@ -84,9 +84,13 @@
 
 <script>
 import draggable from 'vuedraggable'
+import { questionsListener } from '../mixins/questionsListener'
+
 
 export default {
     props: ['folder', 'chime'],
+    // this causes us to listen too much, because we get chime level data for each folder
+    mixins: [questionsListener],
     data() {
         return {
             showModal: false,
@@ -102,7 +106,7 @@ export default {
             this.show_edit_folder = (this.show_edit_folder ? false : true);
         },
         swap_question(event, originalEvent) {
-            console.log(this.questions);
+
             const newOrder = Array.from(this.questions.entries()).map(e => {
                 return {
                     order: e[0]+1,
@@ -128,6 +132,9 @@ export default {
             .catch(err => {
                 console.log(err.response);
             });
+
+            this.load_questions();
+
         },
         delete_question(questionId) {
             const url = (
@@ -155,30 +162,6 @@ export default {
         },
         delete_folder() {
             this.$emit('deletefolder', this.folder);
-        },
-        load_questions() {
-            const url = (
-                '/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id);
-
-
-            axios.get(url)
-            .then(res => {
-                this.questions = res.data;
-                console.log('questions:', this.questions);
-                if(this.$refs.slideup) {
-                    // redraw the vue slide on the next draw loop
-                    this.$nextTick(function () {
-                        this.$refs.slideup.layout();    
-                    });
-                    
-                }
-            })
-            .catch(err => {
-                console.log(err);
-            });
-
-            
-
         }
     },
     created: function() {

@@ -8,11 +8,12 @@
 
 
     <div class="container">
-        <b-tabs class="col-12">
-            <b-tab title="Current Questions" active>
+        <b-card no-body>
+        <b-tabs  card class="nav-fill">
+            <b-tab title="Current Questions" active >
                <transition-group name="fade">
-                <div v-if="sessions.length < 1" key='none'>
-                    <h3>No Open Sessions!</h3>
+                <div v-if="sessions.length < 1" key='none' class="text-center">
+                    <h3>No Open Questions</h3>
                 </div>
                 <student-prompt
                 v-else
@@ -38,6 +39,7 @@
                 </response>
             </b-tab>
         </b-tabs>
+    </b-card>
     </div>
 </div>
 
@@ -102,6 +104,9 @@ export default {
             self.sessions.splice(removeIndex, 1);
         });
 
+    },
+    beforeDestroy: function() {
+        Echo.leave('session-status.' + this.chimeId);
     }
 };
 </script>

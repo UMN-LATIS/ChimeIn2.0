@@ -1,5 +1,5 @@
 <template>
-        <b-form-group  label="Stacked radios" >
+        <b-form-group  label="" >
             <b-form-radio-group :disabled="disabled" v-model="selected" :options="selectOptions"
                           stacked
                           >

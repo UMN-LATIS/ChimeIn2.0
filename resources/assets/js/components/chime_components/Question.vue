@@ -18,7 +18,7 @@
 
         <a 
         class="pointer"
-        v-bind:href="'/chime/' + folder.chime_id + '/folder/' + folder.id + '/present/#/' + (question.order - 1)">
+        v-bind:href="'/chime/' + folder.chime_id + '/folder/' + folder.id + '/present/' + (question.order - 1)">
         <i class="material-icons">play_arrow</i>
     </a>
         <a 

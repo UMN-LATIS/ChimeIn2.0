@@ -29,6 +29,7 @@
                 :disabled="false"
                 v-on:recordresponse="record_response"
             ></free-response-question>
+            <hr>
         </div>
         <!-- <div class="card-content" v-else>
             <span class="card-title">
@@ -41,9 +42,9 @@
 <style>
 
 .questionContainer {
-    border: 1px solid black;
-    border-radius: 5px;
-    margin: 5px;
+    /*border: 1px solid black;*/
+    /*border-radius: 5px;*/
+    /*margin: 5px;*/
 }
 
 </style>
@@ -110,7 +111,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
     li {
         font-size: 1.5em;
     }

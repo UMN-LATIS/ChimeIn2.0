@@ -36,13 +36,19 @@ class ResponseController extends Controller
 
     public function createOrUpdateResponse(Chime $chime, Session $session, Response $response = null, Request $request) {
         $user = Auth::user();
-        $chime = $user->chimes()->find($chime->id)->first();
+
+        $chime = $user->chimes()->find($chime->id);
+
         if(!$chime
             ->sessions()
             ->contains($session)) {
             // TODO ERROR
             dd($chime
             ->sessions());
+            return "nope";
+        }
+
+        if(!$session->question->current_session || $session->question->current_session->id != $session->id) {
             return "nope";
         }
         

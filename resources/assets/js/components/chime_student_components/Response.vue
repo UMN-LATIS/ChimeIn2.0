@@ -22,6 +22,7 @@
                 :response="response"
                 :disabled="true"
             ></free-response-question>
+            <hr />
         </div>
     </div>
 </template>
@@ -29,9 +30,9 @@
 
 <style>
 .responseContainer {
-    border: 1px solid black;
+    /*border: 1px solid black;
     border-radius: 5px;
-    margin: 5px;
+    margin: 5px;*/
 }
 
 </style>

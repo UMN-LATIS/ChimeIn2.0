@@ -1,13 +1,13 @@
 <template>
 
     <b-row v-bind:class="{ in_progress: current_session, not_in_progress: !current_session }">
-        <b-col sm="12" md="10">
+        <b-col sm="12" md="8" lg="9">
 
             <results-display v-if="show_results" :question="question"></results-display>
             <presentation-prompt v-if="!show_results" :session="current_session" :question="question"></presentation-prompt>
         </b-col>
-        <b-col sm="12" md="2" class="presentationControls" >
-           <b-card title="Presentation Controls" >
+        <b-col sm="12" md="4" lg="3" class="presentationControls" >
+           <b-card title="Presentation Controls" class="float-right">
             <p v-if="current_session">Session Responses: {{ current_session?current_session.responses.length:0 }}</p>
             <p v-else>Total Responses: {{ total_responses }}</p>
             <button class="btn btn-outline-primary align-items-center d-flex" v-on:click="start_session" v-if="!current_session">
@@ -152,6 +152,12 @@ export default {
 
 .presentationControls {
     margin-top :5px;
+
+}
+
+.presentationControls .card {
+
+    max-width: 300px;
 }
 
 .presentationControls .card-title {
