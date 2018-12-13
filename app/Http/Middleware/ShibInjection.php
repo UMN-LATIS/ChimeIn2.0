@@ -36,7 +36,7 @@ class ShibInjection
                     return $userValues[$variableName];
                 }
             }
-        } else if (Auth::user()->name != 'guest') {
+        } else if (!Auth::user()->guest_user) {
             $variable = Request::server($variableName);
 
             return (!empty($variable)) ?
