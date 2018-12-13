@@ -28,17 +28,21 @@ window.Vue = require('vue');
 
 Vue.use(BootstrapVue);
 window.axios = require('axios');
-window.Pusher = require('pusher-js');
+// window.Pusher = require('pusher-js');
 
 // todo: fetch environment variables from .env file
 // note: will not send if encryption is true
 // when curl permissions are updated for encryption, reset cache (php artisan config:cache)
 window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: window.pusherKey,
-    cluster: 'us2',
-    encrypted: false
+    broadcaster: 'socket.io',
+    host: window.location.hostname + ':6001',
+    // auth: {
+    //     headers: {
+    //         Authorization: 'Bearer ' + "2b54f921c0e9394855626e3641cb91c4",
+    //     },
+    // },
 });
+
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
