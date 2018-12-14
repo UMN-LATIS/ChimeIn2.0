@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12">
                 <p>You have access to {{ chimes.length }} chimes</p>
-                <button class="btn btn-outline-primary align-items-center d-flex" @click="showAdd = !showAdd"><span class="material-icons">add</span>Add a Chime</button>
+                <button class="btn btn-outline-primary align-items-center d-flex" @click="showAdd = !showAdd" v-if="!user.guest_user"><span class="material-icons">add</span>Add a Chime</button>
                 <transition name="fade">
                 <div class="card"  v-if="!user.guest_user && showAdd">
                     <div class="card-body">

@@ -27,7 +27,7 @@
                 </transition-group>
             </b-tab>
             <b-tab title="Past Responses">
-                <div v-if="responses.length < 1">
+                <div v-if="responses.length < 1" class="text-center">
                     <h3>No Responses Yet!</h3>
                 </div>
                 <response

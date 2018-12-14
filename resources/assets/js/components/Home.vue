@@ -62,6 +62,7 @@ export default {
             .then(res => {
                 this.access_code = "";
                 EventBus.$emit('chimesChanged');
+                this.$router.push({ name: 'chimeStudent', params: { chimeId: res.data.id }})
             })
             .catch(err => {
                 if(err.response.data.requiresLogin) {
