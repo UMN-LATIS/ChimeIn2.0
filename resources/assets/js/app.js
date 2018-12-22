@@ -60,11 +60,11 @@ Vue.component('student-prompt',
     require('./components/chime_student_components/Student_Prompt.vue'));
 Vue.component('response',
     require('./components/chime_student_components/Response.vue'));
-Vue.component('multiple-choice-question',
+Vue.component('multiple_choice',
     require('./components/questions/response/MultipleChoice.vue'));
-Vue.component('image-response-question',
+Vue.component('image_response',
     require('./components/questions/response/ImageResponse.vue'));
-Vue.component('free-response-question',
+Vue.component('free_response',
     require('./components/questions/response/FreeResponse.vue'));
 
 
@@ -77,11 +77,11 @@ Vue.component('results-display',
     require('./components/presentation_components/ResultsDisplay.vue'));
 Vue.component('multiple-choice-display',
     require('./components/questions/display/MultipleChoice.vue'));
-Vue.component('multiple-choice-statistics',
+Vue.component('multiple_choice_statistics',
     require('./components/presentation_components/MultipleChoiceStatistics.vue'));
-Vue.component('image-response-statistics',
+Vue.component('image_response_statistics',
     require('./components/presentation_components/ImageResponseStatistics.vue'));
-Vue.component('free-response-statistics',
+Vue.component('free_response_statistics',
     require('./components/presentation_components/FreeResponseStatistics.vue'));
 
 

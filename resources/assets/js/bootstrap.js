@@ -2,9 +2,13 @@ import Echo from "laravel-echo";
 
 import BootstrapVue from 'bootstrap-vue'
 
+window._ = {};
+window._.sortBy = require('lodash/sortBy')
+window._.orderBy = require('lodash/orderBy')
 
+// window._ = require('lodash');
 
-window._ = require('lodash');
+// import _sortBy from 'lodash';
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support

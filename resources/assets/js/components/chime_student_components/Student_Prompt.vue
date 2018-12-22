@@ -7,28 +7,14 @@
             
             <p class="quesiton-text" v-html="question.text"></p>
             
-            <multiple-choice-question
-                v-if="question.question_info.question_type === 'multiple_choice'"
+            <component
+                :is="question.question_info.question_type"
                 :question="question"
                 :response="response"
                 :disabled="false"
                 v-on:recordresponse="record_response">
-            </multiple-choice-question>
-            <image-response-question
-                v-else-if="question.question_info.question_type === 'image_response'"
-                :question="question"
-                :response="response"
-                :disabled="false"
-                :chime="chime"
-                v-on:recordresponse="record_response">
-            </image-response-question>
-            <free-response-question
-                v-else-if="question.question_info.question_type === 'free_response'"
-                :question="question"
-                :response="response"
-                :disabled="false"
-                v-on:recordresponse="record_response"
-            ></free-response-question>
+            </component>
+           
             <hr>
         </div>
         <!-- <div class="card-content" v-else>

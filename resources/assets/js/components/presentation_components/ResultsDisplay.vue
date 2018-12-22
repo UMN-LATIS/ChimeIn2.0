@@ -10,21 +10,16 @@
             <template v-if="this.question.sessions.length > 0">
             
                 <b-form-select v-model="selected" :options="question.sessions.map(el => ({'value':el.id, 'text': el.created_at})).concat({'value':0, 'text':'All'})" class="mb-3" />
-                <multiple-choice-statistics
-                    v-if="question.question_info.question_type === 'multiple_choice' && selected_session"
+                
+
+                <component
+                    v-if="selected_session"
                     :responses="selected_session.responses"
-                    :question="question">
-                </multiple-choice-statistics>
-                <image-response-statistics
-                    v-else-if="question.question_info.question_type === 'image_response' && selected_session"
-                    :responses="selected_session.responses"
-                    :question="question">
-                </image-response-statistics>
-                <free-response-statistics
-                    v-else-if="question.question_info.question_type == 'free_response' && selected_session"
-                    :responses="selected_session.responses"
-                    :question="question">
-                </free-response-statistics>
+                    :question="question"
+                    :is="question.question_info.question_type + '_statistics'"
+                    >
+                </component>
+               
             </template>
             <template v-else>
                 <p>No sessions yet</p>

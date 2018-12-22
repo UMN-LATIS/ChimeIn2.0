@@ -7,7 +7,6 @@
                 v-on:click="export_csv">
                 Export CSV
             </a>
-            <fullscreen ref="fullscreen" @change="fullscreenChange">
             <word-cloud
                 :data="word_groups"
                 :nameKey="'name'"
@@ -20,12 +19,10 @@
                 >
             </word-cloud>
             
-            </fullscreen>
 
-<button type="button" @click="toggle" >Fullscreen</button>
             <transition-group name="fade">
                 <div
-                    v-for="(r, i) in responses.reverse().slice(0, 30)"
+                    v-for="(r, i) in responses.slice().reverse().slice(0, 30)"
                     v-bind:key="i">
                     <blockquote v-bind:key="i">
                         {{ r.response_info.text }}
@@ -36,18 +33,6 @@
 
         <div v-else>No Responses Yet!</div>
 
-<!--         <input
-            id="response_search_input"
-            type="text"
-            v-model="response_search"
-            v-on:keyup="filter_responses">
-        <label for="response_search_input">Student Name</label>
-
-        <ul>
-            <li v-for="r in visible_responses" :key="r.id">
-                {{r.user.name}}: {{r.response_info.text}}
-            </li>
-        </ul> -->
     </div>
 </template>
 
@@ -65,7 +50,6 @@ export default {
     data: function() {
         return {
             fontSize: [20, 120],
-            fullscreen: false,
             visible_responses: [],
             response_search: '',
             rotation: {from: 0, to: 0, numOfOrientation: 1 },
@@ -73,22 +57,6 @@ export default {
         }
     },
     methods: {
-        toggle () {
-        this.$refs['fullscreen'].toggle() // recommended
-        // this.fullscreen = !this.fullscreen // deprecated
-      },
-      fullscreenChange (fullscreen) {
-        this.fullscreen = fullscreen
-      },
-        filter_responses: function() {
-            if (this.response_search) {
-                this.visible_responses = this.responses.filter(r => {
-                    return r.user.name.indexOf(this.response_search) > -1
-                });
-            } else {
-                this.visible_responses = [];
-            }
-        },
         similarity: function(x, y) {
             return (new difflib.SequenceMatcher(null, x, y)).ratio();
         },
@@ -150,7 +118,7 @@ export default {
                 this.similarity).groups(0.9);
             */
 
-            console.log('word groups:', groups);
+
             return groups
         }
     }

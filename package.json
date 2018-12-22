@@ -46,6 +46,7 @@
     "vue-wordcloud": "https://github.com/UMN-LATIS/vue-wordcloud/tarball/master",
     "vue2-editor": "^2.5.0",
     "vuedraggable": "^2.16.0",
+    "webpack-bundle-analyzer": "^3.0.3",
     "winston": "^2.4.3"
   }
 }

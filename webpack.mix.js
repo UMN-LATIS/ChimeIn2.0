@@ -1,5 +1,12 @@
 let mix = require('laravel-mix');
 
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+// mix.webpackConfig({
+//   plugins: [
+//     new BundleAnalyzerPlugin(),
+//   ],
+// });
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -11,5 +18,16 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-        .sass('resources/assets/sass/app.scss', 'public/css');
+ mix.js('resources/assets/js/app.js', 'public/js')
+ .sass('resources/assets/sass/app.scss', 'public/css');
+
+
+
+
+const webpack = require('webpack');
+
+ mix.webpackConfig({
+ 	plugins: [
+ 	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+ 	]
+ })

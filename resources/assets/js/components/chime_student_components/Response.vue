@@ -4,24 +4,12 @@
             class="col-12"
             v-if="response.session.question">
             <p class="questionText" v-html="response.session.question.text"></p>
-            <multiple-choice-question
-                v-if="response.session.question.question_info.question_type === 'multiple_choice'"
-                :question="response.session.question"
+            <component :question="response.session.question"
                 :disabled="true"
-                :response="response">
-            </multiple-choice-question>
-            <image-response-question
-                v-else-if="response.session.question.question_info.question_type === 'image_response'"
-                :question="response.session.question"
                 :response="response"
-                :disabled="true"
-            ></image-response-question>
-            <free-response-question
-                v-else-if="response.session.question.question_info.question_type === 'free_response'"
-                :question="response.session.question"
-                :response="response"
-                :disabled="true"
-            ></free-response-question>
+                :is="response.session.question.question_info.question_type">
+            </component>
+            
             <hr />
         </div>
     </div>

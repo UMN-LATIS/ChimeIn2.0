@@ -7,51 +7,57 @@
         v-on:click.stop="export_csv">
         Export CSV
     </a>
-    <reactive-bar-chart :chart-data="chartData" :options="options"></reactive-bar-chart>
+    <reactive-bar-chart :chart-data="chartData" :options="options" :styles="myStyles"></reactive-bar-chart>
 </div>
 </template>
 
 <script>
 
 
-import ReactiveBarChart from "../../ReactiveBarChart.js";
+    import ReactiveBarChart from "../../ReactiveBarChart.js";
 
-export default {
-    props: ['responses', 'question'],
-    components: {
-        ReactiveBarChart
-    },
-    data: function() {
-        return {
-            visible_responses: [],
-            response_search: '',
-            options: { 
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            userCallback: function(label, index, labels) {
-                                if (Math.floor(label) === label) {return label;}
+    export default {
+        props: ['responses', 'question'],
+        components: {
+            ReactiveBarChart
+        },
+        data: function() {
+            return {
+                visible_responses: [],
+                response_search: '',
+                options: { 
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                userCallback: function(label, index, labels) {
+                                    if (Math.floor(label) === label) {return label;}
+                                }
                             }
-                        }
-                    }]
-                }, 
-                responsive: true, 
-                maintainAspectRatio: false
+                        }]
+                    }, 
+                    responsive: true, 
+                    maintainAspectRatio: false
+                }
             }
-        }
-    },
-    computed: {
+        },
+        computed: {
+            myStyles () {
+              return {
+                // height: `${this.height}px`,
+                position: 'relative'
+            }
+        },
         chartData: function() {
             return {labels: this.question.question_info.question_responses,
                 datasets: [
-                    {
+                {
                     label: 'Number of Responses',
-                        backgroundColor: '#0b3c4c',
-                        data:  this.question.question_info.question_responses.map(
-                            q => this.responses.filter(r => q === r.response_info.choice).length
+                    backgroundColor: '#0b3c4c',
+                    data:  this.question.question_info.question_responses.map(
+                        q => this.responses.filter(r => q === r.response_info.choice).length
                         )
-                    }
+                }
                 ]
             };
         }
