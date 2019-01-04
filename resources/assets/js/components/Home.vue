@@ -19,6 +19,9 @@
             
         <div class="col-12 col-md-3 order-md-last order-sm-first order-first">
             <div class="card">
+                <div class="card-header">
+                    Access Code
+                </div>
                 <div class="card-body">
                     <div class="input-group mb-3">
                         <p>Do you have an access code to join a Chime? Enter it below.</p>

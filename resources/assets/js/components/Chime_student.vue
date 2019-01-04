@@ -1,7 +1,7 @@
 <template>
     <div>
         <navbar
-        :title="chime.name"
+        title="Home"
         :user="user"
         :link="'/'">
     </navbar>

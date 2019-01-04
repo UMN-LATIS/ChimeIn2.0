@@ -110,7 +110,7 @@ ImageBlot.tagName = 'img';
 Quill.register(ImageBlot);
 
 export default {
-    props: ['question', 'chime', 'show', 'folder', 'controlType'],
+    props: ['question', 'show', 'folder', 'controlType'],
     data: function() {
         return {
             choice_text: '',
@@ -192,7 +192,7 @@ export default {
 
         axios.post(
             '/api/chime/'
-            + this.chime.id
+            + this.folder.chimeId
             + '/image', form_data)
         .then(res => {
             editor.insertEmbed(cursor, 'image', {url: res.data});

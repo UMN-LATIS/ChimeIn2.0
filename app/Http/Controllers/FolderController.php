@@ -7,6 +7,33 @@ use Illuminate\Http\Request;
 class FolderController extends Controller
 {
 
+    public function show(Request $req, $chime, $folder, $includeQuestions=false) {
+        $user = $req->user();
+        $chime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $chime->id)
+            ->first());
+        
+        if ($chime != null && $chime->pivot->permission_number >= 200) {
+            
+            if($includeQuestions) {
+
+                // this is spendy!
+                $folder->load("questions");
+                $folder->load("questions.folder");
+                $folder->load("questions.sessions");
+                $folder->load("questions.sessions.responses");
+            }
+            return response()->json($folder);
+        }
+        else {
+            return response('Invalid Permissions to Get Folder', 403);
+        }
+
+        
+    }
+
     /**
      * Show the application dashboard.
      *

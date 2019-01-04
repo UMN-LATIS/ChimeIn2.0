@@ -34,6 +34,8 @@ Vue.component('ChimeStudent', ChimeStudent);
 import Present from './components/Present.vue';
 Vue.component('Present', Present);
 
+import Folder from './components/Folder.vue';
+Vue.component('Folder', Folder);
 
 Vue.component('navbar',
     require('./components/Navbar.vue'));
@@ -90,6 +92,7 @@ const router = new VueRouter({
   routes: [
     { path: "/", component: Home },
     { path: "/chime/:chimeId", name:'chime', component: Chime, props: true },
+    { path: "/chime/:chimeId/folder/:folderId", name:'folder', component: Folder, props: true },
     { path: "/chimeStudent/:chimeId", name:'chimeStudent', component: ChimeStudent, props: true },
     { path: "/chime/:chimeId/folder/:folderId/present/:questionId?", name:'present', component: Present, props: true }
     // { path: '/:id?', name: "present", component: require('./components/Present.vue')}

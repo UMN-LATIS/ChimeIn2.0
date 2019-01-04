@@ -21,16 +21,18 @@ export default {
         }
     },
     watch: {
-        selected: function(value) {
-            const response = {
-                question_type: 'multiple_choice',
-                choice: value
+        selected: function(newValue, value) {
+            if(newValue !== value && newValue !== this.response.response_info.choice) {
+                const response = {
+                    question_type: 'multiple_choice',
+                    choice: newValue
+                }
+                this.$emit('recordresponse', response);
             }
-            this.$emit('recordresponse', response);
         },
         response: function(value) {
             if(this.response && this.response.response_info) {
-                this.selected = this.response.response_info.choice;    
+                this.selected = this.response.response_info.choice;
             }
             
         }

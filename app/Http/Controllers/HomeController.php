@@ -69,7 +69,7 @@ class HomeController extends Controller
             return response()->json($chime);
         }
         else {
-            return redirect("/");
+            return redirect("/chimeStudent/" . $chime->id);
         }
     }
 

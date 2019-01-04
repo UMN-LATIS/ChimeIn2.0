@@ -5,13 +5,12 @@
             <question-form :show="show_edit" @edited="edit_question" @close="show_edit = false;"
             :question="question"
             :folder="folder"
-            :chime="chime"
             controlType="edit">
         </question-form>
         <div>
             <p class="response_label">{{ total_responses }}</p>
             <p class="flow-text" v-html="question.text"></p>
-    </div>
+        </div>
 </b-col>
 <b-col sm=3>
     <div class="float-right">
@@ -40,7 +39,7 @@
 
 <script>
 export default {
-    props: ['folder', 'question', 'chime'],
+    props: ['folder', 'question'],
     data: function() {
         return {
             show_edit: false
@@ -88,6 +87,7 @@ export default {
 
 .flow-text {
     display: inline-block;
+    width: 90%;
 }
 </style>
 

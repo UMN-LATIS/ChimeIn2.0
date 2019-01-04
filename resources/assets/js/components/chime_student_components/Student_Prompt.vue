@@ -65,7 +65,6 @@ export default {
     },
     methods: {
         record_response: function(response, newResponse=false) {
-
             const self = this;
 
             var url = '/api/chime/'

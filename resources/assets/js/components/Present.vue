@@ -1,9 +1,9 @@
 <template>
     <div>
         <navbar
-        :title="this.questions[0].folder.name"
+        :title="this.folder.name"
         :user="user"
-        :link="{name:'chime', params:{chimeId: chimeId}}">
+        :link="{name:'folder', params:{chimeId: chimeId, folderId: folderId}}">
     </navbar>
 
 
@@ -27,6 +27,7 @@ import { questionsListener } from './mixins/questionsListener'
 export default {
     data() {
         return {
+            folder: {name:""},
             questions: [{folder: {name:""}, sessions: [], question_info: {question_type: "f_f"}}],
             show_results: false,
             current_question: 0,

@@ -22,20 +22,14 @@ export const questionsListener = {
             + chimeId
             + '/folder/'
             + folderId
+            + '/true'
             );
 
         axios.get(url)
         .then(res => {                
-            this.questions = res.data;
+            this.folder = res.data;
+            this.questions = res.data.questions.sort((a,b) => a.order - b.order);;
             console.log(this.questions);
-            if(this.$refs.slideup) {
-                    // redraw the vue slide on the next draw loop
-                    this.$nextTick(function () {
-                        this.$refs.slideup.layout();    
-                    });
-                    
-                }
-
             })
         .catch(err => {
             console.log(err);

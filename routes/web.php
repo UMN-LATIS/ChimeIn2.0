@@ -26,6 +26,9 @@ use App\Http\Controllers\PresentController;
 Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/', 'HomeController@index')->name("home");
     
+    Route::model('chime', '\App\Chime');
+    Route::model('folder', '\App\Folder');
+
 
     Route::get('/api/chime', 'HomeController@getChimes');
     Route::post('/api/chime', 'HomeController@createChime');
@@ -55,7 +58,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::put('/api/chime/{chime}/session/{session}/response/{response?}', 'ResponseController@createOrUpdateResponse');
 
         // Folder Routes (chime page subroutes)
-    Route::get('/api/chime/{chime_id}/folder/{folder_id}',  'FolderController@getQuestions');
+    Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
