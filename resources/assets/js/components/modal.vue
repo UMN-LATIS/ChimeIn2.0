@@ -57,14 +57,14 @@ export default {
 .modal-container {
     width: 80%;
     max-width: 600px;
-    margin: 40px auto 0;
+    margin: 20px auto 0;
     padding: 20px 30px;
     background-color: #fff;
     border-radius: 2px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
     transition: all .3s ease;
     font-family: Helvetica, Arial, sans-serif;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 40px);
     overflow-y: auto;
 }
 
