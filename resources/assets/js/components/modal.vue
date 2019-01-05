@@ -64,14 +64,23 @@ export default {
     box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
     transition: all .3s ease;
     font-family: Helvetica, Arial, sans-serif;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+}
+
+.modal-header {
+  padding: 0;
 }
 
 .modal-header h3 {
     margin-top: 0;
     color: #42b983;
+    line-height: 1.2em;
+    font-size:1.2em;
 }
 
 .modal-body {
-    margin: 20px 0;
+  padding:0;
+    margin: 10px 0;
 }
 </style>
