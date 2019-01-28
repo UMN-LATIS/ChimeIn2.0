@@ -37,11 +37,11 @@ class ShibInjection
                 }
             }
         } else if (!Auth::user()->guest_user) {
-            $variable = Request::server($variableName);
+            $variable = \App\Http\Request::server($variableName);
 
             return (!empty($variable)) ?
                 $variable :
-                Request::server('REDIRECT_' . $variableName);
+                \App\Http\Request::server('REDIRECT_' . $variableName);
         } else {
             return null;
         }

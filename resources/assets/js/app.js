@@ -15,6 +15,9 @@ Vue.use(VueRouter)
 import fullscreen from 'vue-fullscreen'
 Vue.use(fullscreen)
 
+import PrettyCheckbox from 'pretty-checkbox-vue';
+Vue.use(PrettyCheckbox);
+
 
 // import ReactiveBarChart from "./ReactiveBarChart.js";
 

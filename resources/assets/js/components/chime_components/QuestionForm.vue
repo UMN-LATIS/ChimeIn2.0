@@ -9,7 +9,7 @@
             <label for="questionType" class="col-form-label">Question Type</label>
         </b-col>
         <b-col sm="9">
-            <b-form-select id="questionType" v-model="question_type" :options="options" size="md">
+            <b-form-select id="questionType" v-model="question_type"  size="md">
             <option value="multiple_choice">Multiple Choice</option>
             <option value="free_response">Free Response</option>
             <option value="image_response">Image Response</option>

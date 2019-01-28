@@ -30,6 +30,7 @@
             </b-col>
         </b-row>
         <b-row>
+            <b-col sm="12">
          <ul>
             <draggable v-model="questions" @end=swap_question>
                 <question
@@ -42,6 +43,7 @@
             </question>
         </draggable>
     </ul>
+</b-col>
 </b-row>
 </div>
     <question-form :show="showModal" @close="showModal = false; load_questions();"
