@@ -73,8 +73,6 @@ Route::group(['middleware' => ['shibinjection']], function () {
     // Auth::routes();
 
 
-Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
-
 
 if (config('shibboleth.emulate_idp') ) {
     Route::name('login')->get("login", '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@emulateLogin');

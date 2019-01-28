@@ -8,7 +8,7 @@
         <ul class="navbar-nav ml-auto">
         <li>
             <a href="/logout" v-if="user.id && !user.guest_user">Log out</a>
-            <a href="/login" v-else>Log in</a>
+            <a href="/shibboleth-logout" v-else>Log in</a>
         </li>
         </ul>
 

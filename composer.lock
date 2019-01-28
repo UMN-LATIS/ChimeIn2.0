@@ -2818,12 +2818,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/UMN-LATIS/laravel-shibboleth.git",
-                "reference": "773bdeb1b34c6908566cae5b5e69fda01541a84e"
+                "reference": "9fc8e89b95cccaeece8f55c47cb8fb01e5c4e61b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UMN-LATIS/laravel-shibboleth/zipball/773bdeb1b34c6908566cae5b5e69fda01541a84e",
-                "reference": "773bdeb1b34c6908566cae5b5e69fda01541a84e",
+                "url": "https://api.github.com/repos/UMN-LATIS/laravel-shibboleth/zipball/9fc8e89b95cccaeece8f55c47cb8fb01e5c4e61b",
+                "reference": "9fc8e89b95cccaeece8f55c47cb8fb01e5c4e61b",
                 "shasum": ""
             },
             "require": {
@@ -2877,7 +2877,7 @@
             "support": {
                 "source": "https://github.com/UMN-LATIS/laravel-shibboleth/tree/master"
             },
-            "time": "2018-05-17T13:53:49+00:00"
+            "time": "2019-01-28T16:35:09+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
