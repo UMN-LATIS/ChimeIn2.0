@@ -9,7 +9,7 @@
                 :response="response"
                 :is="response.session.question.question_info.question_type">
             </component>
-            
+            <a class="pointer" v-if="chime.students_can_view" v-bind:href="'/chime/' + chime.id + '/folder/' + response.session.question.folder_id + '/present/' + (response.session.question.order - 1)">View Responses</a>
             <hr />
         </div>
     </div>
@@ -27,6 +27,6 @@
 
 <script>
 export default {
-    props: ['response']
+    props: ['response', 'chime']
 };
 </script>

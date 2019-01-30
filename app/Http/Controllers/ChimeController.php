@@ -67,8 +67,7 @@ class ChimeController extends Controller
         }
     }
 
-    public function updateChime(Chime $chime, Request $req) {
-        
+    public function update(Chime $chime, Request $req) {
         $chime->fill($req->all());
         $chime->save();
         return response()->json(["success"=>true]);

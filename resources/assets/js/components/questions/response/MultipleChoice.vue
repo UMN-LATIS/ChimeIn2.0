@@ -22,7 +22,7 @@ export default {
     },
     watch: {
         selected: function(newValue, value) {
-            if(newValue !== value && newValue !== this.response.response_info.choice) {
+            if(newValue !== value && !(this.response && this.response.response_info && newValue == this.response.response_info.choice)) {
                 const response = {
                     question_type: 'multiple_choice',
                     choice: newValue

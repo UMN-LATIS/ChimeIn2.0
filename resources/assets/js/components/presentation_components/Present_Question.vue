@@ -6,7 +6,7 @@
             <results-display v-if="show_results" :question="question"></results-display>
             <presentation-prompt v-if="!show_results" :session="current_session" :question="question"></presentation-prompt>
         </b-col>
-        <b-col sm="12" md="4" lg="3" class="presentationControls" >
+        <b-col sm="12" md="4" lg="3" class="presentationControls" v-if="!folder.student_view">
            <b-card title="Presentation Controls" class="float-right">
             <p v-if="current_session">Session Responses: {{ current_session?current_session.responses.length:0 }}</p>
             <p v-else>Total Responses: {{ total_responses }}</p>
@@ -47,11 +47,16 @@
 <script>
 
 export default {
-    props: ['question', 'chimeId', 'folderId'],
+    props: ['question', 'chimeId', 'folder'],
     data() {
         return {
             show_results: false,
         };
+    },
+    mounted() {
+        if(this.folder.student_view) {
+            this.show_results = true;
+        }
     },
     computed: {
         current_session: function() {
@@ -80,15 +85,14 @@ export default {
     },
     methods: {
         toggle () {
-        this.$emit('toggle');
-        // this.fullscreen = !this.fullscreen // deprecated
-      },
-      start_session: function() {
+            this.$emit('toggle');
+        },
+        start_session: function() {
         const url = (
             '/api/chime/'
             + this.chimeId
             + '/folder/'
-            + this.folderId
+            + this.folder.id
             + '/question/'
             + this.question.id);
 
@@ -105,7 +109,7 @@ export default {
             '/api/chime/'
             + this.chimeId
             + '/folder/'
-            + this.folderId
+            + this.folder.id
             + '/question/'
             + this.question.id
             + '/stopSession/'

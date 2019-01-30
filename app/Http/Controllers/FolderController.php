@@ -15,11 +15,14 @@ class FolderController extends Controller
             ->where('chime_id', $chime->id)
             ->first());
         
-        if ($chime != null && $chime->pivot->permission_number >= 200) {
+        if ($chime != null && ($chime->pivot->permission_number >= 200 || $chime->students_can_view)) {
             
             if($includeQuestions) {
 
                 // this is spendy!
+                if($chime->students_can_view && $chime->pivot->permission_number < 200) {
+                    $folder->student_view = true;
+                }
                 $folder->load("questions");
                 $folder->load("questions.folder");
                 $folder->load("questions.sessions");

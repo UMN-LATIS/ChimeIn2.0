@@ -19,7 +19,7 @@
             </p>
             
             <b-collapse id="collapse1" class="mt-2">
-                <ChimeManagement :chime="chime" v-on:requireLoginChange="requireLoginChange"></ChimeManagement>
+                <ChimeManagement :chime="chime" v-on:requireLoginChange="requireLoginChange" v-on:studentsCanViewChange="studentsCanViewChange"></ChimeManagement>
             </b-collapse>
         </div>
         
@@ -70,6 +70,10 @@ export default {
     methods: {
         requireLoginChange: function(newValue) {
             this.chime.require_login = newValue;
+            this.saveChime();
+        },
+        studentsCanViewChange: function(newValue) {
+            this.chime.students_can_view = newValue;
             this.saveChime();
         },
         saveChime: function() {

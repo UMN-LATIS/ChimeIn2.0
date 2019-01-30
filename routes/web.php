@@ -50,7 +50,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@deleteFolder');
 
 
-    Route::patch('/api/chime/{chime}', 'ChimeController@updateChime');
+    Route::patch('/api/chime/{chime}', 'ChimeController@update');
 
     // Response subroutes
     Route::get('/api/chime/{chime_id}/responses', 'ResponseController@getResponse');

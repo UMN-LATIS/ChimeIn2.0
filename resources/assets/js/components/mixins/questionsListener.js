@@ -1,4 +1,10 @@
 export const questionsListener = {
+    data() {
+        return {
+            folder: { student_view: false},
+            questions: []
+        }
+    },
   methods: {
     load_questions: function() {
         var chimeId;
@@ -28,7 +34,7 @@ export const questionsListener = {
         axios.get(url)
         .then(res => {                
             this.folder = res.data;
-            this.questions = res.data.questions.sort((a,b) => a.order - b.order);;
+            this.questions = res.data.questions.sort((a,b) => a.order - b.order);
             console.log(this.questions);
             })
         .catch(err => {
@@ -65,8 +71,6 @@ mounted(){
                     }
                 })
             });
-
-
 
             if(!targetSession) {
                 console.log("Session does not exist.  Weird");

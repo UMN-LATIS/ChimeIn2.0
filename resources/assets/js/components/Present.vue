@@ -7,40 +7,39 @@
     </navbar>
 
 
-        <div class="container-fluid">
-    
+    <div class="container-fluid">
+
         <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
-        <template v-for="(question,index) in questions"x>
-            <present-question :question="question" :chimeId="chimeId" :folderId="folderId" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle">
-            </present-question>
-        </template>
+            <template v-for="(question,index) in questions"x>
+                <present-question :question="question" :chimeId="chimeId" :folder="folder" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle">
+                </present-question>
+            </template>
         </fullscreen>
-        </div>
+    </div>
 </div>
 
 </template>
 
 <script>
 
-import { questionsListener } from './mixins/questionsListener'
+    import { questionsListener } from './mixins/questionsListener'
 
-export default {
-    data() {
-        return {
-            folder: {name:""},
-            questions: [{folder: {name:""}, sessions: [], question_info: {question_type: "f_f"}}],
-            show_results: false,
-            current_question: 0,
-            fullscreen: false
-        };
-    },
-    props: ['user', 'chimeId', 'folderId', 'questionId'],
-    mixins: [questionsListener],
-    methods: {
-           toggle () {
-        this.$refs['fullscreen'].toggle() // recommended
-        // this.fullscreen = !this.fullscreen // deprecated
-      },
+    export default {
+        mixins: [questionsListener],
+        data() {
+            return {
+                folder: {name:""},
+                questions: [{folder: {name:""}, sessions: [], question_info: {question_type: "f_f"}}],
+                show_results: false,
+                current_question: 0,
+                fullscreen: false
+            };
+        },
+        props: ['user', 'chimeId', 'folderId', 'questionId'],
+        methods: {
+         toggle () {
+            this.$refs['fullscreen'].toggle();
+        },
         fullscreenChange (fullscreen) {
             this.fullscreen = fullscreen
         },
