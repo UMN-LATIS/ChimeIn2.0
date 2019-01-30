@@ -22,12 +22,15 @@ let mix = require('laravel-mix');
  .sass('resources/assets/sass/app.scss', 'public/css');
 
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('babel-plugin-syntax-dynamic-import').BundleAnalyzerPlugin;
 
 
 const webpack = require('webpack');
 
  mix.webpackConfig({
  	plugins: [
- 	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+ 	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+ 	// new BundleAnalyzerPlugin()
  	]
  })

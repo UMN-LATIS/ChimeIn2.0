@@ -16,9 +16,11 @@
     "laravel-mix": "^1.0",
     "lodash": "^4.17.10",
     "pretty-checkbox-vue": "^1.1.9",
-    "vue": "^2.5.16"
+    "vue": "^2.5.16",
+    "webpack-bundle-analyzer": "^3.0.3"
   },
   "dependencies": {
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "bootstrap": "^4.1.1",
     "chart.js": "^2.7.2",
     "difflib": "^0.2.4",
@@ -46,7 +48,6 @@
     "vue-wordcloud": "https://github.com/UMN-LATIS/vue-wordcloud/tarball/master",
     "vue2-editor": "^2.5.0",
     "vuedraggable": "^2.16.0",
-    "webpack-bundle-analyzer": "^3.0.3",
     "winston": "^2.4.3"
   }
 }
