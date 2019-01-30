@@ -155,7 +155,7 @@ class ChimeController extends Controller
         $chime = $user->chimes()->find($req->route('chime_id'));
 
         $validator = Validator::make($req->all(), [
-             'image'  => 'required|max:2048',
+             'image'  => 'required|max:8192',
          ]);
 
          if ($validator->fails()) {

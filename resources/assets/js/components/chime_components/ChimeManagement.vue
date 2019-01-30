@@ -1,54 +1,66 @@
 <template>
     <div>
-        <b-row>
-            <b-col>
+        <div class="row">
+            <div class="col-sm-12">
                 <ul>
                     <li><strong>Access Code:</strong> {{ chime.access_code }}</li>
                     <li><strong>Participants can join by visiting:</strong> <a v-bind:href="join_url">{{ join_url }}</a></li>
-                    <li><b-form-checkbox v-on:change="requireLoginChange" v-model="requireLogin" :value="1" :unchecked-value="0">
-                        Require Login to Join or Access
-                    </b-form-checkbox></li>
-                    <li><b-form-checkbox v-on:change="studentsCanViewChange" v-model="studentsCanView" :value="1" :unchecked-value="0">
+                    <li>
+
+                       <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="requireLogin" v-model="requireLogin">
+                          <label class="form-check-label" for="requireLogin">
+                            Require Login to Join or Access
+                        </label>
+                    </div>
+
+                </li>
+                <li>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="studentView" v-model="studentsCanView">
+                      <label class="form-check-label" for="studentView">
                         Students can view results
-                    </b-form-checkbox></li>
-                </ul>
-            </b-col>
-        </b-row>
-        
-        <div class="row">
-            <div class="col-sm-12">
-                <h3>Users</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Permission</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(u, key) in sorted_users">
-                            <td>{{ u.name }}</td>
-                            <td>{{ u.email }}</td>
-                            <td >
-                                <template v-if="u.editPermission">
-                                    <b-form-select v-model="u.permission_number" :options="[
-                                    { value: 100, text: 'Student' },
-                                    { value: 300, text: 'Instructor' }]" class="mb-3" @input="saveUsers"/>
-                                </template>
-                                <span v-on:click="u.editPermission = !u.editPermission" v-else>
-                                    <template  v-if="u.permission_number == 300">Instructor</template>
-                                    <template  v-if="u.permission_number == 100">Student</template>
-                                </span>
-                            </td>
-                            <td><b-btn @click="deleteUser(key)" size="sm">Remove User</b-btn></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </a>
-        </div>
+                    </label>
+                </div>
+            </li>
+        </ul>
     </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Users</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Permission</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(u, key) in sorted_users">
+                    <td>{{ u.name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td >
+                        <template v-if="u.editPermission">
+                            <b-form-select v-model="u.permission_number" :options="[
+                            { value: 100, text: 'Student' },
+                            { value: 300, text: 'Instructor' }]" class="mb-3" @input="saveUsers"/>
+                        </template>
+                        <span v-on:click="u.editPermission = !u.editPermission" v-else>
+                            <template  v-if="u.permission_number == 300">Instructor</template>
+                            <template  v-if="u.permission_number == 100">Student</template>
+                        </span>
+                    </td>
+                    <td><b-btn @click="deleteUser(key)" size="sm">Remove User</b-btn></td>
+                </tr>
+            </tbody>
+        </table>
+    </a>
+</div>
+</div>
 </div>
 </template>
 
@@ -67,6 +79,18 @@ ul li {
                 requireLogin: 0,
                 studentsCanView: 0,
                 users: [],
+            }
+        },
+        watch: {
+            requireLogin: function(newValue, oldValue) {
+                if(newValue !== this.chime.require_login) {
+                    this.$emit('requireLoginChange', newValue);
+                }
+            },
+            studentsCanView: function(newValue, oldValue) {
+                if(newValue !== this.chime.students_can_view) {
+                    this.$emit('studentsCanViewChange', newValue);
+                }
             }
         },
         computed: {
@@ -96,12 +120,6 @@ ul li {
                     this.saveUsers();
                 }
             },
-            requireLoginChange: function(newValue) {
-                this.$emit('requireLoginChange', newValue);
-            },
-            studentsCanViewChange: function(newValue) {
-                this.$emit('studentsCanViewChange', newValue);
-            },
             saveUsers: function() {
 
                 const url = (
@@ -130,13 +148,11 @@ ul li {
 
             }
         },
-        watch: {
-         chime: function() {
+        mounted() {
             this.requireLogin = this.chime.require_login;
             this.studentsCanView = this.chime.students_can_view;
             this.loadUsers();
         }
-    }
 
-}
+    }
 </script>

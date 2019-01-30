@@ -1,10 +1,13 @@
 <template>
-        <b-form-group  label="" >
-            <b-form-radio-group :disabled="disabled" v-model="selected" :options="selectOptions"
-                          stacked
-                          >
-            </b-form-radio-group>
-        </b-form-group>
+    <div class="form-group">
+        <div class="form-check" v-for="(option, key) in selectOptions">
+            <input class="form-check-input" :disabled="disabled" type="radio" v-bind:id="'radio'+question.id + '_' + key" v-model="selected" :value="option">
+            <label class="form-check-label" v-bind:for="'radio'+question.id + '_' + key" >
+                {{ option }}
+            </label>
+        </div>
+    </div>
+
 </template>
 
 <script>

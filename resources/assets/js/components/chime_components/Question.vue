@@ -1,7 +1,7 @@
 <template>
     <li>
-        <b-row>
-            <b-col sm=9>
+        <div class="row">
+            <div class="col-sm-9">
                 <question-form :show="show_edit" @edited="edit_question" @close="show_edit = false;"
                 :question="question"
                 :folder="folder"
@@ -11,8 +11,8 @@
                 <p class="response_label">{{ total_responses }}</p>
                 <p class="flow-text" v-html="question.text"></p>
             </div>
-        </b-col>
-        <b-col sm=3>
+        </div>
+        <div class="col-sm-3">
             <div class="float-right">
                 <p-check name="check" class="p-switch p-outline" color="success" v-model="check"> &nbsp;
                 </p-check>
@@ -32,9 +32,9 @@
         <i class="material-icons ">delete</i>
     </a>
 </div>
-</b-col>
+</div>
 
-</b-row>
+</div>
 </li>
 </template>
 

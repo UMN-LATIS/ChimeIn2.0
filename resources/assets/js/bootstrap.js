@@ -1,6 +1,5 @@
 import Echo from "laravel-echo";
 
-import BootstrapVue from 'bootstrap-vue'
 
 window._ = {};
 window._.sortBy = require('lodash/sortBy')
@@ -18,7 +17,7 @@ window._.orderBy = require('lodash/orderBy')
 
 try {
     window.$ = window.jQuery = require('jquery');
-    // require('bootstrap');
+    require('bootstrap');
 } catch (e) {}
 
 /**
@@ -30,7 +29,6 @@ try {
 
 window.Vue = require('vue');
 
-Vue.use(BootstrapVue);
 window.axios = require('axios');
 window.io = require('socket.io-client');
 // window.Pusher = require('pusher-js');

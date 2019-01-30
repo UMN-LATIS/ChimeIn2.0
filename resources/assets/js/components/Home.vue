@@ -29,8 +29,12 @@
                         <div class="input-group-append">
                             <button class="btn btn-secondary" type="button" v-on:click="join_chime">Join</button>
                         </div>
-                        <b-alert variant="danger" :show="requires_login">You must <a href="/login">log in</a> to join this Chime</b-alert>
-                        <b-alert variant="danger" :show="chime_not_found">We couldn't find a Chime associated with that code</b-alert>
+                        <div class="alert alert-danger" role="alert" v-if="requires_login">
+                            You must <a href="/login">log in</a> to join this Chime
+                        </div>
+                        <div class="alert alert-danger" role="alert" v-if="chime_not_found">
+                            We couldn't find a Chime associated with that code
+                        </div>
                 </div>
                 
                 </div>

@@ -1,5 +1,5 @@
 <template>  
- <modal :show="show" @close="close">
+   <modal :show="show" @close="close">
     <div class="modal-header">
         <h3>Add a Question</h3>
     </div>
@@ -10,24 +10,24 @@
         </b-col>
         <b-col sm="9">
             <b-form-select id="questionType" v-model="question_type"  size="md">
-            <option value="multiple_choice">Multiple Choice</option>
-            <option value="free_response">Free Response</option>
-            <option value="image_response">Image Response</option>
-        </b-form-select>
-    </b-col>
-</b-row>
+                <option value="multiple_choice">Multiple Choice</option>
+                <option value="free_response">Free Response</option>
+                <option value="image_response">Image Response</option>
+            </b-form-select>
+        </b-col>
+    </b-row>
 
-<hr>
-<div class="row">
-    <div class="col">
-        <vue-editor
-        v-model="question_text"
-        placeholder="Question Text"
-        v-bind:editorToolbar="toolbar"
-        v-bind:useCustomImageHandler="true"
-        v-on:imageAdded="handle_image_added">
-    </vue-editor>
-</div>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <vue-editor
+            v-model="question_text"
+            placeholder="Question Text"
+            v-bind:editorToolbar="toolbar"
+            v-bind:useCustomImageHandler="true"
+            v-on:imageAdded="handle_image_added">
+        </vue-editor>
+    </div>
 </div>
 
 <div class="row choiceRow">
@@ -137,14 +137,14 @@
 
             },
             savePost: function () {
-             var url = (
+               var url = (
                 '/api/chime/' + this.folder.chime_id +
                 '/folder/' + this.folder.id);
 
 
-             var question = {};
-             question.text = this.question_text;
-             question.question_info = {
+               var question = {};
+               question.text = this.question_text;
+               question.question_info = {
                 question_type: this.question_type,
                 question_responses: this.question_responses
             };

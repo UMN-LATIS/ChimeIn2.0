@@ -11,6 +11,7 @@
                 :is="question.question_info.question_type"
                 :question="question"
                 :response="response"
+                :chime="chime"
                 :disabled="false"
                 v-on:recordresponse="record_response">
             </component>

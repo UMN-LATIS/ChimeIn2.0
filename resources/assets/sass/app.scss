@@ -7,7 +7,6 @@
 
 // CSS libraries
 @import '~bootstrap/scss/bootstrap';
-@import '~bootstrap-vue/dist/bootstrap-vue.css';
 
 @import "footer";
 
@@ -26,4 +25,16 @@
 
 .fade-move {
     transition: transform 1s;
+}
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.2s;
+  max-height: 600px;
+}
+.dropdown-enter,
+.dropdown-leave-to
+{
+  opacity: 0;
+  max-height: 0px;
 }

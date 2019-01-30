@@ -3,9 +3,15 @@
         <div v-if="response.response_info">
             <img class="responsive-img imageContainer" v-bind:src="'/storage/' + response.response_info.image">
         </div>
-
-        
-        <b-form-file v-if="!disabled" accept="image/*" v-model="file" :state="Boolean(file)" placeholder="Choose an image..."></b-form-file>
+        <div class="dropbox" v-if="!disabled">
+          <input type="file" multiple accept="image/*" @change="attachFile($event.target.name, $event.target.files)" class="form-control-file input-file">
+            <p v-if="isInitial">
+              Drag your file(s) here to begin<br> or click to browse
+            </p>
+            <p v-if="isSaving">
+              Uploading file...
+            </p>
+        </div>
     </div>
 </template>
 
@@ -16,6 +22,34 @@
     max-height: 400px;
 }
 
+.dropbox {
+    outline: 2px dashed grey; /* the dash box */
+    outline-offset: -10px;
+    background: lightcyan;
+    color: dimgray;
+    padding: 10px 10px;
+    min-height: 200px; /* minimum height */
+    position: relative;
+    cursor: pointer;
+  }
+
+  .input-file {
+    opacity: 0; /* invisible but it's there! */
+    width: 100%;
+    height: 200px;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  .dropbox:hover {
+    background: lightblue; /* when mouse over to the drop zone, change color */
+  }
+
+  .dropbox p {
+    font-size: 1.2em;
+    text-align: center;
+    padding: 50px 0;
+  }
 </style>
 
 <script>
@@ -23,60 +57,39 @@ export default {
     props: ['question', 'response', 'disabled', 'chime'],
     data() {
         return {
-            "file": ""
+            "isInitial": true,
+            "isSaving": false
         }
     },
-    watch: {
-        file: function(value){
-
-            let form_data = new FormData();
-            form_data.append('image', value);
-
-
-            axios.post(
-                '/api/chime/'
-                + this.chime.id
-                + '/image', form_data)
-            .then(res => {
-                 const response = {
-                    question_type: 'image_response',
-                    image: res.data.image,
-                    image_name: value.name
-                }
-
-                this.$emit('recordresponse', response);
-            });
-
-        },
-    },
     methods: {
-        record_response: function(event) {
-            const self = this;
-            const file = event.target.files[0];
-            console.log(file);
-            
-            let form_data = new FormData();
-            form_data.append('image', file);
+        attachFile: function(event, fileList){
+            this.isSaving = true;
+            this.isInitial = false;
+            let formData = new FormData();
+            Array
+            .from(Array(fileList.length).keys())
+            .map(x => {
+                formData.append("image", fileList[x], fileList[x].name);
+            });
 
             axios.post(
                 '/api/chime/'
                 + this.chime.id
-                + '/image', form_data)
+                + '/image', formData)
             .then(res => {
-                console.log(res);
+               const response = {
+                question_type: 'image_response',
+                image: res.data.image,
+                image_name: fileList[0].name
+            }
+            this.isSaving = false;
+            this.isInitial= true;
 
-                const response = {
-                    question_type: 'image_response',
-                    image: res.data.image,
-                    image_name: file.name
-                }
+            this.$emit('recordresponse', response);
+        });
 
-                this.$emit('recordresponse', response);
-            })
-            .catch(err => {
-                console.log(err.response)
-            });
         },
+
     }
 }
 </script>

@@ -1,19 +1,20 @@
 <template>
     <div>
-        <col>
-        <b-form-textarea 
-                     v-model="response_text"
+        <div class="col-sm-12">
+         <div class="form-group">
+            <textarea class="form-control" v-model="response_text"
                      placeholder="Type your response"
                      :rows="3"
                      :disabled="disabled"
-                     :max-rows="6">
-        </b-form-textarea>
-        </col>
-        <col>
-            <b-button v-if="(!disabled && !response.id) || create_new_response" type="button" variant="primary" @click="record_response">Save</b-button>
-            <b-button v-if="!disabled && response.id && !create_new_response" type="button" variant="primary" @click="record_response">Update</b-button>
-            <b-button v-if="!disabled && response.id && !create_new_response" type="button" variant="primary" @click="new_response">+ New Response</b-button>
-        </col>
+                     :max-rows="6"></textarea>
+            </div>
+        
+        </div">
+        <div class="col-sm-12">
+            <button v-if="(!disabled && !response.id) || create_new_response" class="btn btn-primary" variant="primary" @click="record_response">Save</button>
+            <button v-if="!disabled && response.id && !create_new_response" class="btn btn-primary" variant="primary" @click="record_response">Update</button>
+            <button v-if="!disabled && response.id && !create_new_response" class="btn btn-primary" variant="primary" @click="new_response">+ New Response</button>
+        </div>
     </div>
 </template>
 

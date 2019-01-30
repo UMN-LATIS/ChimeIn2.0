@@ -1,21 +1,21 @@
 <template>
     <div class="card">
         <div class="card-body">
-            <b-row>
+            <div class="row">
 
-                <b-col sm="9">
+                <div class="col-sm-9">
                    
                      <h4>
                     <router-link :to="{ name: 'folder', params: {chimeId: chime.id, folderId: folder.id} }">
                      {{ folder.name }}</router-link></h4>
-                </b-col>
-                <b-col sm="3" class="text-right">
+                </div>
+                <div class="col-sm-3 text-right">
 
                     <router-link :to="{ name: 'present', params: {chimeId: chime.id, folderId: folder.id} }">
                         <i class="material-icons">play_arrow</i>
                     </router-link>
-                </b-col>
-            </b-row> 
+                </div>
+            </div> 
 
         </div>
     </div>
