@@ -43,4 +43,5 @@ if (mix.inProduction()) {
     	chunkFilename: 'js/[name].bundle.js',
     	publicPath: '/',
 	};
+	mix.version();
 }
