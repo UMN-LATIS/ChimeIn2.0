@@ -9,6 +9,7 @@
 
             <template v-if="this.question.sessions.length > 0">
             
+                // TODO
                 <b-form-select v-model="selected" :options="question.sessions.map(el => ({'value':el.id, 'text': el.created_at})).concat({'value':0, 'text':'All'})" class="mb-3" />
                 
 
@@ -29,12 +30,32 @@
 </template>
 
 <script>
+
+const multiplechoicestatistics = () => import(
+    /* webpackChunkName: "multiplechoicestatistics" */
+    './MultipleChoiceStatistics.vue'
+);
+const FreeResponseStatistics = () => import(
+    /* webpackChunkName: "FreeResponseStatistics" */
+    './FreeResponseStatistics.vue'
+);
+const ImageResponseStatistics = () => import(
+    /* webpackChunkName: "ImageResponseStatistics" */
+    './ImageResponseStatistics.vue'
+);
+
+
 export default {
     props: ['sessions', 'session', 'question'],
     data: function() {
         return {
             selected: null
         }
+    },
+    components: {
+        'multiple_choice_statistics': multiplechoicestatistics,
+        'image_response_statistics':ImageResponseStatistics,
+        'free_response_statistics': FreeResponseStatistics
     },
     methods: {
         updateSelected() {

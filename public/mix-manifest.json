@@ -1,4 +1,9 @@
 {
+    "/QuestionForm.js": "/QuestionForm.js",
+    "/FreeResponseStatistics.js": "/FreeResponseStatistics.js",
+    "/multiplechoicestatistics.js": "/multiplechoicestatistics.js",
+    "/folder.js": "/folder.js",
+    "/ImageResponseStatistics.js": "/ImageResponseStatistics.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css"
 }

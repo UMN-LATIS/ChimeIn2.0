@@ -12,12 +12,12 @@
         <h1 class="display-4 center" v-else="!user.guest_user">Welcome, guest user</h1>
 
         <div class="row">
-            <div class="col-12 col-md-9 order-sm-last order-last order-md-first">
+            <div class="col-12 col-md-9">
                 <chime-panel :user="user">
                 </chime-panel>
             </div>
             
-        <div class="col-12 col-md-3 order-md-last order-sm-first order-first">
+        <div class="col-12 col-md-3">
             <div class="card">
                 <div class="card-header">
                     Access Code

@@ -37,7 +37,10 @@ Vue.component('ChimeStudent', ChimeStudent);
 import Present from './components/Present.vue';
 Vue.component('Present', Present);
 
-import Folder from './components/Folder.vue';
+const Folder = () => import(
+    /* webpackChunkName: "folder" */
+    './components/Folder.vue'
+);
 Vue.component('Folder', Folder);
 
 Vue.component('navbar',
@@ -57,8 +60,7 @@ Vue.component('question',
     require('./components/chime_components/Question.vue'));
 Vue.component('multiple-choice-display',
     require('./components/questions/display/MultipleChoice.vue'));
-Vue.component('question-form',
-    require('./components/chime_components/QuestionForm.vue'));
+
 
 
 Vue.component('student-prompt',
@@ -82,12 +84,10 @@ Vue.component('results-display',
     require('./components/presentation_components/ResultsDisplay.vue'));
 Vue.component('multiple-choice-display',
     require('./components/questions/display/MultipleChoice.vue'));
-Vue.component('multiple_choice_statistics',
-    require('./components/presentation_components/MultipleChoiceStatistics.vue'));
-Vue.component('image_response_statistics',
-    require('./components/presentation_components/ImageResponseStatistics.vue'));
-Vue.component('free_response_statistics',
-    require('./components/presentation_components/FreeResponseStatistics.vue'));
+
+
+// Vue.component('multiple_choice_statistics',
+    // require('./components/presentation_components/MultipleChoiceStatistics.vue'));
 
 
 const router = new VueRouter({

@@ -34,3 +34,13 @@ const webpack = require('webpack');
  	// new BundleAnalyzerPlugin()
  	]
  })
+
+
+// breaks hot updating?
+
+if (mix.inProduction()) {
+ 	mix.config.webpackConfig.output = {
+    	chunkFilename: 'js/[name].bundle.js',
+    	publicPath: '/',
+	};
+}

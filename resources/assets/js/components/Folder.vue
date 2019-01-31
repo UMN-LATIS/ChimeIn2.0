@@ -64,11 +64,18 @@ controlType="create">
 <script>
     import draggable from 'vuedraggable'
     import { questionsListener } from './mixins/questionsListener'
-
+    
+    const QuestionForm = () => import(
+        /* webpackChunkName: "QuestionForm" */
+        './chime_components/QuestionForm.vue'
+    );
 
     export default {
         props: ['folderId', 'chimeId', 'user'],
         mixins: [questionsListener],
+        components: {
+            draggable, 'question-form': QuestionForm
+        },
         data() {
             return {
                 folder: {name: ""},
@@ -170,10 +177,6 @@ controlType="create">
             this.load_folder();
             this.load_questions();
 
-        },
-
-        components: {
-            draggable
         }
     };
 </script>

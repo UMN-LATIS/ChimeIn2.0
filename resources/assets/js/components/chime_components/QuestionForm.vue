@@ -4,18 +4,22 @@
         <h3>Add a Question</h3>
     </div>
     <div class="modal-body">
-        <b-row>
-          <b-col sm="3">
+        <div class="row">
+          <div class="col-sm-3">
             <label for="questionType" class="col-form-label">Question Type</label>
-        </b-col>
-        <b-col sm="9">
-            <b-form-select id="questionType" v-model="question_type"  size="md">
-                <option value="multiple_choice">Multiple Choice</option>
+        </div>
+        <div class="col-sm-9">
+            <div class="form-group">
+            <select class="form-control" id="" v-model="question_type" >
+      <option value="multiple_choice">Multiple Choice</option>
                 <option value="free_response">Free Response</option>
                 <option value="image_response">Image Response</option>
-            </b-form-select>
-        </b-col>
-    </b-row>
+    </select>
+  </div>
+
+                
+        </div>
+    </div>
 
     <hr>
     <div class="row">
@@ -113,6 +117,9 @@
 
     export default {
         props: ['question', 'show', 'folder', 'controlType'],
+        components: {
+            VueEditor
+        },
         data: function() {
             return {
                 choice_text: '',

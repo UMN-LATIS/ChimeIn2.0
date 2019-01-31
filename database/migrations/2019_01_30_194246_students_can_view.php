@@ -14,7 +14,7 @@ class StudentsCanView extends Migration
     public function up()
     {
         Schema::table('chimes', function(Blueprint $table) {
-            $table->boolean('students_can_view');
+            $table->boolean('students_can_view')->default(false);
         });
     }
 

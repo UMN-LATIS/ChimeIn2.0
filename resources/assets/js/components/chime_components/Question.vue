@@ -39,8 +39,16 @@
 </template>
 
 <script>
+    const QuestionForm = () => import(
+        /* webpackChunkName: "QuestionForm" */
+        './QuestionForm.vue'
+    );
+
     export default {
         props: ['folder', 'question'],
+        components: {
+            'question-form': QuestionForm
+        },
         data: function() {
             return {
                 show_edit: false,
