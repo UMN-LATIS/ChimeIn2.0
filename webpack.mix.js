@@ -40,7 +40,7 @@ const webpack = require('webpack');
 
 if (mix.inProduction()) {
  	mix.config.webpackConfig.output = {
-    	chunkFilename: 'js/[name].bundle.js',
+    	chunkFilename: 'js/[name].[chunkhash].bundle.js',
     	publicPath: '/',
 	};
 	mix.version();

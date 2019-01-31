@@ -1,9 +1,9 @@
 {
-    "/QuestionForm.js": "/QuestionForm.js",
-    "/FreeResponseStatistics.js": "/FreeResponseStatistics.js",
-    "/multiplechoicestatistics.js": "/multiplechoicestatistics.js",
-    "/folder.js": "/folder.js",
-    "/ImageResponseStatistics.js": "/ImageResponseStatistics.js",
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/js/QuestionForm.ed1be4d24a415a3e4be6.bundle.js": "/js/QuestionForm.ed1be4d24a415a3e4be6.bundle.js?id=11ed094fbeabc92392d6",
+    "/js/multiplechoicestatistics.587af50c1f350ac5b72c.bundle.js": "/js/multiplechoicestatistics.587af50c1f350ac5b72c.bundle.js?id=18c461edfaa89bc3d0eb",
+    "/js/FreeResponseStatistics.cb7218cc4c0b4a6ef107.bundle.js": "/js/FreeResponseStatistics.cb7218cc4c0b4a6ef107.bundle.js?id=7b7463014b63f0cc7e67",
+    "/js/folder.a579b0f992ee0397e2bb.bundle.js": "/js/folder.a579b0f992ee0397e2bb.bundle.js?id=85f0a71e54b98f5ecc17",
+    "/js/ImageResponseStatistics.5200c749ba3851c07689.bundle.js": "/js/ImageResponseStatistics.5200c749ba3851c07689.bundle.js?id=6be0e855c2cb9d787560",
+    "/js/app.js": "/js/app.js?id=32d479b9310bd9150e63",
+    "/css/app.css": "/css/app.css?id=423fe8008cd3c9b69768"
 }
