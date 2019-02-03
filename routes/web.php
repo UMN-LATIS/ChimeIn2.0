@@ -25,7 +25,7 @@ use App\Http\Controllers\PresentController;
 
 Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/', 'HomeController@index')->name("home");
-    
+    Route::get('/loginAndRedirect', 'HomeController@loginAndRedirect');
     Route::model('chime', '\App\Chime');
     Route::model('folder', '\App\Folder');
 

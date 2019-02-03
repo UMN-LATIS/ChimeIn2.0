@@ -6,7 +6,9 @@
         :link="'/'">
     </navbar>
 
-
+    <div class="alert alert-warning" role="alert" v-if="error">
+        {{ error }}
+    </div>
     <div class="container">
         <div class="card ">
           <div class="card-header text-center">
@@ -71,7 +73,8 @@
             return {
                 chime: {},
                 sessions: [],
-                responses: []
+                responses: [],
+                error: null
             };
         },
         props: ['user', 'chimeId'],
@@ -91,24 +94,30 @@
             }
         },
         created: function () {
-            const self = this;
-
             axios.get('/api/chime/' + this.chimeId)
             .then(res => {
                 console.log('debug', 'chime:', res);
-                self.chime = res.data.chime;
-                document.title = self.chime.name;
-                self.sessions = res.data.sessions;
-
+                this.chime = res.data.chime;
+                document.title = this.chime.name;
+                this.sessions = res.data.sessions;
             })
             .catch(err => {
-                console.error('error getting sessions:', err.response);
+                if(err.response.data.status == "AttemptAuth") {
+                    window.location = "/loginAndRedirect?target=" + window.location.pathname;
+                }
+                else {
+                    if(err.response.data.message) {
+                        this.error = err.response.data.message;    
+                    }
+                    console.log("error getting chime:", err.response);
+                    
+                }
             });
 
             axios.get('/api/chime/' + this.chimeId + "/responses")
             .then(res => {
                 console.log('debug', 'Response:', res);
-                self.responses= res.data;
+                this.responses= res.data;
 
             })
 
@@ -116,11 +125,11 @@
             Echo.private('session-status.' + this.chimeId)
             .listen('StartSession', m => {
                 console.log('debug', 'message:', m);
-                self.sessions.push(m.session);
+                this.sessions.push(m.session);
             })
             .listen('EndSession', m => {
-                var removeIndex = self.sessions.findIndex(session => session.id == m.session.id);
-                self.sessions.splice(removeIndex, 1);
+                var removeIndex = this.sessions.findIndex(session => session.id == m.session.id);
+                this.sessions.splice(removeIndex, 1);
             });
 
         },

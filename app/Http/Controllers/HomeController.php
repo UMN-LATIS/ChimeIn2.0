@@ -73,6 +73,16 @@ class HomeController extends Controller
         }
     }
 
+    public function loginAndRedirect(Request $req) {
+        $target = $req->query('target');
+        if(!Auth::user()->guest_user) {
+            return redirect($target);
+        }
+        else {
+            return redirect()->guest('login');    
+        }
+    }
+
     public function deleteChime(Request $req) {
         $user = $req->user();
         $chime = ($user->chimes()->find($req->route('chime_id')));

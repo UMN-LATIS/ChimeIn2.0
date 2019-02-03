@@ -24,6 +24,22 @@ class ChimeController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
+        if(!$chime) {
+             $returnData = array(
+                'status' => '',
+                'message' => "Error"
+            );
+            if(Auth::user()->guest_user) {
+                $returnData["status"] = "AttemptAuth";
+                $returnData["message"] = "Auth May Be Required";
+            }
+            else {
+                $returnData["status"] = "Error";
+                $returnData["message"] = "You don't have permission to access this Chime";
+            }
+            return Response()->json($returnData, 403);
+        }
+
         $chime->load("folders");
 
         if ($chime != null && $chime->pivot->permission_number >= 200) {
