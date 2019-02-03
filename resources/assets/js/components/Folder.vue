@@ -6,8 +6,8 @@
         :link="{name:'chime', params:{chimeId: chimeId}}">
     </navbar>
     <div class="container">
-        <div class="row">
-            <div class="col-12">
+        <div class="row mt-2">
+            <div class="col-5 align-items-center d-flex">
                 <h4 v-if="!show_edit_folder">{{ folder.name }}</h4>
                 <div class="input-group mb-3" v-if="show_edit_folder">
                   <input type="text" class="form-control" v-model="folder.name">
@@ -16,9 +16,8 @@
                     </div>
                 </div>
             </div>
-    </div>
-    <div class="row">
-        <div class="btn-group" role="group" aria-label="Folder Controls">
+            <div class="col-md-7 col-sm-12">
+                <div class="btn-group float-right" style="flex-wrap: wrap;" role="group" aria-label="Folder Controls">
                     <router-link :to="{ name: 'present', params: {chimeId: chimeId, folderId: folderId} }"  tag="button" class="btn btn-outline-info align-items-center d-flex">
                         Presentation View
                         <i class="material-icons">play_arrow</i>
@@ -27,6 +26,10 @@
                     <button class="btn btn-outline-info align-items-center d-flex" @click="delete_folder">Delete Folder <i class="material-icons pointer">delete</i></button>
                     <button class="btn btn-outline-info align-items-center d-flex" @click="showModal = true">Add a Question <i class="material-icons pointer">add</i></button>
         </div>
+    </div>
+    </div>
+    <div class="row">
+        
     </div>
     <div class="row border-top mt-3 pt-3">
         <div class="col-sm-12">
@@ -189,6 +192,10 @@ controlType="create">
 <style scoped>
 ul li {
     list-style: none;
+}
+
+.align-items-center h4 {
+    margin-bottom: 0;
 }
 
 </style>

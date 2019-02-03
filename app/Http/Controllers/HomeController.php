@@ -23,6 +23,7 @@ class HomeController extends Controller
         $chimes = $req->user()->chimes()->get();
         return response()->json($chimes);
     }
+    
     public function createChime(Request $req) {
         $user = $req->user();
 
@@ -73,6 +74,8 @@ class HomeController extends Controller
         }
     }
 
+
+    // call this URL with target=<target> to force a login and redirect
     public function loginAndRedirect(Request $req) {
         $target = $req->query('target');
         if(!Auth::user()->guest_user) {
