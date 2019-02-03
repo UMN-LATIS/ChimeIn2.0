@@ -16,22 +16,6 @@
     </div>
 </template>
 
-<style>
-
-
-.hoverable:hover {
-    cursor:pointer;
-    transition: 0.2s;
-    box-shadow: 2px 2px 18px lightgray;
-}
-
-.card {
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-</style>
-
 
 <script>
 export default {

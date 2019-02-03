@@ -16,21 +16,15 @@
             <div class="float-right">
                 <p-check name="check" class="p-switch p-outline" color="success" v-model="check"> &nbsp;
                 </p-check>
-                <a 
-                class="pointer"
-                v-bind:href="'/chime/' + folder.chime_id + '/folder/' + folder.id + '/present/' + (question.order - 1)">
+                <router-link :to="{ name: 'present', params: {chimeId: folder.chime_id, folderId: folder.id, questionId:question.order - 1} }" class="text-dark">
                 <i class="material-icons">play_arrow</i>
+                </router-link>
+            <a class="pointer" @click="show_edit = !show_edit">
+                <i class="material-icons">edit</i>
             </a>
-            <a 
-            class="pointer"
-            v-on:click="show_edit = !show_edit">
-            <i class="material-icons">edit</i>
-        </a>
-        <a 
-        class="pointer"
-        v-on:click="delete_question">
-        <i class="material-icons ">delete</i>
-    </a>
+            <a class="pointer" @click="delete_question">
+                <i class="material-icons ">delete</i>
+            </a>
 </div>
 </div>
 
@@ -155,6 +149,12 @@
 .pretty {
     margin-right: 0;
 }
+
+.p-switch {
+    vertical-align: top;
+    margin-top: 6px;
+}
+
 </style>
 
 

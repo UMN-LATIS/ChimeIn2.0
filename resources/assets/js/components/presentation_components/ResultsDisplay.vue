@@ -8,10 +8,11 @@
             </div>
 
             <template v-if="this.question.sessions.length > 0">
-            
-                // TODO
-                <b-form-select v-model="selected" :options="question.sessions.map(el => ({'value':el.id, 'text': el.created_at})).concat({'value':0, 'text':'All'})" class="mb-3" />
-                
+                <select v-model="selected" class="mb-3 form-control col-6">
+                    <template v-for=" question in question.sessions.map(el => ({'value':el.id, 'text': el.created_at})).concat({'value':0, 'text':'All'})">
+                        <option :value="question.value">{{ question.text}}</option>
+                    </template>
+                </select>
 
                 <component
                     v-if="selected_session"

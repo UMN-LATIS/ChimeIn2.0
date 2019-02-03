@@ -38,3 +38,17 @@
   opacity: 0;
   max-height: 0px;
 }
+
+/**
+ * To make the cards hover with a dropshadow
+ */
+.hoverable {
+	margin-top: 5px;
+    margin-bottom: 5px;
+}
+.hoverable:hover {
+    cursor:pointer;
+    transition: 0.2s;
+    box-shadow: 2px 2px 18px lightgray;
+    
+}

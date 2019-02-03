@@ -1,13 +1,11 @@
 <template>
-    <div class="card">
+    <div class="card hoverable">
         <div class="card-body">
             <div class="row">
-
-                <div class="col-sm-9">
+                
+                <div class="col-sm-9" @click="$router.push({ name: 'folder', params: {chimeId: chime.id, folderId: folder.id} })">
                    
-                     <h4>
-                    <router-link :to="{ name: 'folder', params: {chimeId: chime.id, folderId: folder.id} }">
-                     {{ folder.name }}</router-link></h4>
+                     <h4>{{ folder.name }}</h4>
                 </div>
                 <div class="col-sm-3 text-right">
 

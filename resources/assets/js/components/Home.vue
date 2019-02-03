@@ -8,8 +8,8 @@
     <div class="container">
 
        <div class="col-sm-12">
-        <h1 class="display-4 center" v-if="!user.guest_user">Welcome, {{ user.name }}</h1>
-        <h1 class="display-4 center" v-else="!user.guest_user">Welcome, guest user</h1>
+        <h1 class="center" v-if="!user.guest_user">{{ welcome }}, {{ user.name }}</h1>
+        <h1 class="center" v-else="!user.guest_user">Welcome, guest user</h1>
 
         <div class="row">
             <div class="col-12 col-md-9">
@@ -56,10 +56,16 @@ export default {
         return {
             access_code: "",
             requires_login: false,
-            chime_not_found: false
+            chime_not_found: false,
+            welcomePhrases: ["Hello", "Hi", "Greetings", "Ahoy-hoy", "Good day", "Howdy", "Welcome"]
         };
     },
     props: ['user'],
+    computed: {
+        welcome: function() {
+            return this.welcomePhrases[Math.floor(Math.random()*this.welcomePhrases.length)];
+        }
+    },
     methods: {
         join_chime() {
             console.log(this.access_code);

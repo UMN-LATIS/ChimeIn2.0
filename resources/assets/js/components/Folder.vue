@@ -7,28 +7,28 @@
     </navbar>
     <div class="container">
         <div class="row">
-            <div class="col-sm-9">
+            <div class="col-12">
                 <h4 v-if="!show_edit_folder">{{ folder.name }}</h4>
                 <div class="input-group mb-3" v-if="show_edit_folder">
                   <input type="text" class="form-control" v-model="folder.name">
                   <div class="input-group-append">
                     <button class="btn btn-primary align-items-center d-flex" @click="edit_folder"><span class="material-icons pointer">save</span> Save</button>
+                    </div>
                 </div>
             </div>
-            
-        </div>
-        <div class="col-sm-3 text-right">
-
-            <router-link :to="{ name: 'present', params: {chimeId: chimeId, folderId: folderId} }">
-                <i class="material-icons">play_arrow</i>
-            </router-link>
-            <i class="material-icons pointer" v-on:click="show_edit_folder = !show_edit_folder">edit</i>
-            <i class="material-icons pointer" v-on:click="delete_folder">delete</i>
-            <i class="material-icons pointer" @click="showModal = true">add</i>
-
-        </div>
     </div>
     <div class="row">
+        <div class="btn-group" role="group" aria-label="Folder Controls">
+                    <router-link :to="{ name: 'present', params: {chimeId: chimeId, folderId: folderId} }"  tag="button" class="btn btn-outline-info align-items-center d-flex">
+                        Presentation View
+                        <i class="material-icons">play_arrow</i>
+                    </router-link>
+                    <button class="btn btn-outline-info align-items-center d-flex" @click="show_edit_folder = !show_edit_folder">Edit Folder <i class="material-icons pointer">edit</i></button>
+                    <button class="btn btn-outline-info align-items-center d-flex" @click="delete_folder">Delete Folder <i class="material-icons pointer">delete</i></button>
+                    <button class="btn btn-outline-info align-items-center d-flex" @click="showModal = true">Add a Question <i class="material-icons pointer">add</i></button>
+        </div>
+    </div>
+    <div class="row border-top mt-3 pt-3">
         <div class="col-sm-12">
            <ul>
             <draggable v-model="questions" @end=swap_question>
@@ -68,7 +68,7 @@ controlType="create">
     const QuestionForm = () => import(
         /* webpackChunkName: "QuestionForm" */
         './chime_components/QuestionForm.vue'
-    );
+        );
 
     export default {
         props: ['folderId', 'chimeId', 'user'],
