@@ -22,9 +22,7 @@ class LTIHandler extends Controller
     public function launch() {
 
         $tool = new ChimeToolProvider();
-
         $tool->handleRequest();
-
         if(!$tool->user->sourceId || !is_numeric($tool->user->sourceId)) {
             return view("errors.emplid");    
         }
@@ -51,7 +49,7 @@ class LTIHandler extends Controller
                 $chime = $folder->chime;
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 $chime->save();
-                return \Redirect::route("home");
+                return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
             }
             else {
                 if($chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first()) {
@@ -75,14 +73,14 @@ class LTIHandler extends Controller
                 $folder->resource_link_pk = $tool->resourceLink->getRecordId();
                 $folder->save();
                 
-                return \Redirect::route('home'); 
+                return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
             }
         }
         else {
             // Auth::logout();
             // we'll force shib
-            if($chime = \App\Chime::where("lti_course_id",$tool->context->ltiContextId)) {
-                return \Redirect::route('home'); 
+            if($chime = \App\Chime::where("lti_course_id",$tool->context->ltiContextId)->first()) {
+                return \Redirect::to("/chimeStudent/" . $chime->id);
             }
             else {
 

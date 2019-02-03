@@ -21,7 +21,7 @@ class ChimeToolProvider extends ToolProvider\ToolProvider {
 
 	function onError() {
 		echo $this->reason;
-		var_dump($this->details);
+		dd($this->details);
 	}
 
 

@@ -15,4 +15,5 @@ public/*.js
 public/css
 *.DS_Store
 .phpintel
+public/js/
 

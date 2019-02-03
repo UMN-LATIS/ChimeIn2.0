@@ -21,7 +21,9 @@ class ShibInjection
         }
 
         foreach($map as $key=>$value) {
-            Auth::user()->$key = $value;
+            if($value) {
+                Auth::user()->$key = $value;
+            }
         }
         // dd(Auth::user());
         return $next($request);
