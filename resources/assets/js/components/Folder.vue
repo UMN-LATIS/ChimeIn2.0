@@ -101,6 +101,7 @@ controlType="create">
                 if(this.allSessions && this.folder.id) {
                     return this.allSessions.filter(e => e.question.folder_id != this.folder.id);
                 }
+                return [];
             }
         },
         methods: {
