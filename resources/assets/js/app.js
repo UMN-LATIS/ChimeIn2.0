@@ -19,7 +19,12 @@ import PrettyCheckbox from 'pretty-checkbox-vue';
 Vue.use(PrettyCheckbox);
 
 
-// import ReactiveBarChart from "./ReactiveBarChart.js";
+// filters
+
+Vue.filter('pluralize', (word, amount) => amount > 1 ? `${word}s` : word)
+
+
+
 
 Vue.component('modal',
     require('./components/modal.vue'));
@@ -84,11 +89,6 @@ Vue.component('results-display',
     require('./components/presentation_components/ResultsDisplay.vue'));
 Vue.component('multiple-choice-display',
     require('./components/questions/display/MultipleChoice.vue'));
-
-
-// Vue.component('multiple_choice_statistics',
-    // require('./components/presentation_components/MultipleChoiceStatistics.vue'));
-
 
 const router = new VueRouter({
     mode: 'history',
