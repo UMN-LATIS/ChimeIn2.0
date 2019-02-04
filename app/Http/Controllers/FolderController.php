@@ -37,30 +37,7 @@ class FolderController extends Controller
         
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getQuestions(Request $req) {
-        $user = $req->user();
-        $chime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-        
-        if ($chime != null && $chime->pivot->permission_number >= 200) {
-            $folder = $chime->folders()->find($req->route('folder_id'));
-            $questions = $folder->questions()->orderBy('order')->get();
-            $questions->load("folder");
-            $questions->load("sessions");
-            $questions->load("sessions.responses");
-            return response()->json($questions);
-        } else {
-            return response('Invalid Permissions to Get Questions', 403);
-        }
-    }
+
 
     public function createQuestion(Request $req) {
         $user = $req->user();

@@ -94,7 +94,7 @@
             }
         },
         created: function () {
-            axios.get('/api/chime/' + this.chimeId)
+            axios.get('/api/chime/' + this.chimeId + '/openQuestions')
             .then(res => {
                 console.log('debug', 'chime:', res);
                 this.chime = res.data.chime;

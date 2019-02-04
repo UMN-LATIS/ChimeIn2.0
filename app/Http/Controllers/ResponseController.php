@@ -24,7 +24,6 @@ class ResponseController extends Controller
     public function getResponse(Request $req) {
         $user = $req->user();
 
-
         // get all of the user's existing responses for this chime
 
         $responses = DB::table('responses')->where("user_id", $user->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->join('chimes', 'folders.chime_id', '=', 'chimes.id')->where('chimes.id', $req->route('chime_id'))->select('responses.*')->get();
@@ -39,9 +38,7 @@ class ResponseController extends Controller
 
         $chime = $user->chimes()->find($chime->id);
 
-        if(!$chime
-            ->sessions()
-            ->contains($session)) {
+        if(!$chime->sessions()->contains($session)) {
             // TODO ERROR
             dd($chime
             ->sessions());

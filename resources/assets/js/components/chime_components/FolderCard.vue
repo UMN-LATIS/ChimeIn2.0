@@ -23,10 +23,8 @@
 
     export default {
         props: ['folder', 'chime'],
-    // this causes us to listen too much, because we get chime level data for each folder
-    mixins: [],
-    data() {
-        return {
+        data() {
+            return {
         }
     },
 };

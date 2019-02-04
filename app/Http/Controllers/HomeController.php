@@ -75,17 +75,6 @@ class HomeController extends Controller
     }
 
 
-    // call this URL with target=<target> to force a login and redirect
-    public function loginAndRedirect(Request $req) {
-        $target = $req->query('target');
-        if(!Auth::user()->guest_user) {
-            return redirect($target);
-        }
-        else {
-            return redirect()->guest('login');    
-        }
-    }
-
     public function deleteChime(Request $req) {
         $user = $req->user();
         $chime = ($user->chimes()->find($req->route('chime_id')));
@@ -97,6 +86,19 @@ class HomeController extends Controller
         } else {
             $user->chimes()->detach($chime);
             return response('Removed from Chime', 200);
+        }
+    }
+
+    
+
+    // call this URL with target=<target> to force a login and redirect
+    public function loginAndRedirect(Request $req) {
+        $target = $req->query('target');
+        if(!Auth::user()->guest_user) {
+            return redirect($target);
+        }
+        else {
+            return redirect()->guest('login');    
         }
     }
 }

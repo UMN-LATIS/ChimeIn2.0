@@ -5,9 +5,12 @@
         :user="user"
         :link="{name:'chime', params:{chimeId: chimeId}}">
     </navbar>
+    <div class="alert alert-warning" role="alert" v-if="!hideOpenAlert && otherFolderSessions.length > 0">
+        You have {{ otherFolderSessions.length }} questions open outside this folder.  Would you like to <a class="pointer" href="" @click.prevent="closeOthers">close them</a>?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
+    </div>
     <div class="container">
         <div class="row mt-2">
-            <div class="col-5 align-items-center d-flex">
+            <div class="col-4 align-items-center d-flex">
                 <h4 v-if="!show_edit_folder">{{ folder.name }}</h4>
                 <div class="input-group mb-3" v-if="show_edit_folder">
                   <input type="text" class="form-control" v-model="folder.name">
@@ -16,15 +19,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-7 col-sm-12">
+            <div class="col-md-8 col-sm-12">
                 <div class="btn-group float-right" style="flex-wrap: wrap;" role="group" aria-label="Folder Controls">
-                    <router-link :to="{ name: 'present', params: {chimeId: chimeId, folderId: folderId} }"  tag="button" class="btn btn-outline-info align-items-center d-flex">
-                        Presentation View
+                    <router-link :to="{ name: 'present', params: {chimeId: chimeId, folderId: folderId} }"  tag="button" class="btn btn-sm btn-outline-info align-items-center d-flex">
+                        Present
                         <i class="material-icons">play_arrow</i>
                     </router-link>
-                    <button class="btn btn-outline-info align-items-center d-flex" @click="show_edit_folder = !show_edit_folder">Edit Folder <i class="material-icons pointer">edit</i></button>
-                    <button class="btn btn-outline-info align-items-center d-flex" @click="delete_folder">Delete Folder <i class="material-icons pointer">delete</i></button>
-                    <button class="btn btn-outline-info align-items-center d-flex" @click="showModal = true">Add a Question <i class="material-icons pointer">add</i></button>
+                    <button class="btn btn-sm  btn-outline-info align-items-center d-flex" @click="show_edit_folder = !show_edit_folder">Edit <i class="material-icons pointer">edit</i></button>
+                    <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="delete_folder">Delete <i class="material-icons pointer">delete</i></button>
+                    <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="showModal = true">New Question <i class="material-icons pointer">add</i></button>
+              
         </div>
     </div>
     </div>
@@ -86,6 +90,16 @@ controlType="create">
                 show_edit_folder: false,
                 show_questions: false,
                 new_folder_name: "",
+                allSessions: null,
+                hideOpenAlert: false,
+            }
+        },
+        computed: {
+            otherFolderSessions: function() {
+                if(this.allSessions && this.folder.id) {
+                    return this.allSessions.filter(e => e.question.folder_id != this.folder.id);
+                }
+                
             }
         },
         methods: {
@@ -171,13 +185,37 @@ controlType="create">
                 }
             },
             load_folder: function() {
+                axios.get('/api/chime/' + this.chimeId + '/openQuestions')
+                    .then(res => {
+                        this.allSessions = res.data.sessions;
+                })
+            },
+            closeOthers: function() {
+                for(var openSession of this.otherFolderSessions) {
+                    const url = (
+                            '/api/chime/'
+                            + this.folder.chime_id
+                            + '/folder/'
+                            + openSession.question.folder_id
+                            + '/question/'
+                            + openSession.question.id
+                            + '/stopSession/'
+                            );
 
+                        axios.put(url, {})
+                        .then(res => {
+
+                        })
+                        .catch(err => {
+
+                        });
+                }
+                this.hideOpenAlert = true;
             }
         },
         created: function() {
             this.load_folder();
             this.load_questions();
-
         }
     };
 </script>

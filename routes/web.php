@@ -48,7 +48,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::post('/api/chime/{chime_id}/folder', 'ChimeController@createFolder');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@editFolder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@deleteFolder');
-
+    Route::get('/api/chime/{chime}/openQuestions', 'ChimeController@getOpenQuestions');
 
     Route::patch('/api/chime/{chime}', 'ChimeController@update');
 

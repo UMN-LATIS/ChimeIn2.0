@@ -25,7 +25,7 @@ class ChimeController extends Controller
             ->first());
         
         if(!$chime) {
-             $returnData = array(
+            $returnData = array(
                 'status' => '',
                 'message' => "Error"
             );
@@ -45,41 +45,7 @@ class ChimeController extends Controller
         if ($chime != null && $chime->pivot->permission_number >= 200) {
             return response()->json($chime);
         } else {
-            
-            // TODO : this should be its own method 
-            // 
-            // 
-            // $questions = \App\Question::whereNotNull("current_session")->whereHas('folder', function($f) use ($chime) {
-            //     $f->whereHas("chime", function($c) use ($chime) {
-            //         $c->where("id", $chime->id);
-            //     });
-            // })->get();
-
-
-            $questions = \App\Question::whereNotNull("current_session_id")->whereHas('folder.chime', function($c) use ($chime) {
-                $c->where("id", $chime->id);
-            })->get();
-            $sessions = [];
-
-
-            foreach($questions as $question) {
-                $question->current_session->load("question");
-                $sessions[] = $question->current_session;
-            }
-
-            usort($sessions, function($a, $b) {
-                if(strtotime($a->updated_at) == strtotime($b->updated_at)) {
-                    return 0;
-                }
-                return strtotime($a->updated_at)<strtotime($b->updated_at)?-1:1;
-            });
-
-            // dd($questions);
-
-            return response()->json([
-                'chime' => $chime,
-                'sessions' => $sessions
-            ]);
+            return response()->json(["status"=>"error", "message"=>"You don't have permission to access this Chime"], 403);
         }
     }
 
@@ -255,5 +221,46 @@ class ChimeController extends Controller
         } else {
             return response('Invalid Permissions to Delete Folder', 403);
         }
+    }
+
+    public function getOpenQuestions(Chime $chime) {
+        if(!Auth::user()->chimes()->where('chime_id', $chime->id)->first()) {
+            $returnData = array(
+                'status' => '',
+                'message' => "Error"
+            );
+            if(Auth::user()->guest_user) {
+                $returnData["status"] = "AttemptAuth";
+                $returnData["message"] = "Auth May Be Required";
+            }
+            else {
+                $returnData["status"] = "Error";
+                $returnData["message"] = "You don't have permission to access this Chime";
+            }
+            return Response()->json($returnData, 403);
+        }
+
+
+        $questions = \App\Question::join('folders', 'folders.id','=','questions.folder_id')->join('chimes','folders.chime_id','=','chimes.id')->whereNotNull('questions.current_session_id')->where('chimes.id', $chime->id)->select('questions.*')->with('current_session')->with('current_session.question')->get(); 
+        $sessions = [];
+
+
+        foreach($questions as $question) {
+            $sessions[] = $question->current_session;
+        }
+
+        usort($sessions, function($a, $b) {
+            if(strtotime($a->updated_at) == strtotime($b->updated_at)) {
+                return 0;
+            }
+            return strtotime($a->updated_at)<strtotime($b->updated_at)?-1:1;
+        });
+
+
+        return response()->json([
+            'chime' => $chime,
+            'sessions' => $sessions
+        ]);
+
     }
 }
