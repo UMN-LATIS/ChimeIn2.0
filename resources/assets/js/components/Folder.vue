@@ -28,6 +28,8 @@
                     <button class="btn btn-sm  btn-outline-info align-items-center d-flex" @click="show_edit_folder = !show_edit_folder">Edit <i class="material-icons pointer">edit</i></button>
                     <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="delete_folder">Delete <i class="material-icons pointer">delete</i></button>
                     <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="showModal = true">New Question <i class="material-icons pointer">add</i></button>
+                    <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="openAll">Open All <i class="material-icons pointer">visibility</i></button>
+                    <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="closeAll">Close All <i class="material-icons pointer">visibility_off</i></button>
               
         </div>
     </div>
@@ -99,7 +101,6 @@ controlType="create">
                 if(this.allSessions && this.folder.id) {
                     return this.allSessions.filter(e => e.question.folder_id != this.folder.id);
                 }
-                
             }
         },
         methods: {
@@ -190,6 +191,48 @@ controlType="create">
                         this.allSessions = res.data.sessions;
                 })
             },
+            
+            openAll: function() {
+                for(var question of this.folder.questions) {
+                    const url = (
+                            '/api/chime/'
+                            + this.folder.chime_id
+                            + '/folder/'
+                            + this.folder.id
+                            + '/question/'
+                            + question.id
+                            );
+
+                        axios.post(url, {})
+                        .then(res => {
+
+                        })
+                        .catch(err => {
+
+                        });
+                }
+            },
+            closeAll: function() {
+                for(var question of this.folder.questions) {
+                    const url = (
+                            '/api/chime/'
+                            + this.folder.chime_id
+                            + '/folder/'
+                            + this.folder.id
+                            + '/question/'
+                            + question.id
+                            + '/stopSession/'
+                            );
+
+                        axios.put(url, {})
+                        .then(res => {
+
+                        })
+                        .catch(err => {
+
+                        });
+                }
+            },
             closeOthers: function() {
                 for(var openSession of this.otherFolderSessions) {
                     const url = (
@@ -232,6 +275,10 @@ ul li {
 
 .align-items-center h4 {
     margin-bottom: 0;
+}
+
+.btn-group .btn i.material-icons {
+    margin-left: 2px;
 }
 
 </style>

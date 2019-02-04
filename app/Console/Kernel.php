@@ -4,7 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use DB;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -24,8 +24,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->call(function () {
+            DB::delete('DELETE FROM users WHERE NOT EXISTS (SELECT * FROM chime_user WHERE chime_user.user_id = users.id) AND  NOT EXISTS (SELECT * FROM responses WHERE responses.user_id=users.id) and DATEDIFF( CURDATE(), updated_at ) > 15');
+        })->daily();
     }
 
     /**

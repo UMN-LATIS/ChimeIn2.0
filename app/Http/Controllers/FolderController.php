@@ -16,9 +16,7 @@ class FolderController extends Controller
             ->first());
         
         if ($chime != null && ($chime->pivot->permission_number >= 200 || $chime->students_can_view)) {
-            
             if($includeQuestions) {
-
                 // this is spendy!
                 if($chime->students_can_view && $chime->pivot->permission_number < 200) {
                     $folder->student_view = true;
