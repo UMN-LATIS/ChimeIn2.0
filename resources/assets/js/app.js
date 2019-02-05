@@ -63,8 +63,6 @@ Vue.component('ChimeManagement',
     require('./components/chime_components/ChimeManagement.vue'));
 Vue.component('question',
     require('./components/chime_components/Question.vue'));
-Vue.component('multiple-choice-display',
-    require('./components/questions/display/MultipleChoice.vue'));
 
 
 
@@ -74,6 +72,8 @@ Vue.component('response',
     require('./components/chime_student_components/Response.vue'));
 Vue.component('multiple_choice',
     require('./components/questions/response/MultipleChoice.vue'));
+Vue.component('true_false',
+    require('./components/questions/response/TrueFalse.vue'));
 Vue.component('image_response',
     require('./components/questions/response/ImageResponse.vue'));
 Vue.component('free_response',
@@ -89,6 +89,9 @@ Vue.component('results-display',
     require('./components/presentation_components/ResultsDisplay.vue'));
 Vue.component('multiple-choice-display',
     require('./components/questions/display/MultipleChoice.vue'));
+Vue.component('true-false-display',
+    require('./components/questions/display/TrueFalse.vue'));
+
 
 const router = new VueRouter({
     mode: 'history',

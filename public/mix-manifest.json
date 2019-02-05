@@ -1,10 +1,19 @@
 {
-    "/js/QuestionForm.ed1be4d24a415a3e4be6.bundle.js": "/js/QuestionForm.ed1be4d24a415a3e4be6.bundle.js?id=11ed094fbeabc92392d6",
-    "/js/FreeResponseStatistics.8d783f0257409f5bfe50.bundle.js": "/js/FreeResponseStatistics.8d783f0257409f5bfe50.bundle.js?id=9ddc55f41d6c0da53bf9",
-    "/js/folder.34e283ceee5306d713d7.bundle.js": "/js/folder.34e283ceee5306d713d7.bundle.js?id=30808a7c623af009fad7",
-    "/js/ImageResponseStatistics.5200c749ba3851c07689.bundle.js": "/js/ImageResponseStatistics.5200c749ba3851c07689.bundle.js?id=89f2d51987227a5218b0",
-    "/js/multiplechoicestatistics.47dd0be061d7844f2f2f.bundle.js": "/js/multiplechoicestatistics.47dd0be061d7844f2f2f.bundle.js?id=5cf03e3c3816565f16b7",
-    "/js/ReactiveBarChart.84f3f3d0cba4f50f1267.bundle.js": "/js/ReactiveBarChart.84f3f3d0cba4f50f1267.bundle.js?id=b6c82e20a8d11f224933",
-    "/js/app.js": "/js/app.js?id=3fcb676308cf946e35b8",
-    "/css/app.css": "/css/app.css?id=1adf0e098167244f331f"
+    "/QuestionForm.js": "/QuestionForm.js",
+    "/FreeResponseStatistics.js": "/FreeResponseStatistics.js",
+    "/folder.js": "/folder.js",
+    "/ImageResponseStatistics.js": "/ImageResponseStatistics.js",
+    "/multiplechoicestatistics.js": "/multiplechoicestatistics.js",
+    "/ReactiveBarChart.js": "/ReactiveBarChart.js",
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/0.6dc35c7952fc2340fb92.hot-update.js": "/0.6dc35c7952fc2340fb92.hot-update.js",
+    "/6.01538e9004e78b8f2f2d.hot-update.js": "/6.01538e9004e78b8f2f2d.hot-update.js",
+    "/6.b428eda13f5db437dacb.hot-update.js": "/6.b428eda13f5db437dacb.hot-update.js",
+    "/6.2ea14266d5615a9ad6bd.hot-update.js": "/6.2ea14266d5615a9ad6bd.hot-update.js",
+    "/4.dbd1a6c514b594f8ba2b.hot-update.js": "/4.dbd1a6c514b594f8ba2b.hot-update.js",
+    "/6.dbd1a6c514b594f8ba2b.hot-update.js": "/6.dbd1a6c514b594f8ba2b.hot-update.js",
+    "/4.348ade5b70604f9d4b87.hot-update.js": "/4.348ade5b70604f9d4b87.hot-update.js",
+    "/4.f5401ebc875049361c44.hot-update.js": "/4.f5401ebc875049361c44.hot-update.js",
+    "/4.b20a122686a692f4c648.hot-update.js": "/4.b20a122686a692f4c648.hot-update.js"
 }

@@ -32,7 +32,10 @@
 
 <script>
 
-
+const truefalsestatistics = () => import(
+    /* webpackChunkName: "multiplechoicestatistics" */
+    './TrueFalseStatistics.vue'
+);
 const multiplechoicestatistics = () => import(
     /* webpackChunkName: "multiplechoicestatistics" */
     './MultipleChoiceStatistics.vue'
@@ -56,6 +59,7 @@ export default {
     },
     components: {
         'multiple_choice_statistics': multiplechoicestatistics,
+        'true_false_statistics': truefalsestatistics,
         'image_response_statistics':ImageResponseStatistics,
         'free_response_statistics': FreeResponseStatistics
     },

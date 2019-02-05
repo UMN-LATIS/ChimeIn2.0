@@ -11,7 +11,8 @@
         <div class="col-sm-9">
             <div class="form-group">
             <select class="form-control" id="" v-model="question_type" >
-      <option value="multiple_choice">Multiple Choice</option>
+                <option value="multiple_choice">Multiple Choice</option>
+                <option value="true_false">True/False</option>
                 <option value="free_response">Free Response</option>
                 <option value="image_response">Image Response</option>
     </select>

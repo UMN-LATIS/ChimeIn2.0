@@ -27,6 +27,20 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             DB::delete('DELETE FROM users WHERE NOT EXISTS (SELECT * FROM chime_user WHERE chime_user.user_id = users.id) AND  NOT EXISTS (SELECT * FROM responses WHERE responses.user_id=users.id) and DATEDIFF( CURDATE(), updated_at ) > 15');
         })->daily();
+
+        
+        $schedule->call(function() {
+            
+            $folders = \App\Folder::join("questions", "folders.id", "=", "questions.folder_id")->join("sessions", "questions.id","=","sessions.question_id")
+            ->join("responses", "sessions.id","=","responses.session_id")
+            ->whereNotNull("folders.resource_link_pk")
+            ->whereBetween('responses.updated_at', [now()->subMinutes(10), now()])->get();
+
+            foreach($folders as $folder) {
+                \App\Library\LTIProcessor::syncFolder($folder);
+            }
+
+        })->everyFiveMinutes();
     }
 
     /**
