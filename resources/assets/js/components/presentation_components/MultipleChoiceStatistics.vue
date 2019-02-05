@@ -13,8 +13,11 @@
 
 <script>
 
-
-    import ReactiveBarChart from "../../ReactiveBarChart.js";
+const ReactiveBarChart = () => import(
+    /* webpackChunkName: "ReactiveBarChart" */
+    '../../ReactiveBarChart.js'
+);
+    // import ReactiveBarChart from "../../ReactiveBarChart.js";
 
     export default {
         props: ['responses', 'question'],

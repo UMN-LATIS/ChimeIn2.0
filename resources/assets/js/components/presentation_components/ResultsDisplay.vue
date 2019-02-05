@@ -32,6 +32,7 @@
 
 <script>
 
+
 const multiplechoicestatistics = () => import(
     /* webpackChunkName: "multiplechoicestatistics" */
     './MultipleChoiceStatistics.vue'
