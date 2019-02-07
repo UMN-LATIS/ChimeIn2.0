@@ -30,6 +30,10 @@
                     <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="showModal = true">New Question <i class="material-icons pointer">add</i></button>
                     <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="openAll">Open All <i class="material-icons pointer">visibility</i></button>
                     <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="closeAll">Close All <i class="material-icons pointer">visibility_off</i></button>
+                    <router-link :to="{ name: 'chimeStudent', params: {chimeId: chimeId} }"  tag="button" class="btn btn-sm btn-outline-info align-items-center d-flex">
+                        Preview
+                        <i class="material-icons">search</i>
+                    </router-link>
               
         </div>
     </div>

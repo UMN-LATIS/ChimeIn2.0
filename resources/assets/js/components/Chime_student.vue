@@ -99,7 +99,7 @@
                 console.log('debug', 'chime:', res);
                 this.chime = res.data.chime;
                 document.title = this.chime.name;
-                this.sessions = res.data.sessions;
+                this.sessions = res.data.sessions.reverse();
             })
             .catch(err => {
                 if(err.response.data.status == "AttemptAuth") {
@@ -125,7 +125,7 @@
             Echo.private('session-status.' + this.chimeId)
             .listen('StartSession', m => {
                 console.log('debug', 'message:', m);
-                this.sessions.push(m.session);
+                this.sessions.unshift(m.session);
             })
             .listen('EndSession', m => {
                 var removeIndex = this.sessions.findIndex(session => session.id == m.session.id);
