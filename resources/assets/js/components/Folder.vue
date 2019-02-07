@@ -52,12 +52,12 @@
 </div>
 </div>
 </div>
-<question-form :show="showModal" @close="showModal = false; load_questions();"
+<question-form v-if="showModal" :show="showModal" @close="showModal = false; load_questions();"
 :question="{
     text:'',
     question_info: {
         question_type:'multiple_choice',
-        question_responses: []
+        question_responses: null
     }
 }"
 :folder="folder"

@@ -1,83 +1,49 @@
 <template>  
-   <modal :show="show" @close="close">
+ <modal :show="show" @close="close">
     <div class="modal-header">
         <h3>Add a Question</h3>
     </div>
     <div class="modal-body">
         <div class="row">
           <div class="col-sm-3">
-            <label for="questionType" class="col-form-label">Question Type</label>
-        </div>
-        <div class="col-sm-9">
-            <div class="form-group">
-            <select class="form-control" id="" v-model="question_type" >
-                <option value="multiple_choice">Multiple Choice</option>
-                <option value="true_false">True/False</option>
-                <option value="free_response">Free Response</option>
-                <option value="image_response">Image Response</option>
-    </select>
-  </div>
-
-                
-        </div>
-    </div>
-
-    <hr>
-    <div class="row">
-        <div class="col">
-            <vue-editor
-            v-model="question_text"
-            placeholder="Question Text"
-            v-bind:editorToolbar="toolbar"
-            v-bind:useCustomImageHandler="true"
-            v-on:imageAdded="handle_image_added">
-        </vue-editor>
-    </div>
-</div>
-
-<div class="row choiceRow">
-    <div class="col">
-        <p>Answers:</p>
-        <ol type="A" v-if="question_type === 'multiple_choice'">
-            <li v-for="(r, i) in question_responses"
-            :key="i"
-            >
-            {{ r }}
-            <span>
-                <i
-                class="material-icons pointer deleteIcon"
-                v-on:click="() => remove(i)">delete</i>
-            </span>
-        </li>
-    </ol>
-</div>
-</div>
-<div class="row" v-if="question_type === 'multiple_choice'">
-    <div class="col">
-        <label for="choice_text" class="form-control-label">Add a choice</label>
-        <div class="input-group">
-            <input
-            id="choice_text"
-            v-model="choice_text"
-            type="text"
-            @keyup.enter="add_choice"
-            class="validate form-control">
-            <div class="input-group-append ">
-                <button @click="add_choice" class="btn btn-outline-primary"><span class="material-icons ">add</span></button>
+                <label for="questionType" class="col-form-label">Question Type</label>
+            </div>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <select class="form-control" id="" v-model="question_type" >
+                        <option value="multiple_choice">Multiple Choice</option>
+                        <option value="true_false">True/False</option>
+                        <option value="free_response">Free Response</option>
+                        <option value="image_response">Image Response</option>
+                        <option value="slider_response">Slider Response</option>
+                    </select>
+                </div>
             </div>
         </div>
+        <hr>
+        <div class="row">
+            <div class="col">
+            <vue-editor
+                v-model="question_text"
+                placeholder="Question Text"
+                v-bind:editorToolbar="toolbar"
+                v-bind:useCustomImageHandler="true"
+                v-on:imageAdded="handle_image_added">
+            </vue-editor>
+            </div>
+        </div>
+        
+        <component :is="question_type + '_response'" :question_responses.sync="question_responses"></component>
     </div>
-</div>
-</div>
-<div class="modal-footer text-right">
-    <button class="btn btn-secondary" @click="close">
-        Cancel
-    </button>
-    <button class="btn btn-primary" @click="savePost">
-        Save
-    </button>
+    <div class="modal-footer text-right">
+        <button class="btn btn-secondary" @click="close">
+            Cancel
+        </button>
+        <button class="btn btn-primary" @click="savePost">
+            Save
+        </button>
 
-</div>
+    </div>
 </modal>
 </template>
 
@@ -93,6 +59,11 @@
 
 <script>
     import { VueEditor, Quill } from 'vue2-editor'
+    import MultipleChoiceResponse from "./response_components/MultipleChoice.vue";
+    import ImageResponse from "./response_components/ImageResponse.vue";
+    import SliderResponse from "./response_components/SliderResponse.vue";
+    import FreeResponse from "./response_components/FreeResponse.vue";
+    import TrueFalseResponse from "./response_components/TrueFalse.vue";
 
     const Embed = Quill.import('blots/embed');
 
@@ -119,7 +90,12 @@
     export default {
         props: ['question', 'show', 'folder', 'controlType'],
         components: {
-            VueEditor
+            VueEditor, 
+            "multiple_choice_response": MultipleChoiceResponse,
+            'image_response_response': ImageResponse,
+            'slider_response_response': SliderResponse,
+            'free_response_response': FreeResponse,
+            'true_false_response': TrueFalseResponse
         },
         data: function() {
             return {
@@ -136,23 +112,16 @@
         methods: {
             close: function () {
                 this.$emit('close');
-                if(this.controlType == "create") {
-                    this.choice_text = "";
-                    this.question_text = "";
-                    this.question_type = "multiple_choice";
-                    this.question_responses = [];    
-                }
-
             },
             savePost: function () {
-               var url = (
+             var url = (
                 '/api/chime/' + this.folder.chime_id +
                 '/folder/' + this.folder.id);
 
 
-               var question = {};
-               question.text = this.question_text;
-               question.question_info = {
+             var question = {};
+             question.text = this.question_text;
+             question.question_info = {
                 question_type: this.question_type,
                 question_responses: this.question_responses
             };
@@ -186,13 +155,6 @@
             }
 
 
-        },
-        remove: function(response_index) {
-            this.$delete(this.question_responses, response_index);
-        },
-        add_choice: function() {
-            this.question_responses.push(this.choice_text);
-            this.choice_text = '';
         },
         handle_image_added: function(file, editor, cursor, reset) {
             console.log('file:', file);

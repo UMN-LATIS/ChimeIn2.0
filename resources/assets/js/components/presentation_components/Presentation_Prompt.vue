@@ -1,14 +1,13 @@
 <template>
 
     <div class="questionContent">
-        <div
-            v-if="question"
-            >
+        <div v-if="question">
         <h1 v-html="question.text"></h1>
+        // refactor
         <multiple-choice-display
-                v-if="question.question_info.question_type === 'multiple_choice'"
-                :question="question">
-            </multiple-choice-display>
+            v-if="question.question_info.question_type === 'multiple_choice'"
+            :question="question">
+        </multiple-choice-display>
             
             <div v-else>
                 {{ question.question_info.question_type

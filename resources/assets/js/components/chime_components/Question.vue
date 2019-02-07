@@ -2,7 +2,7 @@
     <li>
         <div class="row">
             <div class="col-sm-9">
-                <question-form :show="show_edit" @edited="edit_question" @close="show_edit = false;"
+                <question-form v-if="show_edit" :show="show_edit" @edited="edit_question" @close="show_edit = false;"
                 :question="question"
                 :folder="folder"
                 controlType="edit">

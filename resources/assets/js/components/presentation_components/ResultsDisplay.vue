@@ -32,6 +32,11 @@
 
 <script>
 
+const sliderstatistics = () => import(
+    /* webpackChunkName: "multiplechoicestatistics" */
+    './SliderStatistics.vue'
+);
+
 const truefalsestatistics = () => import(
     /* webpackChunkName: "multiplechoicestatistics" */
     './TrueFalseStatistics.vue'
@@ -58,6 +63,7 @@ export default {
         }
     },
     components: {
+        'slider_response_statistics': sliderstatistics,
         'multiple_choice_statistics': multiplechoicestatistics,
         'true_false_statistics': truefalsestatistics,
         'image_response_statistics':ImageResponseStatistics,
