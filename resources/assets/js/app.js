@@ -89,12 +89,17 @@ Vue.component('presentation-prompt',
     require('./components/presentation_components/Presentation_Prompt.vue'));
 Vue.component('results-display',
     require('./components/presentation_components/ResultsDisplay.vue'));
-Vue.component('multiple-choice-display',
+Vue.component('multiple_choice_display',
     require('./components/questions/display/MultipleChoice.vue'));
-Vue.component('true-false-display',
+Vue.component('true_false_display',
     require('./components/questions/display/TrueFalse.vue'));
-Vue.component('slider-display',
+Vue.component('slider_response_display',
     require('./components/questions/display/Slider.vue'));
+Vue.component('free_response_display',
+    require('./components/questions/display/FreeResponse.vue'));
+Vue.component('image_response_display',
+    require('./components/questions/display/Imageresponse.vue'));
+
 
 const router = new VueRouter({
     mode: 'history',

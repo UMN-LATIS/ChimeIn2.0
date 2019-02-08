@@ -10,7 +10,7 @@
     <div class="container-fluid">
 
         <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
-            <template v-for="(question,index) in questions"x>
+            <template v-for="(question,index) in questions">
                 <present-question :question="question" :chimeId="chimeId" :folder="folder" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle">
                 </present-question>
             </template>
@@ -29,7 +29,7 @@
         data() {
             return {
                 folder: {name:""},
-                questions: [{folder: {name:""}, sessions: [], question_info: {question_type: "f_f"}}],
+                questions: [],
                 show_results: false,
                 current_question: 0,
                 fullscreen: false

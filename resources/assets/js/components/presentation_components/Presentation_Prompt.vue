@@ -3,19 +3,7 @@
     <div class="questionContent">
         <div v-if="question">
         <h1 v-html="question.text"></h1>
-        // refactor
-        <multiple-choice-display
-            v-if="question.question_info.question_type === 'multiple_choice'"
-            :question="question">
-        </multiple-choice-display>
-            
-            <div v-else>
-                {{ question.question_info.question_type
-                    .split('_')
-                    .map(e => e[0]
-                    .toUpperCase() + e.slice(1))
-                    .join(' ') }}
-            </div>
+            <component :is="question.question_info.question_type + '_display'" :question="question"/>
         </div>
         <div v-else>
             <span>
