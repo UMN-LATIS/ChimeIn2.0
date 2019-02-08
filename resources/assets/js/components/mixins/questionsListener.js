@@ -54,10 +54,20 @@ mounted(){
     var self=this;
     Echo.private('session-status.' + chimeId)
     .listen('StartSession', m => {
-        self.load_questions();
+        for(var question of this.questions) {
+            if(question.id == m.session.question.id) {
+                question.current_session_id = m.session.id;
+                m.session.responses = [];
+                question.sessions.push(m.session);
+            }
+        }
     })
     .listen('EndSession', m => {
-        this.load_questions();
+        for(var question of this.questions) {
+            if(question.id == m.session.question_id) {
+                question.current_session_id = null;
+            }
+        }
     });
 
     Echo.private('session-response.'+ chimeId)

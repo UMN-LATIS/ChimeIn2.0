@@ -28,6 +28,7 @@
         "razorbacks/laravel-shibboleth": "dev-master"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.2",
         "deployer/recipes": "^6.1",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",

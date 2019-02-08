@@ -9,11 +9,7 @@ class FolderController extends Controller
 
     public function show(Request $req, $chime, $folder, $includeQuestions=false) {
         $user = $req->user();
-        $chime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $chime->id)
-            ->first());
+        $chime = $user->chimes()->where('chime_id', $chime->id)->first();
         
         if ($chime != null && ($chime->pivot->permission_number >= 200 || $chime->students_can_view)) {
             if($includeQuestions) {
@@ -21,9 +17,9 @@ class FolderController extends Controller
                 if($chime->students_can_view && $chime->pivot->permission_number < 200) {
                     $folder->student_view = true;
                 }
-                $folder->load("questions");
+                // $folder->load("questions");
                 $folder->load("questions.folder");
-                $folder->load("questions.sessions");
+                // $folder->load("questions.sessions");
                 $folder->load("questions.sessions.responses");
             }
             return response()->json($folder);
