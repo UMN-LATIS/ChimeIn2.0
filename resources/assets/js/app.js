@@ -98,7 +98,7 @@ Vue.component('slider_response_display',
 Vue.component('free_response_display',
     require('./components/questions/display/FreeResponse.vue'));
 Vue.component('image_response_display',
-    require('./components/questions/display/Imageresponse.vue'));
+    require('./components/questions/display/ImageResponse.vue'));
 
 
 const router = new VueRouter({
