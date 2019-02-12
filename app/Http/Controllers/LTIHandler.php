@@ -80,7 +80,7 @@ class LTIHandler extends Controller
             // Auth::logout();
             // we'll force shib
             if($chime = \App\Chime::where("lti_course_id",$tool->context->ltiContextId)->first()) {
-                return \Redirect::to("/chimeStudent/" . $chime->id);
+                return \Redirect::to("/chimeParticipant/" . $chime->id);
             }
             else {
 

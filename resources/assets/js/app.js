@@ -107,7 +107,7 @@ const router = new VueRouter({
     { path: "/", component: Home },
     { path: "/chime/:chimeId", name:'chime', component: Chime, props: true },
     { path: "/chime/:chimeId/folder/:folderId", name:'folder', component: Folder, props: true },
-    { path: "/chimeStudent/:chimeId", name:'chimeStudent', component: ChimeStudent, props: true },
+    { path: "/chimeParticipant/:chimeId", name:'chimeStudent', component: ChimeStudent, props: true },
     { path: "/chime/:chimeId/folder/:folderId/present/:questionId?", name:'present', component: Present, props: true }
     // { path: '/:id?', name: "present", component: require('./components/Present.vue')}
   ]

@@ -46,12 +46,12 @@
                     <td >
                         <template v-if="u.editPermission">
                             <b-form-select v-model="u.permission_number" :options="[
-                            { value: 100, text: 'Student' },
-                            { value: 300, text: 'Instructor' }]" class="mb-3" @input="saveUsers"/>
+                            { value: 100, text: 'Participant' },
+                            { value: 300, text: 'Presenter' }]" class="mb-3" @input="saveUsers"/>
                         </template>
                         <span v-on:click="u.editPermission = !u.editPermission" v-else>
-                            <template  v-if="u.permission_number == 300">Instructor</template>
-                            <template  v-if="u.permission_number == 100">Student</template>
+                            <template  v-if="u.permission_number == 300">Presenter</template>
+                            <template  v-if="u.permission_number == 100">Participant</template>
                         </span>
                     </td>
                     <td><b-btn @click="deleteUser(key)" size="sm">Remove User</b-btn></td>
