@@ -37,7 +37,7 @@ class LTIHandler extends Controller
             // $user->first_name = $tool->user->firstname;
             // $user->last_name = $tool->user->lastname;
             $user->email = $tool->user->email;
-            $user->name = $user->first_name . " ". $user->last_name;
+            $user->name = $tool->user->firstname . " ". $tool->user->lastname;
             $user->emplid = $tool->user->sourceId;    
             $user->lti_user_id = $tool->user->ltiUserId;
             $user->save();
@@ -81,9 +81,11 @@ class LTIHandler extends Controller
             // Auth::logout();
             // we'll force shib
             if($chime = \App\Chime::where("lti_course_id",$tool->context->ltiContextId)->first()) {
-                Auth::user()->chimes()->attach($chime, [
-                    'permission_number' => 100
-                ]);
+                if(!Auth::user()->chimes->contains($chime)) {
+                    Auth::user()->chimes()->attach($chime, [
+                        'permission_number' => 100
+                    ]);
+                }
                 return \Redirect::to("/chimeParticipant/" . $chime->id);
             }
             else {
