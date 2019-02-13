@@ -27,7 +27,7 @@
                     </router-link>
                     <button class="btn btn-sm  btn-outline-info align-items-center d-flex" @click="show_edit_folder = !show_edit_folder">Edit <i class="material-icons pointer">edit</i></button>
                     <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="delete_folder">Delete <i class="material-icons pointer">delete</i></button>
-                    <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="showModal = true">New Question <i class="material-icons pointer">add</i></button>
+                    <button dusk="new-question-button" class="btn btn-sm btn-outline-info align-items-center d-flex" @click="showModal = true">New Question <i class="material-icons pointer">add</i></button>
                     <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="openAll">Open All <i class="material-icons pointer">visibility</i></button>
                     <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="closeAll">Close All <i class="material-icons pointer">visibility_off</i></button>
                     <router-link :to="{ name: 'chimeStudent', params: {chimeId: chimeId} }"  tag="button" class="btn btn-sm btn-outline-info align-items-center d-flex">

@@ -8,7 +8,7 @@
                         <input type="text" class="form-control" v-model="folder_name" @keyup.enter="new_folder" name="createFolder" id="createFolder" placeholder="Folder Name">
                     </div>
                     <div class="col-2">
-                        <button type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>
+                        <button dusk="create-folder" type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>
                     </div>
                     </div>  
                 </div>

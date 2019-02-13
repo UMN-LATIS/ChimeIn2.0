@@ -88,9 +88,7 @@ class HomeController extends Controller
             return response('Removed from Chime', 200);
         }
     }
-
     
-
     // call this URL with target=<target> to force a login and redirect
     public function loginAndRedirect(Request $req) {
         $target = $req->query('target');
