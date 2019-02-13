@@ -34,7 +34,7 @@ class HomeController extends Controller
             ]);
         
             $user->chimes()->attach($new_chime, [
-                'permission_number' => $user->permission_number
+                'permission_number' => 300
             ]);
 
             return response()->json($new_chime);

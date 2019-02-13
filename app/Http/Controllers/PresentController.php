@@ -19,7 +19,7 @@ class PresentController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime != null && $chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
 
@@ -45,7 +45,7 @@ class PresentController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime != null && $chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             
             $question = $folder->questions()->find($req->route('question_id'));

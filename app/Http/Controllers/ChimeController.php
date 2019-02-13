@@ -42,7 +42,7 @@ class ChimeController extends Controller
 
         $chime->load("folders");
 
-        if ($chime != null && $chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
             return response()->json($chime);
         } else {
             return response()->json(["status"=>"error", "message"=>"You don't have permission to access this Chime"], 403);
@@ -176,7 +176,7 @@ class ChimeController extends Controller
             ->where('chime_id', $req->route('chime_id'))
             ->first());
         
-        if ($chime != null && $chime->pivot->permission_number >= 200) {
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
             $new_folder = $chime->folders()->create([
                 'name' => $req->get('folder_name')
             ]);
