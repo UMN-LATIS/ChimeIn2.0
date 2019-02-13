@@ -27,7 +27,8 @@ class LTIHandler extends Controller
             return view("errors.emplid");    
         }
         
-        if(Auth::attempt(["emplid"=>$tool->user->sourceId])) {
+        // if(Auth::attempt(["emplid"=>$tool->user->sourceId])) {
+        if(Auth::attempt(["email"=>$tool->user->email])) {
             Auth::user()->lti_user_id = $tool->user->ltiUserId;
             Auth::user()->save();
         }
