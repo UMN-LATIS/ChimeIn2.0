@@ -75,6 +75,7 @@ export default {
             axios.post('/api/chime', {'chime_name': this.chime_name})
             .then(res => {
                 console.log('debug', 'Chime Created:', res);
+                this.showAdd = false;
                 EventBus.$emit('chimesChanged');
             })
             .catch(err => {
