@@ -81,6 +81,9 @@ class LTIHandler extends Controller
             // Auth::logout();
             // we'll force shib
             if($chime = \App\Chime::where("lti_course_id",$tool->context->ltiContextId)->first()) {
+                Auth::user()->chimes()->attach($chime, [
+                    'permission_number' => 100
+                ]);
                 return \Redirect::to("/chimeParticipant/" . $chime->id);
             }
             else {
