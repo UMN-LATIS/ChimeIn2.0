@@ -4,9 +4,12 @@
             <img class="responsive-img imageContainer" v-bind:src="'/storage/' + response.response_info.image">
         </div>
         <div class="dropbox" v-if="!disabled">
-          <input type="file" multiple accept="image/*" @change="attachFile($event.target.name, $event.target.files)" class="form-control-file input-file">
+          <input type="file" accept="image/*" @change="attachFile($event.target.name, $event.target.files)" class="form-control-file input-file">
             <p v-if="isInitial">
-              Drag your file(s) here to begin<br> or click to browse
+              Drag your image here to upload<br> or click to browse
+            </p>
+            <p v-if="!isInitial && !isSaving">
+              Drag your image here to upload<br> or click to browse to replace your image
             </p>
             <p v-if="isSaving">
               Uploading file...
@@ -57,7 +60,7 @@ export default {
     props: ['question', 'response', 'disabled', 'chime'],
     data() {
         return {
-            "isInitial": true,
+            "isInitial": response ? false:true,
             "isSaving": false
         }
     },
@@ -83,7 +86,7 @@ export default {
                 image_name: fileList[0].name
             }
             this.isSaving = false;
-            this.isInitial= true;
+            // this.isInitial= true;
 
             this.$emit('recordresponse', response);
         });
