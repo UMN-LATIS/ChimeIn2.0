@@ -5,7 +5,7 @@
                 
                 <div class="col-sm-9" @click="$router.push({ name: 'folder', params: {chimeId: chime.id, folderId: folder.id} })">
                    
-                     <h4>{{ folder.name }}</h4>
+                     <h2 class="h4">{{ folder.name }}</h2>
                 </div>
                 <div class="col-sm-3 text-right">
 

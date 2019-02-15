@@ -3,8 +3,8 @@
         class="card hoverable">
         <div class="card-body" v-on:click="open_chime">
             <div class="float-left">
-            <h5  class="card-title">{{ chime.name }}</h5>
-            <h6 v-on:click.stop="" class="card-subtitle mb-2 text-muted">Access code: {{ chime.access_code.toLowerCase() }}</h6>
+            <h2  class="card-title h5">{{ chime.name }}</h2>
+            <p v-on:click.stop="" class="h6 card-subtitle mb-2 text-muted">Access code: {{ chime.access_code.toLowerCase() }}</p>
             </div>
             <div class="float-right">
                 <a href="#" v-on:click.stop="delete_chime()">

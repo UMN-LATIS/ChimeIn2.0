@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row mt-2">
             <div class="col-4 align-items-center d-flex">
-                <h4 v-if="!show_edit_folder">{{ folder.name }}</h4>
+                <h1 class="h4" v-if="!show_edit_folder">{{ folder.name }}</h1>
                 <div class="input-group mb-3" v-if="show_edit_folder">
                   <input type="text" class="form-control" v-model="folder.name">
                   <div class="input-group-append">
