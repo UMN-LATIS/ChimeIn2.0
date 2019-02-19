@@ -60,8 +60,8 @@ export default {
     props: ['question', 'response', 'disabled', 'chime'],
     data() {
         return {
-            "isInitial": response ? false:true,
-            "isSaving": false
+            isInitial: this.response ? false:true,
+            isSaving: false
         }
     },
     methods: {

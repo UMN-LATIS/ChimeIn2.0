@@ -15,7 +15,10 @@
                 :disabled="false"
                 v-on:recordresponse="record_response">
             </component>
-           
+           <transition name="fade">
+               <p class="alert alert-info" v-if="responseUpdated">Response Updated</p>
+           </transition>
+           <p class="alert alert-warning" v-if="error">{{ error }}.  Please reload.</p>
             <hr>
         </div>
         <!-- <div class="card-content" v-else>
@@ -41,6 +44,8 @@ export default {
     props: ['session', 'chime', 'responses'],
     data: function() {
         return {
+            responseUpdated: false,
+            error: null,
             question: {
                 question_info: ''
             },
@@ -83,10 +88,15 @@ export default {
             .then(res => {
                 console.log('debug', 'response recorded:', res);
                 this.$emit('updateResponse', res.data);
+                this.responseUpdated = true;
+                setTimeout(() => {
+                    this.responseUpdated = false;
+                }, 1500);
             })
             .catch(err => {
                 console.error(
                     'error', 'error recording response', err.response);
+                this.error = err.response;
             });
             document.activeElement.blur();
         }
