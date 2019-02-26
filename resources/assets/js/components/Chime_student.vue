@@ -93,7 +93,7 @@
 
             }
         },
-        created: function () {
+        mounted: function () {
             axios.get('/api/chime/' + this.chimeId + '/openQuestions')
             .then(res => {
                 console.log('debug', 'chime:', res);

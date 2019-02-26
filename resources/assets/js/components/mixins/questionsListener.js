@@ -116,6 +116,7 @@ beforeDestroy: function() {
     else {
         chimeId = this.chime.id;
     }
+
     Echo.leave('session-response.'+ chimeId);
     Echo.leave('session-status.'+ chimeId);
 }
