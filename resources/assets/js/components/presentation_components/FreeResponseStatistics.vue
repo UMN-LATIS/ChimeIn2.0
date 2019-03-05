@@ -97,6 +97,7 @@ export default {
 
             var wordsWithoutStops = sw.removeStopwords(words)
             // var wordsStemmed = wordsWithoutStops.map(word => stemmer(word).toLowerCase());
+            
             const groups = wordsWithoutStops.reduce((acc, w) => {
                 if(w.length < 2 || !isNaN(w)) {
                     return acc;
@@ -112,11 +113,11 @@ export default {
                 return acc;
             }, []);
 
-            /*
-            const groups =  cluster(
-                this.responses.map(r => r.response_info.text),
-                this.similarity).groups(0.9);
-            */
+            
+            // groups =  cluster(
+            //     this.responses.map(r => r.response_info.text),
+            //     this.similarity).groups(0.9);
+            
 
 
             return groups
