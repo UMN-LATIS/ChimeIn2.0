@@ -5,11 +5,15 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li><a href="https://umn-latis.github.io/ChimeIn2.0/">Help</a></li>
+        </ul>
         <ul class="navbar-nav ml-auto">
-        <li>
+            <li>
+            
             <a href="/shibboleth-logout" v-if="user.id && !user.guest_user">Log out</a>
             <a href="/login" v-else>Log in</a>
-        </li>
+            </li>
         </ul>
 
     </div>
