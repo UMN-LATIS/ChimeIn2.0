@@ -42,7 +42,7 @@
 <script>
 
 export default {
-    created() {
+    mounted() {
         let umnhf = document.createElement('script');    
         umnhf.setAttribute('src',"https://chimein2.cla.umn.edu/umn/js/umnhf-2015.js");
         document.head.appendChild(umnhf);
