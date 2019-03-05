@@ -17,3 +17,4 @@ Add any questions you'd like to your folder.  If you have co-instructors, they w
 When you're ready to share your questions with your students, have them follow the assignment link within Canvas.  **This is important in order for them to receive credit in the gradebook.**  As the instructor, you can follow the same link to present the questions.  At that point, the process is the same as presenting ChimeIn outside of Canvas.
 
 It can take up to 10 minutes for data from ChimeIn to be passed back to the Canvas gradebook. 
+
