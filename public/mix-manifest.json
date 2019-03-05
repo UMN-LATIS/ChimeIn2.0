@@ -1,13 +1,4 @@
 {
-    "/multiplechoicestatistics.js": "/multiplechoicestatistics.js",
-    "/QuestionForm.js": "/QuestionForm.js",
-    "/FreeResponseStatistics.js": "/FreeResponseStatistics.js",
-    "/folder.js": "/folder.js",
-    "/ImageResponseStatistics.js": "/ImageResponseStatistics.js",
-    "/ReactiveBarChart.js": "/ReactiveBarChart.js",
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/1.3d4bb0bbdae40faef267.hot-update.js": "/1.3d4bb0bbdae40faef267.hot-update.js",
-    "/1.1c0467f9391d5a130381.hot-update.js": "/1.1c0467f9391d5a130381.hot-update.js",
-    "/1.5ecdf458d76ad5dac6c7.hot-update.js": "/1.5ecdf458d76ad5dac6c7.hot-update.js"
+    "/css/app.css": "/css/app.css"
 }

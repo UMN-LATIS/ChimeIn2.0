@@ -9,7 +9,7 @@
                      :max-rows="6"></textarea>
             </div>
         
-        </div">
+        </div>
         <div class="col-sm-12">
             <button v-if="(!disabled && !response.id) || create_new_response" class="btn btn-primary" variant="primary" @click="record_response">Save</button>
             <button v-if="!disabled && response.id && !create_new_response" class="btn btn-primary" variant="primary" @click="record_response">Update</button>

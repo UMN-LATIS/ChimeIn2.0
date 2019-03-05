@@ -65,8 +65,8 @@ export default {
 
             const rows = this.responses.map(r => {
                 return [
-                    r.user.id,
-                    r.user.name,
+                    this.question.anonymous?'':r.user.id,
+                    this.question.anonymous?'anonymous':r.user.name,
                     r.session_id,
                     r.response_info.text].join(',')
             });

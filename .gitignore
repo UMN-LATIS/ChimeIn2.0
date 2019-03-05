@@ -16,4 +16,4 @@ public/css
 *.DS_Store
 .phpintel
 public/js/
-
+docs/.vuepress/dist
