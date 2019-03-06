@@ -6,7 +6,7 @@ Questions are stored inside of folders.  After you've created your first Folder,
 
 ## Anonymous Questions
 
-You can choose to make questions anonymous. In this case, participant names won't be displayed in association with their responses. Keep in mind that identity information is still tracked on the ChimeIn server, so this is not an acceptible option for collecting truly anonymous data. 
+You can choose to make questions anonymous. In this case, participant names won't be displayed in association with their responses. Keep in mind that identity information is still tracked on the ChimeIn server, so this is not an acceptable option for collecting truly anonymous data. 
 
 ## Question Types
 

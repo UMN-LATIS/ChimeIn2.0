@@ -2,7 +2,7 @@
 
 ChimeIn has direct Canvas integration, which makes it easy to create and manage Chimes.  In addition, ChimeIn can share completion data back to the Canvas gradebook, allowing ChimeIn responses to be used to track attendance or participation.
 
-ChimeIn Canvas integration is currently in beta at the University of minnesota. If you'd like to help test within your course, please [contact us](mailto:mcfa0086@umn.edu) and we'll help get your course setup. 
+ChimeIn Canvas integration is currently in beta at the University of Minnesota. If you'd like to help test within your course, please [contact us](mailto:mcfa0086@umn.edu) and we'll help get your course setup. 
 
 ## Creating a Chime
 
