@@ -97,7 +97,7 @@ $navbar-vertical-padding = 0.7rem
 $navbar-horizontal-padding = 1.5rem
 
 .vuepress-nav {
-  line-height: 2.2em;
+  // line-height: 2.2em;
   position: relative;
   padding $navbar-vertical-padding $navbar-horizontal-padding;
   background: white;
