@@ -1,7 +1,7 @@
 <template>
     <div>
         <navbar
-        :title="this.folder.name"
+        title="Back to Folder"
         :user="user"
         :link="{name:'folder', params:{chimeId: chimeId, folderId: folderId}}">
     </navbar>

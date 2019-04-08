@@ -1,7 +1,7 @@
 <template>
     <div>
         <navbar
-        title="Home"
+        title="Back to Home"
         :user="user"
         :link="'/'">
     </navbar>
