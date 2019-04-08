@@ -7,7 +7,7 @@
         </div>
         <div v-else>
             <span>
-                <h4>No Question Yet!</h4>
+                <h4>There aren't any questions in this folder</h4>
             </span>
         </div>
 

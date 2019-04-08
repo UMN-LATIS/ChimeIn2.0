@@ -39,7 +39,7 @@
 
 </div>
 <div v-else>
-    No Folders Yet!
+    <h4>You don't have any folders yet.  Why not create one now?</h4>
 </div>
 <new-folder
 :chime="chime"
