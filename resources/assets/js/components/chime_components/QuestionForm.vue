@@ -161,7 +161,7 @@
                     axios.post(url, {
                             question_text: question.text,
                             question_info: question.question_info,
-                            anonymous: this.anonymous
+                            anonymous: this.anonymous?true:false
                         })
                         .then(res => {
                             console.log(res);
