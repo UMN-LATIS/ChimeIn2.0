@@ -16,6 +16,8 @@ class HomeController extends Controller
      */
     public function index(Request $req)
     {
+        // Auth::user()->impersonate(\App\User::find(8));
+        Auth::user()->leaveImpersonation();
         return view('home', ['user' => $req->user()]);
     }
 

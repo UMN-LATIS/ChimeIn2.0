@@ -180,6 +180,7 @@ return [
 
         StudentAffairsUwm\Shibboleth\ShibbolethServiceProvider::class,
         StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
+        Lab404\Impersonate\ImpersonateServiceProvider::class,
     ],
 
     /*

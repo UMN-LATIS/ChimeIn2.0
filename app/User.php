@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
+    use \Lab404\Impersonate\Models\Impersonate;
 
     /**
      * The attributes that are mass assignable.

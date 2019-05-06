@@ -23,6 +23,9 @@ use App\Http\Controllers\PresentController;
 // 
 // 
 
+// this might be wrong
+Route::impersonate();
+
 Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/', 'HomeController@index')->name("home");
     Route::get('/loginAndRedirect', 'HomeController@loginAndRedirect');
