@@ -5,14 +5,13 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li><a href="https://umn-latis.github.io/ChimeIn2.0/">Help</a></li>
-        </ul>
+
         <ul class="navbar-nav ml-auto">
-            <li>
-            <a href="/impersonate/leave" v-if="user.impersonating">End Impersonation</a>
-            <a href="/shibboleth-logout" v-if="user.id && !user.guest_user">Log out</a>
-            <a href="/login" v-else>Log in</a>
+            <li class="nav-item"><a class="nav-link align-items-center d-flex" href="https://umn-latis.github.io/ChimeIn2.0/">Help <i class="material-icons">help</i></a></li>
+            <li class="nav-item"><a class="nav-link align-items-center d-flex" href="/impersonate/leave" v-if="user.impersonating">End Impersonation<i class="material-icons">logout</i></a></li>
+            <li class="nav-item">
+            <a href="/shibboleth-logout" class="nav-link align-items-center d-flex" v-if="user.id && !user.guest_user">Log out <i class="material-icons">logout</i></a>
+            <a href="/login" class="nav-link align-items-center d-flex" v-else>Log in <i class="material-icons">login</i></a>
             </li>
         </ul>
 
@@ -27,3 +26,19 @@ export default {
     props: ['title', 'user', 'link']
 }
 </script>
+
+<style scoped>
+
+
+
+.material-icons {
+    font-size: 1.2em;
+    margin-left: 2px;
+}
+
+.ml-auto li {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+</style>
