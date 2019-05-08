@@ -10,7 +10,7 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li>
-            
+            <a href="/impersonate/leave" v-if="user.impersonating">End Impersonation</a>
             <a href="/shibboleth-logout" v-if="user.id && !user.guest_user">Log out</a>
             <a href="/login" v-else>Log in</a>
             </li>

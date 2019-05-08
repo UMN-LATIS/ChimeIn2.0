@@ -27,6 +27,8 @@ use App\Http\Controllers\PresentController;
 Route::impersonate();
 
 Route::group(['middleware' => ['shibinjection']], function () {
+    
+    Route::resource('admin/users', 'Admin\UsersController');
     Route::get('/', 'HomeController@index')->name("home");
     Route::get('/loginAndRedirect', 'HomeController@loginAndRedirect');
     Route::model('chime', '\App\Chime');
@@ -96,5 +98,7 @@ if (config('shibboleth.emulate_idp') ) {
 
 Route::post('lti', 'LTIHandler@launch');
 Route::get('ltiConfig', 'LTIHandler@configInfo');
+
+
 
 Route::any('{all}','HomeController@index')->where(['all' => '.*']);

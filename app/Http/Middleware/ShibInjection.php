@@ -25,6 +25,15 @@ class ShibInjection
                 Auth::user()->$key = $value;
             }
         }
+
+        $manager = app('impersonate');
+        if($manager->isImpersonating()) {
+            Auth::user()->impersonating = true;
+        }
+        else {
+            Auth::user()->impersonating = false;
+        }
+
         // dd(Auth::user());
         return $next($request);
     }
