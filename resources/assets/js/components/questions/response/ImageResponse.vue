@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="response.response_info">
-            <img class="responsive-img imageContainer" v-bind:src="'/storage/' + response.response_info.image">
+            <img class="responsive-img imageContainer" v-bind:src="'/storage/' + response.response_info.image" v-if="!create_new_response">
         </div>
         <div class="dropbox" v-if="!disabled">
           <input type="file" accept="image/*" @change="attachFile($event.target.name, $event.target.files)" class="form-control-file input-file">
@@ -14,6 +14,9 @@
             <p v-if="isSaving">
               Uploading file...
             </p>
+        </div>
+         <div class="form-group" v-if="question.allow_multiple && !disabled && this.response && this.response.response_info">
+            <button class="btn btn-primary" @click="clear">Clear and Start a New Response</button>
         </div>
     </div>
 </template>
@@ -61,10 +64,14 @@ export default {
     data() {
         return {
             isInitial: this.response ? false:true,
-            isSaving: false
+            isSaving: false,
+            create_new_response: false
         }
     },
     methods: {
+        clear: function() {
+          this.create_new_response = true;
+        },
         attachFile: function(event, fileList){
             this.isSaving = true;
             this.isInitial = false;
@@ -85,11 +92,11 @@ export default {
                 image: res.data.image,
                 image_name: fileList[0].name
             }
-            this.isSaving = false;
+              this.isSaving = false;
             // this.isInitial= true;
-
-            this.$emit('recordresponse', response);
-        });
+              this.$emit('recordresponse', response, this.create_new_response);
+              this.create_new_response = false;
+            });
 
         },
 
