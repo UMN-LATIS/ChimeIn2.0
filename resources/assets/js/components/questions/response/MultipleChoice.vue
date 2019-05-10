@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div class="form-group">
         <div class="form-check" v-for="(option, key) in selectOptions">
             <input class="form-check-input" :disabled="disabled" type="radio" v-bind:id="'radio'+question.id + '_' + key" v-model="selected" :value="option">
@@ -6,6 +7,10 @@
                 {{ option }}
             </label>
         </div>
+    </div>
+    <div class="form-group" v-if="question.allow_multiple && this.selected && !disabled">
+        <button class="btn btn-primary" @click="clear">Clear and Start a New Response</button>
+    </div>
     </div>
 
 </template>
@@ -16,6 +21,7 @@ export default {
     data() {
         return {
             selected: null,
+            create_new_response: false,
         }
     },
     computed: {
@@ -23,14 +29,21 @@ export default {
             return this.question.question_info.question_responses;
         }
     },
+    methods: {
+        clear: function() {
+            this.selected = null;
+            this.create_new_response = true;
+        }
+    },
     watch: {
         selected: function(newValue, value) {
-            if(newValue !== value && !(this.response && this.response.response_info && newValue == this.response.response_info.choice)) {
+            if(newValue !== null && newValue !== value && !(!this.create_new_response && this.response && this.response.response_info && newValue == this.response.response_info.choice)) {
                 const response = {
                     question_type: 'multiple_choice',
                     choice: newValue
                 }
-                this.$emit('recordresponse', response);
+                this.$emit('recordresponse', response, this.create_new_response);
+                this.create_new_response = false;
             }
         },
         response: function(value) {

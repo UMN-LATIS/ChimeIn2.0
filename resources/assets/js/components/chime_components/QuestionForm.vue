@@ -23,11 +23,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-6">
                     <div class="form-check">
                         <label class="form-check-label">
                             <input type="checkbox" class="form-check-input" v-model="anonymous">
                             Anonymous Question
+                        </label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" v-model="allow_multiple">
+                            Allow Multiple Responses
                         </label>
                     </div>
                 </div>
@@ -121,6 +129,7 @@
                 question_responses: this.question.question_info.question_responses,
                 folder_id: this.folder.id,
                 anonymous: this.question.anonymous,
+                allow_multiple: this.question.allow_multiple,
                 question_types: [
                     {id:"multiple_choice", label:"Multiple Choice"},
                     {id:"true_false", label:"True/False"},
@@ -165,15 +174,17 @@
                     question_type: this.question_type,
                     question_responses: this.question_responses
                 };
+                var responseBlock = {
+                    question_text: question.text,
+                    question_info: question.question_info,
+                    anonymous: this.anonymous,
+                    folder_id: this.folder_id,
+                    allow_multiple: this.allow_multiple
+                };
 
                 if (this.question.id) {
                     url = url + "/question/" + this.question.id;
-                    axios.put(url, {
-                            question_text: question.text,
-                            question_info: question.question_info,
-                            anonymous: this.anonymous,
-                            folder_id: this.folder_id
-                        })
+                    axios.put(url, responseBlock)
                         .then(res => {
                             console.log(res);
                             this.$emit('edited');
@@ -182,12 +193,7 @@
                             console.log(err.response);
                         });
                 } else {
-                    axios.post(url, {
-                            question_text: question.text,
-                            question_info: question.question_info,
-                            anonymous: this.anonymous?true:false,
-                            folder_id: this.folder_id
-                        })
+                    axios.post(url, responseBlock)
                         .then(res => {
                             console.log(res);
                             this.close();
