@@ -50,11 +50,12 @@ class FolderController extends Controller
                 $order_num = $highest + 1;
             }
 
-            $new_question = $folder->questions()->create([
+            $new_question = \App\Question::create([
                 'text' => $req->get('question_text'),
                 'order' => $order_num,
                 'question_info' => $req->get('question_info'),
-                'anonymous'=>$req->get('anonymous')
+                'anonymous'=>$req->get('anonymous'),
+                'folder_id'=>$req->get('folder_id')
             ]);
                     
             return response()->json($new_question);
@@ -80,7 +81,8 @@ class FolderController extends Controller
             $question->update([
                 'text' => $req->get('question_text'),
                 'question_info' => $req->get('question_info'),
-                'anonymous'=>$req->get('anonymous')
+                'anonymous'=>$req->get('anonymous'),
+                'folder_id'=>$req->get('folder_id')
             ]);
 
             return response()->json($question);

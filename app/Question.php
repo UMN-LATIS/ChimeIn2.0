@@ -9,7 +9,7 @@ class Question extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['text', 'order', 'question_info', 'anonymous'];
+    protected $fillable = ['text', 'order', 'question_info', 'anonymous', 'folder_id'];
     protected $dates = ['deleted_at'];
      
     protected $casts = [

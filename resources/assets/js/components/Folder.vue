@@ -76,6 +76,9 @@ controlType="create">
     import draggable from 'vuedraggable'
     import { questionsListener } from './mixins/questionsListener'
     
+    
+
+
     const QuestionForm = () => import(
         /* webpackChunkName: "QuestionForm" */
         './chime_components/QuestionForm.vue'

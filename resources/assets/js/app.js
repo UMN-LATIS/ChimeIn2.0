@@ -18,7 +18,6 @@ Vue.use(fullscreen)
 import PrettyCheckbox from 'pretty-checkbox-vue';
 Vue.use(PrettyCheckbox);
 
-
 // filters
 
 Vue.filter('pluralize', (word, amount) => amount > 1 ? `${word}s` : word)

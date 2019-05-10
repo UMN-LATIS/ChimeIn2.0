@@ -14,10 +14,10 @@
           <div class="card-header text-center">
             <ul class="nav nav-tabs card-header-tabs">
               <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#currentQuestions">Current Questions</a>
+                <a class="nav-link active" data-toggle="tab" href="#currentQuestions">Open Questions</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#pastQuestions">Past Questions</a>
+                <a class="nav-link" data-toggle="tab" href="#pastQuestions">Closed Questions</a>
             </li>
         </ul>
     </div>
@@ -41,7 +41,7 @@
         </div>
         <div class="tab-pane container" id="pastQuestions">
             <div v-if="responses.length < 1" class="text-center">
-                <h3>No Responses Yet!</h3>
+                <h3>No Closed Questions</h3>
             </div>
             <response
             v-else

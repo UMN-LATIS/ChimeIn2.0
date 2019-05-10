@@ -5,18 +5,20 @@
         </div>
         <div class="modal-body">
             <div class="row">
+                 <div class="col-sm-3">
+                    <label for="fodler" class="col-form-label">Folder</label>
+                </div>
+                <div class="col-sm-9">
+                    <div class="form-group" v-if="folders">
+                       <v-select v-model="folder_id" :options="folders" label="name" :reduce="folder => folder.id" :clearable="false"></v-select>
+                    </div>
+                </div>
                 <div class="col-sm-3">
                     <label for="questionType" class="col-form-label">Question Type</label>
                 </div>
                 <div class="col-sm-9">
                     <div class="form-group">
-                        <select class="form-control" id="" v-model="question_type">
-                            <option value="multiple_choice">Multiple Choice</option>
-                            <option value="true_false">True/False</option>
-                            <option value="free_response">Free Response</option>
-                            <option value="image_response">Image Response</option>
-                            <option value="slider_response">Slider Response</option>
-                        </select>
+                        <v-select v-model="question_type" :options="question_types"  :reduce="question_type => question_type.id" :clearable="false"></v-select>
                     </div>
                 </div>
             </div>
@@ -75,6 +77,8 @@
     import FreeResponse from "./response_components/FreeResponse.vue";
     import TrueFalseResponse from "./response_components/TrueFalse.vue";
 
+    import VueSelect from 'vue-select';
+
     const Embed = Quill.import('blots/embed');
 
     class ImageBlot extends Embed {
@@ -105,15 +109,25 @@
             'image_response_response': ImageResponse,
             'slider_response_response': SliderResponse,
             'free_response_response': FreeResponse,
-            'true_false_response': TrueFalseResponse
+            'true_false_response': TrueFalseResponse,
+            'v-select':VueSelect
         },
         data: function () {
             return {
+                folders: null,
                 choice_text: '',
                 question_text: this.question.text,
                 question_type: this.question.question_info.question_type,
                 question_responses: this.question.question_info.question_responses,
+                folder_id: this.folder.id,
                 anonymous: this.question.anonymous,
+                question_types: [
+                    {id:"multiple_choice", label:"Multiple Choice"},
+                    {id:"true_false", label:"True/False"},
+                    {id:"free_response", label:"Free Response"},
+                    {id:"image_response", label:"Image Response"},
+                    {id:"slider_response", label:"Slider Response"}
+                    ],
                 toolbar: [
                     ['bold', 'italic', 'underline', 'align'],
                     [{
@@ -124,6 +138,15 @@
                     ['code-block', 'image']
                 ]
             }
+        },
+        mounted() {
+            axios.get('/api/chime/' + this.folder.chime_id)
+            .then(res => {
+                this.folders = res.data.folders;
+            })
+            .catch(err => {
+                console.log(err);
+            });
         },
         methods: {
             close: function () {
@@ -148,7 +171,8 @@
                     axios.put(url, {
                             question_text: question.text,
                             question_info: question.question_info,
-                            anonymous: this.anonymous
+                            anonymous: this.anonymous,
+                            folder_id: this.folder_id
                         })
                         .then(res => {
                             console.log(res);
@@ -161,7 +185,8 @@
                     axios.post(url, {
                             question_text: question.text,
                             question_info: question.question_info,
-                            anonymous: this.anonymous?true:false
+                            anonymous: this.anonymous?true:false,
+                            folder_id: this.folder_id
                         })
                         .then(res => {
                             console.log(res);

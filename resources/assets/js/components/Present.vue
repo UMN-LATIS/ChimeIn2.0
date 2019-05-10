@@ -7,18 +7,25 @@
     </navbar>
 
 
-    <div class="container-fluid">
+    <div class="container-fluid presentContainer">
 
         <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
-            <template v-for="(question,index) in questions">
-                <present-question :question="question" :chimeId="chimeId" :folder="folder" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle">
+
+                <present-question v-for="(question,index) in questions" v-bind:key="index" :question="question" :chimeId="chimeId" :folder="folder" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle">
                 </present-question>
-            </template>
+
         </fullscreen>
     </div>
 </div>
 
 </template>
+
+<style>
+
+.presentContainer {
+    min-height: 90%;
+}
+</style>
 
 <script>
 

@@ -12,6 +12,8 @@
 
 @import '~pretty-checkbox';
 
+@import "~vue-select/src/scss/vue-select.scss";
+
 .fade-enter-active,
 .fade-leave-active {
     transition: all 1s;
@@ -29,21 +31,21 @@
 
 .dropdown-enter-active,
 .dropdown-leave-active {
-  transition: all 0.2s;
-  max-height: 600px;
+    transition: all 0.2s;
+    max-height: 600px;
 }
 .dropdown-enter,
 .dropdown-leave-to
 {
-  opacity: 0;
-  max-height: 0px;
+    opacity: 0;
+    max-height: 0px;
 }
 
 /**
- * To make the cards hover with a dropshadow
- */
+* To make the cards hover with a dropshadow
+*/
 .hoverable {
-	margin-top: 5px;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 .hoverable:hover {
@@ -51,4 +53,17 @@
     transition: 0.2s;
     box-shadow: 2px 2px 18px lightgray;
     
+}
+
+
+body {
+    height: 100%;
+}
+
+#umn-main {
+    min-height: 70%;
+}
+
+html {
+    height: 100%;
 }
