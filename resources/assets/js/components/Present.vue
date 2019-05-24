@@ -30,6 +30,7 @@
 <script>
 
     import { questionsListener } from './mixins/questionsListener'
+    
 
     export default {
         mixins: [questionsListener],
