@@ -1,7 +1,7 @@
 <template>
 
-    <div class="questionContent">
-        <div v-if="question">
+    <div class="questionContent row">
+        <div v-if="question" class="col">
         <h1 v-html="question.text"></h1>
             <component :is="question.question_info.question_type + '_display'" :question="question"/>
         </div>
@@ -24,8 +24,8 @@ export default {
 
 
 .questionContent {
-    margin-left: 5%;
-    margin-top: 2em;
+    /* margin-left: 5%; */
+    /* margin-top: 2em; */
 }
 
 </style>

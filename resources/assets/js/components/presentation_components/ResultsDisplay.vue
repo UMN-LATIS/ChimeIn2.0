@@ -1,37 +1,28 @@
 <template>
-    <div class="row">
-        <div class="col">
-            <div class="row">
-                <div class="col">
-                    <h1 v-html="question.text"></h1>
-                </div>
-            </div>
+<div class="row">
+    <div class="col">
 
-            <template v-if="this.question.sessions.length > 0">
-                <select v-model="selected" class="mb-3 form-control col-6">
+        <h1 v-html="question.text"></h1>
+
+        <template v-if="this.question.sessions.length > 0">
+            <select v-model="selected" class="mb-3 form-control col-6">
                     <template v-for=" question in question.sessions.map(el => ({'value':el.id, 'text': el.created_at})).concat({'value':0, 'text':'All'})">
                         <option :value="question.value">{{ question.text}}</option>
                     </template>
                 </select>
 
-                <component
-                    v-if="selected_session"
-                    :responses="selected_session.responses"
-                    :question="question"
-                    :is="question.question_info.question_type + '_statistics'"
-                    >
-                </component>
-               
-            </template>
-            <template v-else>
-                <p>No sessions yet</p>
-            </template>
-        </div>
+            <component v-if="selected_session" :responses="selected_session.responses" :question="question" :is="question.question_info.question_type + '_statistics'">
+            </component>
+
+        </template>
+        <template v-else>
+            <p>No sessions yet</p>
+        </template>
     </div>
+</div>
 </template>
 
 <script>
-
 const sliderstatistics = () => import(
     /* webpackChunkName: "multiplechoicestatistics" */
     './SliderStatistics.vue'
@@ -54,10 +45,9 @@ const ImageResponseStatistics = () => import(
     './ImageResponseStatistics.vue'
 );
 
-
 export default {
     props: ['sessions', 'session', 'question'],
-    data: function() {
+    data: function () {
         return {
             selected: null
         }
@@ -66,37 +56,36 @@ export default {
         'slider_response_statistics': sliderstatistics,
         'multiple_choice_statistics': multiplechoicestatistics,
         'true_false_statistics': truefalsestatistics,
-        'image_response_statistics':ImageResponseStatistics,
+        'image_response_statistics': ImageResponseStatistics,
         'free_response_statistics': FreeResponseStatistics
     },
     methods: {
         updateSelected() {
-             // if(this.question.current_session_id) {
-                // this.selected = this.question.current_session_id;
+            // if(this.question.current_session_id) {
+            // this.selected = this.question.current_session_id;
             // }
             // else if(this.question.sessions.length > 0) {
-                this.selected = 0;
+            this.selected = 0;
             // }
         }
     },
     computed: {
-        selected_session: function() {
-            if(this.selected === 0) {
+        selected_session: function () {
+            if (this.selected === 0) {
                 var newSession = {};
-                var responses = this.question.sessions.map(s=> s.responses);
+                var responses = this.question.sessions.map(s => s.responses);
                 newSession.responses = Array.prototype.concat(...responses);
                 return newSession;
-            }
-            else {
-                return this.question.sessions.find(s => s.id == this.selected);    
+            } else {
+                return this.question.sessions.find(s => s.id == this.selected);
             }
         }
     },
     mounted() {
-       this.updateSelected();
+        this.updateSelected();
     },
     watch: {
-        question: function() {
+        question: function () {
             this.updateSelected();
         }
     }

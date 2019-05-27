@@ -32,7 +32,7 @@ class CurrentSessionFlag extends Migration
     {
         Schema::table('questions', function (Blueprint $table) {
 
-            $table->dropForeign("current_session_sessions_id_foreign");
+            $table->dropForeign("questions_current_session_foreign");
             $table->dropColumn("current_session");
         });
 
