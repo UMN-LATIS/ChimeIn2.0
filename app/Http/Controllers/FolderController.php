@@ -55,9 +55,9 @@ class FolderController extends Controller
                 'text' => $req->get('question_text'),
                 'order' => $order_num,
                 'question_info' => $req->get('question_info'),
-                'anonymous'=>$req->get('anonymous'),
+                'anonymous'=>$req->get('anonymous')?$req->get('anonymous'):0,
                 'folder_id'=>$req->get('folder_id'),
-                'allow_multiple' => $req->get('allow_multiple')
+                'allow_multiple' => $req->get('allow_multiple')?$req->get('allow_multiple'):0
             ]);
                     
             return response()->json($new_question);
@@ -83,9 +83,9 @@ class FolderController extends Controller
             $question->update([
                 'text' => $req->get('question_text'),
                 'question_info' => $req->get('question_info'),
-                'anonymous'=>$req->get('anonymous'),
+                'anonymous'=>$req->get('anonymous')?$req->get('anonymous'):0,
                 'folder_id'=>$req->get('folder_id'),
-                'allow_multiple' => $req->get('allow_multiple')
+                'allow_multiple' => $req->get('allow_multiple')?$req->get('allow_multiple'):0
             ]);
 
             return response()->json($question);
