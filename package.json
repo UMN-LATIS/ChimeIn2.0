@@ -54,7 +54,7 @@
     "vue-template-compiler": "^2.5.16",
     "vue-wordcloud": "https://github.com/UMN-LATIS/vue-wordcloud/tarball/master",
     "vue2-editor": "^2.5.0",
-    "vuedraggable": "^2.16.0",
+    "vuedraggable": "^2.21.0",
     "winston": "^2.4.3"
   }
 }

@@ -2,16 +2,17 @@
 <div>
     <div v-if="responses.length > 0">
         <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
-        <word-cloud :data="word_groups" :nameKey="'name'" :valueKey="'value'" :rotate="rotation" :margin="margin" :wordPadding="1" style="width: 100%; height:600px" :fontSize="fontSize">
-        </word-cloud>
 
-        <transition-group name="fade">
-            <div v-for="(r, i) in responses.slice().reverse().slice(0, 30)" v-bind:key="i">
-                <blockquote v-bind:key="i">
-                    {{ r.response_info.text }}
-                </blockquote>
-            </div>
-        </transition-group>
+        <word-cloud v-if="!question.question_info.question_responses.hideWordcloud" :data="word_groups" :nameKey="'name'" :valueKey="'value'" :rotate="rotation" :margin="margin" :wordPadding="1" style="width: 100%; height:600px" :fontSize="fontSize">
+        </word-cloud>
+        <ul>
+            <transition-group name="fade">
+                <li class="userResponse" v-for="(r, i) in responses.slice().reverse()" v-bind:key="i">
+                    <p><strong>{{ r.user.name}}</strong></p>
+                    <p>{{ r.response_info.text }}</p>
+                </li>
+            </transition-group>
+        </ul>
     </div>
 
     <div v-else>No Responses Yet!</div>
@@ -31,7 +32,8 @@ const cluster = require('set-clustering');
 
 export default {
     components: {
-        "downloadCsv": JsonCSV
+        "downloadCsv": JsonCSV,
+        'word-cloud': wordcloud
     },
     props: ['responses', 'question'],
     data: function () {
@@ -56,9 +58,6 @@ export default {
         similarity: function (x, y) {
             return (new difflib.SequenceMatcher(null, x, y)).ratio();
         }
-    },
-    components: {
-        'word-cloud': wordcloud
     },
     computed: {
         word_groups: function () {
@@ -112,7 +111,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .fade-enter-active,
 .fade-leave-active {
     transition: all .25s;
@@ -125,5 +124,16 @@ export default {
 
 .fade-move {
     transition: transform 1s;
+}
+
+.userResponse {
+    list-style: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.userResponse p {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 </style>

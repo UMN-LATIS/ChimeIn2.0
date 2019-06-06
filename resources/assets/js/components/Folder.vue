@@ -42,7 +42,7 @@
     <div class="row border-top mt-3 pt-3">
         <div class="col-sm-12">
            <ul>
-            <draggable v-model="questions" @end=swap_question>
+            <draggable v-model="questions" @end="swap_question" handle=".draghandle">
                 <question
                 v-for="q in questions"
                 :key="q.id"

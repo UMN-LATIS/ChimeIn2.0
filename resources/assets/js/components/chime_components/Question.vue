@@ -7,7 +7,7 @@
                 :folder="folder"
                 controlType="edit">
             </question-form>
-            <div>
+            <div class="draghandle">
                 <p class="response_label">{{ total_responses }}</p>
                 <p class="flow-text" v-html="question.text"></p>
             </div>

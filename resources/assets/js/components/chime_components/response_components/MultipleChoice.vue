@@ -4,6 +4,7 @@
             <div class="col">
                 <p>Answers:</p>
                 <ol type="A">
+                    <draggable :list="question_responses"">
                     <li v-for="(r, i) in question_responses"
                     :key="i"
                     >
@@ -14,6 +15,7 @@
                         v-on:click="() => remove(i)">delete</i>
                     </span>
                 </li>
+                    </draggable>
             </ol>
         </div>
     </div>
@@ -60,6 +62,7 @@
          }
      },
      methods: {
+       
         remove: function(response_index) {
             this.$delete(this.question_responses, response_index);
         },
