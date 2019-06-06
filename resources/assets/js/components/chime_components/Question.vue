@@ -1,5 +1,5 @@
 <template>
-    <li>
+    <li class="questionRow">
         <div class="row">
             <div class="col-sm-9">
                 <question-form v-if="show_edit" :show="show_edit" @edited="edit_question" @close="show_edit = false;"
@@ -124,6 +124,10 @@
 </script>
 
 <style scoped>
+
+.questionRow {
+    cursor: move;
+}
 .pointer {
     cursor: pointer;
 }

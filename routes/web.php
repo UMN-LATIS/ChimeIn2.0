@@ -35,11 +35,11 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::model('folder', '\App\Folder');
 
 
-    Route::get('/api/chime', 'HomeController@getChimes');
-    Route::post('/api/chime', 'HomeController@createChime');
-    Route::get('/join/{access_code}', 'HomeController@joinChime');
-    Route::post('/join/{access_code}', 'HomeController@joinChime');
-    Route::delete('/api/chime/{chime_id}', 'HomeController@deleteChime');
+    Route::get('/api/chime', 'ChimeController@getChimes');
+    Route::post('/api/chime', 'ChimeController@createChime');
+    Route::get('/join/{access_code}', 'ChimeController@joinChime');
+    Route::post('/join/{access_code}', 'ChimeController@joinChime');
+    Route::delete('/api/chime/{chime_id}', 'ChimeController@deleteChime');
 
     // Chime Page Routes
     Route::get('/api/chime/{chime_id}', 'ChimeController@getChime');
@@ -68,6 +68,8 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
+    
+    Route::delete('/api/chime/{chime}/folder/{folder}/response/{response}', 'ResponseController@deleteResponse');
 
     // Presentation Routes
     // Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@getSessions');

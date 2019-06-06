@@ -21,7 +21,7 @@ class FolderController extends Controller
                 $folder->load("questions.folder");
                 // $folder->load("questions.sessions");
                 $folder->load("questions.sessions.responses");
-                // $folder->load("questions.sessions.responses.user");
+                $folder->load("questions.sessions.responses.user");
             }
             return response()->json($folder);
         }

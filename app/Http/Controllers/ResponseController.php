@@ -8,6 +8,7 @@ use App\Question;
 use DB;
 
 use App\Chime;
+use App\Folder;
 use App\Session;
 use App\Response;
 use Auth;
@@ -64,6 +65,21 @@ class ResponseController extends Controller
         event(new SubmitResponse($chime, $session, $response, $isEdit=true));
 
         return response()->json($response->load("session.question"));
+    }
+
+    public function deleteResponse(Chime $chime, Folder $folder, Response $response, Request $request) {
+        $user = Auth::user();
+
+        $chime = $user->chimes()->find($chime->id);
+        
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
+            $response->delete();
+            return response('Response Deleted', 200);
+        } else {
+            return response('Invalid Permissions to Delete Response', 403);
+        }
+
+
     }
 
 }

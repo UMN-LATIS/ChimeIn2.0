@@ -26,6 +26,7 @@ class SubmitResponse implements ShouldBroadcast
     {
         $this->chime = $chime;
         $this->session = $session;
+        $response->load("user");
         $this->response = $response;
         $this->isEdit = $isEdit;
     }

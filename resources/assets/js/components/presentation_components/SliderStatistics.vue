@@ -81,7 +81,8 @@ export default {
         csv_data: function () {
             const rows = this.responses.map(r => {
                 return {
-                    "user": r.user_id,
+                    "user": r.user.name,
+                    "email": r.user.email,
                     "session": r.session_id,
                     "response": r.response_info.choice
                 }

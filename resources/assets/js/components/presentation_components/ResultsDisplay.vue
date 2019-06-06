@@ -11,7 +11,7 @@
                     </template>
                 </select>
 
-            <component v-if="selected_session" :responses="selected_session.responses" :question="question" :is="question.question_info.question_type + '_statistics'">
+            <component v-if="selected_session" :responses="selected_session.responses" :question="question" :chimeId="chimeId" :is="question.question_info.question_type + '_statistics'" @removeResponse="removeResponse( $event)">
             </component>
 
         </template>
@@ -46,7 +46,7 @@ const ImageResponseStatistics = () => import(
 );
 
 export default {
-    props: ['sessions', 'session', 'question'],
+    props: ['sessions', 'session', 'question', "chimeId"],
     data: function () {
         return {
             selected: null
@@ -67,6 +67,19 @@ export default {
             // else if(this.question.sessions.length > 0) {
             this.selected = 0;
             // }
+        },
+        removeResponse(response) {
+            const url = (
+            '/api/chime/' + this.chimeId + '/folder/' + this.question.folder_id + '/response/' + response.id
+            );
+
+            axios.delete(url)
+            .then(res => {
+                this.$emit("reload");
+            })
+            .catch(err => {
+                console.log(err.response);
+            });
         }
     },
     computed: {

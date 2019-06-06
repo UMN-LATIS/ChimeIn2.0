@@ -43,7 +43,7 @@
             <hr>
             <div class="row">
                 <div class="col">
-                    <vue-editor v-model="question_text" placeholder="Question Text" v-bind:editorToolbar="toolbar"
+                    <vue-editor v-model="question_text" placeholder="Question Text" v-bind:editorToolbar="toolbar" v-bind:editorOptions="editorOptions"
                         v-bind:useCustomImageHandler="true" v-on:imageAdded="handle_image_added">
                     </vue-editor>
                 </div>
@@ -144,8 +144,11 @@
                     }, {
                         'list': 'bullet'
                     }],
-                    ['code-block', 'image']
-                ]
+                    ['link', 'image']
+                ],
+                editorOptions: {
+                    bounds: ".modal-body"
+                }
             }
         },
         mounted() {
