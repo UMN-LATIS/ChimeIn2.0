@@ -1,23 +1,41 @@
 <template>
-<div>
+<div class="chartContainer">
     <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
-    <reactive-bar-chart :chart-data="chartData" :options="options" :styles="myStyles"></reactive-bar-chart>
+    <GChart
+    type="ColumnChart"
+    :resizeDebounce="100"
+    :data="chartData"
+    :options="options"
+    class="googleChart"
+  />
 </div>
 </template>
+
+<style>
+
+.chartContainer {
+    /* min-height: 20vh; */
+    height: 600px;
+}
+
+.googleChart {
+    height: 100%;
+}
+
+</style>
+
 
 <script>
 import JsonCSV from 'vue-json-csv'
 
-const ReactiveBarChart = () => import(
-    /* webpackChunkName: "ReactiveBarChart" */
-    '../../ReactiveBarChart.js'
-);
-// import ReactiveBarChart from "../../ReactiveBarChart.js";
+
+import { GChart } from 'vue-google-charts'
+
 
 export default {
     props: ['responses', 'question'],
     components: {
-        ReactiveBarChart,
+        GChart,
         "downloadCsv": JsonCSV
     },
     data: function () {
@@ -25,36 +43,24 @@ export default {
             visible_responses: [],
             response_search: '',
             options: {
-                scales: {
-                    xAxes: [{
-                            display: false,
-                            barPercentage: 1.3,
-                            ticks: {
-                                max: 0.2,
-                            }
-                        },
-
-                        {
-                            display: true,
-                            ticks: {
-                                autoSkip: false,
-                                max: 0.2,
-                            }
-                        }
-                    ],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            userCallback: function (label, index, labels) {
-                                if (Math.floor(label) === label) {
-                                    return label;
-                                }
-                            }
-                        }
-                    }]
+                height: "100%",
+                animation:{
+                    duration: 1000,
+                    easing: 'out',
+                    "startup":  false
                 },
-                responsive: true,
-                maintainAspectRatio: false
+                legend: {
+                    position: "none"
+                },
+                chartArea: {
+                    top:30,
+                    left: 50,
+                    width: "100%"
+                },
+                vAxis: {
+                    baseline: 0,
+                    format: "#.#",
+                }
             }
         }
     },
@@ -90,14 +96,10 @@ export default {
             return rows;
         },
         chartData: function () {
-            return {
-                labels: this.labels,
-                datasets: [{
-                    label: 'Number of Responses',
-                    backgroundColor: '#0b3c4c',
-                    data: this.values
-                }]
-            };
+            
+            var questionArray = this.values.map((e,i) => [this.labels[i], e]);
+            questionArray.unshift(['Answer', 'Number of Responses'])
+            return questionArray;
         }
     }
 }
