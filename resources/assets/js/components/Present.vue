@@ -11,7 +11,7 @@
 
         <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
 
-                <present-question v-for="(question,index) in questions" v-bind:key="index" :question="question" :chimeId="chimeId" :folder="folder" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle" @reload="reload">
+                <present-question v-for="(question,index) in questions" v-bind:key="index" :usersCount="usersCount" :question="question" :chimeId="chimeId" :folder="folder" v-if="index == current_question" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle" @reload="reload">
                 </present-question>
 
         </fullscreen>

@@ -34,7 +34,7 @@ class EndSession implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('session-status.' .$this->chime->id);
+        return new PresenceChannel('session-status.' .$this->chime->id);
     }
 
     public $chime;

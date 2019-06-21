@@ -2,18 +2,23 @@ export const questionsListener = {
     data() {
         return {
             folder: { student_view: false},
-            questions: []
+            questions: [],
+            userCount: 0
         }
     },
   methods: {
+    get_chime: function() {
+          var chimeId;
+          if (this.chimeId) {
+              chimeId = this.chimeId;
+          }
+          else {
+              chimeId = this.chime.id;
+          }
+          return chimeId;
+    },
     load_questions: function() {
-        var chimeId;
-        if(this.chimeId) {
-            chimeId = this.chimeId;
-        }
-        else {
-            chimeId = this.chime.id;
-        }
+        
 
         var folderId;
         if(this.folderId) {
@@ -25,7 +30,7 @@ export const questionsListener = {
 
         const url = (
             '/api/chime/'
-            + chimeId
+            + this.get_chime()
             + '/folder/'
             + folderId
             + '/true'
@@ -43,16 +48,13 @@ export const questionsListener = {
     }
 },
 mounted(){
-    var chimeId;
-    if(this.chimeId) {
-        chimeId = this.chimeId;
-    }
-    else {
-        chimeId = this.chime.id;
-    }
+
 
     var self=this;
-    Echo.private('session-status.' + chimeId)
+    Echo.join('session-status.' + this.get_chime())
+    .here((users) => {
+            this.usersCount = users.length;
+    })
     .listen('StartSession', m => {
         for(var question of this.questions) {
             if(question.id == m.session.question.id) {
@@ -68,9 +70,15 @@ mounted(){
                 question.current_session_id = null;
             }
         }
+    })
+    .joining((user) => {
+        this.usersCount = this.usersCount + 1;
+    })
+    .leaving((user) => {
+        this.usersCount = this.usersCount - 1;
     });
 
-    Echo.private('session-response.'+ chimeId)
+    Echo.private('session-response.' + this.get_chime())
     .listen('SubmitResponse', m => {
             // none of this code is right but I'm having trouble thinking of the right way to do it.
             var targetSession = null;
@@ -109,15 +117,8 @@ mounted(){
         });
 },
 beforeDestroy: function() {
-    var chimeId;
-    if(this.chimeId) {
-        chimeId = this.chimeId;
-    }
-    else {
-        chimeId = this.chime.id;
-    }
 
-    Echo.leave('session-response.'+ chimeId);
-    Echo.leave('session-status.'+ chimeId);
+    Echo.leave('session-response.' + this.get_chime());
+    Echo.leave('session-status.' + this.get_chime());
 }
 };

@@ -32,7 +32,7 @@ class ChangeSessionStatus implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('session-status.' .$this->session->id);
+        return new PresenceChannel('session-status.' .$this->session->id);
     }
 
     public $session;

@@ -10,11 +10,7 @@
            <div class="card float-right">
             
             <div class="card-body">
-                <h5 class="card-title">
-                    Presentation Controls
-                </h5>
-                <p v-if="current_session">Session Responses: {{ current_session?current_session.responses.length:0 }}</p>
-                <p v-else>Total Responses: {{ total_responses }}</p>
+  
                 <button class="btn btn-outline-primary align-items-center d-flex" v-on:click="start_session" v-if="!current_session">
                     <i class="material-icons left">play_arrow</i>
                     Open Question
@@ -44,6 +40,11 @@
                     <i class="material-icons left">fullscreen</i>
                     Fullscreen
                 </button>
+                <ul class="sessionStatus">
+                <li v-if="current_session">Session Responses: {{ current_session?current_session.responses.length:0 }}</li>
+                <li v-else>Total Responses: {{ total_responses }}</li>
+                <li>Connected Participants: {{ usersCount - 1 }}</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -53,7 +54,7 @@
 <script>
 
 export default {
-    props: ['question', 'chimeId', 'folder'],
+    props: ['question', 'chimeId', 'folder', 'usersCount'],
     data() {
         return {
             show_results: false,
@@ -185,6 +186,10 @@ export default {
     padding: 30px;
 }
 
+.sessionStatus {
+    padding: 0;
+    list-style-type: none;
+}
 
 </style>
 
