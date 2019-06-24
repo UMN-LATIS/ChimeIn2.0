@@ -69,7 +69,7 @@ class ChimeController extends Controller
             $new_chime = new Chime();
             $new_chime->fill($req->all());
 
-            $new_chime->access_code =  strtolower(str_random(6));
+            $new_chime->access_code = $new_chime->getUniqueCode();
             $new_chime->save();
             $user->chimes()->attach($new_chime, [
                 'permission_number' => 300
@@ -83,7 +83,10 @@ class ChimeController extends Controller
 
     public function joinChime(Request $req) {
 
-        $chime = (Chime::where('access_code', strtolower($req->route('access_code')))
+        $accessCode = $req->route('access_code');
+        $strippedAccessCode = preg_replace('/\D/', '', $accessCode);
+
+        $chime = (Chime::where('access_code', $strippedAccessCode)
                 ->first());
         
         if(!$chime) {

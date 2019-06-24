@@ -5,7 +5,7 @@
         <ul>
           <li>
             <strong>Access Code:</strong>
-            {{ chime.access_code }}
+            {{ hyphenatedCode }}
           </li>
           <li>
             <strong>Participants can join by visiting:</strong>
@@ -36,10 +36,11 @@
         </ul>
       </div>
     </div>
+    <hr>
 
     <div class="row">
       <div class="col-sm-12">
-        <h3>Users</h3>
+        <h4>Users</h4>
         <table class="table">
           <thead>
             <tr>
@@ -70,7 +71,7 @@
                 </span>
               </td>
               <td>
-                <b-btn @click="deleteUser(key)" size="sm">Remove User</b-btn>
+                <button class="btn btn-sm btn-primary" @click="deleteUser(key)">Remove User</button>
               </td>
             </tr>
           </tbody>
@@ -132,6 +133,9 @@ export default {
         }
         return 0;
       });
+    },
+    hyphenatedCode: function () {
+      return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
     }
   },
   methods: {

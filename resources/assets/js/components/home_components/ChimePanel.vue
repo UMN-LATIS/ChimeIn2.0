@@ -31,7 +31,7 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="studentView"
                                             v-model="studentsCanView">
-                                        <label class="form-check-label" for="studentView">Students can view
+                                        <label class="form-check-label" for="studentView">Participants can view
                                             results</label>
                                     </div>
                                     </div>
@@ -94,6 +94,7 @@ export default {
                     console.log('debug', 'Chime Created:', res);
                     this.showAdd = false;
                     EventBus.$emit('chimesChanged');
+                    this.$router.push({ name: 'chime', params: { chimeId: res.data.id }})
                 })
                 .catch(err => {
                     console.log(
