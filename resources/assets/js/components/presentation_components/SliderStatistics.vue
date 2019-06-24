@@ -97,8 +97,8 @@ export default {
         },
         chartData: function () {
             
-            var questionArray = this.values.map((e,i) => [this.labels[i], e]);
-            questionArray.unshift(['Answer', 'Number of Responses'])
+            var questionArray = this.values.map((e,i) => [this.labels[i], e, 'color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2']);
+            questionArray.unshift(['Answer', 'Number of Responses', { role: 'style' }])
             return questionArray;
         }
     }

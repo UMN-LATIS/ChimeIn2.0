@@ -3,7 +3,7 @@ export const questionsListener = {
         return {
             folder: { student_view: false},
             questions: [],
-            userCount: 0
+            usersCount: 0
         }
     },
   methods: {
