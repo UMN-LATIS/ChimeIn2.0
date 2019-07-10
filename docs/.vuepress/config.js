@@ -1,4 +1,5 @@
 module.exports = {
+    plugins: ['vuepress-plugin-export'],
     title: 'ChimeIn Documentation',
     base: '/ChimeIn2.0/',
     themeConfig: {
