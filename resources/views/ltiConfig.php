@@ -11,7 +11,7 @@
     <blti:title>ChimeIn</blti:title>
     <blti:description></blti:description>
     <blti:icon></blti:icon>
-    <blti:launch_url>https://chimein.cla.umn.edu/lti</blti:launch_url>
+    <blti:launch_url>https://chimein2.cla.umn.edu/lti</blti:launch_url>
     <blti:extensions platform="canvas.instructure.com">
       <lticm:property name="tool_id">umn_cla_chimein</lticm:property>
       <lticm:property name="privacy_level">public</lticm:property>
