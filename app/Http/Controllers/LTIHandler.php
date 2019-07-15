@@ -23,7 +23,7 @@ class LTIHandler extends Controller
 
         $tool = new ChimeToolProvider();
         $tool->handleRequest();
-        if(!$tool->user->sourceId || !is_numeric($tool->user->sourceId)) {
+        if(!$tool->user->sourceId) {
             return view("errors.emplid");    
         }
         
