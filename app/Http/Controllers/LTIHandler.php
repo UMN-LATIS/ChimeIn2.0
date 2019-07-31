@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Library\ChimeToolProvider;
 use Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class LTIHandler extends Controller
 {
@@ -15,7 +16,8 @@ class LTIHandler extends Controller
     }
 
     public function configInfo() {
-        return view("ltiConfig");
+        $host = request()->getSchemeAndHttpHost();
+        return view("ltiConfig", ["host"=>$host]);
     }
 
 
@@ -42,7 +44,7 @@ class LTIHandler extends Controller
             $user->save();
             Auth::login($user);
         }
-
+        cookie::queue("ltiLaunch", true, 10);
         if($tool->user->isStaff()) {
             // it's an instructor, let's check if this assingment exists
             if($folder = \App\Folder::where("resource_link_pk", $tool->resourceLink->getRecordId())->first()) {             

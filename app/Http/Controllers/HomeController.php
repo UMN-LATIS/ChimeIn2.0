@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Chime;
 use Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class HomeController extends Controller
 {
@@ -16,7 +17,8 @@ class HomeController extends Controller
      */
     public function index(Request $req)
     {
-        return view('home', ['user' => $req->user()]);
+        $cookie =  Cookie::get('ltiLaunch');
+        return view('home', ['user' => $req->user(), 'ltiLaunch'=>$cookie]);
     }
 
     
