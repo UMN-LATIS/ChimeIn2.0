@@ -5,7 +5,7 @@
         :user="user"
         :link="'/'">
     </navbar>
-
+    <error-dialog />
     <div class="alert alert-warning" role="alert" v-if="error">
         {{ error }}
     </div>
@@ -109,6 +109,7 @@
                     if(err.response.data.message) {
                         this.error = err.response.data.message;    
                     }
+                    this.$store.commit('message', "Could not load Chime. You may not have permission to view this page. ");
                     console.log("error getting chime:", err.response);
                     
                 }

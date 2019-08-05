@@ -5,7 +5,7 @@
         :user="user"
         :link="{name:'folder', params:{chimeId: chimeId, folderId: folderId}}">
     </navbar>
-
+    <error-dialog />
 
     <div class="container-fluid presentContainer">
 

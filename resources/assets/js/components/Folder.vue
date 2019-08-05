@@ -4,7 +4,8 @@
         title="Back to Chime"
         :user="user"
         :link="{name:'chime', params:{chimeId: chimeId}}">
-    </navbar>
+        </navbar>
+        <error-dialog />
     <div class="alert alert-warning" role="alert" v-if="!hideOpenAlert && otherFolderSessions.length > 0">
         You have {{ otherFolderSessions.length }} {{ 'question' | pluralize(otherFolderSessions.length) }} open outside this folder.  Would you like to <a class="pointer" href="" @click.prevent="closeOthers">close {{ otherFolderSessions.length == 1 ? 'it': 'them' }}</a>?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
     </div>

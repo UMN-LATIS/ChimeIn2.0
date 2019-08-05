@@ -8,6 +8,8 @@ window.queryString = require('query-string');
 
 import EventBus from './event-bus';
 
+import Vuex from 'vuex'
+Vue.use(Vuex)
 
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
@@ -21,22 +23,6 @@ Vue.use(PrettyCheckbox);
 // filters
 
 Vue.filter('pluralize', (word, amount) => amount > 1 ? `${word}s` : word)
-
-var errorStore = {
-    debug: true,
-    state: {
-        message: null
-    },
-    setMessageAction(newValue) {
-        if (this.debug) console.log('setMessageAction triggered with', newValue)
-        this.state.message = newValue
-    },
-    clearMessageAction() {
-        if (this.debug) console.log('clearMessageAction triggered')
-        this.state.message = ''
-    }
-};
-
 
 Vue.component('modal',
     require('./components/modal.vue'));
@@ -59,6 +45,9 @@ const Folder = () => import(
     './components/Folder.vue'
 );
 Vue.component('Folder', Folder);
+
+Vue.component('error-dialog',
+    require('./components/error_dialog.vue'));
 
 Vue.component('navbar',
     require('./components/Navbar.vue'));
@@ -113,6 +102,24 @@ Vue.component('image_response_display',
     require('./components/questions/display/ImageResponse.vue'));
 
 
+const store = new Vuex.Store({
+    state: {
+        message: null
+    },
+    mutations: {
+        message(state, message) {
+            state.message = message;
+        },
+        clearMessage(state) {
+            state.message = null;
+        }
+    },
+    getters: {
+        message: state => state.message
+    }
+});
+
+
 const router = new VueRouter({
     mode: 'history',
   routes: [
@@ -126,5 +133,8 @@ const router = new VueRouter({
 })
 
 const app = new Vue({
-    router
-}).$mount('#app')
+    router,
+    store
+}).$mount('#app');
+
+

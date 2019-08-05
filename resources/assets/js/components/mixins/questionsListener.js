@@ -43,8 +43,10 @@ export const questionsListener = {
             console.log(this.questions);
             })
         .catch(err => {
-            errorStore.setMessageAction("Could not load questions. You may not have permission to view this page.  Visit the home page to try again.");
+            this.$store.commit('message', "Could not load questions. You may not have permission to view this page. ");
+            console.log(err);
         });
+
     }
 },
 mounted(){

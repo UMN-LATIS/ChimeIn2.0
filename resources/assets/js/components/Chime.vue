@@ -5,6 +5,7 @@
         :user="user"
         :link="'/'">
     </navbar>
+    <error-dialog />
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -113,6 +114,7 @@ v-on:newfolder="create_folder"></new-folder>
                     document.title = this.chime.name;
                 })
                 .catch(err => {
+                    this.$store.commit('message', "Could not load Chime. You may not have permission to view this page. ");
                     console.log(err);
                 });
             }
