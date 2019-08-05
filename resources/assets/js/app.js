@@ -22,7 +22,20 @@ Vue.use(PrettyCheckbox);
 
 Vue.filter('pluralize', (word, amount) => amount > 1 ? `${word}s` : word)
 
-
+var errorStore = {
+    debug: true,
+    state: {
+        message: null
+    },
+    setMessageAction(newValue) {
+        if (this.debug) console.log('setMessageAction triggered with', newValue)
+        this.state.message = newValue
+    },
+    clearMessageAction() {
+        if (this.debug) console.log('clearMessageAction triggered')
+        this.state.message = ''
+    }
+};
 
 
 Vue.component('modal',

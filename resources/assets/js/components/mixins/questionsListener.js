@@ -43,7 +43,7 @@ export const questionsListener = {
             console.log(this.questions);
             })
         .catch(err => {
-            console.log(err);
+            errorStore.setMessageAction("Could not load questions. You may not have permission to view this page.  Visit the home page to try again.");
         });
     }
 },

@@ -142,7 +142,16 @@ class FolderController extends Controller
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $folder->questions()->find($req->route('question_id'))->delete();
-        
+            
+            $i = 1;
+
+            foreach($folder->questions as $question) {
+                $question->order = $i;
+                $question->save();
+                $i++;
+            }
+
+
             return response('Question Deleted', 200);
         } else {
             return response('Invalid Permissions to Delete Question', 403);
