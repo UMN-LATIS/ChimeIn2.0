@@ -142,6 +142,7 @@
     background-color: lightblue;
     padding-left: 5px;
     padding-right: 5px;
+    vertical-align: top;
 }
 
 .flow-text {
