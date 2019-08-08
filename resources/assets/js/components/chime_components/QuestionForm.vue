@@ -93,7 +93,7 @@
         static create(value) {
             let node = super.create();
             node.setAttribute('src', value.url);
-            node.setAttribute('class', "responsive-img");
+            node.setAttribute('class', "img-fluid");
             return node;
         }
 
@@ -213,14 +213,14 @@
 
                 let form_data = new FormData();
                 form_data.append('image', file);
-
+        
                 axios.post(
                         '/api/chime/' +
-                        this.folder.chimeId +
+                        this.folder.chime_id +
                         '/image', form_data)
                     .then(res => {
                         editor.insertEmbed(cursor, 'image', {
-                            url: res.data
+                            url: '/storage/' + res.data.image
                         });
                         reset();
                     })
