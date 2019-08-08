@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
             ->join("responses", "sessions.id","=","responses.session_id")
             ->select("folders.*")
             ->whereNotNull("folders.resource_link_pk")
-            ->whereBetween('responses.updated_at', [now()->subMinutes(10), now()])->get();
+            ->whereBetween('responses.updated_at', [now()->subMinutes(10), now()])->get()->unique();
 
             foreach($folders as $folder) {
                 \App\Library\LTIProcessor::syncFolder($folder);
