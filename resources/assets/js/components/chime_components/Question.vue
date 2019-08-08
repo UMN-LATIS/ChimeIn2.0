@@ -9,7 +9,7 @@
             </question-form>
             <div class="draghandle">
                 <p class="response_label">{{ total_responses }}</p>
-                <p class="flow-text" v-html="question.text"></p>
+                <p class="flow-text question_list_text" v-html="question.text"></p>
             </div>
         </div>
         <div class="col-sm-3">
@@ -122,8 +122,18 @@
 
     }
 </script>
+<style>
+
+
+.question_list_text img {
+    max-width: 100px;
+    max-height:100px;
+}
+
+</style>
 
 <style scoped>
+
 
 .questionRow {
     cursor: move;
