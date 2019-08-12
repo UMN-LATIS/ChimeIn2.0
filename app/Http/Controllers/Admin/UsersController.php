@@ -38,7 +38,7 @@ class UsersController extends Controller
                 ->orWhere('userType', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
-            $users = User::latest()->where("userType", "!=", "guest")->paginate($perPage);
+            $users = User::latest()->where("guest_user", false)->paginate($perPage);
         }
 
         return view('admin.users.index', compact('users'));
