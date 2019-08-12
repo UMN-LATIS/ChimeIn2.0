@@ -64,7 +64,7 @@ class LTIHandler extends Controller
                     $chime->lti_course_id = $tool->context->ltiContextId;
                     $chime->name = $tool->context->title;
                     $chime->require_login = true;
-                    $chime->access_code = strtolower(str_random(6));
+                    $chime->access_code = $chime->getUniqueCode();
                     $chime->save();
                     $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
                 }
