@@ -9,6 +9,7 @@
     <div class="alert alert-warning" role="alert" v-if="error">
         {{ error }}
     </div>
+     <vue-announcer />
     <div class="container">
         <div class="card ">
           <div class="card-header text-center">
@@ -23,9 +24,9 @@
     </div>
     <div class="card-body">
         <div class="tab-content">
-            <div class="tab-pane container active" id="currentQuestions">
+            <div class="tab-pane container active" id="currentQuestions" aria-live="polite">
                 <div v-if="sessions.length < 1" key='none' class="text-center">
-                    <h3>No Open Questions</h3>
+                    <h1>No Open Questions</h1>
                 </div>
                 <transition-group name="fade">
                     <student-prompt
@@ -41,7 +42,7 @@
         </div>
         <div class="tab-pane container" id="pastQuestions">
             <div v-if="responses.length < 1" class="text-center">
-                <h3>No Closed Questions</h3>
+                <h1>No Closed Questions</h1>
             </div>
             <response
             v-else
@@ -127,10 +128,12 @@
             .listen('StartSession', m => {
                 console.log('debug', 'message:', m);
                 this.sessions.unshift(m.session);
+                this.$announcer.set("A new question has been open.  There are " + this.sessions.length + " questions open");
             })
             .listen('EndSession', m => {
                 var removeIndex = this.sessions.findIndex(session => session.id == m.session.id);
                 this.sessions.splice(removeIndex, 1);
+                this.$announcer.set("A question has been closed.  There are " + this.sessions.length + " questions open");
             });
 
         },

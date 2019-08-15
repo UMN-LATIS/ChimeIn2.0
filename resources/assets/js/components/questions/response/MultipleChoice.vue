@@ -1,13 +1,16 @@
 <template>
     <div>
-    <div class="form-group">
-        <div class="form-check" v-for="(option, key) in selectOptions">
+
+    <fieldset class="form-group" role="radiogroup">
+        
+        <div class="form-check"  v-bind:key="key" v-for="(option, key) in selectOptions">
             <input class="form-check-input" :disabled="disabled" type="radio" v-bind:id="'radio'+question.id + '_' + key" v-model="selected" :value="option">
             <label class="form-check-label" v-bind:for="'radio'+question.id + '_' + key" >
                 {{ option }}
             </label>
         </div>
-    </div>
+    
+    </fieldset>
     <div class="form-group" v-if="question.allow_multiple && this.selected && !disabled">
         <button class="btn btn-primary" @click="clear">Clear and Start a New Response</button>
     </div>

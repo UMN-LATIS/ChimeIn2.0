@@ -98,7 +98,7 @@ export default {
                     'error', 'error recording response', err.response);
                 this.error = err.response;
             });
-            document.activeElement.blur();
+            // document.activeElement.blur();
         }
     },
     created: function() {

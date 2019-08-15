@@ -43,6 +43,7 @@
     "socket.io-client": "^2.2.0",
     "stemmer": "^1.0.2",
     "stopword": "^0.1.10",
+    "vue-announcer": "^1.0.4",
     "vue-carousel": "^0.7.3",
     "vue-chartjs": "^3.3.1",
     "vue-cli": "^2.9.6",
