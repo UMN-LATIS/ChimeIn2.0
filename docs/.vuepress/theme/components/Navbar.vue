@@ -1,54 +1,53 @@
 <template>
   <header class="navbar">
     <Heading></Heading>
-    
-
     <div class="vuepress-nav">
-      <SidebarButton @toggle-sidebar="$emit('toggle-sidebar')"/>
-      <router-link
-        :to="$localePath"
-        class="home-link"
-      >
-        <img
-          class="logo"
-          v-if="$site.themeConfig.logo"
-          :src="$withBase($site.themeConfig.logo)"
-          :alt="$siteTitle"
-        >
-        <span
-          ref="siteName"
-          class="site-name"
-          v-if="$siteTitle"
-          :class="{ 'can-hide': $site.themeConfig.logo }"
-        >{{ $siteTitle }}</span>
-      </router-link>
+    <SidebarButton @toggle-sidebar="$emit('toggle-sidebar')"/>
 
-      <div
-        class="links"
-        :style="{
-          'max-width': linksWrapMaxWidth + 'px'
-        }"
+    <router-link
+      :to="$localePath"
+      class="home-link"
+    >
+      <img
+        class="logo"
+        v-if="$site.themeConfig.logo"
+        :src="$withBase($site.themeConfig.logo)"
+        :alt="$siteTitle"
       >
-        <AlgoliaSearchBox
-          v-if="isAlgoliaSearch"
-          :options="algolia"
-        />
-        <SearchBox v-else-if="$site.themeConfig.search !== false"/>
-        <NavLinks class="can-hide"/>
+      <span
+        ref="siteName"
+        class="site-name"
+        v-if="$siteTitle"
+        :class="{ 'can-hide': $site.themeConfig.logo }"
+      >{{ $siteTitle }}</span>
+    </router-link>
+
+    <div
+      class="links"
+      :style="linksWrapMaxWidth ? {
+        'max-width': linksWrapMaxWidth + 'px'
+      } : {}"
+    >
+      <AlgoliaSearchBox
+        v-if="isAlgoliaSearch"
+        :options="algolia"
+      />
+      <SearchBox v-else-if="$site.themeConfig.search !== false && $page.frontmatter.search !== false"/>
+      <NavLinks class="can-hide"/>
     </div>
     </div>
   </header>
 </template>
 
 <script>
-import SidebarButton from './SidebarButton.vue'
 import AlgoliaSearchBox from '@AlgoliaSearchBox'
-import SearchBox from './SearchBox.vue'
-import NavLinks from './NavLinks.vue'
-import Heading from './Header.vue'
+import SearchBox from '@SearchBox'
+import SidebarButton from '@theme/components/SidebarButton.vue'
+import NavLinks from '@theme/components/NavLinks.vue'
+import Heading from '@theme/components/Header.vue'
 
 export default {
-  components: { SidebarButton, NavLinks, SearchBox, AlgoliaSearchBox,Heading },
+  components: { SidebarButton, NavLinks, SearchBox, AlgoliaSearchBox, Heading },
 
   data () {
     return {
@@ -63,8 +62,8 @@ export default {
       if (document.documentElement.clientWidth < MOBILE_DESKTOP_BREAKPOINT) {
         this.linksWrapMaxWidth = null
       } else {
-        this.linksWrapMaxWidth = this.$el.offsetWidth - NAVBAR_VERTICAL_PADDING -
-          (this.$refs.siteName && this.$refs.siteName.offsetWidth || 0)
+        this.linksWrapMaxWidth = this.$el.offsetWidth - NAVBAR_VERTICAL_PADDING
+          - (this.$refs.siteName && this.$refs.siteName.offsetWidth || 0)
       }
     }
     handleLinksWrapWidth()
@@ -91,7 +90,6 @@ function css (el, property) {
 </script>
 
 <style lang="stylus">
-@import './styles/config.styl'
 
 $navbar-vertical-padding = 0.7rem
 $navbar-horizontal-padding = 1.5rem
@@ -104,9 +102,8 @@ $navbar-horizontal-padding = 1.5rem
 }
 
 .navbar
-  
-
-  position relative
+  // padding $navbar-vertical-padding $navbar-horizontal-padding
+  // line-height $navbarHeight - 1.4rem
   a, span, img
     display inline-block
   .logo
@@ -132,11 +129,9 @@ $navbar-horizontal-padding = 1.5rem
     .search-box
       flex: 0 0 auto
       vertical-align top
-    .nav-links
-      flex 1
 
 @media (max-width: $MQMobile)
-  .vuepress-nav
+  .navbar
     padding-left 4rem
     .can-hide
       display none

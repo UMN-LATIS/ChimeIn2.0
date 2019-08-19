@@ -2,6 +2,7 @@
   <form
     id="search-form"
     class="algolia-search-wrapper search-box"
+    role="search"
   >
     <input
       id="algolia-search-input"
@@ -34,7 +35,10 @@ export default {
             // #697 Make docsearch work well at i18n mode.
             algoliaOptions: Object.assign({
               'facetFilters': [`lang:${lang}`].concat(algoliaOptions.facetFilters || [])
-            }, algoliaOptions)
+            }, algoliaOptions),
+            handleSelected: (input, event, suggestion) => {
+              this.$router.push(new URL(suggestion.url).pathname)
+            }
           }
         ))
       })
@@ -59,8 +63,6 @@ export default {
 </script>
 
 <style lang="stylus">
-@import './styles/config.styl'
-
 .algolia-search-wrapper
   & > span
     vertical-align middle

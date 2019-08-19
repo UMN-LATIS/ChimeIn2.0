@@ -32,7 +32,7 @@
 </template>
 
 <style lang="stylus">
-@import './styles/config.styl'
+
 @media (max-width: $MQMobile) 
     .umnhf-search
         display:none !important;
