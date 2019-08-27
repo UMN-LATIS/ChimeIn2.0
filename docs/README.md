@@ -2,6 +2,10 @@
 
 ChimeIn is a fast, flexible response tracking tool.  Think of it as a web-based "clicker" tool, but with advanced features that aren't possible with traditional clickers.  ChimeIn can be used in classes, but it can also be used for meetings, conferences, or any type of event in which you want to collect feedback.  ChimeIn can also be used both synchronously and asynchronously.  
 
+::: tip Migrating from the original ChimeIn?  
+Check out our [moving to ChimeIn 2](/moving-to-chimein-2) page or [contact us](mailto:mcfa0086@umn.edu) for a personal introduction
+:::
+
 ## ChimeIn Basics
 
 ChimeIn organizes content into "Chimes".  Each Chime can contain one or more folders, and each folder can contain one or more questions.  To get started creating a Chime, just log in.  

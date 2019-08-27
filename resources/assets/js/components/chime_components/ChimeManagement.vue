@@ -30,7 +30,7 @@
                 id="studentView"
                 v-model="studentsCanView"
               >
-              <label class="form-check-label" for="studentView">Students can view results</label>
+              <label class="form-check-label" for="studentView">Participants can view results</label>
             </div>
           </li>
         </ul>

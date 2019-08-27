@@ -23,6 +23,7 @@ module.exports = {
             '/participate',
             '/asking-questions',
             '/canvas',
+            '/moving-to-chimein-2',
             '/deploying'
     ],
 
