@@ -9,10 +9,16 @@
 
        <div class="col-sm-12">
         <h1 class="center" v-if="!user.guest_user">{{ welcome }}, {{ user.name }}</h1>
-        <h1 class="center" v-else="!user.guest_user">Welcome, guest user</h1>
+        <h1 class="center" v-else>Welcome, guest user</h1>
 
+      
         <div class="row">
             <div class="col-12 col-md-9">
+                  <div class="alert alert-info" role="alert" v-if="user.guest_user">
+                    <strong>New to ChimeIn 2?</strong>
+                        We've documentation available on our <a href="https://umn-latis.github.io/ChimeIn2.0/" class="alert-link">help site</a>.  You can also <a href="mailto:clatel@umn.edu" class="alert-link">drop us a line</a> and we can arrange a person introduction.
+                    </div>
+
                 <chime-panel :user="user">
                 </chime-panel>
             </div>
