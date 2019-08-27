@@ -1,0 +1,103 @@
+version: "3"
+services:
+  app:
+    image: laravel-www
+    container_name: laravel-www
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - redis
+      - mysql
+    ports:
+      - 8080:80
+    volumes:
+      - ./app:/var/www/html/app
+      - ./resources:/var/www/html/resources
+      - ./routes:/var/www/html/routes
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: app
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      REDIS_HOST: redis
+      BROADCAST_DRIVER: redis
+      DB_HOST: mysql
+      DB_DATABASE: homestead
+      DB_USERNAME: homestead
+      DB_PASSWORD: secret
+
+  scheduler:
+    image: laravel-www
+    container_name: laravel-scheduler
+    depends_on:
+      - app
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: scheduler
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      BROADCAST_DRIVER: redis
+      REDIS_HOST: redis
+
+  queue:
+    image: laravel-www
+    container_name: laravel-queue
+    depends_on:
+      - app
+    volumes:
+      - ./app:/var/www/html/app
+      - ./resources:/var/www/html/resources
+      - ./routes:/var/www/html/routes
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: queue
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      BROADCAST_DRIVER: redis
+      REDIS_HOST: redis
+
+  redis:
+    container_name: laravel-redis
+    image: redis:4-alpine
+    ports:
+      - 16379:6379
+    volumes:
+      - redis:/data
+
+  mysql:
+    container_name: laravel-mysql
+    image: mysql:5.7
+    ports:
+      - 13306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+  echo:
+    image: oanhnn/laravel-echo-server
+    container_name: laravel-echo
+    ports:
+      - 6001:6001
+    depends_on:
+      - redis
+      - app
+    # volumes:
+      # - .:/app
+    environment:
+      REDIS_HOST: redis
+      LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
+      LARAVEL_ECHO_SERVER_DEBUG: "true"
+volumes:
+  redis:
+    driver: "local"
+  mysql:
+    driver: "local"
