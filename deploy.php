@@ -47,6 +47,12 @@ task('assets:generate', function() {
 })->desc('Assets generation');
 
 
+task('fix_storage_perms', '
+    touch storage/logs/laravel.log
+    chown apache storage/logs/laravel.log
+    chgrp apache storage/logs/laravel.log
+')->desc("Fix Apache Logs");
+
 // $result = run("scl enable rh-php56 'php -v'");
 // Tasks
 
@@ -66,4 +72,5 @@ after('deploy:failed', 'deploy:unlock');
 before('deploy:symlink', 'artisan:migrate');
 after('deploy:update_code', 'npm:install');
 after('npm:install', 'assets:generate');
+after('assets:generate', 'fix_storage_perms');
 after('artisan:migrate', 'artisan:queue:restart');

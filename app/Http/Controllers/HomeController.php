@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Chime;
 use Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -17,6 +18,7 @@ class HomeController extends Controller
      */
     public function index(Request $req)
     {
+        Log::warning("Genearting some log noise");
         $cookie =  Cookie::get('ltiLaunch');
         return view('home', ['user' => $req->user(), 'ltiLaunch'=>$cookie]);
     }
