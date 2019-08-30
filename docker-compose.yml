@@ -1,4 +1,18 @@
-version: "3"
+version: "3.4"
+
+x-common-variables: &common-variables
+  CACHE_DRIVER: redis
+  SESSION_DRIVER: redis
+  QUEUE_DRIVER: redis
+  REDIS_HOST: redis
+  BROADCAST_DRIVER: redis
+  DB_CONNECTION: mysql
+  DB_HOST: mysql
+  DB_DATABASE: homestead
+  DB_USERNAME: homestead
+  DB_PASSWORD: secret
+  DB_PORT: 3306
+
 services:
   app:
     image: laravel-www
@@ -12,22 +26,14 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./app:/var/www/html/app
-      - ./resources:/var/www/html/resources
-      - ./routes:/var/www/html/routes
+      - .:/var/www/html/:cached
+      - /var/www/html/node_modules
+      - /var/www/html/vendor
+      - /var/www/html/public
     environment:
+      <<: *common-variables
       APP_ENV: local
       CONTAINER_ROLE: app
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      QUEUE_DRIVER: redis
-      REDIS_HOST: redis
-      BROADCAST_DRIVER: redis
-      DB_HOST: mysql
-      DB_DATABASE: homestead
-      DB_USERNAME: homestead
-      DB_PASSWORD: secret
-
   scheduler:
     image: laravel-www
     container_name: laravel-scheduler
@@ -36,13 +42,9 @@ services:
     volumes:
       - .:/var/www/html
     environment:
+      <<: *common-variables
       APP_ENV: local
       CONTAINER_ROLE: scheduler
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      QUEUE_DRIVER: redis
-      BROADCAST_DRIVER: redis
-      REDIS_HOST: redis
 
   queue:
     image: laravel-www
@@ -54,13 +56,9 @@ services:
       - ./resources:/var/www/html/resources
       - ./routes:/var/www/html/routes
     environment:
+      <<: *common-variables
       APP_ENV: local
       CONTAINER_ROLE: queue
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      QUEUE_DRIVER: redis
-      BROADCAST_DRIVER: redis
-      REDIS_HOST: redis
 
   redis:
     container_name: laravel-redis

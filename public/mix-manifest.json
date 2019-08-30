@@ -1,10 +1,10 @@
 {
-    "/multiplechoicestatistics.js": "/multiplechoicestatistics.js",
-    "/QuestionForm.js": "/QuestionForm.js",
-    "/FreeResponseStatistics.js": "/FreeResponseStatistics.js",
-    "/ImageResponseStatistics.js": "/ImageResponseStatistics.js",
-    "/folder.js": "/folder.js",
-    "/ReactiveBarChart.js": "/ReactiveBarChart.js",
-    "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/js/multiplechoicestatistics.b0424c37eb2ad5c8a978.bundle.js": "/js/multiplechoicestatistics.b0424c37eb2ad5c8a978.bundle.js?id=855632ffc79e3f5e23b3",
+    "/js/QuestionForm.d66e9817ec315a782181.bundle.js": "/js/QuestionForm.d66e9817ec315a782181.bundle.js?id=a5efb91ec2d768abbe73",
+    "/js/FreeResponseStatistics.3e06bf68358a70a3b0da.bundle.js": "/js/FreeResponseStatistics.3e06bf68358a70a3b0da.bundle.js?id=d78d1cb9269b4aacc826",
+    "/js/ImageResponseStatistics.881d428d7ac66c1eeccd.bundle.js": "/js/ImageResponseStatistics.881d428d7ac66c1eeccd.bundle.js?id=6317796861999808c7b2",
+    "/js/folder.f75ffe923cc590f7ee88.bundle.js": "/js/folder.f75ffe923cc590f7ee88.bundle.js?id=17627a07edc4256cb418",
+    "/js/ReactiveBarChart.7058ed12f2f4a7d511a2.bundle.js": "/js/ReactiveBarChart.7058ed12f2f4a7d511a2.bundle.js?id=8b51647ed784557559a2",
+    "/js/app.js": "/js/app.js?id=4012f4d94486db8396f4",
+    "/css/app.css": "/css/app.css?id=caf874290e68f4e86c1f"
 }
