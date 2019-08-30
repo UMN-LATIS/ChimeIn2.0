@@ -4,16 +4,13 @@
     <fieldset class="form-group" role="radiogroup">
         
         <div class="form-check"  v-bind:key="key" v-for="(option, key) in selectOptions">
-            <input class="form-check-input" :disabled="disabled" type="radio" v-bind:id="'radio'+question.id + '_' + key" v-model="selected" :value="option">
+            <input class="form-check-input" :disabled="disabled" v-bind:type="question.allow_multiple?'checkbox':'radio'" v-bind:id="'radio'+question.id + '_' + key" v-model="selected" :value="option">
             <label class="form-check-label" v-bind:for="'radio'+question.id + '_' + key" >
                 {{ option }}
             </label>
         </div>
     
     </fieldset>
-    <div class="form-group" v-if="question.allow_multiple && this.selected && !disabled">
-        <button class="btn btn-primary" @click="clear">Clear and Start a New Response</button>
-    </div>
     </div>
 
 </template>
@@ -23,8 +20,7 @@ export default {
     props: ['question', 'response', 'disabled'],
     data() {
         return {
-            selected: null,
-            create_new_response: false,
+            selected: []
         }
     },
     computed: {
@@ -32,21 +28,14 @@ export default {
             return this.question.question_info.question_responses;
         }
     },
-    methods: {
-        clear: function() {
-            this.selected = null;
-            this.create_new_response = true;
-        }
-    },
     watch: {
         selected: function(newValue, value) {
-            if(newValue !== null && newValue !== value && !(!this.create_new_response && this.response && this.response.response_info && newValue == this.response.response_info.choice)) {
+            if(newValue !== null && newValue !== value && !(this.response && this.response.response_info && newValue == this.response.response_info.choice)) {
                 const response = {
                     question_type: 'multiple_choice',
                     choice: newValue
                 }
-                this.$emit('recordresponse', response, this.create_new_response);
-                this.create_new_response = false;
+                this.$emit('recordresponse', response, false);
             }
         },
         response: function(value) {
