@@ -24,6 +24,7 @@ module.exports = {
             '/asking-questions',
             '/canvas',
             '/moving-to-chimein-2',
+            '/taking-attendance',
             '/deploying'
     ],
 

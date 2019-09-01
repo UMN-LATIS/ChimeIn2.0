@@ -19,7 +19,7 @@ ChimeIn currently has 5 question types.  The architecture of ChimeIn allows us t
 
 ### Multiple Choice
 
-Multiple choice questions can easily be written in class and before class.  Questions with short prompts and answers can be written in class, while questions with long prompts and detailed answers should be written prior to the start of class.  
+Multiple choice questions can easily be written in class and before class.  Questions with short prompts and answers can be written in class, while questions with long prompts and detailed answers should be written prior to the start of class.  If you check the box for "allow multiple responses", participants will be able to select more than one option. 
 
 #### Written in class
 
