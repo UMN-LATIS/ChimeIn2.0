@@ -46,7 +46,8 @@ services:
       - 8080:8080
     volumes:
       - .:/app:cached
-      - /var/www/html/vendor
+      - /app/vendor
+      - /app/node_modules
   scheduler:
     image: laravel-www
     container_name: laravel-scheduler

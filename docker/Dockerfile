@@ -27,7 +27,7 @@ RUN npm run prod
 FROM php:7.2-apache-stretch
 
 RUN apt-get update && apt-get install -y zlib1g-dev git && \
-    docker-php-ext-install pdo pdo_mysql zip
+    docker-php-ext-install pdo pdo_mysql zip gd
 
 COPY --from=vendor /app/vendor/ /var/www/html/vendor/
 COPY --from=frontend /app/public/js/ /var/www/html/public/js/

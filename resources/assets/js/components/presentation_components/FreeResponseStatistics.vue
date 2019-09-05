@@ -8,7 +8,7 @@
         <ul>
             <transition-group name="fade">
                 <li class="userResponse" v-for="(r, i) in responses.slice().reverse()" v-bind:key="i">
-                    <p><strong>{{ r.user.name}}</strong></p>
+                    <p><strong>{{ question.anonymous?"Anonymous":r.user.name}}</strong></p>
                     <p>{{ r.response_info.text }}</p>
                 </li>
             </transition-group>
@@ -99,8 +99,8 @@ export default {
         csv_data: function () {
             const rows = this.responses.map(r => {
                 return {
-                    "user": r.user.name,
-                    "email": r.user.email,
+                    "user": this.question.anonymous?"Anonymous":r.user.name,
+                    "email": this.question.anonymous?"Anonymous":r.user.email,
                     "session": r.session_id,
                     "response": r.response_info.text
                 }

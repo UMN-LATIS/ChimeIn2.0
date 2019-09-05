@@ -64,8 +64,8 @@ export default {
         csv_data: function () {
             const rows = this.responses.map(r => {
                 return {
-                    "user": r.user.name,
-                    "email": r.user.email,
+                    "user": this.question.anonymous?"Anonymous":r.user.name,
+                    "email": this.question.anonymous?"Anonymous":r.user.email,
                     "session": r.session_id,
                     "response": r.response_info.choice
                 }
