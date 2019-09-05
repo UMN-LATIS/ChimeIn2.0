@@ -12,6 +12,7 @@ x-common-variables: &common-variables
   DB_USERNAME: homestead
   DB_PASSWORD: secret
   DB_PORT: 3306
+  APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
 
 services:
   app:
