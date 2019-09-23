@@ -3,51 +3,45 @@
         <navbar
         title="Back to Home"
         :user="user"
-        :link="'/'">
-    </navbar>
-    <error-dialog />
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
+        :link="'/'" />
+        <error-dialog />
+        <div class="container">
+            <div class="row mt-2">
+                <div class="col-12">
 
-                <p><h1>{{ chime.name }}<div class="float-right">
+                    <h1>{{ chime.name }}
+                        <div class="float-right btn-group"  role="group" aria-label="Chime Controls">
+                            <button @click="showSettings = !showSettings; exportPanel = false"  class="btn btn-outline-info align-items-center d-flex">Chime Settings <span class="material-icons">settings</span>
+                            </button>
+                            <button @click="exportPanel = !exportPanel; showSettings = false" class="btn btn-outline-info align-items-center d-flex">Export <span class="material-icons">save_alt</span>
+                            </button>
+                        </div>
+                    </h1> 
+                <transition name="dropdown">
+                <ChimeManagement  v-if="showSettings" :chime.sync="chime" />
+                <ChimeExport  v-if="exportPanel" :chime="chime" />
+                </transition>
+                </div>
+            </div>
 
-                    
-                    <button @click="showSettings = !showSettings" variant="outline-primary" class="btn btn-outline-primary align-items-center d-flex"><span class="material-icons">settings</span>Chime Settings</button>
-                </div></h1>
-
-                
-            </p>
-            <transition name="dropdown">
-               <ChimeManagement  v-if="showSettings" :chime="chime" v-on:requireLoginChange="requireLoginChange" v-on:studentsCanViewChange="studentsCanViewChange"></ChimeManagement>
-           </transition>
-       </div>
-       
-
-   </div>
-
-   <div class="center-align">
-    <div v-if="viewable_folders.length > 0">
-        <transition-group name="fade">
-            <folder-card
-            v-for="folder in viewable_folders"
-            :folder="folder"
-            :chime="chime"
-            :key="folder.id"
-            >
-        </folder-card>
-    </transition-group>
-
-</div>
-<div v-else>
-    <h4>You don't have any folders yet.  Why not create one now?</h4>
-</div>
-<new-folder
-:chime="chime"
-v-on:newfolder="create_folder"></new-folder>   
-</div>
-</div>
-</div>
+            <div class="center-align">
+                <div v-if="viewable_folders.length > 0">
+                    <transition-group name="fade">
+                        <folder-card
+                            v-for="folder in viewable_folders"
+                            :folder="folder"
+                            :chime="chime"
+                            :key="folder.id"
+                        />    
+                    </transition-group>
+                </div>
+                <div v-else>
+                    <h4>You don't have any folders yet.  Why not create one now?</h4>
+                </div>
+                <new-folder :chime="chime" v-on:newfolder="create_folder"></new-folder>   
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -64,30 +58,12 @@ v-on:newfolder="create_folder"></new-folder>
                 chime: {},
                 folders: [],
                 viewable_folders: [],
-                showSettings: false
+                showSettings: false,
+                exportPanel: false
             };
         },
         props: ['user', 'chimeId'],
         methods: {
-            requireLoginChange: function(newValue) {
-                this.chime.require_login = newValue;
-                this.saveChime();
-            },
-            studentsCanViewChange: function(newValue) {
-                this.chime.students_can_view = newValue;
-                this.saveChime();
-            },
-            saveChime: function() {
-
-                axios.patch('/api/chime/' + this.chime.id, this.chime)
-                .then(res => {
-                    this.reloadChime();
-                })
-                .catch(err => {
-                    console.log(err.response);
-                });
-
-            },
             create_folder: function(folder_name) {
                 if (this.folders.filter(e => e.name === folder_name).length < 1) {
                     const self = this;

@@ -338,4 +338,112 @@ class ChimeController extends Controller
         ]);
 
     }
+
+    public function exportChime(Chime $chime, Request $req) {
+        $user = $req->user();
+
+        $loadedChime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $chime->id)
+            ->first());
+        
+        if ($loadedChime == null || $loadedChime->pivot->permission_number < 300) {
+            return "Insufficient permissions";
+        }
+        $chime = $loadedChime;
+
+       
+        $folderArray = [];
+        $questionArray = [];
+        $globalUsers = [];
+        $outputArray = [];
+        
+        foreach($chime->folders as $folder) {
+            $folderArray[$folder->id] = ["name"=>$folder->name, "questions"=>$folder->questions->count()];
+            foreach($folder->questions as $question) {
+                $questionArray[$question->id] = strip_tags($question->text);
+            }
+        }
+
+
+
+        $exportType = $req->get("export_type");
+
+        $headers = array(
+                "Content-type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=file.csv",
+                "Pragma" => "no-cache",
+                "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+                "Expires" => "0"
+            );
+
+        $file = fopen('php://output', 'w');
+        switch ($exportType) {
+            case 'folder_summary':
+                $columns = [];
+                foreach($folderArray as $folderId => $folderInfo) {
+                    $columns[] = $folderInfo["name"];
+                }
+                
+                fputcsv($file, $columns);
+
+                foreach($chime->users as $participant) {
+                    $row = [];
+                    $row[] =  $participant->name;
+                    foreach($folderArray as $folderId => $folderInfo) {
+                        $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->where('folders.id', $folderId)->groupBy("questions.id")->select('questions.id')->get();
+                        $row[] = $responses->count();
+                    }
+                    fputcsv($file, $row);
+                    
+                
+                }
+                fclose($file);
+    
+                break;
+            case 'question_summary':
+                $columns = [];
+                foreach($questionArray as $questionId => $questionText) {
+                    $columns[] = $questionText;
+                }
+                fputcsv($file, $columns);
+                foreach($chime->users as $participant) {
+                    $row = [];
+                    $row[] =  $participant->name;
+                    foreach($questionArray as $questionId => $questionText) {
+                        $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->where('questions.id', $questionId)->groupBy("questions.id")->select('questions.id')->get();
+                        $row[] = $responses->count();
+                    }
+                    fputcsv($file, $row);
+                }
+                
+                break;
+            case 'question_full':
+                $columns = [];
+                foreach($questionArray as $questionId => $questionText) {
+                    $columns[] = $questionText;
+                }
+                fputcsv($file, $columns);
+
+                foreach($chime->users as $participant) {
+                    $row = [];
+                    $row[] =  $participant->name;
+                    foreach($questionArray as $questionId => $questionText) {
+                        $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->where('questions.id', $questionId)->select('responses.*')->get();
+                        $responseModels = \App\Response::hydrate($responses->toArray());    
+                        $responses = $responseModels->pluck('response_info');
+                        $row[] = json_encode($responses);
+                    }
+                    fputcsv($file, $row);
+                }
+                break;
+            default:
+                # code...
+                break;
+        }
+
+
+    }
+
 }

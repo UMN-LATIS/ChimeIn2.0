@@ -17,7 +17,8 @@
                 class="form-check-input"
                 type="checkbox"
                 id="requireLogin"
-                v-model="requireLogin"
+                v-model="localChime.require_login"
+                @change="saveChime(); $emit('update:chime', localChime);"
               >
               <label class="form-check-label" for="requireLogin">Require Login to Join or Access</label>
             </div>
@@ -28,9 +29,22 @@
                 class="form-check-input"
                 type="checkbox"
                 id="studentView"
-                v-model="studentsCanView"
+                v-model="localChime.students_can_view"
+                @change="saveChime(); $emit('update:chime', localChime);"
               >
               <label class="form-check-label" for="studentView">Participants can view results</label>
+            </div>
+          </li>
+           <li>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="joinInstructions"
+                v-model="localChime.join_instructions"
+                @change="saveChime(); $emit('update:chime', localChime);"
+              >
+              <label class="form-check-label" for="joinInstructions">Display "join" instructions when presenting</label>
             </div>
           </li>
         </ul>
@@ -88,22 +102,9 @@ export default {
   props: ["chime"],
   data: function() {
     return {
-      requireLogin: 0,
-      studentsCanView: 0,
-      users: []
+      users: [],
+      localChime: { ...this.chime }
     };
-  },
-  watch: {
-    requireLogin: function(newValue, oldValue) {
-      if (newValue !== this.chime.require_login) {
-        this.$emit("requireLoginChange", newValue);
-      }
-    },
-    studentsCanView: function(newValue, oldValue) {
-      if (newValue !== this.chime.students_can_view) {
-        this.$emit("studentsCanViewChange", newValue);
-      }
-    }
   },
   computed: {
     join_url: function() {
@@ -135,6 +136,16 @@ export default {
     }
   },
   methods: {
+    saveChime: function() {
+        axios.patch('/api/chime/' + this.chime.id, this.localChime)
+        .then(res => {
+            this.reloadChime();
+        })
+        .catch(err => {
+            console.log(err.response);
+        });
+
+    },
     deleteUser: function(key) {
       if (confirm("Are you sure you want to remove this user?")) {
         this.$delete(this.users, key);
@@ -167,8 +178,6 @@ export default {
     }
   },
   mounted() {
-    this.requireLogin = this.chime.require_login;
-    this.studentsCanView = this.chime.students_can_view;
     this.loadUsers();
   }
 };

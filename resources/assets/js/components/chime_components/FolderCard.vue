@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-3 text-right">
 
-                    <router-link :to="{ name: 'present', params: {chimeId: chime.id, folderId: folder.id} }">
+                    <router-link :to="{ name: 'present', params: {chimeId: chime.id, folderId: folder.id} }" class="text-dark">
                         <i class="material-icons">play_arrow</i>
                     </router-link>
                 </div>

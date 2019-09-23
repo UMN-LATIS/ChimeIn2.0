@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Chime extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name', 'access_code', 'require_login', 'students_can_view'];
+    protected $fillable = ['name', 'access_code', 'require_login', 'students_can_view', 'join_instructions'];
     protected $dates = ['deleted_at'];
 
     public function folders() {
