@@ -358,8 +358,15 @@ class ChimeController extends Controller
         $questionArray = [];
         $globalUsers = [];
         $outputArray = [];
-        
+        $selectedFolders = null;
+        if($req->get('selectedFolder')) {
+            $selectedFolders = $req->get('selectedFolder');
+        }
+
         foreach($chime->folders as $folder) {
+            if($selectedFolders && !in_array($folder->id, $selectedFolders)) {
+                continue;
+            }
             $folderArray[$folder->id] = ["name"=>$folder->name, "questions"=>$folder->questions->count()];
             foreach($folder->questions as $question) {
                 $questionArray[$question->id] = strip_tags($question->text);
@@ -378,19 +385,30 @@ class ChimeController extends Controller
                 "Expires" => "0"
             );
 
-        $file = fopen('php://output', 'w');
+
+        $callback = function() use ($folderArray, $exportType, $questionArray, $chime) {
+            $file = fopen('php://output', 'w');
+
+        $headers = ['Student', 'ID', 'SIS User ID', 'SIS Login ID', 'Section'];
+        $secondHeaders = ['Points Possible', '','','',''];
         switch ($exportType) {
             case 'folder_summary':
-                $columns = [];
+
                 foreach($folderArray as $folderId => $folderInfo) {
-                    $columns[] = $folderInfo["name"];
+                    $headers[] = $folderInfo["name"];
+                    $secondHeaders[] = $folderInfo['questions'];
                 }
                 
-                fputcsv($file, $columns);
+                fputcsv($file, $headers);
+                fputcsv($file, $secondHeaders);
 
                 foreach($chime->users as $participant) {
                     $row = [];
                     $row[] =  $participant->name;
+                    $row[] = '';
+                    $row[] = '';
+                    $row[] = $participant->email;
+                    $row[] = '';
                     foreach($folderArray as $folderId => $folderInfo) {
                         $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->where('folders.id', $folderId)->groupBy("questions.id")->select('questions.id')->get();
                         $row[] = $responses->count();
@@ -403,14 +421,20 @@ class ChimeController extends Controller
     
                 break;
             case 'question_summary':
-                $columns = [];
+
                 foreach($questionArray as $questionId => $questionText) {
-                    $columns[] = $questionText;
+                    $headers[] = $questionText;
+                    $secondHeaders[] = 1;
                 }
-                fputcsv($file, $columns);
+                fputcsv($file, $headers);
+                fputcsv($file, $secondHeaders);
                 foreach($chime->users as $participant) {
                     $row = [];
                     $row[] =  $participant->name;
+                    $row[] = '';
+                    $row[] = '';
+                    $row[] = $participant->email;
+                    $row[] = '';
                     foreach($questionArray as $questionId => $questionText) {
                         $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->where('questions.id', $questionId)->groupBy("questions.id")->select('questions.id')->get();
                         $row[] = $responses->count();
@@ -420,15 +444,21 @@ class ChimeController extends Controller
                 
                 break;
             case 'question_full':
-                $columns = [];
+
                 foreach($questionArray as $questionId => $questionText) {
-                    $columns[] = $questionText;
+                    $headers[] = $questionText;
+                    $secondHeaders[] = 1;
                 }
-                fputcsv($file, $columns);
+                fputcsv($file, $headers);
+                fputcsv($file, $secondHeaders);
 
                 foreach($chime->users as $participant) {
                     $row = [];
                     $row[] =  $participant->name;
+                    $row[] = '';
+                    $row[] = '';
+                    $row[] = $participant->email;
+                    $row[] = '';
                     foreach($questionArray as $questionId => $questionText) {
                         $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->where('questions.id', $questionId)->select('responses.*')->get();
                         $responseModels = \App\Response::hydrate($responses->toArray());    
@@ -441,7 +471,9 @@ class ChimeController extends Controller
             default:
                 # code...
                 break;
-        }
+            }
+        };
+        return Response()->streamDownload($callback, 200, $headers);
 
 
     }
