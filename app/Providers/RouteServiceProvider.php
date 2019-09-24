@@ -26,6 +26,9 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        Route::model('chime', '\App\Chime');
+        Route::model('folder', '\App\Folder');
     }
 
     /**
