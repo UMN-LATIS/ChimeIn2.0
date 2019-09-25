@@ -2,10 +2,9 @@
     <div>
         <form method="post" :action="'/api/chime/'+ chime.id + '/export'">
             <input type="hidden" name="_token" :value="csrf">
-            <fieldset class="form-group">
-                
+            <fieldset class="form-group border p-2">
+                <legend class="col-form-label w-auto">Export Type</legend>
                 <div class="row">
-                    <legend class="col-form-label col-sm-2 pt-0">Export Type:</legend>
                     <div class="col-sm-10">
                         <div class="form-check">
                             <label class="form-check-label">
@@ -31,10 +30,9 @@
                     </div>
                 </div>
             </fieldset>
-            <fieldset class="form-group">
-                
+            <fieldset class="form-group border p-2">
+                <legend class="col-form-label w-auto">Export Items</legend>
                 <div class="row">
-                    <legend class="col-form-label col-sm-2 pt-0">Export:</legend>
                     <div class="col-sm-10">
                         <div class="form-check">
                             <label class="form-check-label">
@@ -53,10 +51,8 @@
                       
                     </div>
                 </div>
-            </fieldset>
-             <fieldset class="form-group" v-if="exportGroup == 'selected'">
-                <div class="row">
-                    <div class="col-sm-10 offset-sm-2">
+                 <div class="row" v-if="exportGroup == 'selected'">
+                    <div class="col-sm-10 offset-sm-1">
 
                         <div class="form-check" v-for="folder in chime.folders" :key="folder.id">
                             <label class="form-check-label">
