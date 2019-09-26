@@ -16,4 +16,3 @@ Every Chime has a custom URL associated with it, as well as an access code.  The
 
 You can optionally require that participants login in order to join your Chime.  This will allow you to see names associated with the responses, and will allow participants to access their previous responses.
 
-

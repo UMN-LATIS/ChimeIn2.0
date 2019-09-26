@@ -6,19 +6,7 @@ ChimeIn 2 also uses some new language.  ChimeIn has been used in many non-course
 
 ## Using ChimeIn 2 with a course ##
 
-We're currently testing our [Canvas](/canvas) integration, which dramatically simplifies using ChimeIn with a course.  Although that's not yet available for everyone, you can still use ChimeIn with a course.  
-
-Begin by creating your Chime, adding at least one folder, and some [questions](/asking-questions). From the Chime page, click the "Chime Settings" button. 
-
-![Chime Settings](./chimesettings.png)
-
-### Access Code ###
-
-The "access code" provides a six digit code which can be used to join your Chime.  Participants just need to visit [chimein2.cla.umn.edu](http://chimein2.cla.umn.edu) and enter the access code in the box on the right side of the screen.  If you've checked the "Require Login to Join or Access" box, users will need to log in to their University account to complete the join process.
-
-### Unique Link ###
-
-You can also use the unique link in the Chime settings ("Participants can join by visiting") to automatically connect participants with your Chime.  This link can be placed on a Canvas website, distributed via email, or linked to via a "[Z](http://z.umn.edu)" link.  When a participant clicks the link, they'll be taken straight to your Chime and can begin participating. 
+We're currently testing our [Canvas](/canvas) integration, which dramatically simplifies using ChimeIn with a course.  Although that's not yet available for everyone, you can still use ChimeIn with a course.  See the [Managing a Chime](/managing-a-chime) section for more information on the basics of setting up a Chime and sharing links. 
 
 ## Other Changes with ChimeIn 2 ##
 

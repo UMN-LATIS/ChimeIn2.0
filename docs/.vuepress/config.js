@@ -25,7 +25,8 @@ module.exports = {
             '/canvas',
             '/moving-to-chimein-2',
             '/taking-attendance',
-            '/deploying'
+            '/deploying',
+            '/managing-a-chime'
     ],
 
     }
