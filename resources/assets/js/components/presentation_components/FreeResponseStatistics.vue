@@ -3,16 +3,24 @@
     <div v-if="responses.length > 0">
         <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
 
-        <word-cloud v-if="!question.question_info.question_responses.hideWordcloud" :data="word_groups" :nameKey="'name'" :valueKey="'value'" :rotate="rotation" :margin="margin" :wordPadding="1" style="width: 100%; height:600px" :fontSize="fontSize">
+        <word-cloud v-if="!question.question_info.question_responses.hideWordcloud" :data="word_groups" :nameKey="'name'" :valueKey="'value'" :rotate="rotation" :margin="margin" :wordPadding="1" style="width: 100%; height:600px" :fontSize="fontSize" :wordClick="wordClicked">
         </word-cloud>
+        <div v-if="filterWords.length > 0"> 
+            <h2 class="smallHeader">Filtered Words</h2>
+            <ul class="filterList">
+                <li v-for="(word, index) in filterWords" :key="index" @click="filterWords.splice(index, 1)" class="align-items-center d-flex filterListItem">{{ word }} <i class="material-icons md-18 md-dark">close</i></li>
+            </ul>
+        </div>
+        <h2 class="smallHeader">Responses</h2>
         <ul>
             <transition-group name="fade">
-                <li class="userResponse" v-for="(r, i) in responses.slice().reverse()" v-bind:key="i">
+                <li class="userResponse" v-for="(r, i) in responses.reverse()" v-bind:key="i">
                     <p><strong>{{ question.anonymous?"Anonymous":r.user.name}}</strong></p>
                     <p>{{ r.response_info.text }}</p>
                 </li>
             </transition-group>
         </ul>
+        
     </div>
 
     <div v-else>No Responses Yet!</div>
@@ -51,12 +59,16 @@ export default {
                 bottom: 0,
                 left: 0,
                 right: 0
-            }
+            },
+            filterWords: []
         }
     },
     methods: {
         similarity: function (x, y) {
             return (new difflib.SequenceMatcher(null, x, y)).ratio();
+        },
+        wordClicked: function(word, event) {
+            this.filterWords.push(word);
         }
     },
     computed: {
@@ -66,7 +78,8 @@ export default {
                 .responses
                 .map(r => r.response_info.text)
                 .join(' ')
-                .match(/\w+/g));
+                .match(/\w+/g))
+                .filter(w=>!this.filterWords.includes(w));
 
             var wordsWithoutStops = sw.removeStopwords(words)
             // var wordsStemmed = wordsWithoutStops.map(word => stemmer(word).toLowerCase());
@@ -135,5 +148,33 @@ export default {
 .userResponse p {
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.smallHeader {
+    font-size: 1.2em;
+}
+
+.filterList {
+    list-style: none;
+    margin-left: 0;
+    padding-left:10px;
+}
+.filterListItem {
+    display: inline-flex !important;
+    border-radius: 10px;
+    padding: 3px 8px;
+    margin-left: 1px;
+    margin-right: 1px;
+    cursor: pointer;
+    background-color: lightblue;
+}
+
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+</style>
+<style>
+.wordCloud * .text {
+    cursor:pointer;
 }
 </style>

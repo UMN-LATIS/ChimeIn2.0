@@ -84,7 +84,7 @@
             return this.questions[this.current_question];
         },
         host: function() {
-            if(this.chime.join_instructions) {
+            if(this.chime && this.chime.join_instructions) {
                 return window.location.host;
             }
             return null;
