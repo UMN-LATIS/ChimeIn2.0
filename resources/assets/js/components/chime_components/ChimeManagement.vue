@@ -75,7 +75,7 @@
                     <option value="300">Presenter</option>
                     </select>
                 </template>
-                <span v-on:click="u.editPermission = !u.editPermission" v-else>
+                <span v-on:click="u.editPermission = !u.editPermission" v-else class="clickToChange">
                   <template v-if="u.permission_number == 300">Presenter</template>
                   <template v-if="u.permission_number == 100">Participant</template>
                 </span>
@@ -94,6 +94,9 @@
 <style scoped>
 ul li {
   list-style: none;
+}
+.clickToChange {
+  cursor: pointer;
 }
 </style>
 
