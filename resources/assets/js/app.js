@@ -65,6 +65,8 @@ Vue.component('folder-card',
     require('./components/chime_components/FolderCard.vue'));
 Vue.component('ChimeManagement',
     require('./components/chime_components/ChimeManagement.vue'));
+Vue.component('ChimeManagementOptions',
+    require('./components/chime_components/ChimeManagementOptions.vue'));
 Vue.component('ChimeExport',
     require('./components/chime_components/ChimeExport.vue'));    
 Vue.component('question',

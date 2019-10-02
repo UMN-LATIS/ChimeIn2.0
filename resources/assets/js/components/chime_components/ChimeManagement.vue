@@ -11,43 +11,8 @@
             <strong>Participants can join by visiting:</strong>
             <a v-bind:href="join_url">{{ join_url }}</a>
           </li>
-          <li>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="requireLogin"
-                v-model="localChime.require_login"
-                @change="saveChime(); $emit('update:chime', localChime);"
-              >
-              <label class="form-check-label" for="requireLogin">Require Login to Join or Access</label>
-            </div>
-          </li>
-          <li>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="studentView"
-                v-model="localChime.students_can_view"
-                @change="saveChime(); $emit('update:chime', localChime);"
-              >
-              <label class="form-check-label" for="studentView">Participants can view results</label>
-            </div>
-          </li>
-           <li>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="joinInstructions"
-                v-model="localChime.join_instructions"
-                @change="saveChime(); $emit('update:chime', localChime);"
-              >
-              <label class="form-check-label" for="joinInstructions">Display "join" instructions when presenting</label>
-            </div>
-          </li>
         </ul>
+        <ChimeManagementOptions :require_login.sync="require_login" :students_can_view.sync="students_can_view" :join_instructions.sync="join_instructions"></ChimeManagementOptions>
       </div>
     </div>
     <hr>
@@ -106,8 +71,21 @@ export default {
   data: function() {
     return {
       users: [],
-      localChime: { ...this.chime }
+      join_instructions: this.chime.join_instructions,
+      students_can_view: this.chime.students_can_view,
+      require_login: this.chime.require_login
     };
+  },
+  watch: {
+    join_instructions: function(val) {
+      this.saveChime();
+    },
+    students_can_view: function(val) {
+      this.saveChime();
+    },
+    require_login: function(val) {
+      this.saveChime();
+    }
   },
   computed: {
     join_url: function() {
@@ -140,9 +118,14 @@ export default {
   },
   methods: {
     saveChime: function() {
-        axios.patch('/api/chime/' + this.chime.id, this.localChime)
+        var localChime = { ...this.chime };
+        localChime.join_instructions = this.join_instructions;
+        localChime.students_can_view = this.students_can_view;
+        localChime.require_login = this.require_login;
+
+        axios.patch('/api/chime/' + this.chime.id, localChime)
         .then(res => {
-            this.reloadChime();
+            this.$emit('update:chime', localChime);
         })
         .catch(err => {
             console.log(err.response);

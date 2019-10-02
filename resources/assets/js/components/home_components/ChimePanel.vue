@@ -17,25 +17,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-8 form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="requireLogin"
-                                            v-model="requireLogin">
-                                        <label class="form-check-label" for="requireLogin">Require Login to Join or
-                                            Access</label>
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-8 form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="studentView"
-                                            v-model="studentsCanView">
-                                        <label class="form-check-label" for="studentView">Participants can view
-                                            results</label>
-                                    </div>
-                                    </div>
-                                </div>
+                                 <ChimeManagementOptions :require_login.sync="requireLogin" :students_can_view.sync="studentsCanView" :join_instructions.sync="joinInstructions"></ChimeManagementOptions>
+                            </div>
                             <div class="row">
                                 <div class="col">
 
@@ -77,6 +60,7 @@ export default {
         return {
             requireLogin: false,
             studentsCanView: false,
+            joinInstructions: false,
             chimes: [],
             showAdd: false,
             chime_name: "",
@@ -88,7 +72,8 @@ export default {
             axios.post('/api/chime', {
                     'name': this.chime_name,
                     'require_login': this.requireLogin,
-                    "students_can_view": this.studentsCanView
+                    "students_can_view": this.studentsCanView,
+                    "join_instructions": this.joinInstructions
                 })
                 .then(res => {
                     console.log('debug', 'Chime Created:', res);
