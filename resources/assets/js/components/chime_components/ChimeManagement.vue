@@ -1,5 +1,16 @@
 <template>
   <div>
+    <div class="form-group row ml-4">
+         <label class="sr-only" for="chimeName"><strong>Chime Name:</strong></label>
+        <div class="input-group col-sm-5">
+          <input type="text" class="form-control form-control-sm" id="chimeName" v-model="chime_name">
+            <div class="input-group-append">
+                    <button class="btn btn-outline-primary align-items-center d-flex btn-sm" @click="saveChime"><span class="material-icons pointer">save</span> Update Chime Name</button>
+                   
+                    </div>
+                </div>
+    </div>
+
     <div class="row">
       <div class="col-sm-12">
         <ul>
@@ -71,6 +82,7 @@ export default {
   data: function() {
     return {
       users: [],
+      chime_name: this.chime.name,
       join_instructions: this.chime.join_instructions,
       students_can_view: this.chime.students_can_view,
       require_login: this.chime.require_login
@@ -122,7 +134,7 @@ export default {
         localChime.join_instructions = this.join_instructions;
         localChime.students_can_view = this.students_can_view;
         localChime.require_login = this.require_login;
-
+        localChime.name = this.chime_name;
         axios.patch('/api/chime/' + this.chime.id, localChime)
         .then(res => {
             this.$emit('update:chime', localChime);
