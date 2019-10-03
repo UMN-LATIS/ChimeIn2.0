@@ -3,7 +3,7 @@
     <div v-if="responses.length > 0">
         <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
 
-        <word-cloud v-if="!question.question_info.question_responses.hideWordcloud" :data="word_groups" :nameKey="'name'" :valueKey="'value'" :rotate="rotation" :margin="margin" :wordPadding="1" style="width: 100%; height:600px" :fontSize="fontSize" :wordClick="wordClicked">
+        <word-cloud v-if="!question.question_info.question_responses.hideWordcloud && word_groups" :data="word_groups" :nameKey="'name'" :valueKey="'value'" :rotate="rotation" :margin="margin" :wordPadding="1" style="width: 100%; height:600px" :fontSize="fontSize" :wordClick="wordClicked">
         </word-cloud>
         <div v-if="filterWords.length > 0"> 
             <h2 class="smallHeader">Filtered Words</h2>
