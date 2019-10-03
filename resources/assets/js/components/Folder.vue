@@ -18,7 +18,6 @@
                   <div class="input-group-append">
                     <button class="btn btn-outline-primary align-items-center d-flex" @click="edit_folder"><span class="material-icons pointer">save</span> Save</button>
                     <button class="btn btn-sm btn-outline-primary align-items-center d-flex" @click="delete_folder">Delete <i class="material-icons pointer">delete</i></button>
-                    <download-csv class="btn btn-sm btn-outline-primary align-items-center d-flex" :data="csv_data">Export <i class="material-icons pointer">save_alt</i></download-csv>
                     </div>
                 </div>
             </div>
@@ -113,18 +112,7 @@ export default {
                 return this.allSessions.filter(e => e.question.folder_id != this.folder.id);
             }
             return [];
-        },
-        csv_data: function () {
-            // const rows = this.questions.map(r => {
-            //     return {
-            //         // "user": this.question.anonymous?"Anonymous":r.user.name,
-            //         // "email": this.question.anonymous?"Anonymous":r.user.email,
-            //         // "session": r.session_id,
-            //         // "response": r.response_info.choice
-            //     }
-            // });
-            return [];
-        },
+        }
     },
     methods: {
         swap_question(event, originalEvent) {
