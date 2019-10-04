@@ -7,7 +7,7 @@
                     @click="showAdd = !showAdd" v-if="!user.guest_user"><span class="material-icons">add</span>Add a
                     Chime</button>
             <transition name="fade">
-                <div class="card" v-if="!user.guest_user && showAdd">
+                <div class="card mt-1" v-if="!user.guest_user && showAdd">
                     <div class="card-body">
                         <div class="form-group row">
                             <label for="chime_name_input" class="col-sm-2 col-form-label">Chime Name</label>

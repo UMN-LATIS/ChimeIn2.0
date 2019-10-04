@@ -2,8 +2,9 @@ import Echo from "laravel-echo";
 
 
 window._ = {};
-window._.sortBy = require('lodash/sortBy')
+window._.sortBy = require('lodash/sortBy');
 window._.orderBy = require('lodash/orderBy')
+window._.throttle = require('lodash/throttle')
 
 // window._ = require('lodash');
 

@@ -1,10 +1,20 @@
 <template>
 <div>
+
     <div v-if="responses.length > 0">
         <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
-
+        <div class="d-flex justify-content-center" v-if="!word_groups">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
         <word-cloud v-if="!question.question_info.question_responses.hideWordcloud && word_groups" :data="word_groups" :nameKey="'name'" :valueKey="'value'" :rotate="rotation" :margin="margin" :wordPadding="1" style="width: 100%; height:600px" :fontSize="fontSize" :wordClick="wordClicked">
         </word-cloud>
+        <div class="form-check form-check-inline" v-if="!question.question_info.question_responses.hideWordcloud">
+            <label class="form-check-label align-items-center d-flex">
+                <input class="form-check-input" type="checkbox" v-model="textProcessing"> Natural Language Processing  <span class="ml-1 material-icons md-18" v-tooltip:top="'Attempt to detect names, places and organizations. This may slow down word cloud processing.'">help</span>
+            </label>
+        </div>
         <div v-if="filterWords.length > 0"> 
             <h2 class="smallHeader">Filtered Words</h2>
             <ul class="filterList">
@@ -14,7 +24,7 @@
         <h2 class="smallHeader">Responses</h2>
         <ul>
             <transition-group name="fade">
-                <li class="userResponse" v-for="(r, i) in responses.reverse()" v-bind:key="i">
+                <li class="userResponse" v-for="(r, i) in responses.slice().reverse()" v-bind:key="i">
                     <p><strong>{{ question.anonymous?"Anonymous":r.user.name}}</strong></p>
                     <p>{{ r.response_info.text }}</p>
                 </li>
@@ -33,15 +43,25 @@ import JsonCSV from 'vue-json-csv'
 
 import wordcloud from 'vue-wordcloud/src/components/WordCloud'
 
+const nlp = require('compromise');
+
 const stemmer = require('stemmer');
 // const wordcloud = require('vue-wordcloud').default;
 const difflib = require('difflib');
 const cluster = require('set-clustering');
 
+Vue.directive('tooltip', function(el, binding){
+    $(el).tooltip({
+             title: binding.value,
+             placement: binding.arg,
+             trigger: 'hover'             
+         })
+})
+
 export default {
     components: {
         "downloadCsv": JsonCSV,
-        'word-cloud': wordcloud
+        'word-cloud': wordcloud,
     },
     props: ['responses', 'question'],
     data: function () {
@@ -60,7 +80,11 @@ export default {
                 left: 0,
                 right: 0
             },
-            filterWords: []
+            filterWords: [],
+            word_groups: null,
+            debounced: null,
+            textProcessing: false,
+            buildtime: null
         }
     },
     methods: {
@@ -69,46 +93,85 @@ export default {
         },
         wordClicked: function(word, event) {
             this.filterWords.push(word);
-        }
-    },
-    computed: {
-        word_groups: function () {
+        },
+        buildWords: _.throttle(function()  {
+            var start = performance.now()
             const words = (
                 this
                 .responses
                 .map(r => r.response_info.text)
-                .join(' ')
-                .match(/\w+/g))
-                .filter(w=>!this.filterWords.includes(w));
+                .join(' '));
+                // .match(/\w+/g))
+                // .filter(w=>!this.filterWords.includes(w));
+            
+            if(this.textProcessing) {
+                
+                var doc = nlp(words);
+                
+                var topics = doc.topics().out('array');
+                
+                // var quotes = doc.quotations().out('array');
+                var filteredWords = words;
+                
+                for(var i=0; i < topics.length; i++) {
+                    filteredWords = filteredWords.replace(new RegExp('\\b' + topics[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b',"gi"),'');
+                }
+                
+            }
+            else {
+                var filteredWords = words;
+                var topics = [];
+            }
+             
+            
+            var wordsWithoutStops = sw.removeStopwords(filteredWords.match(/[^\s"]+\w|"([^"]*)"/g));
 
-            var wordsWithoutStops = sw.removeStopwords(words)
+            var finalizedWords = wordsWithoutStops.concat(topics).filter(w=>!this.filterWords.includes(w));
             // var wordsStemmed = wordsWithoutStops.map(word => stemmer(word).toLowerCase());
 
-            const groups = wordsWithoutStops.reduce((acc, w) => {
+            
+            const groups = finalizedWords.reduce((acc, w) => {
                 if (w.length < 2 || !isNaN(w)) {
                     return acc;
                 }
-                const i = acc.findIndex(e => e.stem === stemmer(w.toLowerCase()));
+                var stem = stemmer(w.toLowerCase());
+                const i = acc.findIndex(e => e.stem === stem);
 
                 if (i > -1) {
                     acc[i].value += 1;
                 } else {
                     acc.push({
-                        'name': w,
+                        'name': w.replace(/\"/g, ""),
                         'value': 1,
-                        'stem': stemmer(w)
+                        'stem': stem
                     });
                 }
 
                 return acc;
             }, []);
-
+            
             // groups =  cluster(
             //     this.responses.map(r => r.response_info.text),
             //     this.similarity).groups(0.9);
+            var end = performance.now()
+            this.buildtime = end - start
+            var sortedArray = groups.sort((a,b) => { return b.value - a.value});
 
-            return groups
+            this.word_groups = sortedArray.slice(0, 200);
+        }, 1000)
+    },
+    watch: {
+        responses: function() {
+            setTimeout(() => this.buildWords(), 100);
         },
+        filterWords: function() {
+            setTimeout(() => this.buildWords(), 100);
+        },
+        textProcessing: function() {
+            setTimeout(() => this.buildWords(), 100);
+        }
+    },
+    computed: {
         csv_data: function () {
             const rows = this.responses.map(r => {
                 return {
@@ -120,8 +183,13 @@ export default {
             });
             return rows;
         }
+    },
+    mounted: function() {
+        // run this in a time to not block initial render
+        setTimeout(() => this.buildWords(), 100);
     }
 };
+
 </script>
 
 <style scoped>

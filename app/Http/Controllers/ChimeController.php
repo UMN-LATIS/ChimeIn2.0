@@ -379,7 +379,6 @@ class ChimeController extends Controller
 
         $headers = array(
                 "Content-type" => "text/csv",
-                "Content-Disposition" => "attachment; filename=file.csv",
                 "Pragma" => "no-cache",
                 "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
                 "Expires" => "0"
@@ -473,7 +472,7 @@ class ChimeController extends Controller
                 break;
             }
         };
-        return Response()->streamDownload($callback, 200, $headers);
+        return Response()->streamDownload($callback, "chimeExport.csv", $headers);
 
 
     }
