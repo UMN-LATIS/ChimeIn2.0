@@ -100,7 +100,7 @@ export default {
                 this
                 .responses
                 .map(r => r.response_info.text)
-                .join(' '));
+                .join('\n '));
                 // .match(/\w+/g))
                 // .filter(w=>!this.filterWords.includes(w));
             
