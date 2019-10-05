@@ -124,7 +124,7 @@ export default {
             }
              
             
-            var wordsWithoutStops = sw.removeStopwords(filteredWords.match(/[^\s"]+\w|"([^"]*)"/g));
+            var wordsWithoutStops = sw.removeStopwords(filteredWords.match(/"(.*?)"|\w+/g));
 
             var finalizedWords = wordsWithoutStops.concat(topics).filter(w=>!this.filterWords.includes(w));
             // var wordsStemmed = wordsWithoutStops.map(word => stemmer(word).toLowerCase());
