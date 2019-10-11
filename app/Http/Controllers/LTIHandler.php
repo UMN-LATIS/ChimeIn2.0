@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Cookie;
 class LTIHandler extends Controller
 {
 
+    private $allowedDomains = ["umnscratch.instructure.com", "canvas.umn.edu", "umn.instructure.com"];
+
+
     public function index() {
 
     }
@@ -22,9 +25,16 @@ class LTIHandler extends Controller
 
 
     public function launch() {
-
+        
         $tool = new ChimeToolProvider();
         $tool->handleRequest();
+        $launchDomain = $tool->resourceLink->getSetting("custom_canvas_api_domain");
+        if(!in_array($launchDomain, $this->allowedDomains)) {
+            abort(401, 'LTI Launch from an invalid domain');
+
+        }
+
+
         if(!$tool->user->sourceId) {
             return view("errors.emplid");    
         }
@@ -46,6 +56,7 @@ class LTIHandler extends Controller
         }
         cookie::queue("ltiLaunch", true, 10);
         if($tool->user->isStaff()) {
+
             // it's an instructor, let's check if this assingment exists
             if($folder = \App\Folder::where("resource_link_pk", $tool->resourceLink->getRecordId())->first()) {             
                 $chime = $folder->chime;
