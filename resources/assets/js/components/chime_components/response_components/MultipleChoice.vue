@@ -30,7 +30,7 @@
                 @keyup.enter="add_choice"
                 class="validate form-control">
                 <div class="input-group-append ">
-                    <button @click="add_choice" class="btn btn-outline-primary"><span class="material-icons ">add</span></button>
+                    <button @click="add_choice" class="btn btn-outline-primary  align-items-center d-flex"><span class="material-icons ">add</span></button>
                 </div>
             </div>
         </div>
