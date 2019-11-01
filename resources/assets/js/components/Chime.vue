@@ -11,7 +11,7 @@
 
                     <h1>{{ chime.name }}
                         <div class="float-right btn-group"  role="group" aria-label="Chime Controls">
-                            <button @click="showSettings = !showSettings; exportPanel = false"  class="btn btn-outline-info align-items-center d-flex">Chime Settings <span class="material-icons">settings</span>
+                            <button @click="showSettings = !showSettings; exportPanel = false"  class="btn btn-outline-info align-items-center d-flex" dusk="manage-button">Chime Settings <span class="material-icons">settings</span>
                             </button>
                             <button @click="exportPanel = !exportPanel; showSettings = false" class="btn btn-outline-info align-items-center d-flex">Export <span class="material-icons">save_alt</span>
                             </button>

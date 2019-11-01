@@ -26,7 +26,7 @@ class EmplidSupportGenerics extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table>integer('emplid')->nullable()->change();
+            $table->integer('emplid')->nullable()->change();
         });
     }
 }
