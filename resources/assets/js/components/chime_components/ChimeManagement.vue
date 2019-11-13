@@ -5,7 +5,7 @@
         <div class="input-group col-sm-5">
           <input type="text" class="form-control form-control-sm" id="chimeName" v-model="chime_name">
             <div class="input-group-append">
-                    <button class="btn btn-outline-primary align-items-center d-flex btn-sm" @click="saveChime"><span class="material-icons pointer">save</span> Update Chime Name</button>
+                    <button class="btn btn-outline-primary align-items-center d-flex btn-sm" @click="saveChime"><span class="material-icons pointer md-18">save</span> Update Chime Name</button>
                    
                     </div>
                 </div>
@@ -23,7 +23,7 @@
             <a v-bind:href="join_url">{{ join_url }}</a>
           </li>
         </ul>
-        <ChimeManagementOptions :require_login.sync="require_login" :students_can_view.sync="students_can_view" :join_instructions.sync="join_instructions"></ChimeManagementOptions>
+      <ChimeManagementOptions :require_login.sync="require_login" :students_can_view.sync="students_can_view" :join_instructions.sync="join_instructions"></ChimeManagementOptions>
       </div>
     </div>
     <hr>
