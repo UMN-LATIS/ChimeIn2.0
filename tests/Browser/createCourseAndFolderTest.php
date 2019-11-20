@@ -45,7 +45,7 @@ class TestCreateCourseAndQuestions extends DuskTestCase
             $browser->pause(500)->assertSee("Chime Name");
             $browser->type("#chime_name_input", "Test Chime");
             $browser->click('@create-chime-button');
-            $browser->pause(100)->assertSee('Test Chime');
+            $browser->pause(1000)->assertSee('Test Chime');
             $browser->assertSee("any folders");
         });
     }
@@ -58,7 +58,7 @@ class TestCreateCourseAndQuestions extends DuskTestCase
             $browser->type("#createFolder", "Test Folder");
             $browser->click('@create-folder');
             $browser->pause(200)->click('.h4');
-            $browser->pause(100)->assertSee('Test Folder');
+            $browser->pause(1000)->assertSee('Test Folder');
         });
     }
 
@@ -69,9 +69,8 @@ class TestCreateCourseAndQuestions extends DuskTestCase
 
         $this->browse(function (Browser $browser) {
             $browser->loginAs($this->admin)->visit('/chime/' . $this->chime->id);
-            $browser->click('@manage-button');
-            $browser->pause(200);
-            $browser->assertSee("Access Code");
+            $browser->pause(500)->click('@manage-button');
+            $browser->pause(2000)->assertSee("Access Code");
             $browser->check('requireLogin');
             $browser->check('studentView');
             $browser->check('joinInstructions');
