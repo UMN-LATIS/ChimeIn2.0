@@ -21,7 +21,17 @@ class createQuestionsTest extends DuskTestCase
         $this->admin->chimes()->attach($this->chime, [
             'permission_number' => 300
         ]);
+    }
+
+     public function testQuestionWindow() {
+
+        $this->browse(function (Browser $browser) {
+            $browser->loginAs($this->admin)->visit('/chime/' . $this->chime->id . '/folder/' . $this->folder->id);
+            $browser->pause(500)->click('@new-question-button');
+            $browser->pause(2000)->assertSee("Add a Question");
+        });
 
     }
+
 
 }
