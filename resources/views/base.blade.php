@@ -55,11 +55,7 @@
 			</div>
 
 		</main>
-		@if($ltiLaunch)
-		<div class="alert alert-info" role="alert" style="margin-bottom: -1rem; opacity: 0.7">
-    		The Canvas integration with ChimeIn is currently in a "pilot" phase.  If you have questions, please contact CLA TEL directly at <a 		href="mailto:clatel@umn.edu">clatel@umn.edu</a>
-		</div>
-		@endif
+	
 		<footer id="page-footer">
 			<div class="regions-2-only">
 				<div class="region-container">
