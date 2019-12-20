@@ -20,6 +20,8 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: app
+      APP_URL: http://app.local:80
+      APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
       BROADCAST_DRIVER: redis
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
@@ -38,7 +40,7 @@ services:
     networks:
        chimein:    
           aliases:
-            - web.local
+            - app.local
   node:
     image: laravel-node
     container_name: laravel-node
@@ -84,6 +86,8 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: queue
+      APP_URL: http://app.local:80
+      APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
       BROADCAST_DRIVER: redis
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
@@ -137,6 +141,9 @@ services:
     environment:
       LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
       LARAVEL_ECHO_SERVER_DEBUG: "true"
+      APP_URL: http://app.local:80
+      APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
+      REDIS_KEY_PREFIX: "laravel_database_"
       BROADCAST_DRIVER: redis
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
@@ -164,6 +171,8 @@ services:
       - /dev/shm:/dev/shm
     networks:
        chimein: 
+          aliases:
+          - selenium.local
 volumes:
   redis:
     driver: "local"

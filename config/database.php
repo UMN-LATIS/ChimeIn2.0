@@ -116,7 +116,7 @@ return [
 
         'client' => 'predis',
         'options' => [
-            'prefix' => 'laravel_database_'
+            'prefix' => env('REDIS_PREFIX', 'laravel_database_'),
         ],
 
         'default' => [
