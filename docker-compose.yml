@@ -20,13 +20,13 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: app
-      APP_URL: http://app.local:80
+      APP_URL: http://app.testing.local:80
       APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
       BROADCAST_DRIVER: redis
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
       SESSION_LIFETIME: 120
-      SESSION_DOMAIN: .local
+      SESSION_DOMAIN: .testing.local
       QUEUE_DRIVER: redis
       REDIS_HOST: redis
       REDIS_PASSWORD: null
@@ -40,7 +40,7 @@ services:
     networks:
        chimein:    
           aliases:
-            - app.local
+            - app.testing.local
   node:
     image: laravel-node
     container_name: laravel-node
@@ -58,7 +58,7 @@ services:
     networks:
        chimein:    
           aliases:
-            - node.local
+            - node.testing.local
   scheduler:
     image: laravel-www
     container_name: laravel-scheduler
@@ -86,13 +86,13 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: queue
-      APP_URL: http://app.local:80
+      APP_URL: http://app.testing.local:80
       APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
       BROADCAST_DRIVER: redis
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
       SESSION_LIFETIME: 120
-      SESSION_DOMAIN: .local
+      SESSION_DOMAIN: .testing.local
       QUEUE_DRIVER: redis
       REDIS_HOST: redis
       REDIS_PASSWORD: null
@@ -141,14 +141,14 @@ services:
     environment:
       LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
       LARAVEL_ECHO_SERVER_DEBUG: "true"
-      APP_URL: http://app.local:80
+      APP_URL: http://app.testing.local:80
       APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
       REDIS_KEY_PREFIX: "laravel_database_"
       BROADCAST_DRIVER: redis
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
       SESSION_LIFETIME: 120
-      SESSION_DOMAIN: .local
+      SESSION_DOMAIN: .testing.local
       QUEUE_DRIVER: redis
       REDIS_HOST: redis
       REDIS_PASSWORD: null
@@ -162,7 +162,7 @@ services:
     networks:
        chimein:    
           aliases:
-            - echo.local
+            - echo.testing.local
   selenium:
     image: selenium/standalone-chrome:3.11.0-antimony
     depends_on:
@@ -172,7 +172,7 @@ services:
     networks:
        chimein: 
           aliases:
-          - selenium.local
+          - selenium.testing.local
 volumes:
   redis:
     driver: "local"
