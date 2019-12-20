@@ -20,6 +20,21 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: app
+      BROADCAST_DRIVER: redis
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      SESSION_LIFETIME: 120
+      SESSION_DOMAIN: .local
+      QUEUE_DRIVER: redis
+      REDIS_HOST: redis
+      REDIS_PASSWORD: null
+      REDIS_PORT: 6379
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: chimein2
+      DB_USERNAME: chimein2
+      DB_PASSWORD: chimein2
     networks:
        chimein:    
           aliases:
@@ -63,9 +78,9 @@ services:
       - app
       - redis
     volumes:
-      - ./app:/var/www/html/app
-      - ./resources:/var/www/html/resources
-      - ./routes:/var/www/html/routes
+      - .:/var/www/html:cached
+      - /var/www/html/node_modules
+      - /var/www/html/vendor
     environment:
       APP_ENV: local
       CONTAINER_ROLE: queue
