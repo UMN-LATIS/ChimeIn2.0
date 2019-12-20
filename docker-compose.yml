@@ -20,6 +20,10 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: app
+    networks:
+       chimein:    
+          aliases:
+            - web.local
   node:
     image: laravel-node
     container_name: laravel-node
@@ -34,6 +38,10 @@ services:
       - .:/app:cached
       - /app/vendor
       - /app/node_modules
+    networks:
+       chimein:    
+          aliases:
+            - node.local
   scheduler:
     image: laravel-www
     container_name: laravel-scheduler
@@ -46,12 +54,14 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: scheduler
-
+    networks:
+       chimein:
   queue:
     image: laravel-www
     container_name: laravel-queue
     depends_on:
       - app
+      - redis
     volumes:
       - ./app:/var/www/html/app
       - ./resources:/var/www/html/resources
@@ -59,7 +69,23 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: queue
-
+      BROADCAST_DRIVER: redis
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      SESSION_LIFETIME: 120
+      SESSION_DOMAIN: .local
+      QUEUE_DRIVER: redis
+      REDIS_HOST: redis
+      REDIS_PASSWORD: null
+      REDIS_PORT: 6379
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: chimein2
+      DB_USERNAME: chimein2
+      DB_PASSWORD: chimein2
+    networks:
+       chimein: 
   redis:
     container_name: laravel-redis
     image: redis:4-alpine
@@ -67,7 +93,8 @@ services:
       - 16379:6379
     volumes:
       - redis:/data
-
+    networks:
+       chimein: 
   mysql:
     container_name: laravel-mysql
     image: mysql:5.7
@@ -80,6 +107,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+       chimein: 
   echo:
     image: oanhnn/laravel-echo-server
     container_name: laravel-echo
@@ -91,17 +120,39 @@ services:
     # volumes:
       # - .:/app
     environment:
-      REDIS_HOST: redis
       LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
       LARAVEL_ECHO_SERVER_DEBUG: "true"
+      BROADCAST_DRIVER: redis
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      SESSION_LIFETIME: 120
+      SESSION_DOMAIN: .local
+      QUEUE_DRIVER: redis
+      REDIS_HOST: redis
+      REDIS_PASSWORD: null
+      REDIS_PORT: 6379
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: chimein2
+      DB_USERNAME: chimein2
+      DB_PASSWORD: chimein2
+    networks:
+       chimein:    
+          aliases:
+            - echo.local
   selenium:
     image: selenium/standalone-chrome:3.11.0-antimony
     depends_on:
       - app
     volumes:
       - /dev/shm:/dev/shm
+    networks:
+       chimein: 
 volumes:
   redis:
     driver: "local"
   mysql:
     driver: "local"
+networks: 
+  chimein:

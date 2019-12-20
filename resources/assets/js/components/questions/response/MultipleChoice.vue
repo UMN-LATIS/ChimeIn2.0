@@ -6,7 +6,7 @@
         <div class="form-check"  v-bind:key="key" v-for="(option, key) in selectOptions">
             <input class="form-check-input" :disabled="disabled" v-bind:type="question.allow_multiple?'checkbox':'radio'" v-bind:id="'radio'+question.id + '_' + key" v-model="selected" :value="option">
             <label class="form-check-label" v-bind:for="'radio'+question.id + '_' + key" >
-                {{ option }}
+                {{ isObject(option)?option.text:option }}
             </label>
         </div>
     

@@ -41,7 +41,7 @@ const env = process.env.NODE_ENV || 'development';
 // use our internal hostnames so we can work with docker
 var host = window.location.hostname;
 if(env == "development") {
-    host = "echo";
+    host = "echo.local";
 }
 
 window.Echo = new Echo({

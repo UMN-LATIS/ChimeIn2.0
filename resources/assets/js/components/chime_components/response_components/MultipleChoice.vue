@@ -4,16 +4,21 @@
             <div class="col">
                 <p>Answers:</p>
                 <ol type="A">
-                    <draggable :list="question_responses"">
+                    <draggable :list="question_responses">
                     <li v-for="(r, i) in question_responses"
                     :key="i"
                     >
-                    {{ r }}
-                    <span>
-                        <i
+                    <div class="row">
+
+                        <div class="col-10 dragItem">
+                            {{ isObject(r)?r.text:r }}
+                        </div>
+                        <div class="col-1">
+                            <i
                         class="material-icons pointer deleteIcon"
                         v-on:click="() => remove(i)">delete</i>
-                    </span>
+                        </div>
+                    </div>
                 </li>
                     </draggable>
             </ol>
@@ -21,8 +26,14 @@
     </div>
     <div class="row">
         <div class="col">
-            <label for="choice_text" class="form-control-label">Add a choice</label>
+            <label for="choice_text" class="form-control-label">Add a choice <small id="emailHelp" class="form-text text-muted">Optionally use the checkbox to mark correct answers.</small></label>
+            
             <div class="input-group">
+                 <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="checkbox" v-model="choice_correct" aria-label="Correct Answer">
+                    </div>
+                </div>
                 <input
                 id="choice_text"
                 v-model="choice_text"
@@ -46,6 +57,10 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.dragItem {
+    cursor: move;
+}
 </style>
 
 <script>
@@ -58,7 +73,8 @@
         },
         data: function() {
             return {
-             choice_text: ""
+             choice_text: "",
+             choice_correct: false
          }
      },
      methods: {
@@ -67,8 +83,9 @@
             this.$delete(this.question_responses, response_index);
         },
         add_choice: function() {
-            this.question_responses.push(this.choice_text);
+            this.question_responses.push({"text": this.choice_text, "correct": this.choice_correct});
             this.choice_text = '';
+            this.choice_correct = false;
         },   
     },
     mounted() {
