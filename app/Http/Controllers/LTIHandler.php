@@ -29,9 +29,8 @@ class LTIHandler extends Controller
         $tool = new ChimeToolProvider();
         $tool->handleRequest();
         $launchDomain = $tool->resourceLink->getSetting("custom_canvas_api_domain");
-        if(!in_array($launchDomain, $this->allowedDomains)) {
+        if(!\App::environment('local') && !in_array($launchDomain, $this->allowedDomains)) {
             abort(401, 'LTI Launch from an invalid domain');
-
         }
 
 
@@ -54,7 +53,7 @@ class LTIHandler extends Controller
             $user->save();
             Auth::login($user);
         }
-        cookie::queue("ltiLaunch", true, 10);
+
         if($tool->user->isStaff()) {
 
             // it's an instructor, let's check if this assingment exists
@@ -98,7 +97,12 @@ class LTIHandler extends Controller
                         'permission_number' => 100
                     ]);
                 }
-                return \Redirect::to("/chimeParticipant/" . $chime->id);
+
+                $folderId = null;
+                if($folder = \App\Folder::where("resource_link_pk", $tool->resourceLink->getRecordId())->first()) {
+                    $folderId = $folder->id;
+                }
+                return \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
             }
             else {
 

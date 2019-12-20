@@ -17,9 +17,7 @@ class HomeController extends Controller
      */
     public function index(Request $req)
     {
-        $cookie =  Cookie::get('ltiLaunch');
-
-        return view('home', ['user' => $req->user(), 'ltiLaunch'=>$cookie]);
+        return view('home', ['user' => $req->user()]);
     }
 
     

@@ -25,13 +25,12 @@
     <div class="card-body">
         <div class="tab-content">
             <div class="tab-pane container active" id="currentQuestions" aria-live="polite">
-                <div v-if="sessions.length < 1" key='none' class="text-center">
+                <div v-if="filteredSession.length < 1" key='none' class="text-center">
                     <h1>No Open Questions</h1>
                 </div>
-                <transition-group name="fade">
+                <transition-group name="fade" v-if="filteredSession.length > 0">
                     <student-prompt
-                    v-if="sessions.length > 0"
-                    v-for="s in sessions"
+                    v-for="s in filteredSession"
                     v-on:updateResponse="updateResponse"
                     :session="s"
                     :chime="chime"
@@ -47,9 +46,10 @@
             <response
             v-else
             v-for="response, i in responses"
+            v-bind:key="i"
             :chime="chime"
             :response="response"
-            :key="i">
+            >
         </response>
     </div>
 
@@ -78,7 +78,7 @@
                 error: null
             };
         },
-        props: ['user', 'chimeId'],
+        props: ['user', 'chimeId', 'folderId'],
         methods: {
             updateResponse: function(newResponse) {
                 var updateInPlace = false;
@@ -92,6 +92,16 @@
                     this.responses.push(newResponse);
                 }
 
+            }
+        },
+        computed: {
+            filteredSession: function() {
+                if(this.folderId) {
+                    return this.sessions.filter(e => e.question.folder_id == this.folderId);
+                }
+                else {
+                    return this.sessions;
+                }
             }
         },
         mounted: function () {

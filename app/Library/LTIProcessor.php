@@ -22,7 +22,7 @@ class LTIProcessor {
 		}
 
 		$tool = new ChimeToolProvider();
-		$consumer = ToolProvider\ToolConsumer::fromRecordId(3, $tool->data_connector);
+
 		$resource_link = ToolProvider\ResourceLink::fromRecordId($folder->resource_link_pk, $tool->data_connector);
 
 		$ltiUsers = $resource_link->getUserResultSourcedIDs();
