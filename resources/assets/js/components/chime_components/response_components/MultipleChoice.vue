@@ -9,13 +9,21 @@
                     :key="i"
                     >
                     <div class="row">
-
-                        <div class="col-10 dragItem">
+                       
+                        <div class="col-9 dragItem">
                             {{ isObject(r)?r.text:r }}
                         </div>
-                        <div class="col-1">
+                         <div class="col-1">
                             <i
-                        class="material-icons pointer deleteIcon"
+                        class="material-icons inline-icon" v-if="isObject(r)?r.correct:false">check</i>
+                        </div>
+                        <div class="col-2">
+                        <i
+                        class="material-icons pointer inline-icon"
+                        v-on:click="() => edit(i)">edit</i>
+                        
+                            <i
+                        class="material-icons pointer inline-icon"
                         v-on:click="() => remove(i)">delete</i>
                         </div>
                     </div>
@@ -50,7 +58,7 @@
 </template>
 
 <style scoped>
-.deleteIcon {
+.inline-icon {
     vertical-align: middle !important;
 }
 .choiceRow {
@@ -74,18 +82,32 @@
         data: function() {
             return {
              choice_text: "",
-             choice_correct: false
+             choice_correct: false,
+             editing_index: null
          }
      },
      methods: {
-       
+        edit: function(response_index) {
+            var response = this.question_responses[response_index];
+
+            this.choice_text = this.isObject(response)?response.text:response;
+            this.choice_correct = this.isObject(response)?response.correct:false;
+            this.editing_index = response_index;
+        },
         remove: function(response_index) {
             this.$delete(this.question_responses, response_index);
         },
         add_choice: function() {
-            this.question_responses.push({"text": this.choice_text, "correct": this.choice_correct});
+            if(this.editing_index !== null) {
+                this.$set(this.question_responses, this.editing_index, {"text": this.choice_text, "correct": this.choice_correct});
+            }
+            else {
+                this.question_responses.push({"text": this.choice_text, "correct": this.choice_correct});
+            }
+            
             this.choice_text = '';
             this.choice_correct = false;
+            this.editing_index = null;
         },   
     },
     mounted() {

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class TestCreateCourseAndQuestions extends DuskTestCase
 {
-    use DatabaseMigrations;
+    // use DatabaseMigrations;
     public $admin = null;
     public $chime = null;
     public function setUp(): void {

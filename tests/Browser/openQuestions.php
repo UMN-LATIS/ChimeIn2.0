@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class openQuestions extends DuskTestCase
 {
-    use DatabaseMigrations;
+    // use DatabaseMigrations;
     public $admin = null;
     public $chime = null;
     public function setUp(): void {

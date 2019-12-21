@@ -21,7 +21,7 @@ let mix = require('laravel-mix');
 
 mix.options({
 	hmrOptions: {
-		host: 'node.testing.local',
+		host: 'node.knowfear.net',
 		port: 8080
 	}
 })
