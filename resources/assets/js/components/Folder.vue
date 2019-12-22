@@ -147,24 +147,26 @@ export default {
 
         },
         delete_question(questionId) {
-            const url = (
-                '/api/chime/' + this.folder.chime_id +
-                '/folder/' + this.folder.id + '/question/' + questionId);
-            const self = this;
+            if (confirm("Are you sure you want to remove this question?")) {
+                const url = (
+                    '/api/chime/' + this.folder.chime_id +
+                    '/folder/' + this.folder.id + '/question/' + questionId);
+                const self = this;
 
-            axios.delete(url)
-            .then(res => {
-                console.log(res);
-                const question_index = self.questions.findIndex(
-                    e => e.id === questionId);
-                self.questions.splice(question_index, 1);
-                this.$nextTick(function () {
-                    this.$refs.slideup.layout();    
+                axios.delete(url)
+                .then(res => {
+                    console.log(res);
+                    const question_index = self.questions.findIndex(
+                        e => e.id === questionId);
+                    self.questions.splice(question_index, 1);
+                    this.$nextTick(function () {
+                        this.$refs.slideup.layout();    
+                    });
+                })
+                .catch(err => {
+                    console.log(err.response);
                 });
-            })
-            .catch(err => {
-                console.log(err.response);
-            });
+            }
         },
         edit_folder: function() {
             const self = this;
