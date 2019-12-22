@@ -85,8 +85,6 @@ Vue.component('response',
     require('./components/chime_student_components/Response.vue').default);
 Vue.component('multiple_choice',
     require('./components/questions/response/MultipleChoice.vue').default);
-Vue.component('true_false',
-    require('./components/questions/response/TrueFalse.vue').default);
 Vue.component('image_response',
     require('./components/questions/response/ImageResponse.vue').default);
 Vue.component('free_response',
@@ -104,8 +102,6 @@ Vue.component('results-display',
     require('./components/presentation_components/ResultsDisplay.vue').default);
 Vue.component('multiple_choice_display',
     require('./components/questions/display/MultipleChoice.vue').default);
-Vue.component('true_false_display',
-    require('./components/questions/display/TrueFalse.vue').default);
 Vue.component('slider_response_display',
     require('./components/questions/display/Slider.vue').default);
 Vue.component('free_response_display',
@@ -130,7 +126,6 @@ const store = new Vuex.Store({
         message: state => state.message
     }
 });
-
 
 const router = new VueRouter({
     mode: 'history',

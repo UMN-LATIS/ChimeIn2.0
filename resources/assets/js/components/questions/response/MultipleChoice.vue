@@ -1,12 +1,10 @@
 <template>
     <div>
-
     <fieldset class="form-group" role="radiogroup">
-        
         <div class="form-check"  v-bind:key="key" v-for="(option, key) in selectOptions">
-            <input class="form-check-input" :disabled="disabled" v-bind:type="question.allow_multiple?'checkbox':'radio'" v-bind:id="'radio'+question.id + '_' + key" v-model="selected" :value="isObject(option)?option.text:option">
+            <input class="form-check-input" :disabled="disabled" v-bind:type="question.allow_multiple?'checkbox':'radio'" v-bind:id="'radio'+question.id + '_' + key" v-model="selected" :value="option.text">
             <label class="form-check-label" v-bind:for="'radio'+question.id + '_' + key" >
-                {{ isObject(option)?option.text:option }}
+                {{ option.text }}
             </label>
         </div>
     

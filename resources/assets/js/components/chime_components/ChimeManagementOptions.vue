@@ -22,6 +22,13 @@
                     presenting</label>
             </div>
         </li>
+        <li>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="onlyCorrectAnswersLti" id="onlyCorrectAnswersLti"
+                    v-model="only_correct_answers_lti_local" @change="$emit('update:only_correct_answers_lti', $event.target.checked)">
+                <label class="form-check-label" for="onlyCorrectAnswersLti">Only count "correct" answers towards Canvas grades (for questions which have a "correct" response)</label>
+            </div>
+        </li>
     </ul>
 </template>
 
@@ -38,10 +45,11 @@ export default {
             return {
                 require_login_local: this.require_login,
                 students_can_view_local: this.students_can_view,
-                join_instructions_local: this.join_instructions
+                join_instructions_local: this.join_instructions,
+                only_correct_answers_lti_local: this.only_correct_answers_lti
             }
         },
-        props: ['require_login','students_can_view', 'join_instructions'],
+        props: ['require_login','students_can_view', 'join_instructions', 'only_correct_answers_lti'],
 
 }
 </script>

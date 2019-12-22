@@ -83,7 +83,6 @@
     import ImageResponse from "./response_components/ImageResponse.vue";
     import SliderResponse from "./response_components/SliderResponse.vue";
     import FreeResponse from "./response_components/FreeResponse.vue";
-    import TrueFalseResponse from "./response_components/TrueFalse.vue";
 
     import VueSelect from 'vue-select';
 
@@ -117,7 +116,6 @@
             'image_response_response': ImageResponse,
             'slider_response_response': SliderResponse,
             'free_response_response': FreeResponse,
-            'true_false_response': TrueFalseResponse,
             'v-select':VueSelect
         },
         data: function () {
@@ -132,7 +130,6 @@
                 allow_multiple: this.question.allow_multiple,
                 question_types: [
                     {id:"multiple_choice", label:"Multiple Choice"},
-                    {id:"true_false", label:"True/False"},
                     {id:"free_response", label:"Free Response"},
                     {id:"image_response", label:"Image Response"},
                     {id:"slider_response", label:"Slider Response"}

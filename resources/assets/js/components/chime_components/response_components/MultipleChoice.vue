@@ -1,6 +1,15 @@
 <template>  
     <div>
+        <div class="row">
+            <div class="col">
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="truefalse" id="truefalse" v-model="truefalse" @change="toggleTrueFalse">
+                <label class="form-check-label" for="truefalse">True/False Question</label>
+            </div>
+            </div>
+        </div>
         <div class="row choiceRow">
+
             <div class="col">
                 <p>Answers:</p>
                 <ol type="A">
@@ -9,7 +18,6 @@
                     :key="i"
                     >
                     <div class="row">
-                       
                         <div class="col-9 dragItem">
                             {{ isObject(r)?r.text:r }}
                         </div>
@@ -20,11 +28,11 @@
                         <div class="col-2">
                         <i
                         class="material-icons pointer inline-icon"
-                        v-on:click="() => edit(i)">edit</i>
+                        v-on:click="edit(i)">edit</i>
                         
                             <i
                         class="material-icons pointer inline-icon"
-                        v-on:click="() => remove(i)">delete</i>
+                        v-on:click="remove(i)">delete</i>
                         </div>
                     </div>
                 </li>
@@ -83,7 +91,8 @@
             return {
              choice_text: "",
              choice_correct: false,
-             editing_index: null
+             editing_index: null,
+             truefalse: false
          }
      },
      methods: {
@@ -108,12 +117,26 @@
             this.choice_text = '';
             this.choice_correct = false;
             this.editing_index = null;
-        },   
+        }, 
+        toggleTrueFalse: function()   {
+            if(this.truefalse && !this.isTrueFalse()) {
+                this.question_responses.push({"text":"True","correct":false});
+                this.question_responses.push({"text":"False","correct":false});
+            }
+        },
+        isTrueFalse: function() {
+            if(this.question_responses && JSON.stringify(this.question_responses.map(e=>e.text)) == JSON.stringify(["True", "False"])) {
+                return true;
+            }
+            return false;
+        }
     },
     mounted() {
         if(!this.question_responses) {
             this.$emit('update:question_responses', []);
         }
+
+        this.truefalse = this.isTrueFalse();
     }
 }
 </script>
