@@ -133,7 +133,6 @@
 
             })
 
-
             Echo.join('session-status.' + this.chimeId)
             .listen('StartSession', m => {
                 console.log('debug', 'message:', m);

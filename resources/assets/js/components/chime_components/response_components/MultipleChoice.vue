@@ -9,7 +9,6 @@
             </div>
         </div>
         <div class="row choiceRow">
-
             <div class="col">
                 <p>Answers:</p>
                 <ol type="A">
@@ -35,7 +34,7 @@
                         v-on:click="remove(i)">delete</i>
                         </div>
                     </div>
-                </li>
+                    </li>
                     </draggable>
             </ol>
         </div>
@@ -57,7 +56,7 @@
                 @keyup.enter="add_choice"
                 class="validate form-control">
                 <div class="input-group-append ">
-                    <button @click="add_choice" class="btn btn-outline-primary  align-items-center d-flex"><span class="material-icons ">add</span></button>
+                    <button @click="add_choice" class="btn btn-outline-primary  align-items-center d-flex"><span class="material-icons ">{{ editing_index !==null ? "save":"add" }}</span></button>
                 </div>
             </div>
         </div>
