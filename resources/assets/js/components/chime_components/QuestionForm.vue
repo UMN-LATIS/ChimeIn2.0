@@ -51,13 +51,20 @@
 
             <component :is="question_type + '_response'" :question_responses.sync="question_responses"></component>
         </div>
-        <div class="modal-footer text-right">
+        <div class="modal-footer ">
+            <div class="mr-auto">
+                <button class="btn btn-danger" @click="reset">
+                Reset Question
+                </button>
+            </div>
+            <div class="">
             <button class="btn btn-secondary" @click="close">
                 Cancel
             </button>
             <button class="btn btn-primary" @click="savePost">
                 Save
             </button>
+            </div>
 
         </div>
     </modal>
@@ -160,6 +167,16 @@
         methods: {
             close: function () {
                 this.$emit('close');
+            },
+            reset: function() {
+                if(confirm("Are you sure you want to reset this question, clearing all sessions and responses?")) {
+                    const url = ('/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id + '/question/' + this.question.id + "/responses");
+                    const self = this;
+                    axios.delete(url)
+                    .then(res => {
+                        this.$emit('edited');
+                    });
+                }
             },
             savePost: function () {
                 var url = (
