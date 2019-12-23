@@ -39,7 +39,7 @@
             </ol>
         </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="!truefalse || editing_index !== null">
         <div class="col">
             <label for="choice_text" class="form-control-label">Add a choice <small id="emailHelp" class="form-text text-muted">Optionally use the checkbox to mark correct answers.</small></label>
             
@@ -54,7 +54,8 @@
                 v-model="choice_text"
                 type="text"
                 @keyup.enter="add_choice"
-                class="validate form-control">
+                class="validate form-control"
+                v-bind:disabled="truefalse">
                 <div class="input-group-append ">
                     <button @click="add_choice" class="btn btn-outline-primary  align-items-center d-flex"><span class="material-icons ">{{ editing_index !==null ? "save":"add" }}</span></button>
                 </div>
@@ -65,6 +66,9 @@
 </template>
 
 <style scoped>
+.input-group-text {
+    background-color: white;
+}
 .inline-icon {
     vertical-align: middle !important;
 }
