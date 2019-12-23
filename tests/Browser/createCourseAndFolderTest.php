@@ -45,7 +45,7 @@ class TestCreateCourseAndQuestions extends DuskTestCase
             $browser->pause(500)->assertSee("Chime Name");
             $browser->type("#chime_name_input", "Test Chime");
             $browser->click('@create-chime-button');
-            $browser->pause(1000)->assertSee('Test Chime');
+            $browser->pause(1500)->assertSee('Test Chime');
             $browser->assertSee("any folders");
         });
     }

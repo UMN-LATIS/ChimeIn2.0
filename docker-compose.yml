@@ -20,23 +20,8 @@ services:
     environment:
       APP_ENV: local
       CONTAINER_ROLE: app
-      APP_URL: http://app.knowfear.net:80
-      APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
-      BROADCAST_DRIVER: redis
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      SESSION_LIFETIME: 120
-      SESSION_DOMAIN: knowfear.net
-      QUEUE_DRIVER: redis
-      REDIS_HOST: redis
-      REDIS_PASSWORD: null
-      REDIS_PORT: 6379
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_DATABASE: chimein2
-      DB_USERNAME: chimein2
-      DB_PASSWORD: chimein2
+    env_file:
+      - .env
     networks:
        chimein:    
           aliases:
@@ -59,6 +44,8 @@ services:
        chimein:    
           aliases:
             - node.knowfear.net
+    env_file:
+      - .env
   scheduler:
     image: laravel-www
     container_name: laravel-scheduler
@@ -69,8 +56,9 @@ services:
       - /var/www/html/node_modules
       - /var/www/html/vendor
     environment:
-      APP_ENV: local
       CONTAINER_ROLE: scheduler
+    env_file:
+      - .env
     networks:
        chimein:
   queue:
@@ -84,25 +72,9 @@ services:
       - /var/www/html/node_modules
       - /var/www/html/vendor
     environment:
-      APP_ENV: local
       CONTAINER_ROLE: queue
-      APP_URL: http://app.knowfear.net:80
-      APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
-      BROADCAST_DRIVER: redis
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      SESSION_LIFETIME: 120
-      SESSION_DOMAIN: knowfear.net
-      QUEUE_DRIVER: redis
-      REDIS_HOST: redis
-      REDIS_PASSWORD: null
-      REDIS_PORT: 6379
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_DATABASE: chimein2
-      DB_USERNAME: chimein2
-      DB_PASSWORD: chimein2
+    env_file:
+    - .env
     networks:
        chimein: 
   redis:
@@ -114,6 +86,8 @@ services:
       - redis:/data
     networks:
        chimein: 
+    env_file:
+      - .env
   mysql:
     container_name: laravel-mysql
     image: mysql:5.7
@@ -121,6 +95,8 @@ services:
       - 13306:3306
     volumes:
       - mysql:/var/lib/mysql
+    env_file:
+      - .env
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: root
@@ -136,29 +112,11 @@ services:
     depends_on:
       - redis
       - app
-    # volumes:
-      # - .:/app
+    env_file:
+      - .env
     environment:
       LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
       LARAVEL_ECHO_SERVER_DEBUG: "true"
-      APP_URL: http://appknowfear.net:80
-      APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
-      REDIS_KEY_PREFIX: "laravel_database_"
-      BROADCAST_DRIVER: redis
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: redis
-      SESSION_LIFETIME: 120
-      SESSION_DOMAIN: knowfear.net
-      QUEUE_DRIVER: redis
-      REDIS_HOST: redis
-      REDIS_PASSWORD: null
-      REDIS_PORT: 6379
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_DATABASE: chimein2
-      DB_USERNAME: chimein2
-      DB_PASSWORD: chimein2
     networks:
        chimein:    
           aliases:
@@ -169,6 +127,8 @@ services:
       - app
     volumes:
       - /dev/shm:/dev/shm
+    env_file:
+      - .env
     networks:
        chimein: 
           aliases:
