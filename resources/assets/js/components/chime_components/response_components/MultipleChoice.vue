@@ -123,6 +123,10 @@
         }, 
         toggleTrueFalse: function()   {
             if(this.truefalse && !this.isTrueFalse()) {
+                for(i=0; i<this.question_responses.length; i++) {
+                    this.$delete(this.question_responses, i);
+                }
+                
                 this.question_responses.push({"text":"True","correct":false});
                 this.question_responses.push({"text":"False","correct":false});
             }
