@@ -30,3 +30,6 @@ When you're ready to share your questions with your students, have them follow t
 
 It can take up to 10 minutes for data from ChimeIn to be passed back to the Canvas gradebook. 
 
+## "Correct" answers and the gradebook
+
+ChimeIn is most often used to check engagement or collect feedback on a topic, rather than as a substitute for a quiz tool.  However, when using multiple choice questions, you can choose to mark some responses as "correct".  In your [Chime settings](managing-a-chime), you can choose to only count correct answers towards grades in Canvas. 

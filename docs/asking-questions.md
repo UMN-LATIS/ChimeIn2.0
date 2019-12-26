@@ -1,6 +1,6 @@
 # Asking Questions with ChimeIn
 
-ChimeIn offers multiple question types, including multiple choice, free response, true/false, slider response, and an image upload.  Multiple choice, true/false, and slider response questions are great choices for quick in class comprehension checks.  They are easy to make quickly in class, and students can answer in a few seconds.  Free response questions and image uploads require more time on the students’ part, so these options are great for reflecting on learning and even allowing students to answer the question outside of class.   Questions with long prompts and/or long multiple choice answers should be prepared prior to the start of class to keep class running smoothly.  If ChimeIn questions should appear in the Canvas gradebook, instructors should make ChimeIn assignments in [Canvas](canvas) before class.  This process is fairly simple, but does take more time than just creating a question in class.  
+ChimeIn offers multiple question types, including multiple choice, free response, slider response, and an image upload.  Multiple choice and slider response questions are great choices for quick in class comprehension checks.  They are easy to make quickly in class, and students can answer in a few seconds.  Free response questions and image uploads require more time on the students’ part, so these options are great for reflecting on learning and even allowing students to answer the question outside of class.   Questions with long prompts and/or long multiple choice answers should be prepared prior to the start of class to keep class running smoothly.  If ChimeIn questions should appear in the Canvas gradebook, instructors should make ChimeIn assignments in [Canvas](canvas) before class.  This process is fairly simple, but does take more time than just creating a question in class.  
 
 Questions can include links, images, numbered and bulleted lists, as well as standard typographical emphasis options, allowing for a wide variety of question options.
 
@@ -20,6 +20,8 @@ ChimeIn currently has 5 question types.  The architecture of ChimeIn allows us t
 ### Multiple Choice
 
 Multiple choice questions can easily be written in class and before class.  Questions with short prompts and answers can be written in class, while questions with long prompts and detailed answers should be written prior to the start of class.  If you check the box for "allow multiple responses", participants will be able to select more than one option. 
+
+You can **optionally** select a "correct" answer or answers for a question by checking the box to the left of the response text.  The correct answer will be marked with a check in the results display.  You can also [optionally have only correct answers passed to Canvas](managing-a-chime) when using the Canvas integration. 
 
 #### Written in class
 
@@ -46,11 +48,9 @@ Multiple choice questions can easily be written in class and before class.  Ques
     * Hace referencia a la celebración griega en honor al diós del vino
     * Comparación entre flores que hace referencia a la frágilidad y pureza de la mujer
 
+#### True/False
 
-
-### True/False
-
-True/false questions are great ways to check comprehension.  These can easily be prepared both in and before class.  Instructors can provide the prompt verbally and have students select true or false in ChimeIn for impromptu comprehension checks, or plan more detailed questions ahead of time.
+True/false questions are great ways to check comprehension.  You can check the "True/false" box when making a multiple choice question to automatically fill in entries for True and False.   These can easily be prepared both in and before class.  Instructors can provide the prompt verbally and have students select true or false in ChimeIn for impromptu comprehension checks, or plan more detailed questions ahead of time.
 
 * Is this [spoken claim] true or false? T/F 
 * Los trabajadores del Banco de Ahorros decidieron comprar juntos números de la lotería. T/F

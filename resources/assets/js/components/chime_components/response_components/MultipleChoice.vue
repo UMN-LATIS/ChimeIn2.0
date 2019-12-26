@@ -10,7 +10,7 @@
         </div>
         <div class="row choiceRow">
             <div class="col">
-                <p>Answers:</p>
+                <p>Responses:</p>
                 <ol type="A">
                     <draggable :list="question_responses">
                     <li v-for="(r, i) in question_responses"
@@ -41,7 +41,7 @@
     </div>
     <div class="row" v-if="!truefalse || editing_index !== null">
         <div class="col">
-            <label for="choice_text" class="form-control-label">Add a choice <small id="emailHelp" class="form-text text-muted">Optionally use the checkbox to mark correct answers.</small></label>
+            <label for="choice_text" class="form-control-label">Add a response <small id="emailHelp" class="form-text text-muted">Optionally use the checkbox to mark correct responses.</small></label>
             
             <div class="input-group">
                  <div class="input-group-prepend">
@@ -123,8 +123,8 @@
         }, 
         toggleTrueFalse: function()   {
             if(this.truefalse && !this.isTrueFalse()) {
-                for(i=0; i<this.question_responses.length; i++) {
-                    this.$delete(this.question_responses, i);
+                while(this.question_responses.length > 0) {
+                    this.$delete(this.question_responses, 0);
                 }
                 
                 this.question_responses.push({"text":"True","correct":false});

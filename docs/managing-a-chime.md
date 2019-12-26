@@ -24,6 +24,10 @@ By default, ChimeIn operates on a model where presenters share the question and 
 
 By checking this box, small instructions will be shown on the "presenter" view, giving participants instructions on how to join.  This can be useful when asking questions in an open setting, allowing participants to join at any time. 
 
+### Only count "correct" answers towards Canvas grades ###
+
+Multiple choice (and true/false) questions can have a "correct" answer marked when creating the question.  If you've marked an answer "correct" and check this box in your Chime settings, students will only receive credit for selecting the correct answer. 
+
 ### Managing Users ###
 
 The "Chime Settings" view will also show you all of the users that have joined your Chime.  Any of them can be promoted from "participant" to "presenter" by clicking the word "participant".  It will change into a dropdown, allowing you to elevate their permissions. 
