@@ -51,13 +51,20 @@
 
             <component :is="question_type + '_response'" :question_responses.sync="question_responses"></component>
         </div>
-        <div class="modal-footer text-right">
+        <div class="modal-footer ">
+            <div class="mr-auto">
+                <button class="btn btn-danger" @click="reset">
+                Reset Question
+                </button>
+            </div>
+            <div class="">
             <button class="btn btn-secondary" @click="close">
                 Cancel
             </button>
             <button class="btn btn-primary" @click="savePost">
                 Save
             </button>
+            </div>
 
         </div>
     </modal>
@@ -83,7 +90,6 @@
     import ImageResponse from "./response_components/ImageResponse.vue";
     import SliderResponse from "./response_components/SliderResponse.vue";
     import FreeResponse from "./response_components/FreeResponse.vue";
-    import TrueFalseResponse from "./response_components/TrueFalse.vue";
 
     import VueSelect from 'vue-select';
 
@@ -117,7 +123,6 @@
             'image_response_response': ImageResponse,
             'slider_response_response': SliderResponse,
             'free_response_response': FreeResponse,
-            'true_false_response': TrueFalseResponse,
             'v-select':VueSelect
         },
         data: function () {
@@ -132,7 +137,6 @@
                 allow_multiple: this.question.allow_multiple,
                 question_types: [
                     {id:"multiple_choice", label:"Multiple Choice"},
-                    {id:"true_false", label:"True/False"},
                     {id:"free_response", label:"Free Response"},
                     {id:"image_response", label:"Image Response"},
                     {id:"slider_response", label:"Slider Response"}
@@ -163,6 +167,16 @@
         methods: {
             close: function () {
                 this.$emit('close');
+            },
+            reset: function() {
+                if(confirm("Are you sure you want to reset this question, clearing all sessions and responses?")) {
+                    const url = ('/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id + '/question/' + this.question.id + "/responses");
+                    const self = this;
+                    axios.delete(url)
+                    .then(res => {
+                        this.$emit('edited');
+                    });
+                }
             },
             savePost: function () {
                 var url = (

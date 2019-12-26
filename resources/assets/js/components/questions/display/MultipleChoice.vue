@@ -1,7 +1,7 @@
 <template>
     <ol type="A">
-        <li class="questionDisplay" v-for="question in question.question_info.question_responses">
-            {{question}}
+        <li class="questionDisplay" v-for="response in question.question_info.question_responses">
+            {{  isObject(response)?response.text:response }}
         </li>
     </ol>
 </template>

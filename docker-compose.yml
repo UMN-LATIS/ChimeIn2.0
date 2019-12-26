@@ -1,19 +1,5 @@
 version: "3.4"
 
-x-common-variables: &common-variables
-  CACHE_DRIVER: redis
-  SESSION_DRIVER: redis
-  QUEUE_DRIVER: redis
-  REDIS_HOST: redis
-  BROADCAST_DRIVER: redis
-  DB_CONNECTION: mysql
-  DB_HOST: mysql
-  DB_DATABASE: homestead
-  DB_USERNAME: homestead
-  DB_PASSWORD: secret
-  DB_PORT: 3306
-  APP_KEY: base64:4bvMNFVCcokLXjBXEFBTrMuNEjanJttvCARSKxwkL+4=
-
 services:
   app:
     image: laravel-www
@@ -32,9 +18,14 @@ services:
       - /var/www/html/vendor
       # - /var/www/html/public
     environment:
-      <<: *common-variables
       APP_ENV: local
       CONTAINER_ROLE: app
+    env_file:
+      - .env
+    networks:
+       chimein:    
+          aliases:
+            - app.knowfear.net
   node:
     image: laravel-node
     container_name: laravel-node
@@ -49,6 +40,12 @@ services:
       - .:/app:cached
       - /app/vendor
       - /app/node_modules
+    networks:
+       chimein:    
+          aliases:
+            - node.knowfear.net
+    env_file:
+      - .env
   scheduler:
     image: laravel-www
     container_name: laravel-scheduler
@@ -59,24 +56,27 @@ services:
       - /var/www/html/node_modules
       - /var/www/html/vendor
     environment:
-      <<: *common-variables
-      APP_ENV: local
       CONTAINER_ROLE: scheduler
-
+    env_file:
+      - .env
+    networks:
+       chimein:
   queue:
     image: laravel-www
     container_name: laravel-queue
     depends_on:
       - app
+      - redis
     volumes:
-      - ./app:/var/www/html/app
-      - ./resources:/var/www/html/resources
-      - ./routes:/var/www/html/routes
+      - .:/var/www/html:cached
+      - /var/www/html/node_modules
+      - /var/www/html/vendor
     environment:
-      <<: *common-variables
-      APP_ENV: local
       CONTAINER_ROLE: queue
-
+    env_file:
+    - .env
+    networks:
+       chimein: 
   redis:
     container_name: laravel-redis
     image: redis:4-alpine
@@ -84,7 +84,10 @@ services:
       - 16379:6379
     volumes:
       - redis:/data
-
+    networks:
+       chimein: 
+    env_file:
+      - .env
   mysql:
     container_name: laravel-mysql
     image: mysql:5.7
@@ -92,11 +95,15 @@ services:
       - 13306:3306
     volumes:
       - mysql:/var/lib/mysql
+    env_file:
+      - .env
     environment:
-      MYSQL_DATABASE: homestead
+      MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: homestead
-      MYSQL_PASSWORD: secret
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+       chimein: 
   echo:
     image: oanhnn/laravel-echo-server
     container_name: laravel-echo
@@ -105,14 +112,31 @@ services:
     depends_on:
       - redis
       - app
-    # volumes:
-      # - .:/app
+    env_file:
+      - .env
     environment:
-      REDIS_HOST: redis
       LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
       LARAVEL_ECHO_SERVER_DEBUG: "true"
+    networks:
+       chimein:    
+          aliases:
+            - echo.knowfear.net
+  selenium:
+    image: selenium/standalone-chrome:3.11.0-antimony
+    depends_on:
+      - app
+    volumes:
+      - /dev/shm:/dev/shm
+    env_file:
+      - .env
+    networks:
+       chimein: 
+          aliases:
+          - selenium.knowfear.net
 volumes:
   redis:
     driver: "local"
   mysql:
     driver: "local"
+networks: 
+  chimein:

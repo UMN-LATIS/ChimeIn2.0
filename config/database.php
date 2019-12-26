@@ -115,6 +115,9 @@ return [
     'redis' => [
 
         'client' => 'predis',
+        'options' => [
+            'prefix' => env('REDIS_PREFIX', ''),
+        ],
 
         'default' => [
             'host' => env('REDIS_HOST', '127.0.0.1'),

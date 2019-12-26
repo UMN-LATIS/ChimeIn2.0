@@ -70,6 +70,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
+    Route::delete('/api/chime/{chime}/folder/{folder}/question/{question}/responses', 'FolderController@resetQuestion');
     
     Route::delete('/api/chime/{chime}/folder/{folder}/response/{response}', 'ResponseController@deleteResponse');
 

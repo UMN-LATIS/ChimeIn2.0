@@ -29,6 +29,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::model('chime', '\App\Chime');
         Route::model('folder', '\App\Folder');
+        Route::model('question', '\App\Question');
     }
 
     /**

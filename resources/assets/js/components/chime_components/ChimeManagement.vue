@@ -23,7 +23,7 @@
             <a v-bind:href="join_url">{{ join_url }}</a>
           </li>
         </ul>
-      <ChimeManagementOptions :require_login.sync="require_login" :students_can_view.sync="students_can_view" :join_instructions.sync="join_instructions"></ChimeManagementOptions>
+      <ChimeManagementOptions :require_login.sync="require_login" :students_can_view.sync="students_can_view" :join_instructions.sync="join_instructions" :only_correct_answers_lti.sync="only_correct_answers_lti"></ChimeManagementOptions>
       </div>
     </div>
     <hr>
@@ -85,7 +85,8 @@ export default {
       chime_name: this.chime.name,
       join_instructions: this.chime.join_instructions,
       students_can_view: this.chime.students_can_view,
-      require_login: this.chime.require_login
+      require_login: this.chime.require_login,
+      only_correct_answers_lti: this.chime.only_correct_answers_lti
     };
   },
   watch: {
@@ -96,6 +97,9 @@ export default {
       this.saveChime();
     },
     require_login: function(val) {
+      this.saveChime();
+    },
+    only_correct_answers_lti: function(val) {
       this.saveChime();
     }
   },
@@ -134,6 +138,7 @@ export default {
         localChime.join_instructions = this.join_instructions;
         localChime.students_can_view = this.students_can_view;
         localChime.require_login = this.require_login;
+        localChime.only_correct_answers_lti = this.only_correct_answers_lti;
         localChime.name = this.chime_name;
         axios.patch('/api/chime/' + this.chime.id, localChime)
         .then(res => {

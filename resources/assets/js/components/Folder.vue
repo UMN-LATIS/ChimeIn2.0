@@ -29,8 +29,8 @@
                         <i class="material-icons">play_arrow</i>
                     </router-link>
                     <button dusk="new-question-button" class="btn btn-sm btn-outline-info align-items-center d-flex" @click="showModal = true">New Question <i class="material-icons pointer">add</i></button>
-                    <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="openAll">Open All <i class="material-icons pointer">visibility</i></button>
-                    <button class="btn btn-sm btn-outline-info align-items-center d-flex" @click="closeAll">Close All <i class="material-icons pointer">visibility_off</i></button>
+                    <button dusk="open-all-button" class="btn btn-sm btn-outline-info align-items-center d-flex" @click="openAll">Open All <i class="material-icons pointer">visibility</i></button>
+                    <button dusk="close-all-button" class="btn btn-sm btn-outline-info align-items-center d-flex" @click="closeAll">Close All <i class="material-icons pointer">visibility_off</i></button>
                     <router-link :to="{ name: 'chimeStudent', params: {chimeId: chimeId} }"  tag="button" class="btn btn-sm btn-outline-info align-items-center d-flex">
                         Preview
                         <i class="material-icons">search</i>
@@ -147,24 +147,26 @@ export default {
 
         },
         delete_question(questionId) {
-            const url = (
-                '/api/chime/' + this.folder.chime_id +
-                '/folder/' + this.folder.id + '/question/' + questionId);
-            const self = this;
+            if (confirm("Are you sure you want to remove this question?")) {
+                const url = (
+                    '/api/chime/' + this.folder.chime_id +
+                    '/folder/' + this.folder.id + '/question/' + questionId);
+                const self = this;
 
-            axios.delete(url)
-            .then(res => {
-                console.log(res);
-                const question_index = self.questions.findIndex(
-                    e => e.id === questionId);
-                self.questions.splice(question_index, 1);
-                this.$nextTick(function () {
-                    this.$refs.slideup.layout();    
+                axios.delete(url)
+                .then(res => {
+                    console.log(res);
+                    const question_index = self.questions.findIndex(
+                        e => e.id === questionId);
+                    self.questions.splice(question_index, 1);
+                    this.$nextTick(function () {
+                        this.$refs.slideup.layout();    
+                    });
+                })
+                .catch(err => {
+                    console.log(err.response);
                 });
-            })
-            .catch(err => {
-                console.log(err.response);
-            });
+            }
         },
         edit_folder: function() {
             const self = this;

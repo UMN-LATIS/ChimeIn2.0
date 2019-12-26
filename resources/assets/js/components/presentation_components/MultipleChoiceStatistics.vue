@@ -81,8 +81,20 @@ export default {
             return rows;
         },
         chartData: function () {
-            var questionArray = this.question.question_info.question_responses.map(q => { return [q, this.responses.filter(r => Array.isArray(r.response_info.choice)?r.response_info.choice.includes(q):(r.response_info.choice == q)).length, 'color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2'] })
-            questionArray.unshift(['Answer', 'Number of Responses', { role: 'style' }])
+            var questionArray = this.question.question_info.question_responses.map(q => 
+            { 
+                var questionText = this.isObject(q)?q.text:q; 
+                var formattedQuestion = questionText;
+                if(this.isObject(q) && q.correct == true) {
+                    formattedQuestion = formattedQuestion + " ✓";
+                }
+                return [
+                    formattedQuestion, 
+                    this.responses.filter(r => Array.isArray(r.response_info.choice)?r.response_info.choice.includes(questionText):(r.response_info.choice == questionText)).length, 
+                    'color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2'
+                    ] 
+            });
+            questionArray.unshift(['Answer', 'Number of Responses', { role: 'style' }]);
             return questionArray;
         }
     }

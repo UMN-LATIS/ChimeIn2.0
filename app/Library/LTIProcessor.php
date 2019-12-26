@@ -22,7 +22,7 @@ class LTIProcessor {
 		}
 
 		$tool = new ChimeToolProvider();
-		$consumer = ToolProvider\ToolConsumer::fromRecordId(3, $tool->data_connector);
+
 		$resource_link = ToolProvider\ResourceLink::fromRecordId($folder->resource_link_pk, $tool->data_connector);
 
 		$ltiUsers = $resource_link->getUserResultSourcedIDs();
@@ -33,16 +33,51 @@ class LTIProcessor {
 
 		$globalUsers = [];
 
-		foreach($questions as $question) {
+		$chime = $folder->chime;
+		$filterForCorrectAnswers = false;
+		if($chime->only_correct_answers_lti) {
+			$filterForCorrectAnswers = true;
+		}
 
-			$users = $question->sessions->map(function ($session) {
-				return $session->responses->map(function ($response) {
-					return $response->user->lti_user_id?$response->user:false;
+		foreach($questions as $question) {
+			$correctText = null;
+			$correctAnswers = null;
+			if($filterForCorrectAnswers) {
+				$correctAnswers = array_filter($question->question_info["question_responses"], function($k) { if(isset($k["correct"])) { return $k["correct"]==true;} return false;});
+				$correctText = array_map(function($k) { return $k["text"];}, $correctAnswers);
+			}
+
+			$users = $question->sessions->map(function ($session) use($correctText) {
+				return $session->responses->map(function ($response) use ($correctText) {
+					// if this question has "correct" answers, see if the respondent got at least one correct
+					// if so pass it back.  
+					if($correctText) {
+						$choice = [];
+						if(isset($response->response_info["choice"])) {
+							if(is_array($response->response_info["choice"])) {
+								$choice = $response->response_info["choice"];
+							}
+							else {
+								$choice = [$response->response_info["choice"]];
+							}
+							
+						}
+						if(count(array_intersect($choice, $correctText)) > 0 && $response->user->lti_user_id) {
+							return $response->user;
+						}
+						return false;
+					}
+					else {
+						return $response->user->lti_user_id?$response->user:false;
+					}
+					
 				});
 			})->flatten()->unique();
 
 			foreach($users as $user ) {
-
+				if(!isset($user->lti_user_id)) {
+					continue;
+				}
 				if(array_key_exists($user->lti_user_id, $globalUsers)) {
 					$globalUsers[$user->lti_user_id]++;
 				}

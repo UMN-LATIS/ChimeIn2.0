@@ -37,9 +37,16 @@ window.io = require('socket.io-client');
 // todo: fetch environment variables from .env file
 // note: will not send if encryption is true
 // when curl permissions are updated for encryption, reset cache (php artisan config:cache)
+const env = process.env.NODE_ENV || 'development';
+// use our internal hostnames so we can work with docker
+var host = window.location.hostname;
+if(env == "development") {
+    host = "echo.knowfear.net";
+}
+
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    host: window.location.hostname + ':6001',
+    host: host + ':6001',
     // auth: {
     //     headers: {
     //         Authorization: 'Bearer ' + "2b54f921c0e9394855626e3641cb91c4",
