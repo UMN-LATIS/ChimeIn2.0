@@ -20,6 +20,10 @@ After creating the assignment, click the link to open ChimeIn.  This will automa
 
 Add any questions you'd like to your folder.  If you have co-instructors, they will automatically be granted the access to add questions as well. 
 
+This screencast shows the process.
+
+<iframe width="100%" height="420" src="https://www.youtube.com/embed/Vz-exmZVvzc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Approaches to using ChimeIn within Canvas
 
 If you're using ChimeIn repeatedly throughout a course, there are a couple different approaches to setting up your Canvas course.  If you'd like to keep track of student participation on a weekly or per-lecture basis, you should create separate assignments.  That way, the gradebook will reflect participation in individual course sessions.  Alternatively, you can create a single assignment for an entire semester, and collect an overall grade.  If you'd like to discuss different approaches, just [contact us](mailto:mcfa0086@umn.edu). 
