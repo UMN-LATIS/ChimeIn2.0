@@ -10,6 +10,10 @@ ChimeIn needs to be enabled in your Canvas course.  Go to the "settings" link in
 
 Some instructions will be presented.  You'll need to copy and paste two values - the "consumer key" and "secret key". It might be helpful to copy these to a temporary text document.  Once it's been enabled, you can begin adding ChimeIn assignments. 
 
+This screencast shows the process.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3sAjHC3onFM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Creating a Chime
 
 ChimeIn is available as an "external tool" within the Canvas assignment tool.  When adding an assignment, select ChimeIn from the external tools list.  You can assign a grading basis as well.  **We recommend checking the box for "open in a new tab" so your students have plenty of space**.
