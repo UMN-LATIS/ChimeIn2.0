@@ -54,7 +54,7 @@ class LTIHandler extends Controller
             Auth::login($user);
         }
 
-        if($tool->user->isStaff()) {
+        if($tool->user->isStaff() || $tool->user->isAdmin()) {
 
             // it's an instructor, let's check if this assingment exists
             if($folder = \App\Folder::where("resource_link_pk", $tool->resourceLink->getRecordId())->first()) {             
@@ -89,8 +89,6 @@ class LTIHandler extends Controller
             }
         }
         else {
-            // Auth::logout();
-            // we'll force shib
             if($chime = \App\Chime::where("lti_course_id",$tool->context->ltiContextId)->first()) {
                 if(!Auth::user()->chimes->contains($chime)) {
                     Auth::user()->chimes()->attach($chime, [
