@@ -61,7 +61,13 @@ class LTIHandler extends Controller
                 $chime = $folder->chime;
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 $chime->save();
-                return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+                 if($folder->chime->folders->filter(function($folder) { return !$folder->resource_link_pk;})->count() > 0) {
+                    return \Redirect::to("/chime/" . $chime->id);
+                }
+                else {
+                    return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+                }
+                
             }
             else {
                 if($chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first()) {
@@ -99,6 +105,9 @@ class LTIHandler extends Controller
                 $folderId = null;
                 if($folder = \App\Folder::where("resource_link_pk", $tool->resourceLink->getRecordId())->first()) {
                     $folderId = $folder->id;
+                    if($folder->chime->folders->filter(function($folder) { return !$folder->resource_link_pk;})->count() > 0) {
+                        $folderId = null;
+                    }
                 }
                 return \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
             }
