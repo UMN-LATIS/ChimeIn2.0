@@ -19,6 +19,7 @@
         "deployer/deployer": "^6.3",
         "deployer/dist": "^6.3",
         "doctrine/dbal": "^2.7",
+        "iatstuti/laravel-cascade-soft-deletes": "^2.0",
         "imsglobal/lti": "dev-master",
         "intervention/image": "^2.4",
         "lab404/laravel-impersonate": "^1.4",

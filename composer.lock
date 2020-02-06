@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac9e0c7fa860e384cb695b8b388a0c8d",
+    "content-hash": "12e13bac5653c334026fa106603cd59c",
     "packages": [
         {
             "name": "deployer/deployer",
@@ -786,6 +786,48 @@
                 "url"
             ],
             "time": "2019-07-01T23:21:34+00:00"
+        },
+        {
+            "name": "iatstuti/laravel-cascade-soft-deletes",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/michaeldyrynda/laravel-cascade-soft-deletes.git",
+                "reference": "a5a16c7b9468d730d27b1c3b5bf824d7d1caf648"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/michaeldyrynda/laravel-cascade-soft-deletes/zipball/a5a16c7b9468d730d27b1c3b5bf824d7d1caf648",
+                "reference": "a5a16c7b9468d730d27b1c3b5bf824d7d1caf648",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^6.0",
+                "illuminate/events": "^6.0",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "utility",
+            "autoload": {
+                "psr-4": {
+                    "Iatstuti\\Database\\Support\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dyrynda",
+                    "email": "michael@dyrynda.com.au",
+                    "homepage": "https://dyrynda.com.au"
+                }
+            ],
+            "description": "Cascading deletes for Eloquent models that implement soft deletes",
+            "time": "2019-09-06T05:25:24+00:00"
         },
         {
             "name": "imsglobal/lti",
