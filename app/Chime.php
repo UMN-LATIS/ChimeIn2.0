@@ -6,13 +6,16 @@ use Sessions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Iatstuti\Database\Support\CascadeSoftDeletes;
 
 
 class Chime extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CascadeSoftDeletes;
+    
     protected $fillable = ['name', 'access_code', 'require_login', 'students_can_view', 'join_instructions', 'only_correct_answers_lti'];
     protected $dates = ['deleted_at'];
+    protected $cascadeDeletes = ['folders'];
 
     public function folders() {
         return $this->hasMany(Folder::class);

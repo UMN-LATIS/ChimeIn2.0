@@ -132,7 +132,9 @@ $navbar-horizontal-padding = 1.5rem
 
 @media (max-width: $MQMobile)
   .navbar
-    padding-left 4rem
+    .vuepress-nav {
+      padding-left 4rem
+    }
     .can-hide
       display none
     .links

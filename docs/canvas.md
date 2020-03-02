@@ -8,7 +8,7 @@ ChimeIn needs to be enabled in your Canvas course.  Go to the "settings" link in
 
 ![Enabling ChimeIn](./addCanvas.png)
 
-Some instructions will be presented.  You'll need to copy and paste two values - the "consumer key" and "secret key". It might be helpful to copy these to a temporary text document.  Once it's been enabled, you can begin adding ChimeIn assignments. 
+Some instructions will be presented.  **You'll need to copy and paste two values** - the "consumer key" and "secret key". It might be helpful to copy these to a temporary text document.  Once it's been enabled, you can begin adding ChimeIn assignments. 
 
 This screencast shows the process.
 
