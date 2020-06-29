@@ -480,7 +480,7 @@ class ChimeController extends Controller
                                 $row[] = json_encode($responses);
                             }
                             else {
-                                $row[] = $responses[0];
+                                $row[] = reset($responses);
                             }
                             
                         }
