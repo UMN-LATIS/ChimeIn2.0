@@ -148,6 +148,7 @@
                     }, {
                         'list': 'bullet'
                     }],
+                    [{ "script": "sub"}, {"script":"super"}],
                     ['link', 'image']
                 ],
                 editorOptions: {
