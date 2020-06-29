@@ -479,8 +479,11 @@ class ChimeController extends Controller
                             if(count($responses) > 1) {
                                 $row[] = json_encode($responses);
                             }
+                            if(count($responses) == 0) {
+                                $row[] = "";
+                            }
                             else {
-                                $row[] = reset($responses);
+                                $row[] = $responses[0];
                             }
                             
                         }
