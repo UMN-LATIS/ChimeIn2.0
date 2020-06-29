@@ -2,7 +2,7 @@
     <div class="row responseContainer">
         <div
             class="col-12"
-            v-if="response.session.question">
+            v-if="response.session && response.session.question">
             <p class="questionText" v-html="response.session.question.text"></p>
             <component :question="response.session.question"
                 :disabled="true"
