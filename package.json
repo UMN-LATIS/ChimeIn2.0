@@ -32,7 +32,7 @@
     "fs": "0.0.1-security",
     "laravel-echo": "^1.4.0",
     "material-design-icons": "^3.0.1",
-    "npm": "^6.7.0",
+    "npm": "^6.14.6",
     "popper.js": "^1.14.3",
     "pusher-js": "^4.2.2",
     "query-string": "^5.1.1",
