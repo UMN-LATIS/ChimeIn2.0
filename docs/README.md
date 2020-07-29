@@ -10,6 +10,10 @@ Check out our [moving to ChimeIn 2](moving-to-chimein-2) page or [contact us](ma
 
 ChimeIn organizes content into "Chimes".  Each Chime can contain one or more folders, and each folder can contain one or more questions.  To get started creating a Chime, just log in.  
 
+Below is a diagram explaining how questions are organized. If you're using ChimeIn as part of a course, you'll probably have a "Chime" for each of your courses. Then you can create folders for each lecture or topic, or just create a single folder for your whole semester. 
+
+![ChimeIn Organization](./organization.png)
+
 ## Chime access
 
 Every Chime has a custom URL associated with it, as well as an access code.  These are visible by clicking the "Chime settings" button.  Participants can join your chime by going to the ChimeIn homepage and entering that access code, or by visiting the link.
