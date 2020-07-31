@@ -5,6 +5,8 @@ window.sw = require('stopword')
 
 window.queryString = require('query-string');
 
+window.simpleheat = require('simpleheat');
+
 Vue.mixin({
     methods: {
         isObject: obj => typeof obj == "object"
@@ -91,6 +93,9 @@ Vue.component('free_response',
     require('./components/questions/response/FreeResponse.vue').default);
 Vue.component('slider_response',
     require('./components/questions/response/Slider.vue').default);
+Vue.component('heatmap_response',
+    require('./components/questions/response/HeatmapResponse.vue').default);
+
 
 
 Vue.component('present-question',
@@ -108,6 +113,8 @@ Vue.component('free_response_display',
     require('./components/questions/display/FreeResponse.vue').default);
 Vue.component('image_response_display',
     require('./components/questions/display/ImageResponse.vue').default);
+Vue.component('heatmap_response_display',
+    require('./components/questions/display/HeatmapResponse.vue').default);
 
 
 const store = new Vuex.Store({

@@ -474,12 +474,15 @@ class ChimeController extends Controller
                                     case "image_response":
                                         $responses[$key] = $value["image_name"];
                                         break;
+                                    case "heatmap_response":
+                                        $responses[$key] = $value["image_coordinates"]["coordinate_x"] . "," . $value["image_coordinates"]["coordinate_y"];
+                                        break;
                                 }
                             }
                             if(count($responses) > 1) {
                                 $row[] = json_encode($responses);
                             }
-                            if(count($responses) == 0) {
+                            else if(count($responses) == 0) {
                                 $row[] = "";
                             }
                             else {

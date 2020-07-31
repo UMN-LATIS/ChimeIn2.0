@@ -40,6 +40,10 @@ const ImageResponseStatistics = () => import(
     /* webpackChunkName: "ImageResponseStatistics" */
     './ImageResponseStatistics.vue'
 );
+const HeatmapResponseStatistics = () => import(
+    /* webpackChunkName: "ImageResponseStatistics" */
+    './HeatmapResponseStatistics.vue'
+);
 
 export default {
     props: ['sessions', 'session', 'question', "chimeId"],
@@ -52,7 +56,8 @@ export default {
         'slider_response_statistics': sliderstatistics,
         'multiple_choice_statistics': multiplechoicestatistics,
         'image_response_statistics': ImageResponseStatistics,
-        'free_response_statistics': FreeResponseStatistics
+        'free_response_statistics': FreeResponseStatistics,
+        'heatmap_response_statistics': HeatmapResponseStatistics
     },
     methods: {
         updateSelected() {

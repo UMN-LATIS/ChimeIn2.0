@@ -42,6 +42,7 @@
     "pusher-js": "^4.2.2",
     "query-string": "^5.1.1",
     "set-clustering": "^1.0.1",
+    "simpleheat": "^0.4.0",
     "socket.io-client": "^2.2.0",
     "stemmer": "^1.0.2",
     "stopword": "^0.1.10",

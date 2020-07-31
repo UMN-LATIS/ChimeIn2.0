@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <component :is="question_type + '_response'" :question_responses.sync="question_responses"></component>
+            <component :is="question_type + '_response'" :question_responses.sync="question_responses" :chime_id="this.folder.chime_id"></component>
         </div>
         <div class="modal-footer ">
             <div class="mr-auto">
@@ -90,6 +90,7 @@
     import ImageResponse from "./response_components/ImageResponse.vue";
     import SliderResponse from "./response_components/SliderResponse.vue";
     import FreeResponse from "./response_components/FreeResponse.vue";
+    import HeatmapResponse from "./response_components/HeatmapResponse.vue";
 
     import VueSelect from 'vue-select';
 
@@ -123,6 +124,7 @@
             'image_response_response': ImageResponse,
             'slider_response_response': SliderResponse,
             'free_response_response': FreeResponse,
+            'heatmap_response_response': HeatmapResponse,
             'v-select':VueSelect
         },
         data: function () {
@@ -139,7 +141,8 @@
                     {id:"multiple_choice", label:"Multiple Choice"},
                     {id:"free_response", label:"Free Response"},
                     {id:"image_response", label:"Image Response"},
-                    {id:"slider_response", label:"Slider Response"}
+                    {id:"slider_response", label:"Slider Response"},
+                    {id:"heatmap_response", label:"Heatmap Response"}
                     ],
                 toolbar: [
                     ['bold', 'italic', 'underline', 'align'],
