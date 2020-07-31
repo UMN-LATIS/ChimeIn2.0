@@ -2,7 +2,7 @@
     <div>
         <div class="col-sm-12">
             <div class="clickPointer" v-if="image_coordinates" :style="{top:image_coordinates.coordinate_y + 'px',left:image_coordinates.coordinate_x+'px'}"  ></div>
-            <img ref="targetImage" class="img-fluid" v-bind:src="'/storage/' + question.question_info.question_responses.image" @click="triggerResponse" @load="updateScaledCoordinates">
+            <img ref="targetImage" class="img-fluid max-height-image" v-bind:src="'/storage/' + question.question_info.question_responses.image" @click="triggerResponse" @load="updateScaledCoordinates">
         </div>
          <div class="col-sm-12">
             <button v-if="!disabled && response.id && !create_new_response && question.allow_multiple" class="btn btn-primary" variant="primary" @click="new_response">Clear and Select Another Point</button>
@@ -11,6 +11,11 @@
 </template>
 
 <style scoped>
+
+
+.max-height-image {
+    max-height: 70vh
+}
 
 .clickPointer {
     margin-top: -1.5em;
