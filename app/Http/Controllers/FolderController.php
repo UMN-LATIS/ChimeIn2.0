@@ -66,6 +66,36 @@ class FolderController extends Controller
         }
     }
 
+    public function importQuestions(Request $req, $chime, $folder) {
+        $user = $req->user();
+        $localChime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $chime->id)
+            ->first());
+        
+        if ($localChime != null && $localChime->pivot->permission_number >= 300) {
+
+            $sourceFolder = \App\Folder::find($req->get("folder_id"));
+            if(!$sourceFolder) {
+                return response('Could not find source folder', 403);
+            }
+            foreach($sourceFolder->questions as $question) {
+                $newQuestion = $question->replicate();
+                $newQuestion->folder()->associate($folder);
+                $newQuestion->current_session_id = null;
+                $newQuestion->save();
+
+            }
+            return response()->json(["success" => true]);
+
+        }
+        else {
+            return response('Invalid Permissions to Import Questions', 403);
+        }
+
+    }
+
     public function updateQuestion(Request $req) {
 
         $user = $req->user();

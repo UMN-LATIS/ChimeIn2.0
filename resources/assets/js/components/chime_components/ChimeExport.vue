@@ -27,6 +27,13 @@
                                 Full Responses
                             </label>
                         </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="export_type" id="export_type_question_only"
+                                    value="question_only">
+                                Questions (no responses)
+                            </label>
+                        </div>
                     </div>
                 </div>
             </fieldset>

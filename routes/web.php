@@ -67,6 +67,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
         // Folder Routes (chime page subroutes)
     Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
+    Route::post('/api/chime/{chime}/folder/{folder}/import', 'FolderController@importQuestions');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
