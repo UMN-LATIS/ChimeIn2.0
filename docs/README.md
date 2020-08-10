@@ -6,6 +6,11 @@
 Check out our [moving to ChimeIn 2](moving-to-chimein-2) page or [contact us](mailto:mcfa0086@umn.edu) for a personal introduction
 :::
 
+We've got an orientation video, which will cover all the basics. You can take a look below.
+
+<iframe width="100%" height="415" src="https://www.youtube.com/embed/A1jmm6ckm3Y" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 ## ChimeIn Basics
 
 ChimeIn organizes content into "Chimes".  Each Chime can contain one or more folders, and each folder can contain one or more questions.  To get started creating a Chime, just log in.  

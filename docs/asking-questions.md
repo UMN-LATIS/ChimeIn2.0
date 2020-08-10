@@ -1,3 +1,7 @@
+---
+sidebarDepth: 3
+---
+
 # Asking Questions with ChimeIn
 
 ChimeIn offers multiple question types, including multiple choice, free response, slider response, and an image upload.  Multiple choice and slider response questions are great choices for quick in class comprehension checks.  They are easy to make quickly in class, and students can answer in a few seconds.  Free response questions and image uploads require more time on the students’ part, so these options are great for reflecting on learning and even allowing students to answer the question outside of class.   Questions with long prompts and/or long multiple choice answers should be prepared prior to the start of class to keep class running smoothly.  If ChimeIn questions should appear in the Canvas gradebook, instructors should make ChimeIn assignments in [Canvas](canvas) before class.  This process is fairly simple, but does take more time than just creating a question in class.  
@@ -62,6 +66,17 @@ Slider response questions are great ways to check student understanding and conf
 
 * How well do you understand [blank topic]?  Scale: don’t understand at all - completely understand
 * How much money did you spend on textbooks this semester? Scale: $0-$500
+
+### Heatmap
+
+A heatmap question allows you to upload an image and present it to your participants, along with a written prompt. They'll then be able to click or tap on the image to indicate a selected area, which will be rendered as a "heatmap" in the presenter view. 
+
+* Identify the problematic portion of a (HIPAA-respecting) medical slide or scan
+* Flag a portion of a map in response to a geo question
+
+![Example Heatmap](./heatmap.jpg)
+
+
 
 ### Free Response
 
