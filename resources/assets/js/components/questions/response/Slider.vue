@@ -1,18 +1,22 @@
 <template>
     <div>
         <div class="row value-slider">
-
-                <div class="col-1"> {{ left_choice_text}}</div>
-                 <div class="col-10">
+                 <div class="col">
                 <div class="range-wrap ">
                 <input type="range" :disabled="disabled" class="form-control-range custom-range range" :value="sliderValue" @change="valueChanged($event.target.value)" id="formControlRange" >
                 <output class="bubble" :style="customStyle" v-if="question.question_info.question_responses.range_type == 'Numeric (Linear)'">{{ bubbleValue }}</output>
                 </div>
                 </div>
-                <div class="col-1">{{ right_choice_text}}</div>
 
         </div>
-      
+                <div class="row justify-content-between">
+            <div class="col-sm-2">
+                <b>{{ left_choice_text}}</b>
+            </div>
+            <div class="col-sm-2 text-right">
+                <b>{{ right_choice_text}}</b>
+            </div>
+        </div>
          <div class="form-group" v-if="question.allow_multiple && !disabled">
             <button class="btn btn-primary" @click="clear">Clear and Start a New Response</button>
         </div>
@@ -22,7 +26,7 @@
 
   .range-wrap {
         position: relative;
-        margin: 0 auto 3rem;
+        margin: 0 auto 0.3rem;
     }
 
     .range {
@@ -48,6 +52,7 @@
         top: 23px;
         /* transform: translateX(-60%); */
         background-color: white;
+        z-index:100;
     }
 
     .bubble::after {
@@ -61,18 +66,6 @@
     }
 
 
-
-.custom-range:disabled::-webkit-slider-thumb {
-  background-color: lightgray;
-}
-
-.custom-range:disabled::-moz-range-thumb {
-  background-color: lightgray;
-}
-
-.custom-range:disabled::-ms-thumb {
-  background-color: lightgray;
-}
 
 </style>
 
