@@ -92,7 +92,7 @@ export default {
     },
     methods: {
         valueChanged: function(targetValue) {
-            this.updateRange(targetValue);
+            
             const response = {
                 question_type: 'slider',
                 choice: targetValue
@@ -116,7 +116,9 @@ export default {
             }
     },
     watch: {
-
+        sliderValue: function(newValue) {
+            this.updateRange(newValue);
+        }
     },
     computed: {
         sliderValue: function() {
