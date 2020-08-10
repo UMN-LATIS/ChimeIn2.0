@@ -11,7 +11,7 @@
         </div>
         <div class="container">
             <div class="row mt-2">
-                <div class="col4 align-items-center d-flex">
+                <div class="col-4 align-items-center d-flex">
                     <h1 class="h4" v-if="!show_edit_folder">{{ folder.name }}</h1>
                     <div v-if="show_edit_folder">
                         <div class="row">
