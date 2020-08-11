@@ -72,6 +72,9 @@ export default {
 		emitChanges: function() {
 			this.$emit('update:question_responses', {"left_choice_text": this.left_choice_text, "right_choice_text":this.right_choice_text, "range_type": this.range_type});
 		}
-	}
+    },
+    mounted: function () {
+        this.checkValues();
+    }
 }
 </script>
