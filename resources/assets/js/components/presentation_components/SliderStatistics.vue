@@ -86,42 +86,27 @@ export default {
             else if(this.question.question_info.question_responses.range_type == "Numeric (Linear)") {
                 let leftValue = parseInt(this.question.question_info.question_responses.left_choice_text);
                 let rightValue = parseInt(this.question.question_info.question_responses.right_choice_text);
-                let range =  rightValue - leftValue;
-                let increment = 14;
-                let count = Math.round((range / increment) * 100) / 100;
-
-                var outputArray = [];
+                let range =  rightValue * (104/100) - leftValue;
+                let increment = 15;
 
                 
-                for(var i=leftValue; i<rightValue; i=i+count) {
-                    outputArray.push(i);
-                }
-                outputArray[outputArray.length - 1] = rightValue;
 
+                let width = Math.round((range / increment) * 10) / 10;
+                var outputArray = [];
+
+                var endPoint = null
+                for(var i=leftValue; i<rightValue; i=i+width) {
+                    endPoint = (i+width).toFixed(2);
+                    outputArray.push(i.toFixed(2) + " - " + (endPoint - 0.01).toFixed(2));
+                       
+                }
+                
+                outputArray[outputArray.length - 1] = (endPoint-width).toFixed(2) + " - " + rightValue;
 
                 return outputArray;
 
             }
-            else if(this.question.question_info.question_responses.range_type == "Logarithmic") {
 
-                let leftValue = parseInt(this.question.question_info.question_responses.left_choice_text);
-                let rightValue = parseInt(this.question.question_info.question_responses.right_choice_text);
-                let range =  rightValue - leftValue;
-                let increment = 14;
-                let count = Math.round((range / increment) * 100) / 100;
-
-                var outputArray = [];
-
-                
-                for(var i=leftValue; i<rightValue; i=i+count) {
-                    outputArray.push(i);
-                }
-                outputArray[outputArray.length - 1] = rightValue;
-
-
-                return outputArray;
-
-            }
 
 
             
