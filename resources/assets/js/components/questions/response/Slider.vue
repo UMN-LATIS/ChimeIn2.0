@@ -118,8 +118,11 @@ export default {
             if(this.create_new_response) {
                 return 50;
             }
-            if(this.response && this.response.response_info) {
+            else if(this.response && this.response.response_info) {
                 return this.response.response_info.choice;
+            }
+            else {
+                return 50;
             }
         },
         left_choice_text: function() {
