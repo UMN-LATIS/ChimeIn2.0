@@ -266,35 +266,29 @@
             },
 
             openAll: function () {
-                for (var question of this.folder.questions) {
-                    const url = (
-                        '/api/chime/' +
-                        this.folder.chime_id +
-                        '/folder/' +
-                        this.folder.id +
-                        '/question/' +
-                        question.id
-                    );
+                const url = (
+                    '/api/chime/' +
+                    this.folder.chime_id +
+                    '/folder/' +
+                    this.folder.id +
+                    '/question/startAll'
+                );
 
-                    axios.post(url, {})
-                        .then(res => {
+                axios.post(url, {})
+                    .then(res => {
 
-                        })
-                        .catch(err => {
+                    })
+                    .catch(err => {
 
-                        });
-                }
+                    });
             },
             closeAll: function () {
-                for (var question of this.folder.questions) {
                     const url = (
                         '/api/chime/' +
                         this.folder.chime_id +
                         '/folder/' +
                         this.folder.id +
-                        '/question/' +
-                        question.id +
-                        '/stopSession/'
+                        '/question/stopAll'
                     );
 
                     axios.put(url, {})
@@ -304,7 +298,6 @@
                         .catch(err => {
 
                         });
-                }
             },
             closeOthers: function () {
                 for (var openSession of this.otherFolderSessions) {

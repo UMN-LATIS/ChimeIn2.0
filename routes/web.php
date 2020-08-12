@@ -64,6 +64,10 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/api/chime/{chime_id}/session/{session_id}/question', 'ResponseController@getQuestion');
     Route::put('/api/chime/{chime}/session/{session}/response/{response?}', 'ResponseController@createOrUpdateResponse');
 
+    Route::post('/api/chime/{chime}/folder/{folder}/question/startAll', 'PresentController@startAllQuestions');
+    Route::put('/api/chime/{chime}/folder/{folder}/question/stopAll', 'PresentController@stopAllQuestions');
+
+
         // Folder Routes (chime page subroutes)
     Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
@@ -78,6 +82,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     // Presentation Routes
     // Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@getSessions');
     // Route::get('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/session/{session_id}', 'PresentController@getResponses');
+
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
 });
