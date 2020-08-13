@@ -135,22 +135,6 @@ export default {
 }
 
 /*
- * Sum.
- * sum :: (Number, Number) → Number
- * 
- * Provided two numbers, return their summation.
- **/
-const sum = (numX, numY) => numX + numY
-
-/*
- * Increment.
- * incr :: Number → Number
- * 
- * Provided a number, return its value incremented by one.
- **/
-const incr = num => sum(num, 1)
-
-/*
  * Construct bins.
  * consBins :: Object → [[Number]]
  * 
@@ -166,19 +150,19 @@ const consBins = ({
         accum = []
     }) =>
     // Ensure `max` does not exceed the range of our current interval...
-    sum(min, width) > max ? // If so, return our accumulator;
+    (min + width) > max ? // If so, return our accumulator;
     accum : // Otherwise, call upon our method recursively until we fulfill our
     // predicating condition.
     consBins({
         // Increment interval, so as to preclude overlap.
-        min: sum(min, width),
+        min: (min + width),
         // `max` and `width` remain constant.
         max,
         width,
         // Wax upon our accumulator, combining it with a new array, in which the
         // current interval is represented.
         accum: accum.concat([
-            [min, sum(min, width)]
+            [min, (min + width)]
         ]),
     })
 
@@ -246,11 +230,12 @@ const consHistObjWithBins = (arr = [], {
 }) => (
     key = ''
 ) => {
+    
     var bins = consBins({
-    min,
-    max,
-    width
-});
+        min,
+        max,
+        width
+    });
     // we fudge the final bin to be ever so slightly larger than our max to ensure we bin values that equal the max. 
     // otherwise our < max checks will filter that value.
     bins[bins.length - 1][1] = bins[bins.length - 1][1] + 0.0001;
