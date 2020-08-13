@@ -74,8 +74,8 @@ export default {
         binnedValues() {
             return consHistObjWithBins(this.responses.map(r => r.response_info), {
                 min: 0,
-                max: 106,
-                width: 6
+                max: 100,
+                width: 6.25
             })('choice');
         },
         labels() {
@@ -86,12 +86,12 @@ export default {
             else if(this.question.question_info.question_responses.range_type == "Numeric (Linear)") {
                 let leftValue = parseInt(this.question.question_info.question_responses.left_choice_text);
                 let rightValue = parseInt(this.question.question_info.question_responses.right_choice_text);
-                let range =  rightValue * (104/100) - leftValue;
-                let increment = 15;
+                let range =  rightValue - leftValue;
+                let increment = 16;
 
                 
 
-                let width = Math.round((range / increment) * 10) / 10;
+                let width = range / increment;
                 var outputArray = [];
 
                 var endPoint = null
@@ -171,7 +171,7 @@ const consBins = ({
     // predicating condition.
     consBins({
         // Increment interval, so as to preclude overlap.
-        min: incr(sum(min, width)),
+        min: sum(min, width),
         // `max` and `width` remain constant.
         max,
         width,
@@ -204,7 +204,7 @@ const filterPropByMinMax = (arr, {
         // strings; hence, we need abstract their numerical values via `parseInt`.
         // Our callback will return `true` provided the item's value is greater than
         // or equal to our minimum _and_ less than or equal to our maximum.
-        item => parseInt(item[key], 10) >= min && parseInt(item[key], 10) <= max
+        item => parseInt(item[key], 10) >= min && parseInt(item[key], 10) < (max)
     )
 
 /*
@@ -245,9 +245,15 @@ const consHistObjWithBins = (arr = [], {
     width = 1
 }) => (
     key = ''
-) => consHistObj(arr, consBins({
+) => {
+    var bins = consBins({
     min,
     max,
     width
-}))(key)
+});
+    // we fudge the final bin to be ever so slightly larger than our max to ensure we bin values that equal the max. 
+    // otherwise our < max checks will filter that value.
+    bins[bins.length - 1][1] = bins[bins.length - 1][1] + 0.0001;
+    return consHistObj(arr, bins)(key)
+}
 </script>
