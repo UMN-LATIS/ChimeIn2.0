@@ -129,12 +129,12 @@ export default {
             var finalizedWords = wordsWithoutStops.concat(topics).filter(w=>!this.filterWords.includes(w));
             // var wordsStemmed = wordsWithoutStops.map(word => stemmer(word).toLowerCase());
 
-            
+
             const groups = finalizedWords.reduce((acc, w) => {
                 if (w.length < 2 || !isNaN(w)) {
                     return acc;
                 }
-                var stem = stemmer(w.toLowerCase());
+                var stem = stemmer(w.toLowerCase().replace(/\"/g, ""));
                 const i = acc.findIndex(e => e.stem === stem);
 
                 if (i > -1) {
