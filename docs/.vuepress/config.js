@@ -27,6 +27,7 @@ module.exports = {
             '/taking-attendance',
             '/deploying',
             '/managing-a-chime'
+            '/async'
     ],
 
     }
