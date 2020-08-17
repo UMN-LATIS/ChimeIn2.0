@@ -55,6 +55,20 @@ class ChimeController extends Controller
         return response()->json(["success"=>true]);
     }
 
+    public function updateFolders(Chime $chime, Request $req) {
+        $requestFolders = $req->get("folders");
+        foreach($chime->folders as $folder) {
+            foreach($requestFolders as $request) {
+                if($request["id"] == $folder->id) {
+                    $folder->order = $request["order"];
+                    $folder->save();
+                }
+            }
+        }
+        return response()->json(["success"=>true]);
+    }
+
+
 
     public function getChimes(Request $req) {
         $chimes = $req->user()->chimes()->get();
@@ -252,8 +266,16 @@ class ChimeController extends Controller
             ->first());
         
         if ($chime != null && $chime->pivot->permission_number >= 300) {
+            $highest = $chime->folders()->max('order');
+            $order_num = 1;
+
+            if ($highest != null) {
+                $order_num = $highest + 1;
+            }
+
             $new_folder = $chime->folders()->create([
-                'name' => $req->get('folder_name')
+                'name' => $req->get('folder_name'),
+                'order' => $order_num
             ]);
         
             return response()->json($new_folder);

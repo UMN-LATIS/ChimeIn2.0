@@ -26,7 +26,7 @@ module.exports = {
             '/moving-to-chimein-2',
             '/taking-attendance',
             '/deploying',
-            '/managing-a-chime'
+            '/managing-a-chime',
             '/async'
     ],
 

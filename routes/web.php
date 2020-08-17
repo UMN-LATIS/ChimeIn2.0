@@ -56,6 +56,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/api/chime/{chime}/openQuestions', 'ChimeController@getOpenQuestions');
 
     Route::patch('/api/chime/{chime}', 'ChimeController@update');
+    Route::put('/api/chime/{chime}', 'ChimeController@updateFolders');
 
     Route::post('/api/chime/{chime}/export/', 'ChimeController@exportChime');
 

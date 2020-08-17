@@ -9,7 +9,7 @@ class Folder extends Model
 {
 	use SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'order'];
     protected $dates = ['deleted_at'];
     
     public function chime() {

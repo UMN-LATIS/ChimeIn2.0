@@ -25,15 +25,19 @@
             </div>
 
             <div class="center-align">
-                <div v-if="viewable_folders.length > 0">
-                    <transition-group name="fade">
-                        <folder-card
-                            v-for="folder in viewable_folders"
+                <div v-if="ordered_folders.length > 0">
+                    <draggable v-model="ordered_folders"  handle=".draghandle" :forceFallback="true">
+                    <!-- <transition-group name="fade"> -->
+                        
+                        <folder-card class="draghandle"
+                            v-for="folder in ordered_folders"
                             :folder="folder"
                             :chime="chime"
                             :key="folder.id"
                         />    
-                    </transition-group>
+                        
+                    <!-- </transition-group> -->
+                    </draggable>
                 </div>
                 <div v-else>
                     <h4>You don't have any folders yet.  Why not create one now?</h4>
@@ -52,28 +56,30 @@
 </style>
 
 <script>
+
+import draggable from 'vuedraggable'
+
     export default {
         data() {
             return {
                 chime: {},
-                folders: [],
-                viewable_folders: [],
                 showSettings: false,
                 exportPanel: false
             };
         },
+        components: {
+            draggable
+        },
         props: ['user', 'chimeId'],
         methods: {
             create_folder: function(folder_name) {
-                if (this.folders.filter(e => e.name === folder_name).length < 1) {
-                    const self = this;
+                if (this.chime.folders.filter(e => e.name === folder_name).length < 1) {
                     axios.post('/api/chime/' + this.chime.id + '/folder', {
                         folder_name: folder_name
                     })
                     .then(res => {
                         console.log(res);
-                        self.folders.push(res.data);
-                        self.viewable_folders = self.folders.map(e => e);
+                        this.chime.folders.push(res.data);
                     })
                     .catch(err => {
                         console.log(err.response);
@@ -85,14 +91,38 @@
                 .then(res => {
                     console.log(res);
                     this.chime = res.data;
-                    this.folders = this.chime.folders;
-                    this.viewable_folders = res.data.folders;
                     document.title = this.chime.name;
                 })
                 .catch(err => {
                     this.$store.commit('message', "Could not load Chime. You may not have permission to view this page. ");
                     console.log(err);
                 });
+            }
+        },
+        computed: {
+            ordered_folders: {
+                get() {
+                    if(!this.chime || !this.chime.folders) { 
+                        return [];
+                    }
+                    return  _.orderBy(this.chime.folders, ['order','created_at'], ['asc','asc']);
+                },
+                set(value) {
+                    console.log(value);
+                    value.map((f, index) => f.order = index +1)
+                    const url = (
+                        '/api/chime/' +
+                        this.chime.id)
+                    axios.put(url, {
+                            folders: this.chime.folders
+                        })
+                        .then(res => {
+                            this.chime.folders = value;
+                        })
+                        .catch(err => {
+                            console.log(err.response);
+                        });
+                }
             }
         },
         created: function () {
