@@ -106,7 +106,7 @@ import draggable from 'vuedraggable'
                     if(!this.chime || !this.chime.folders) { 
                         return [];
                     }
-                    return  _.orderBy(this.chime.folders, ['order','created_at'], ['asc','asc']);
+                    return  _.orderBy(this.chime.folders, ['order','id'], ['asc','asc']);
                 },
                 set(value) {
                     console.log(value);
