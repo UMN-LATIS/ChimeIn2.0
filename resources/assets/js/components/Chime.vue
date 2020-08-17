@@ -29,11 +29,12 @@
                     <draggable v-model="ordered_folders"  handle=".draghandle" :forceFallback="true">
                     <!-- <transition-group name="fade"> -->
                         
-                        <folder-card class="draghandle"
+                        <folder-card 
                             v-for="folder in ordered_folders"
                             :folder="folder"
                             :chime="chime"
                             :key="folder.id"
+                            :draggable="ordered_folders.length>1?true:false"
                         />    
                         
                     <!-- </transition-group> -->

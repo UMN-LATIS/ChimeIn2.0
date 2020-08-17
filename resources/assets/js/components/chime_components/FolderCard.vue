@@ -5,7 +5,7 @@
                 
                 <div class="col-sm-9" @click="$router.push({ name: 'folder', params: {chimeId: chime.id, folderId: folder.id} })">
                    
-                     <h2 class="h4"><i class="material-icons handle">drag_handle</i> {{ folder.name }}</h2>
+                     <h2 class="h4"><i class="material-icons handle draghandle" v-if="draggable">drag_handle</i> {{ folder.name }}</h2>
                 </div>
                 <div class="col-sm-3 text-right">
 
@@ -23,7 +23,7 @@
 <script>
 
     export default {
-        props: ['folder', 'chime'],
+        props: ['folder', 'chime', 'draggable'],
         data() {
             return {
         }
