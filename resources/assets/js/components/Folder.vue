@@ -12,55 +12,8 @@
         <div class="container">
             <div class="row mt-2">
                 <div class="col-4 align-items-center d-flex">
-                    <h1 class="h4" v-if="!show_edit_folder">{{ folder.name }}</h1>
-                    <div v-if="show_edit_folder">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" v-model="folder.name">
+                    <h1 class="h4">{{ folder.name }}</h1>
 
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-primary align-items-center d-flex"
-                                            @click="edit_folder"><span class="material-icons pointer">save</span>
-                                            Save</button>
-                                        <button class="btn btn-sm btn-outline-primary align-items-center d-flex"
-                                            @click="delete_folder">Delete <i class="material-icons pointer">delete</i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <fieldset class="form-group border p-2">
-                            <legend class="col-form-label w-auto">Import Questions</legend>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label for="chime_select">Select a Chime:</label>
-                                        <select id="chime_select" class="form-control" v-model="selected_chime"
-                                            @change="update_folders">
-                                            <option disabled>Select a Chime</option>
-                                            <option v-for="chime in existing_chimes" :key="chime.id" :value="chime.id">
-                                                {{ chime.name }}</option>
-                                        </select>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label for="folder_select">Select a Folder:</label>
-                                        <select id="folder_select" class="form-control" v-model="selected_folder">
-                                            <option disabled>Select a Folder</option>
-                                            <option v-for="folder in existing_folders" :key="folder.id"
-                                                :value="folder.id">{{ folder.name }}</option>
-                                        </select>
-                                    </div>
-                                   <button class="btn btn-primary" @click="do_import">Import</button> 
-                                </div>
-                            </div>
-                        </fieldset>
-
-
-                    </div>
                 </div>
                 <div class="col-md-8 col-sm-12">
                     <div class="btn-group float-right" style="flex-wrap: wrap;" role="group"
@@ -87,6 +40,58 @@
 
                     </div>
                 </div>
+            </div>
+            <div v-if="show_edit_folder" class="ml-4 mt-2">
+                <div class="row ">
+                    <div class="col-12">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" v-model="folder.name">
+
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary align-items-center d-flex"
+                                    @click="edit_folder"><span class="material-icons pointer">save</span>
+                                    Save</button>
+                                <button class="btn btn-sm btn-outline-primary align-items-center d-flex"
+                                    @click="delete_folder">Delete <i class="material-icons pointer">delete</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+<button class="btn btn-danger ml-auto mr-3" @click="reset">
+                        Reset Folder
+                    </button>
+                </div>
+                    
+                <hr>
+                <fieldset class="form-group border p-2">
+                    <legend class="col-form-label w-auto">Import Questions</legend>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="chime_select">Select a Chime:</label>
+                                <select id="chime_select" class="form-control" v-model="selected_chime"
+                                    @change="update_folders">
+                                    <option disabled>Select a Chime</option>
+                                    <option v-for="chime in existing_chimes" :key="chime.id" :value="chime.id">
+                                        {{ chime.name }}</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="folder_select">Select a Folder:</label>
+                                <select id="folder_select" class="form-control" v-model="selected_folder">
+                                    <option disabled>Select a Folder</option>
+                                    <option v-for="folder in existing_folders" :key="folder.id" :value="folder.id">
+                                        {{ folder.name }}</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" @click="do_import">Import</button>
+                        </div>
+                    </div>
+                </fieldset>
+
+
             </div>
 
             <div class="row border-top mt-3 pt-3">
@@ -170,6 +175,19 @@
             }
         },
         methods: {
+            reset: function() {
+                if(confirm("Are you sure you want to wipe all the responses to questions in this folder?")) {
+                    var promises = [];
+                    for (var question of this.questions) {
+                        const url = ('/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id + '/question/' + question.id + "/responses");
+                        promises.push(axios.delete(url));
+                    }
+                    Promise.all(promises).then(() => {
+                        this.load_questions();
+                    });
+                    
+                }
+            },
             swap_question(event, originalEvent) {
 
                 const newOrder = Array.from(this.questions.entries()).map(e => {
@@ -283,21 +301,21 @@
                     });
             },
             closeAll: function () {
-                    const url = (
-                        '/api/chime/' +
-                        this.folder.chime_id +
-                        '/folder/' +
-                        this.folder.id +
-                        '/question/stopAll'
-                    );
+                const url = (
+                    '/api/chime/' +
+                    this.folder.chime_id +
+                    '/folder/' +
+                    this.folder.id +
+                    '/question/stopAll'
+                );
 
-                    axios.put(url, {})
-                        .then(res => {
+                axios.put(url, {})
+                    .then(res => {
 
-                        })
-                        .catch(err => {
+                    })
+                    .catch(err => {
 
-                        });
+                    });
             },
             closeOthers: function () {
                 for (var openSession of this.otherFolderSessions) {
@@ -335,26 +353,29 @@
             update_folders: function () {
                 axios.get('/api/chime/' + this.selected_chime)
                     .then(res => {
-                        this.existing_folders = _.orderBy(res.data.folders.filter(f=>f.id != this.folderId), 'created_at', ['desc'])
+                        this.existing_folders = _.orderBy(res.data.folders.filter(f => f.id != this.folderId),
+                            'created_at', ['desc'])
                     })
                     .catch(err => {
                         console.error(
                             'error', 'Error in get chimes:', err.response);
                     });
             },
-            do_import: function() {
-                if(!this.selected_chime || !this.selected_folder) {
+            do_import: function () {
+                if (!this.selected_chime || !this.selected_folder) {
                     return;
                 }
-                axios.post("/api/chime/" + this.chimeId + "/folder/" + this.folderId + "/import", { "folder_id": this.selected_folder})
-                .then(res => {
-                    this.load_folder();
-                    this.load_questions();
-                })
-                .catch(err => {
-                    console.error(
-                        'error', 'Error with import:', err.response);
-                });
+                axios.post("/api/chime/" + this.chimeId + "/folder/" + this.folderId + "/import", {
+                        "folder_id": this.selected_folder
+                    })
+                    .then(res => {
+                        this.load_folder();
+                        this.load_questions();
+                    })
+                    .catch(err => {
+                        console.error(
+                            'error', 'Error with import:', err.response);
+                    });
             }
         },
         created: function () {

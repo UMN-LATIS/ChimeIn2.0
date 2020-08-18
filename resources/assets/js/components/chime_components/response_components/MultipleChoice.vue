@@ -85,10 +85,11 @@
 <script>
 // TODO this is mutating a prop from the parent, it shouldn't do that.
 // 
+import draggable from 'vuedraggable'
     export default {
         props: ['question_responses'],
         components: {
-
+            draggable: draggable
         },
         data: function() {
             return {
