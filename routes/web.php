@@ -44,6 +44,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     // Chime Page Routes
     Route::get('/api/chime/{chime_id}', 'ChimeController@getChime');
     Route::get('/api/chime/{chime_id}/users', 'ChimeController@getUsers');
+    Route::post('/api/chime/{chime}/sync', 'ChimeController@forceSync');
     Route::put('/api/chime/{chime}/users', 'ChimeController@syncUsers');
     Route::put('/api/chime/{chime_id}/users/{user_id}', 'ChimeController@changePermission');
     Route::delete('/api/chime/{chime_id}/users/{user_id}', 'ChimeController@removeUser');
@@ -57,6 +58,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
 
     Route::patch('/api/chime/{chime}', 'ChimeController@update');
     Route::put('/api/chime/{chime}', 'ChimeController@updateFolders');
+    
 
     Route::post('/api/chime/{chime}/export/', 'ChimeController@exportChime');
 
@@ -70,9 +72,11 @@ Route::group(['middleware' => ['shibinjection']], function () {
 
 
         // Folder Routes (chime page subroutes)
+        
     Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
     Route::post('/api/chime/{chime}/folder/{folder}/import', 'FolderController@importQuestions');
+    Route::post('/api/chime/{chime}/folder/{folder}/sync', 'FolderController@forceSync');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
@@ -86,6 +90,10 @@ Route::group(['middleware' => ['shibinjection']], function () {
 
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
+    
+    
+    
+    Route::put('saveLTISettings/{chime}', 'LTIHandler@saveLTISettings')->name("ltisettings.update");
 });
     // Auth::routes();
 

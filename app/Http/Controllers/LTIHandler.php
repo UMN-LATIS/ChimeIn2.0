@@ -7,12 +7,16 @@ use Illuminate\Http\Request;
 use App\Library\ChimeToolProvider;
 use Auth;
 use Illuminate\Support\Facades\Cookie;
+use \App\Chime;
 
 class LTIHandler extends Controller
 {
 
     private $allowedDomains = ["umnscratch.instructure.com", "canvas.umn.edu", "umn.instructure.com"];
 
+    public function __construct() {
+        app('debugbar')->disable();
+    }
 
     public function index() {
 
@@ -32,7 +36,8 @@ class LTIHandler extends Controller
         if(!\App::environment('local') && !in_array($launchDomain, $this->allowedDomains)) {
             abort(401, 'LTI Launch from an invalid domain');
         }
-
+// $tool->user->sourceId = 2328381;
+// $tool->user->email = "mcfa0086@umn.edu";
 
         if(!$tool->user->sourceId) {
             return view("errors.emplid");    
@@ -70,8 +75,20 @@ class LTIHandler extends Controller
                 
             }
             else {
-                if($chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first()) {
-
+                $chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first();
+                if($chime && $chime->lti_setup_complete) {
+                    if(!$chime->single_chime_for_lti) {
+                        $folder = new \App\Folder;
+                        $folder->chime()->associate($chime);
+                        $folder->name = $tool->resourceLink->title;
+                        $folder->resource_link_pk = $tool->resourceLink->getRecordId();
+                        $folder->save();
+                    }
+                    return \Redirect::to("/chime/" . $chime->id);
+                }
+                else if($chime && !$chime->lti_setup_complete) {
+                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
+                    return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
                 }
                 else {
                     $chime = new \App\Chime;
@@ -80,18 +97,12 @@ class LTIHandler extends Controller
                     $chime->lti_course_id = $tool->context->ltiContextId;
                     $chime->name = $tool->context->title;
                     $chime->require_login = true;
+                    $chime->single_chime_for_lti = true;
                     $chime->access_code = $chime->getUniqueCode();
                     $chime->save();
                     $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
-                }
-
-                $folder = new \App\Folder;
-                $folder->chime()->associate($chime);
-                $folder->name = $tool->resourceLink->title;
-                $folder->resource_link_pk = $tool->resourceLink->getRecordId();
-                $folder->save();
-                
-                return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+                    return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
+                }                
             }
         }
         else {
@@ -117,5 +128,26 @@ class LTIHandler extends Controller
             }
         }
 
+    }
+
+    public function saveLTISettings(Request $req, Chime $chime) {
+        $chime->fill($req->all());
+        $chime->lti_setup_complete = true;
+        $chime->save();
+        $resource_link_title = $req->get("resource_link_title");
+        $resource_link_pk = $req->get("resource_link_pk");
+        $folder = new \App\Folder;
+        $folder->chime()->associate($chime);
+        $folder->name = $resource_link_title;
+        if(!$chime->single_chime_for_lti) {
+            $folder->resource_link_pk = $resource_link_pk;
+        }
+        else {
+            $chime->resource_link_pk = $resource_link_pk;
+            $chime->save();
+        }
+        $folder->save();
+        return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+        
     }
 }

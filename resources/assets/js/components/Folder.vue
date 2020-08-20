@@ -57,11 +57,16 @@
                             </div>
                         </div>
                     </div>
-<button class="btn btn-danger ml-auto mr-3" @click="reset">
-                        Reset Folder
-                    </button>
+                    <div class="ml-auto col-4 btn-toolbar justify-content-end">
+                        <button class="mr-2 btn btn-success btn-sm align-items-center d-flex" @click="sync" v-if="folder.resource_link_pk > 0">
+                            Force Sync with Canvas <span class="material-icons md-18" v-if="synced">check_circle</span>
+                        </button>
+                        <button class="btn btn-danger btn-sm" @click="reset">
+                            Reset Folder
+                        </button>
+                    </div>
                 </div>
-                    
+
                 <hr>
                 <fieldset class="form-group border p-2">
                     <legend class="col-form-label w-auto">Import Questions</legend>
@@ -156,7 +161,8 @@
                 existing_chimes: [],
                 existing_folders: [],
                 selected_chime: null,
-                selected_folder: null
+                selected_folder: null,
+                synced: false
             }
         },
         computed: {
@@ -175,17 +181,18 @@
             }
         },
         methods: {
-            reset: function() {
-                if(confirm("Are you sure you want to wipe all the responses to questions in this folder?")) {
+            reset: function () {
+                if (confirm("Are you sure you want to wipe all the responses to questions in this folder?")) {
                     var promises = [];
                     for (var question of this.questions) {
-                        const url = ('/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id + '/question/' + question.id + "/responses");
+                        const url = ('/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id +
+                            '/question/' + question.id + "/responses");
                         promises.push(axios.delete(url));
                     }
                     Promise.all(promises).then(() => {
                         this.load_questions();
                     });
-                    
+
                 }
             },
             swap_question(event, originalEvent) {
@@ -375,6 +382,19 @@
                     .catch(err => {
                         console.error(
                             'error', 'Error with import:', err.response);
+                    });
+            },
+            sync: function () {
+                axios.post("/api/chime/" + this.chimeId + "/folder/" + this.folderId + "/sync")
+                    .then(res => {
+                        if (res.data.success) {
+                            this.synced = true;
+                        }
+                    })
+                    .catch(err => {
+                        this.$store.commit('message',
+                            "Could not sync Chime. Please contact support at latis@umn.edu.");
+                        console.log(err);
                     });
             }
         },

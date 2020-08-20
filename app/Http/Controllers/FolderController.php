@@ -208,4 +208,13 @@ class FolderController extends Controller
             return response('Invalid Permissions to Reset Question', 403);
         }
     }
+
+    public function forceSync(Request $req, $chime, $folder) {
+        if(\App\Library\LTIProcessor::syncFolder($folder)) {
+            return response()->json(["success"=>"success"]);
+        }
+        else {
+            return response('Failed to sync', 403);
+        }
+    }
 }

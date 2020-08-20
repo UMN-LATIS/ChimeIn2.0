@@ -348,7 +348,8 @@ class ChimeController extends Controller
 
         usort($sessions, function($a, $b) {
             if(strtotime($a->updated_at) == strtotime($b->updated_at)) {
-                return 0;
+                return $a->question->order < $b->question->order;
+                // return 0;
             }
             return strtotime($a->updated_at)<strtotime($b->updated_at)?-1:1;
         });
@@ -525,4 +526,12 @@ class ChimeController extends Controller
 
     }
 
+    public function forceSync(Request $req, $chime) {
+        if(\App\Library\LTIProcessor::syncChime($chime)) {
+            return response()->json(["success"=>"success"]);
+        }
+        else {
+            return response('Failed to sync', 500);
+        }
+    }
 }
