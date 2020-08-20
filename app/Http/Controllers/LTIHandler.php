@@ -15,7 +15,10 @@ class LTIHandler extends Controller
     private $allowedDomains = ["umnscratch.instructure.com", "canvas.umn.edu", "umn.instructure.com"];
 
     public function __construct() {
-        app('debugbar')->disable();
+        if(app('debugbar')) {
+            app('debugbar')->disable();
+        }
+        
     }
 
     public function index() {
