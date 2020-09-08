@@ -6,13 +6,13 @@
 <div class="container">
 <div class="row">
     <div class="col-12">
-        <h1>LTI Configuration</h1>
+        <h1>Canvas/ChimeIn Configuration</h1>
         <p>How would you like to use ChimeIn with this course? If you're not sure about these options, visit our <a href="https://umn-latis.github.io/ChimeIn2.0/canvas.html" target="_blank">help page</a>.</p>
 
         {{ Form::model($chime, array('route' => ['ltisettings.update', $chime->id],  'method' => 'put')) }}
 
         <div class="form-group">
-            {{ Form::label('single_chime_for_lti', 'LTI Configuration', ['class'=>'col-sm-4 control-label'], false) }}
+            {{ Form::label('single_chime_for_lti', 'Gradebook Configuration', ['class'=>'col-sm-4 control-label'], false) }}
             <div class="col-sm-8">
 
                 <div class="radio">
@@ -38,7 +38,7 @@
         </div>
         <hr>
         <div class="form-group">
-            {{ Form::label('only_correct_answers_lti', 'LTI Grading Calculation', ['class'=>'col-sm-4 control-label'], false) }}
+            {{ Form::label('only_correct_answers_lti', 'Grading Calculation', ['class'=>'col-sm-4 control-label'], false) }}
             <div class="col-sm-8">
 
                 <div class="radio">
