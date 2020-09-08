@@ -8,13 +8,13 @@
                      :disabled="disabled"
                      :max-rows="6"></textarea>
             </div>
-        
         </div>
         <div class="col-sm-12">
             <button v-if="(!disabled && !response.id) || create_new_response" class="btn btn-primary" variant="primary" @click="record_response">Save</button>
             <button v-if="!disabled && response.id && !create_new_response" class="btn btn-primary" variant="primary" @click="record_response">Update</button>
             <button v-if="!disabled && response.id && !create_new_response && question.allow_multiple" class="btn btn-primary" variant="primary" @click="new_response">Clear and Start a New Response</button>
         </div>
+        
     </div>
 </template>
 

@@ -5,12 +5,13 @@
         </div>
         <div class="modal-body">
             <div class="row">
-                 <div class="col-sm-3">
+                <div class="col-sm-3">
                     <label for="fodler" class="col-form-label">Folder</label>
                 </div>
                 <div class="col-sm-9">
                     <div class="form-group" v-if="folders">
-                       <v-select v-model="folder_id" :options="folders" label="name" :reduce="folder => folder.id" :clearable="false"></v-select>
+                        <v-select v-model="folder_id" :options="folders" label="name" :reduce="folder => folder.id"
+                            :clearable="false"></v-select>
                     </div>
                 </div>
                 <div class="col-sm-3">
@@ -18,7 +19,8 @@
                 </div>
                 <div class="col-sm-9">
                     <div class="form-group">
-                        <v-select v-model="question_type" :options="question_types"  :reduce="question_type => question_type.id" :clearable="false"></v-select>
+                        <v-select v-model="question_type" :options="question_types"
+                            :reduce="question_type => question_type.id" :clearable="false"></v-select>
                     </div>
                 </div>
             </div>
@@ -43,27 +45,29 @@
             <hr>
             <div class="row">
                 <div class="col">
-                    <vue-editor v-model="question_text" placeholder="Question Text" v-bind:editorToolbar="toolbar" v-bind:editorOptions="editorOptions"
-                        v-bind:useCustomImageHandler="true" v-on:imageAdded="handle_image_added">
+                    <vue-editor v-model="question_text" placeholder="Question Text" v-bind:editorToolbar="toolbar"
+                        v-bind:editorOptions="editorOptions" v-bind:useCustomImageHandler="true"
+                        v-on:imageAdded="handle_image_added">
                     </vue-editor>
                 </div>
             </div>
 
-            <component :is="question_type + '_response'" :question_responses.sync="question_responses" :chime_id="this.folder.chime_id"></component>
+            <component :is="question_type + '_response'" :question_responses.sync="question_responses"
+                :chime_id="this.folder.chime_id"></component>
         </div>
         <div class="modal-footer ">
             <div class="mr-auto">
                 <button class="btn btn-danger" @click="reset">
-                Reset Question
+                    Reset Question
                 </button>
             </div>
             <div class="">
-            <button class="btn btn-secondary" @click="close">
-                Cancel
-            </button>
-            <button class="btn btn-primary" @click="savePost">
-                Save
-            </button>
+                <button class="btn btn-secondary" @click="close">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" @click="savePost">
+                    Save
+                </button>
             </div>
 
         </div>
@@ -125,7 +129,7 @@
             'slider_response_response': SliderResponse,
             'free_response_response': FreeResponse,
             'heatmap_response_response': HeatmapResponse,
-            'v-select':VueSelect
+            'v-select': VueSelect
         },
         data: function () {
             return {
@@ -137,13 +141,27 @@
                 folder_id: this.folder.id,
                 anonymous: this.question.anonymous,
                 allow_multiple: this.question.allow_multiple,
-                question_types: [
-                    {id:"multiple_choice", label:"Multiple Choice"},
-                    {id:"free_response", label:"Free Response"},
-                    {id:"image_response", label:"Image Response"},
-                    {id:"slider_response", label:"Slider Response"},
-                    {id:"heatmap_response", label:"Heatmap Response"}
-                    ],
+                question_types: [{
+                        id: "multiple_choice",
+                        label: "Multiple Choice"
+                    },
+                    {
+                        id: "free_response",
+                        label: "Free Response"
+                    },
+                    {
+                        id: "image_response",
+                        label: "Image Response"
+                    },
+                    {
+                        id: "slider_response",
+                        label: "Slider Response"
+                    },
+                    {
+                        id: "heatmap_response",
+                        label: "Heatmap Response"
+                    }
+                ],
                 toolbar: [
                     ['bold', 'italic', 'underline', 'align'],
                     [{
@@ -151,35 +169,50 @@
                     }, {
                         'list': 'bullet'
                     }],
-                    [{ "script": "sub"}, {"script":"super"}],
+                    [{
+                        "script": "sub"
+                    }, {
+                        "script": "super"
+                    }],
                     ['link', 'image']
                 ],
                 editorOptions: {
-                    bounds: ".modal-body"
+                    bounds: ".modal-body",
+                    modules: {
+                        keyboard: {
+                        bindings: {
+                            'list autofill': {
+                                prefix: /^\s{0,}(1){1,1}(\.|-|\*|\[ ?\]|\[x\])$/
+                            }
+                        }
+                    }
+                    },
+                    
                 }
             }
         },
         mounted() {
             axios.get('/api/chime/' + this.folder.chime_id)
-            .then(res => {
-                this.folders = res.data.folders;
-            })
-            .catch(err => {
-                console.log(err);
-            });
+                .then(res => {
+                    this.folders = res.data.folders;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         methods: {
             close: function () {
                 this.$emit('close');
             },
-            reset: function() {
-                if(confirm("Are you sure you want to reset this question, clearing all sessions and responses?")) {
-                    const url = ('/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id + '/question/' + this.question.id + "/responses");
+            reset: function () {
+                if (confirm("Are you sure you want to reset this question, clearing all sessions and responses?")) {
+                    const url = ('/api/chime/' + this.folder.chime_id + '/folder/' + this.folder.id + '/question/' +
+                        this.question.id + "/responses");
                     const self = this;
                     axios.delete(url)
-                    .then(res => {
-                        this.$emit('edited');
-                    });
+                        .then(res => {
+                            this.$emit('edited');
+                        });
                 }
             },
             savePost: function () {
@@ -190,7 +223,7 @@
 
                 var question = {};
                 question.text = this.question_text;
-            
+
                 question.question_info = {
                     question_type: this.question_type,
                     question_responses: this.question_responses
@@ -231,7 +264,7 @@
 
                 let form_data = new FormData();
                 form_data.append('image', file);
-        
+
                 axios.post(
                         '/api/chime/' +
                         this.folder.chime_id +
