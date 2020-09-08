@@ -32,7 +32,7 @@ Here's a step-by-step set of instructions.
 4. Click "Find"
 5. Select "ChimeIn 2" in the list
 6. Click add
-7. Check the box for "open in a new tab"
+7. Check the box for "open in a new tab" (**important**)
 8. Click "save and display"
 9. Click the button to open ChimeIn
 10. Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. 
