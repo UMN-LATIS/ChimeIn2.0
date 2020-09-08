@@ -12,7 +12,7 @@
         {{ Form::model($chime, array('route' => ['ltisettings.update', $chime->id],  'method' => 'put')) }}
 
         <div class="form-group">
-            {{ Form::label('single_chime_for_lti', 'Gradebook Configuration', ['class'=>'col-sm-4 control-label'], false) }}
+            {{ Form::label('single_chime_for_lti', '<h2>Gradebook Configuration</h2>', ['class'=>'col-sm-4 control-label'], false) }}
             <div class="col-sm-8">
 
                 <div class="radio">
@@ -38,7 +38,7 @@
         </div>
         <hr>
         <div class="form-group">
-            {{ Form::label('only_correct_answers_lti', 'Grading Calculation', ['class'=>'col-sm-4 control-label'], false) }}
+            {{ Form::label('only_correct_answers_lti', '<h2>Grading Calculation</h2>', ['class'=>'col-sm-4 control-label'], false) }}
             <div class="col-sm-8">
 
                 <div class="radio">
