@@ -20,15 +20,15 @@ module.exports = {
             editLinkText: 'Help us improve this page!',
         sidebar: [
             '/',
+            '/cheatsheet',
             '/participate',
             '/asking-questions',
             '/canvas',
-            '/moving-to-chimein-2',
             '/taking-attendance',
-            '/deploying',
             '/managing-a-chime',
             '/async',
-            '/cheatsheet'
+            '/moving-to-chimein-2',
+            '/deploying',
     ],
 
     }

@@ -1,40 +1,56 @@
 # Using ChimeIn in Canvas
 
-ChimeIn has direct Canvas integration, which makes it easy to create and manage Chimes.  In addition, ChimeIn can share completion data back to the Canvas gradebook, allowing ChimeIn responses to be used to track attendance or participation.
+ChimeIn has direct Canvas integration, which makes it easy to create and manage Chimes.  In addition, ChimeIn can share completion data back to the Canvas gradebook, allowing ChimeIn responses to be used to track attendance or participation. 
 
-## Enabling ChimeIn in your Canvas Course
+## Enabling ChimeIn in your Canvas Course (One Time Setup)
 
-ChimeIn needs to be enabled in your Canvas course.  Go to the "settings" link in your Canvas course and select "apps", then click the ChimeIn icon.
+ChimeIn needs to be enabled in your Canvas course. This needs to be done once per course. Go to the "settings" link in your Canvas course and select "apps", then click the ChimeIn icon.
 
 ![Enabling ChimeIn](./addCanvas.png)
 
 Some instructions will be presented.  **You'll need to copy and paste two values** - the "consumer key" and "secret key". It might be helpful to copy these to a temporary text document.  Once it's been enabled, you can begin adding ChimeIn assignments. 
 
-This screencast shows the process.
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/3sAjHC3onFM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-## Creating a Chime
-
-ChimeIn is available as an "external tool" within the Canvas assignment tool.  When adding an assignment, select ChimeIn from the external tools list.  You can assign a grading basis as well.  **We recommend checking the box for "open in a new tab" so your students have plenty of space**.
-
-![Adding an External Tool](./externalTool.png)
-
-After creating the assignment, click the link to open ChimeIn.  This will automatically create a new Chime within ChimeIn, and add a folder with the same name as your assignment.  Any future assignments you create will automatically have folders created in this Chime as well.  
-
-Add any questions you'd like to your folder.  If you have co-instructors, they will automatically be granted the access to add questions as well. 
+**Important**: it can take a few minutes for new apps to show up within the Canvas "External Tools" list. 
 
 This screencast shows the process.
+
+<iframe width="100%" height="420" src="https://www.youtube.com/embed/3sAjHC3onFM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Adding a ChimeIn Assignment in Canvas
+
+ChimeIn is available as an "external tool" within the Canvas assignment tool.  The screencast below shows the process.
 
 <iframe width="100%" height="420" src="https://www.youtube.com/embed/Vz-exmZVvzc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+###  Step by Step instructions
+
+Here's a step-by-step set of instructions.
+
+1. Add a new assignment within Canvas
+2. Set a point value and grading basis if you'd like
+3. Set "Submission Type" to "External Tool"
+4. Click "Find"
+5. Select "ChimeIn 2" in the list
+6. Click add
+7. Check the box for "open in a new tab"
+8. Click "save and display"
+9. Click the button to open ChimeIn
+10. Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. 
+
+![Adding an External Tool](./externalTool.png)
+
+## Gradebook integration options 
+
+When you first setup ChimeIn in Canvas, you'll be asked to select how you'd like ChimeIn to appear in the gradebook. You've got two options - you can either have a single gradebook entry for all of your ChimeIn responses, or you can have multiple assignments each with its own gradebook entry. 
+
+
 ## Approaches to using ChimeIn within Canvas
 
-If you're using ChimeIn repeatedly throughout a course, there are a couple different approaches to setting up your Canvas course.  If you'd like to keep track of student participation on a weekly or per-lecture basis, you should create separate assignments.  That way, the gradebook will reflect participation in individual course sessions.  Alternatively, you can create a single assignment for an entire semester, and collect an overall grade.  If you'd like to discuss different approaches, just [contact us](mailto:mcfa0086@umn.edu). 
+If you're using ChimeIn repeatedly throughout a course, there are a couple different approaches to setting up your Canvas course.  If you'd like to keep track of student participation on a weekly or per-lecture basis, you should create separate assignments. Just repeat the steps in the previous section each time.  That way, the gradebook will reflect participation in individual course sessions.  Alternatively, you can create a single assignment for an entire semester, and collect an overall grade.  If you'd like to discuss different approaches, just [contact us](mailto:mcfa0086@umn.edu). 
 
 ## Presenting to students
 
-When you're ready to share your questions with your students, have them follow the assignment link within Canvas.  **This is important in order for them to receive credit in the gradebook.**  As the instructor, you can follow the same link to present the questions.  At that point, the process is the same as presenting ChimeIn outside of Canvas.
+When you're ready to share your questions with your students, remind them to follow the assignment link within Canvas.  **This is important in order for them to receive credit in the gradebook.**  As the instructor, you can follow the same link to present the questions.  At that point, the process is the same as presenting ChimeIn outside of Canvas. We've got a [step by step cheatsheet you can refer to](cheatsheet).
 
 It can take up to 10 minutes for data from ChimeIn to be passed back to the Canvas gradebook. 
 
