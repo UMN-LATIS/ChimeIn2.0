@@ -30,6 +30,22 @@ module.exports = {
             '/moving-to-chimein-2',
             '/deploying',
     ],
+    
 
-    }
+    },
+    plugins: [
+        [
+            'vuepress-plugin-medium-zoom',
+            {
+                selector: 'img',
+                delay: 300,
+                options: {
+                    margin: 24,
+                    background: 'rgba(100, 100, 100, 0.65)',
+                    bgOpacity: '0.6',
+                    scrollOffset: 0,
+                },
+            },
+        ],
+    ],
 }

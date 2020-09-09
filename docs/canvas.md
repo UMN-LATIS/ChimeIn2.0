@@ -24,20 +24,22 @@ ChimeIn is available as an "external tool" within the Canvas assignment tool.  T
 
 ###  Step by Step instructions
 
-Here's a step-by-step set of instructions.
+Below is a set of a step-by-step instructions for making a ChimeIn assignment in Canvas.
 
-1. Add a new assignment within Canvas
-2. Set a point value and grading basis if you'd like
-3. Set "Submission Type" to "External Tool"
-4. Click "Find"
-5. Select "ChimeIn 2" in the list
-6. Click add
-7. Check the box for "open in a new tab" (**important**)
-8. Click "save and display"
-9. Click the button to open ChimeIn
-10. Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. 
+| Step        |  Screenshot           | 
+| ------------- |:-------------:| 
+| Add a new assignment within Canvas      | ![Add an assignment](./step1-addassignment.png) | 
+| Set a point value and grading basis if you'd like | ![Grading basis](./step2-grades.png) | 
+| Set "Submission Type" to "External Tool" | ![Submission Type](./step3-submission-type.png) | 
+| Click "Find" | ![Click Find](./step4-find.png) | 
+| Select "ChimeIn 2" in the list and click **Select** | ![Select ChimeIn](./step5-chimein.png) | 
+| Check the box for "open in a new tab" (**important**) | ![Load in a new tab](./step6-checkbox.png) | 
+| Click "save" at the bottom of the page | ![Save and Display](./step7-save.png) | 
+| Click the "load" button to open ChimeIn | ![Load](./step8-load.png) | 
+|  Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well.  | ![Add questions](./step9-new.png) | 
+| **Don't forget to publish your assignment** when you're ready for your students to view it | ![Load](./step10-publish.png) |
 
-![Adding an External Tool](./externalTool.png)
+
 
 ## Gradebook integration options 
 
