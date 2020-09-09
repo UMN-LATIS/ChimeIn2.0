@@ -8,7 +8,7 @@
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js --host 0.0.0.0 --disableHostCheck true",
     "prod": "npm run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "docs:build": "cd docs; vuepress build"
+    "docs:build": "vuepress build docs"
   },
   "devDependencies": {
     "axios": "^0.17",
