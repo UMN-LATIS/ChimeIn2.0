@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Yadahan\AuthenticationLog\AuthenticationLogable;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use AuthenticationLogable;
     use \Lab404\Impersonate\Models\Impersonate;
 
     /**

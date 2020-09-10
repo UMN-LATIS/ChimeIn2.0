@@ -19,6 +19,7 @@ class AddLtiSettingsToChime extends Migration
             $table->integer("resource_link_pk")->nullable();
             $table->foreign("resource_link_pk")->references("resource_link_pk")->on("lti2_resource_link");
         });
+        DB::table("chimes")->update(array('lti_setup_complete' => 1));
     }
 
     /**
