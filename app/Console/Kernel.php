@@ -45,16 +45,16 @@ class Kernel extends ConsoleKernel
                 \App\Library\LTIProcessor::syncFolder($folder);
             }
 
-            $chimes = \App\Chime::join("folders", "chimes.id", "=", "folders.chime_id")->join("questions", "folders.id", "=", "questions.folder_id")->join("sessions", "questions.id","=","sessions.question_id")
-            ->join("responses", "sessions.id","=","responses.session_id")
-            ->select("chimes.*")
-            ->whereNotNull("chimes.resource_link_pk")
-            ->where("chimes.single_chime_for_lti", 1)
-            ->whereBetween('responses.updated_at', [now()->subMinutes(10), now()])->get()->unique();
+            // $chimes = \App\Chime::join("folders", "chimes.id", "=", "folders.chime_id")->join("questions", "folders.id", "=", "questions.folder_id")->join("sessions", "questions.id","=","sessions.question_id")
+            // ->join("responses", "sessions.id","=","responses.session_id")
+            // ->select("chimes.*")
+            // ->whereNotNull("chimes.resource_link_pk")
+            // ->where("chimes.single_chime_for_lti", 1)
+            // ->whereBetween('responses.updated_at', [now()->subMinutes(10), now()])->get()->unique();
 
-            foreach($chimes as $chime) {
-                \App\Library\LTIProcessor::syncChime($chime);
-            }
+            // foreach($chimes as $chime) {
+            //     \App\Library\LTIProcessor::syncChime($chime);
+            // }
 
         })->everyFiveMinutes();
     }
