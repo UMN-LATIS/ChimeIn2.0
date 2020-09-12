@@ -5,7 +5,7 @@
             <img class="responsive-img imageContainer" v-bind:src="'/storage/' + question_responses.image">
         </div>
         <div class="dropbox">
-          <input type="file" accept="image/jpeg, image/heic, image/png" @change="attachFile($event.target.name, $event.target.files)" class="form-control-file input-file">
+          <input type="file" accept="image/jpeg, image/png" @change="attachFile($event.target.name, $event.target.files)" class="form-control-file input-file">
             <p v-if="isInitial">
               Drag your image here to upload<br> or click to browse
             </p>
