@@ -224,7 +224,7 @@ class ChimeController extends Controller
     public function uploadImage(Request $req) {
         $user = Auth::user();
         $chime = $user->chimes()->find($req->route('chime_id'));
-
+        Image::configure(array('driver' => 'imagick'));
         $validator = Validator::make($req->all(), [
              'image'  => 'required|max:24576',
          ]);
