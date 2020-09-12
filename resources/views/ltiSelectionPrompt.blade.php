@@ -6,30 +6,32 @@
 <div class="container">
 <div class="row">
     <div class="col-12">
-        <h1>Canvas/ChimeIn Configuration</h1>
+        <h1>Canvas/ChimeIn Setup</h1>
         <p>How would you like to use ChimeIn with this course? If you're not sure about these options, visit our <a href="https://umn-latis.github.io/ChimeIn2.0/canvas.html" target="_blank">help page</a>.</p>
 
         {{ Form::model($chime, array('route' => ['ltisettings.update', $chime->id],  'method' => 'put')) }}
 
         <div class="form-group">
-            {{ Form::label('single_chime_for_lti', '<h2>Gradebook Configuration</h2>', ['class'=>'col-sm-8 control-label'], false) }}
-            
             <div class="col-sm-8">
 
-                
                 <div class="radio">
                     <label>
-                        {{ Form::radio('single_chime_for_lti', 0, true, ['class'=>'']) }}
-                        Multiple assignments and gradebook entries
-                        <small id="passwordHelpBlock" class="form-text">
-                            You can create multiple ChimeIn assignments in Canvas. Each assignment will correspond to a folder in your Chime, and each assignment/folder will have its own entry in the Canvas gradebook. 
-                        </small>
+                        {{ Form::radio('single_chime_for_lti', 1, true, ['class'=>'']) }}
+                        I don't want ChimeIn results in the Canvas gradebook
+                        
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        {{ Form::radio('single_chime_for_lti', 1, null, ['class'=>'']) }}
-                        Single gradebook entry
+                        {{ Form::radio('single_chime_for_lti', 0, true, ['class'=>'']) }}
+                        Individual gradebook entry for each lecture/week
+                        
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        {{ Form::radio('single_chime_for_lti', 1, false, ['class'=>'']) }}
+                        One gradebook entry for the whole semester
                         <small id="passwordHelpBlock" class="form-text">
                             The Canvas gradebook entry will be based on the total number of questions students respond to across all of your folders. You can still create folders in ChimeIn to organize your questions. 
                         </small>
