@@ -13,7 +13,7 @@
                     <tr>
                         <th scope="col">Image</th>
                         <th scope="col">Alt</th>
-                        <th scope="col">User</th>
+                        <th scope="col">Participant</th>
                         <th scope="col">Remove</th>
                     </tr>
                 </thead>
