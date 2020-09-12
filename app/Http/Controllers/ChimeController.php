@@ -230,7 +230,7 @@ class ChimeController extends Controller
          ]);
 
          if ($validator->fails()) {
-            return response()->json(['sizeError' => $validator->errors()->getMessages()], 400);
+            return response()->json(['message'=>'Images must be 24mb or less', 'sizeError' => $validator->errors()->getMessages()], 400);
          }
 
         if ($chime != null) {

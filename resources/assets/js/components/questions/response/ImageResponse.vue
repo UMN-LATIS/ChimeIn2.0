@@ -15,6 +15,7 @@
               Uploading file...
             </p>
         </div>
+        <p v-if="error"><strong>{{ error }}</strong></p>
          <div class="form-group" v-if="question.allow_multiple && !disabled && this.response && this.response.response_info">
             <button class="btn btn-primary" @click="clear">Clear and Start a New Response</button>
         </div>
@@ -65,7 +66,8 @@ export default {
         return {
             isInitial: this.response ? false:true,
             isSaving: false,
-            create_new_response: false
+            create_new_response: false,
+            error: null
         }
     },
     methods: {
@@ -96,6 +98,12 @@ export default {
             // this.isInitial= true;
               this.$emit('recordresponse', response, this.create_new_response);
               this.create_new_response = false;
+            })
+            .catch( err => {
+              
+              if(err.response) {
+                this.error = err.response.data.message;
+              }
             });
 
         },
