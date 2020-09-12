@@ -27,9 +27,10 @@ RUN npm run prod
 
 FROM php:7.2-apache-stretch
 
-RUN apt-get update && apt-get install -y zlib1g-dev git libjpeg-dev libpng-dev libfreetype6-dev php-imagick && \
-    docker-php-ext-configure imagick  && \
-    docker-php-ext-install pdo pdo_mysql zip imagick pcntl
+RUN apt-get update && apt-get install -y zlib1g-dev git libjpeg-dev libpng-dev libfreetype6-dev imagemagick libmagickwand-dev  && \
+    pecl install imagick  && \
+    docker-php-ext-install pdo pdo_mysql zip  pcntl && \
+    docker-php-ext-enable imagick
 
 COPY --from=vendor /app/vendor/ /var/www/html/vendor/
 COPY --from=frontend /app/public/js/ /var/www/html/public/js/
