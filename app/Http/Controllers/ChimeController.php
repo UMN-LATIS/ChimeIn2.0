@@ -244,7 +244,7 @@ class ChimeController extends Controller
                 $constraint->aspectRatio();
                 $constraint->upsize();
             });
-            $image_resize->save();
+            $image_resize->save(null, null, 'jpg');
             $path = $image->store('public');
 
             if(!$path) {
