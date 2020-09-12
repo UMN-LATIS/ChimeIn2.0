@@ -3,7 +3,7 @@
     <div v-if="responses.length > 0" class="row">
         <div class="col">
             <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
-            <button class="btn btn-warning" data-toggle="button" v-bind:class="{ active: filterImages}" @click="filterImages=!filterImages">Remove Images</button>
+            <button class="btn btn-warning" data-toggle="button" v-bind:class="{ active: filterImages}" @click="filterImages=!filterImages">Manage Images</button>
             <lightbox v-if="!filterImages" v-bind:id="'lightbox' + question.id " :images="images" image_class="img-responsive img-rounded" :options="options">
             </lightbox>
 
