@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'notify' => env('AUTHENTICATION_LOG_NOTIFY', true),
+    'notify' => env('AUTHENTICATION_LOG_NOTIFY', false),
 
     /*
     |--------------------------------------------------------------------------
