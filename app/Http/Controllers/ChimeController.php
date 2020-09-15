@@ -236,14 +236,14 @@ class ChimeController extends Controller
         if ($chime != null) {
             $image = $req->file('image');
             if(!$image) {
-                return response()->json(["message" => "Unable to Store Image"]);
+                return response()->json(["message" => "Unable to Store Image"], 400);
             }
 
             try {
                 $image_resize = Image::make($image);
             }
             catch (\Exception $e) {
-                return response()->json(["message" => "Image Could Not be Read", "rawError"=>$e]);
+                return response()->json(["message" => "Image Could Not be Read", "rawError"=>$e], 400);
             }
            
 
