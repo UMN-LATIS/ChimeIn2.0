@@ -236,10 +236,17 @@ class ChimeController extends Controller
         if ($chime != null) {
             $image = $req->file('image');
             if(!$image) {
-                return response()->json(["error" => "unableToStore"]);
+                return response()->json(["message" => "Unable to Store Image"]);
             }
 
-            $image_resize = Image::make($image);
+            try {
+                $image_resize = Image::make($image);
+            }
+            catch (Exception $e) {
+                return response()->json(["message" => "Image Could Not be Read", "rawError"=>$e]);
+            }
+           
+
             $image_resize->resize(2048, 2048, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
