@@ -242,7 +242,7 @@ class ChimeController extends Controller
             try {
                 $image_resize = Image::make($image);
             }
-            catch (Exception $e) {
+            catch (\Exception $e) {
                 return response()->json(["message" => "Image Could Not be Read", "rawError"=>$e]);
             }
            
