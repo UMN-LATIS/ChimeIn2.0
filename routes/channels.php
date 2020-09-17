@@ -19,7 +19,7 @@ Broadcast::channel('session-response.{chime_id}', function ($user, $chime_id) {
     // Responses can be handled by all admins on the chime
     $chime = App\Chime::find($chime_id);
     $localUser = $chime->users()->where('user_id', $user->id)->first();
-    if($localUser->pivot) {
+    if($localUser && $localUser->pivot) {
         return ($localUser
                 ->pivot
                 ->permission_number) >= 200;
