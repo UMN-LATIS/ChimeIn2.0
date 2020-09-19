@@ -74,6 +74,10 @@ import draggable from 'vuedraggable'
         props: ['user', 'chimeId'],
         methods: {
             create_folder: function(folder_name) {
+                if(folder_name.length == 0) {
+                    alert("You must enter a name for this folder.");
+                    return;
+                }
                 if (this.chime.folders.filter(e => e.name === folder_name).length < 1) {
                     axios.post('/api/chime/' + this.chime.id + '/folder', {
                         folder_name: folder_name
