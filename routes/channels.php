@@ -18,6 +18,9 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 Broadcast::channel('session-response.{chime_id}', function ($user, $chime_id) {
     // Responses can be handled by all admins on the chime
     $chime = App\Chime::find($chime_id);
+    if(!$chime) {
+        return false;
+    }
     $localUser = $chime->users()->where('user_id', $user->id)->first();
     if($localUser && $localUser->pivot) {
         return ($localUser
@@ -32,6 +35,9 @@ Broadcast::channel('session-response.{chime_id}', function ($user, $chime_id) {
 Broadcast::channel('session-status.{chime_id}', function ($user, $chime_id) {
     // Session start events can be received by all members of chime
     $chime = App\Chime::find($chime_id);
+    if(!$chime) {
+        return false;
+    }
     $user = $chime
         ->users()
         ->where('user_id', $user->id)
