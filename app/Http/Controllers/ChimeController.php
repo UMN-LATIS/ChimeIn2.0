@@ -398,7 +398,7 @@ class ChimeController extends Controller
                 continue;
             }
             $folderArray[$folder->id] = ["name"=>$folder->name, "questions"=>$folder->questions->count()];
-            foreach($folder->questions as $question) {
+            foreach($folder->questions()->orderBy("order")->get() as $question) {
                 $questionArray[$question->id] = strip_tags($question->text);
             }
         }
@@ -439,7 +439,7 @@ class ChimeController extends Controller
                         $row[] = $participant->email;
                         $row[] = '';
                         foreach($folderArray as $folderId => $folderInfo) {
-                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->where('folders.id', $folderId)->groupBy("questions.id")->select('questions.id')->get();
+                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->where('folders.id', $folderId)->groupBy("questions.id")->orderBy("questions.order")->select('questions.id')->get();
                             $row[] = $responses->count();
                         }
                         fputcsv($file, $row);
@@ -465,7 +465,7 @@ class ChimeController extends Controller
                         $row[] = $participant->email;
                         $row[] = '';
                         foreach($questionArray as $questionId => $questionText) {
-                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->where('questions.id', $questionId)->groupBy("questions.id")->select('questions.id')->get();
+                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->orderBy("questions.order")->where('questions.id', $questionId)->groupBy("questions.id")->select('questions.id')->get();
                             $row[] = $responses->count();
                         }
                         fputcsv($file, $row);
@@ -489,7 +489,7 @@ class ChimeController extends Controller
                         $row[] = $participant->email;
                         $row[] = '';
                         foreach($questionArray as $questionId => $questionText) {
-                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->where('questions.id', $questionId)->select('responses.*')->get();
+                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->orderBy("questions.order")->where('questions.id', $questionId)->select('responses.*')->get();
                             $responseModels = \App\Response::hydrate($responses->toArray());    
                             $responses = $responseModels->pluck('response_info');
                             foreach($responses as $key=>$value) {
