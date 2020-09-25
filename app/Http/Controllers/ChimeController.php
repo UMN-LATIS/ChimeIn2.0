@@ -453,6 +453,7 @@ class ChimeController extends Controller
 
 
         $exportType = $req->get("export_type");
+        $onlyCorrectAnswers = $req->get("only_correct_answers");
 
         $headers = array(
                 "Content-type" => "text/csv",
@@ -461,13 +462,12 @@ class ChimeController extends Controller
                 "Expires" => "0"
             );
 
-        $callback = function() use ($folderArray, $exportType, $questionArray, $chime) {
+        $callback = function() use ($folderArray, $exportType, $questionArray, $chime, $onlyCorrectAnswers) {
             $file = fopen('php://output', 'w');
 
             $headers = ['Student', 'ID', 'SIS User ID', 'SIS Login ID', 'Section'];
             $secondHeaders = ['Points Possible', '','','',''];
             
-            $onlyCorrectAnswers = $chime->only_correct_answers_lti;
 
             switch ($exportType) {
                 case 'folder_summary':

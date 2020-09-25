@@ -2,6 +2,13 @@
     <div>
         <form method="post" :action="'/api/chime/'+ chime.id + '/export'">
             <input type="hidden" name="_token" :value="csrf">
+
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" name="only_correct_answers" >
+                Only count "correct" answers (for multiple choice)
+              </label>
+            </div>
             <fieldset class="form-group border p-2">
                 <legend class="col-form-label w-auto">Export Type</legend>
                 <div class="row">
