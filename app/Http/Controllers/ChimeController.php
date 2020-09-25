@@ -369,6 +369,52 @@ class ChimeController extends Controller
 
     }
 
+    private function getValuesForFolder($chime, $folder, $user, $correctOnly) {
+        $result = [];
+
+        foreach($folder["folder"]->questions->sortBy('questions.order') as $question) {
+            $userResponses = $question->sessions->flatmap(function($value) use ($user) {
+                return $value->responses->where("user_id", $user->id);
+            });
+
+
+            /*
+             *  I really think there's a better way to pluck the correct choice when the correct key is true, but 
+             *  I can't figure out it. Once we're on mysql8, I think this is possible - worst case by synthesizing a view?
+             */
+            if($correctOnly && $question->question_info["question_type"] == "multiple_choice") {
+                // get only the correct objects from the array of answers
+                $correctAnswers = array_filter($question->question_info["question_responses"], function($k) { if(isset($k["correct"])) { return $k["correct"]==true;} return false;});
+                // grab only the text itself from the array
+                $correctText = array_map(function($k) { return $k["text"];}, $correctAnswers);
+                $points = 0;
+                foreach($userResponses as $response) {
+                    $choice = [];
+                    if(isset($response->response_info["choice"])) {
+                        if(is_array($response->response_info["choice"])) {
+                            $choice = $response->response_info["choice"];
+                        }
+                        else {
+                            $choice = [$response->response_info["choice"]];
+                        }
+                        
+                    }
+                    if(count(array_intersect($choice, $correctText)) > 0) {
+                        $points = 1;
+                    }
+                }
+                $result[] = $points;
+            }
+            elseif($userResponses->count() > 0) {
+                $result[] = 1;
+            }
+            else {
+                $result[] = 0;
+            }
+        }
+        return $result;
+    }
+
     public function exportChime(Chime $chime, Request $req) {
         $user = $req->user();
 
@@ -397,7 +443,8 @@ class ChimeController extends Controller
             if($selectedFolders && !in_array($folder->id, $selectedFolders)) {
                 continue;
             }
-            $folderArray[$folder->id] = ["name"=>$folder->name, "questions"=>$folder->questions->count()];
+            $folder->load('questions', 'questions.sessions', 'questions.sessions.responses');
+            $folderArray[$folder->id] = ["name"=>$folder->name, "questions"=>$folder->questions->count(), "folder"=>$folder];
             foreach($folder->questions()->orderBy("order")->get() as $question) {
                 $questionArray[$question->id] = strip_tags($question->text);
             }
@@ -414,12 +461,14 @@ class ChimeController extends Controller
                 "Expires" => "0"
             );
 
-
         $callback = function() use ($folderArray, $exportType, $questionArray, $chime) {
             $file = fopen('php://output', 'w');
 
             $headers = ['Student', 'ID', 'SIS User ID', 'SIS Login ID', 'Section'];
             $secondHeaders = ['Points Possible', '','','',''];
+            
+            $onlyCorrectAnswers = $chime->only_correct_answers_lti;
+
             switch ($exportType) {
                 case 'folder_summary':
 
@@ -430,7 +479,7 @@ class ChimeController extends Controller
                     
                     fputcsv($file, $headers);
                     fputcsv($file, $secondHeaders);
-
+                    
                     foreach($chime->users as $participant) {
                         $row = [];
                         $row[] =  $participant->name;
@@ -439,8 +488,8 @@ class ChimeController extends Controller
                         $row[] = $participant->email;
                         $row[] = '';
                         foreach($folderArray as $folderId => $folderInfo) {
-                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->where('folders.id', $folderId)->groupBy("questions.id")->orderBy("questions.order")->select('questions.id')->get();
-                            $row[] = $responses->count();
+                            $overallCount = $this->getValuesForFolder($chime, $folderInfo, $participant, $onlyCorrectAnswers);
+                            $row[] = array_sum($overallCount);
                         }
                         fputcsv($file, $row);
                         
@@ -464,10 +513,10 @@ class ChimeController extends Controller
                         $row[] = '';
                         $row[] = $participant->email;
                         $row[] = '';
-                        foreach($questionArray as $questionId => $questionText) {
-                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->orderBy("questions.order")->where('questions.id', $questionId)->groupBy("questions.id")->select('questions.id')->get();
-                            $row[] = $responses->count();
+                        foreach($folderArray as $folderId => $folderInfo) {
+                            $row = array_merge($row, $this->getValuesForFolder($chime, $folderInfo, $participant, $onlyCorrectAnswers));
                         }
+                        
                         fputcsv($file, $row);
                     }
                     
@@ -488,46 +537,69 @@ class ChimeController extends Controller
                         $row[] = '';
                         $row[] = $participant->email;
                         $row[] = '';
-                        foreach($questionArray as $questionId => $questionText) {
-                            $responses = DB::table('responses')->where("user_id", $participant->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->orderBy("questions.order")->where('questions.id', $questionId)->select('responses.*')->get();
-                            $responseModels = \App\Response::hydrate($responses->toArray());    
-                            $responses = $responseModels->pluck('response_info');
-                            foreach($responses as $key=>$value) {
-                                switch($value["question_type"]) {
-                                    case "multiple_choice": 
-                                    case "slider": 
-                                        $responses[$key] = $value["choice"];
-                                        break;
-                                    case "free_response": 
-                                        $responses[$key] = $value["text"];
-                                        break;
-                                    case "image_response":
-                                        $responses[$key] = $value["image_name"];
-                                        break;
-                                    case "heatmap_response":
-                                        $responses[$key] = $value["image_coordinates"]["coordinate_x"] . "," . $value["image_coordinates"]["coordinate_y"];
-                                        break;
+                        foreach($folderArray as $folderId => $folderInfo) {
+                            foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
+                                $userResponses = $question->sessions->flatmap(function($value) use ($participant) {
+                                    return $value->responses->where("user_id", $participant->id);
+                                });
+                                $responses = $userResponses->pluck('response_info');
+                                foreach($responses as $key=>$value) {
+                                    switch($value["question_type"]) {
+                                        case "multiple_choice": 
+                                        case "slider": 
+                                            $responses[$key] = $value["choice"];
+                                            break;
+                                        case "free_response": 
+                                            $responses[$key] = $value["text"];
+                                            break;
+                                        case "image_response":
+                                            $responses[$key] = $value["image_name"];
+                                            break;
+                                        case "heatmap_response":
+                                            $responses[$key] = $value["image_coordinates"]["coordinate_x"] . "," . $value["image_coordinates"]["coordinate_y"];
+                                            break;
+                                    }
+                                }
+                                
+                                if(count($responses) > 1) {
+                                    $row[] = json_encode($responses);
+                                }
+                                else if(count($responses) == 0) {
+                                    $row[] = "";
+                                }
+                                else {
+                                    if(is_array($responses[0])) {
+                                        $row[] = json_encode($responses[0]);
+                                    }
+                                    else {
+                                        $row[] = $responses[0];
+                                    }
+                                    
                                 }
                             }
-                            if(count($responses) > 1) {
-                                $row[] = json_encode($responses);
-                            }
-                            else if(count($responses) == 0) {
-                                $row[] = "";
-                            }
-                            else {
-                                $row[] = $responses[0];
-                            }
-                            
                         }
                         fputcsv($file, $row);
                     }
                     break;
-                default:
+                    case 'question_only':
+                        foreach($folderArray as $folderId => $folderInfo) {
+                            
+                            foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
+                                $row = [];
+                                $row[] = $question->text;
+                                $row[] = json_encode($question->question_info);
+                                fputcsv($file, $row);
+                            }
+                            
+                        }
+                    break;
+                    default:
                     # code...
                     break;
                 }
         };
+
+
         return Response()->streamDownload($callback, "chimeExport.csv", $headers);
 
 
