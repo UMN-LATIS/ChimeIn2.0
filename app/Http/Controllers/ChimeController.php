@@ -384,6 +384,9 @@ class ChimeController extends Controller
              */
             if($correctOnly && $question->question_info["question_type"] == "multiple_choice") {
                 // get only the correct objects from the array of answers
+                $correctAnswers = null;
+                $correctText = null;
+                
                 $correctAnswers = array_filter($question->question_info["question_responses"], function($k) { if(isset($k["correct"])) { return $k["correct"]==true;} return false;});
                 // grab only the text itself from the array
                 $correctText = array_map(function($k) { return $k["text"];}, $correctAnswers);
@@ -399,7 +402,7 @@ class ChimeController extends Controller
                         }
                         
                     }
-                    if(count(array_intersect($choice, $correctText)) > 0) {
+                    if(!$correctText || count(array_intersect($choice, $correctText)) > 0) {
                         $points = 1;
                     }
                 }
