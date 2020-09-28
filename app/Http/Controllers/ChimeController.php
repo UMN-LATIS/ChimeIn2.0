@@ -319,6 +319,13 @@ class ChimeController extends Controller
             ->first());
         
         if ($chime != null && $chime->pivot->permission_number >= 300) {
+            $folder = $chime->folders()->find($req->route('folder_id'));
+            foreach($folder->questions as $question) {
+                $currentSession = $question->current_session;
+                $question->current_session()->dissociate();
+                $question->save();
+                event(new EndSession($chime, $currentSession));
+            }
             $chime->folders()->find($req->route('folder_id'))->delete();
         
             return response('Folder Deleted', 200);
