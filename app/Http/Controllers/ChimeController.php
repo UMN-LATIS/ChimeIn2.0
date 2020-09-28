@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Validator;
 use Auth;
+use App\Events\EndSession;
 
 class ChimeController extends Controller
 {
