@@ -68,7 +68,10 @@ export default {
     },
     methods: {
         create_chime() {
-
+            if(this.chime_name.length == 0) {
+                alert("You must enter a name for the Chime");
+                return;
+            }
             axios.post('/api/chime', {
                     'name': this.chime_name,
                     'require_login': this.requireLogin,

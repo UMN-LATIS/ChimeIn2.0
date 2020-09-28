@@ -51,18 +51,18 @@
                                 <button class="btn btn-outline-primary align-items-center d-flex"
                                     @click="edit_folder"><span class="material-icons pointer">save</span>
                                     Save</button>
-                                <button class="btn btn-sm btn-outline-primary align-items-center d-flex"
-                                    @click="delete_folder">Delete <i class="material-icons pointer">delete</i>
-                                </button>
+
                             </div>
                         </div>
                     </div>
-                    <div class="ml-auto col-4 btn-toolbar justify-content-end">
+                    <div class="ml-auto col-12 btn-toolbar justify-content-end">
                         <button class="mr-2 btn btn-success btn-sm align-items-center d-flex" @click="sync" v-if="folder.resource_link_pk > 0">
                             Force Sync with Canvas <span class="material-icons md-18" v-if="synced">check_circle</span>
                         </button>
-                        <button class="btn btn-danger btn-sm" @click="reset">
+                        <button class="mr-2 btn btn-warning btn-sm align-items-center d-flex" @click="reset">
                             Reset Folder
+                        </button>
+                        <button class="btn btn-sm btn-danger align-items-center d-flex" @click="delete_folder">Delete Folder <i class="material-icons pointer md-18">delete</i>
                         </button>
                     </div>
                 </div>
