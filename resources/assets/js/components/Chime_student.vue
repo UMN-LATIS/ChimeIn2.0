@@ -92,6 +92,35 @@
                     this.responses.push(newResponse);
                 }
 
+            },
+            loadChime: function() {
+                axios.get('/api/chime/' + this.chimeId + '/openQuestions')
+                .then(res => {
+                    console.log('debug', 'chime:', res);
+                    this.chime = res.data.chime;
+                    document.title = this.chime.name;
+                    this.sessions = res.data.sessions.reverse();
+                })
+                .catch(err => {
+                    if(err.response.data.status == "AttemptAuth") {
+                        window.location = "/loginAndRedirect?target=" + window.location.pathname;
+                    }
+                    else {
+                        if(err.response.data.message) {
+                            this.error = err.response.data.message;    
+                        }
+                        this.$store.commit('message', "Could not load Chime. You may not have permission to view this page. ");
+                        console.log("error getting chime:", err.response);
+                        
+                    }
+                });
+
+                axios.get('/api/chime/' + this.chimeId + "/responses")
+                .then(res => {
+                    console.log('debug', 'Response:', res);
+                    this.responses= res.data;
+
+                })
             }
         },
         computed: {
@@ -105,33 +134,7 @@
             }
         },
         mounted: function () {
-            axios.get('/api/chime/' + this.chimeId + '/openQuestions')
-            .then(res => {
-                console.log('debug', 'chime:', res);
-                this.chime = res.data.chime;
-                document.title = this.chime.name;
-                this.sessions = res.data.sessions.reverse();
-            })
-            .catch(err => {
-                if(err.response.data.status == "AttemptAuth") {
-                    window.location = "/loginAndRedirect?target=" + window.location.pathname;
-                }
-                else {
-                    if(err.response.data.message) {
-                        this.error = err.response.data.message;    
-                    }
-                    this.$store.commit('message', "Could not load Chime. You may not have permission to view this page. ");
-                    console.log("error getting chime:", err.response);
-                    
-                }
-            });
-
-            axios.get('/api/chime/' + this.chimeId + "/responses")
-            .then(res => {
-                console.log('debug', 'Response:', res);
-                this.responses= res.data;
-
-            })
+            
 
             Echo.join('session-status.' + this.chimeId)
             .listen('StartSession', m => {
@@ -143,6 +146,11 @@
                 var removeIndex = this.sessions.findIndex(session => session.id == m.session.id);
                 this.sessions.splice(removeIndex, 1);
                 this.$announcer.set("A question has been closed.  There are " + this.sessions.length + " questions open");
+            });
+
+            window.Echo.connector.socket.on("reconnecting", () => {
+                console.log("reconnecting and reloading");
+                this.loadChime();
             });
 
         },
