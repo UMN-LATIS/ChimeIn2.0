@@ -149,7 +149,7 @@
                 this.$announcer.set("A question has been closed.  There are " + this.sessions.length + " questions open");
             });
 
-            window.Echo.connector.socket.on("reconnecting", () => {
+            window.Echo.connector.socket.on("reconnect", () => {
                 console.log("reconnecting and reloading");
                 this.loadChime();
             });
@@ -157,6 +157,7 @@
         },
         beforeDestroy: function() {
             Echo.leave('session-status.' + this.chimeId);
+            window.Echo.connector.socket.off("reconnect");
         }
     };
 </script>
