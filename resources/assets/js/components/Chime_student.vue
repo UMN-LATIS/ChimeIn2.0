@@ -75,7 +75,8 @@
                 chime: {},
                 sessions: [],
                 responses: [],
-                error: null
+                error: null,
+                timeout: null
             };
         },
         props: ['user', 'chimeId', 'folderId'],
@@ -151,7 +152,10 @@
 
             window.Echo.connector.socket.on("reconnect", () => {
                 console.log("reconnecting and reloading");
-                this.loadChime();
+                if (this.timeout) clearTimeout(this.timeout)
+                this.timeout = setTimeout(() => {
+                    this.loadChime()
+                }, 500)
             });
 
         },

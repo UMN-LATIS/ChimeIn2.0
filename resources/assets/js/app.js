@@ -117,6 +117,8 @@ Vue.component('heatmap_response_display',
     require('./components/questions/display/HeatmapResponse.vue').default);
 
 
+
+
 const store = new Vuex.Store({
     state: {
         message: null
