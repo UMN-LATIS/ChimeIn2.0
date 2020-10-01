@@ -96,7 +96,13 @@ export default {
             .catch(err => {
                 console.error(
                     'error', 'error recording response', err.response);
-                this.error = err.response;
+                if(!err.response) {
+                    this.error = "Error recording response. Your internet connection may be down. Try reloading the page.";
+                }
+                else {
+                    this.error = err.response;
+                }
+                
             });
             // document.activeElement.blur();
         }
