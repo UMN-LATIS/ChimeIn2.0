@@ -97,7 +97,7 @@ export default {
                 console.error(
                     'error', 'error recording response', err.response);
                 if(!err.response) {
-                    this.error = "Error recording response. Your internet connection may be down. Try reloading the page.";
+                    this.error = "Error recording response. Your internet connection may be down. ";
                 }
                 else {
                     this.error = err.response;
