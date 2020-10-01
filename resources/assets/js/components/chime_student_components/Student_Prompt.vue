@@ -18,7 +18,7 @@
            <transition name="fade">
                <p class="alert alert-info" v-if="responseUpdated">Response Updated</p>
            </transition>
-           <p class="alert alert-warning" v-if="error">{{ error }}.  Please reload.</p>
+           <p class="alert alert-warning" v-if="error">{{ error }}  Please reload.</p>
             <hr>
         </div>
         <!-- <div class="card-content" v-else>
