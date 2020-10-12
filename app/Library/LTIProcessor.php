@@ -145,7 +145,12 @@ class LTIProcessor {
 				
 			});
 		})->flatten(1)->unique(function ($userCollection) {
-			return $userCollection["user"]->id;
+			if(isset($userCollection["user"])) {
+				return $userCollection["user"]->id;
+			}
+			else {
+				return $userCollection;
+			}
 		});
 		
 		foreach($users as $userCollection) {
