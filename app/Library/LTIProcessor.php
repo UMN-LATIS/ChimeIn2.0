@@ -116,8 +116,8 @@ class LTIProcessor {
 			$correctText = array_map(function($k) { return $k["text"];}, $correctAnswers);
 		}
 		
-		$users = $question->sessions->map(function ($session) use($correctText) {
-			return $session->responses->map(function ($response) use ($correctText) {
+		$users = $question->sessions->map(function ($session) use($correctText, $chime) {
+			return $session->responses->map(function ($response) use ($correctText, $chime) {
 				// if this question has "correct" answers, see if the respondent got at least one correct
 				// if so pass it back.  
 				if($correctText) {
