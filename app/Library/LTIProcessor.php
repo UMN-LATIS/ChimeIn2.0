@@ -40,53 +40,7 @@ class LTIProcessor {
 		}
 		
 		foreach($questions as $question) {
-			$correctText = null;
-			$correctAnswers = null;
-			if($filterForCorrectAnswers) {
-				$correctAnswers = array_filter($question->question_info["question_responses"], function($k) { if(isset($k["correct"])) { return $k["correct"]==true;} return false;});
-				$correctText = array_map(function($k) { return $k["text"];}, $correctAnswers);
-			}
-			
-			$users = $question->sessions->map(function ($session) use($correctText) {
-				return $session->responses->map(function ($response) use ($correctText) {
-					// if this question has "correct" answers, see if the respondent got at least one correct
-					// if so pass it back.  
-					if($correctText) {
-						$choice = [];
-						if(isset($response->response_info["choice"])) {
-							if(is_array($response->response_info["choice"])) {
-								$choice = $response->response_info["choice"];
-							}
-							else {
-								$choice = [$response->response_info["choice"]];
-							}
-							
-						}
-						if(count(array_intersect($choice, $correctText)) > 0 && $response->user->lti_user_id) {
-							return $response->user;
-						}
-						return false;
-					}
-					else {
-						return $response->user->lti_user_id?$response->user:false;
-					}
-					
-				});
-			})->flatten()->unique();
-			
-			foreach($users as $user ) {
-				if(!isset($user->lti_user_id)) {
-					continue;
-				}
-				if(array_key_exists($user->lti_user_id, $globalUsers)) {
-					$globalUsers[$user->lti_user_id]++;
-				}
-				else {
-					$globalUsers[$user->lti_user_id] = 1;
-				}
-				
-			}
-			
+			LTIProcessor::getPointsForQuestion($question, $filterForCorrectAnswers, $globalUsers);
 		}
 		
 		foreach($ltiUsers as $user) {
@@ -133,53 +87,8 @@ class LTIProcessor {
 			$totalQuestions += $questions->count();
 			
 			foreach($questions as $question) {
-				$correctText = null;
-				$correctAnswers = null;
-				if($filterForCorrectAnswers) {
-					$correctAnswers = array_filter($question->question_info["question_responses"], function($k) { if(isset($k["correct"])) { return $k["correct"]==true;} return false;});
-					$correctText = array_map(function($k) { return $k["text"];}, $correctAnswers);
-				}
-				
-				$users = $question->sessions->map(function ($session) use($correctText) {
-					return $session->responses->map(function ($response) use ($correctText) {
-						// if this question has "correct" answers, see if the respondent got at least one correct
-						// if so pass it back.  
-						if($correctText) {
-							$choice = [];
-							if(isset($response->response_info["choice"])) {
-								if(is_array($response->response_info["choice"])) {
-									$choice = $response->response_info["choice"];
-								}
-								else {
-									$choice = [$response->response_info["choice"]];
-								}
-								
-							}
-							if(count(array_intersect($choice, $correctText)) > 0 && $response->user->lti_user_id) {
-								return $response->user;
-							}
-							return false;
-						}
-						else {
-							return $response->user->lti_user_id?$response->user:false;
-						}
-						
-					});
-				})->flatten()->unique();
-				
-				foreach($users as $user ) {
-					if(!isset($user->lti_user_id)) {
-						continue;
-					}
-					if(array_key_exists($user->lti_user_id, $globalUsers)) {
-						$globalUsers[$user->lti_user_id]++;
-					}
-					else {
-						$globalUsers[$user->lti_user_id] = 1;
-					}
-					
-				}
-				
+			
+				LTIProcessor::getPointsForQuestion($question, $filterForCorrectAnswers, $globalUsers);
 			}
 		
 		}
@@ -198,6 +107,62 @@ class LTIProcessor {
 		return true;
 	}
 	
+	static function getPointsForQuestion($question, $filterForCorrectAnswers, &$globalUsers) {
+		$correctText = null;
+		$correctAnswers = null;
+		if($filterForCorrectAnswers) {
+			$correctAnswers = array_filter($question->question_info["question_responses"], function($k) { if(isset($k["correct"])) { return $k["correct"]==true;} return false;});
+			$correctText = array_map(function($k) { return $k["text"];}, $correctAnswers);
+		}
+		
+		$users = $question->sessions->map(function ($session) use($correctText) {
+			return $session->responses->map(function ($response) use ($correctText) {
+				// if this question has "correct" answers, see if the respondent got at least one correct
+				// if so pass it back.  
+				if($correctText) {
+					$choice = [];
+					if(isset($response->response_info["choice"])) {
+						if(is_array($response->response_info["choice"])) {
+							$choice = $response->response_info["choice"];
+						}
+						else {
+							$choice = [$response->response_info["choice"]];
+						}
+						
+					}
+					if(count(array_intersect($choice, $correctText)) > 0 && $response->user->lti_user_id) {
+						return ["user"=>$response->user, "points"=>1];
+					}
+					else if($chime->only_correct_answers_lti == 2) { // partial credit
+						return ["user"=>$response->user, "points"=>0.5];
+					}
+					return false;
+				}
+				else {
+					return $response->user->lti_user_id?["user"=>$response->user, "points"=>1]:false;
+				}
+				
+			});
+		})->flatten()->unique(function ($user) {
+			return $user->id;
+		});
+		
+		foreach($users as $userCollection) {
+			$user = $userCollection["user"];
+			$points = $userCollection["points"];
+			if(!isset($user->lti_user_id)) {
+				continue;
+			}
+			if(array_key_exists($user->lti_user_id, $globalUsers)) {
+				$globalUsers[$user->lti_user_id] += $points;
+			}
+			else {
+				$globalUsers[$user->lti_user_id] = $points;
+			}
+			
+		}
+	}
+
 }
 
 ?>

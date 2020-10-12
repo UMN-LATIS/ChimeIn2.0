@@ -23,11 +23,27 @@
             </div>
         </li>
         <li>
+             <fieldset class="form-group border p-2 pt-0 mt-2">
+                <legend class="col-form-label w-auto mb-0 pb-0">Grading Options (for Canvas-linked Chimes)</legend>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="onlyCorrectAnswersLti" id="onlyCorrectAnswersLti"
-                    v-model="only_correct_answers_lti_local" @change="$emit('update:only_correct_answers_lti', $event.target.checked)">
-                <label class="form-check-label" for="onlyCorrectAnswersLti">Only count "correct" answers towards Canvas grades (for questions which have a "correct" response)</label>
+                <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="onlyCorrectAnswersLti" id="onlyCorrectAnswersLti_any" value="0"  v-model="only_correct_answers_lti_local" @change="$emit('update:only_correct_answers_lti', $event.target.value)">
+                Count any participation
+              </label>
             </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="onlyCorrectAnswersLti" id="onlyCorrectAnswersLti_participation" value="2"  v-model="only_correct_answers_lti_local" @change="$emit('update:only_correct_answers_lti', $event.target.value)">
+                Half credit for participation, full credit for "correct" answers (for questions which have a "correct" response)
+              </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="onlyCorrectAnswersLti" id="onlyCorrectAnswersLti_correct" value="1"  v-model="only_correct_answers_lti_local" @change="$emit('update:only_correct_answers_lti', $event.target.value)">
+                Only count "correct" answers (for questions which have a "correct" response)
+              </label>
+            </div>
+            </fieldset>
         </li>
     </ul>
 </template>
