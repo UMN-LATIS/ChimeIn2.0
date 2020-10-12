@@ -40,7 +40,7 @@ class LTIProcessor {
 		}
 		
 		foreach($questions as $question) {
-			LTIProcessor::getPointsForQuestion($question, $filterForCorrectAnswers, $globalUsers);
+			LTIProcessor::getPointsForQuestion($question, $chime, $globalUsers);
 		}
 		
 		foreach($ltiUsers as $user) {
@@ -77,10 +77,7 @@ class LTIProcessor {
 		$totalQuestions = 0;
 		$globalUsers = [];
 				
-		$filterForCorrectAnswers = false;
-		if($chime->only_correct_answers_lti) {
-			$filterForCorrectAnswers = true;
-		}
+
 		foreach($folders as $folder) {
 			$questions = $folder->questions;
 			
@@ -88,7 +85,7 @@ class LTIProcessor {
 			
 			foreach($questions as $question) {
 			
-				LTIProcessor::getPointsForQuestion($question, $filterForCorrectAnswers, $globalUsers);
+				LTIProcessor::getPointsForQuestion($question, $chime, $globalUsers);
 			}
 		
 		}
@@ -107,7 +104,11 @@ class LTIProcessor {
 		return true;
 	}
 	
-	static function getPointsForQuestion($question, $filterForCorrectAnswers, &$globalUsers) {
+	static function getPointsForQuestion($question, $chime, &$globalUsers) {
+		$filterForCorrectAnswers = false;
+		if($chime->only_correct_answers_lti) {
+			$filterForCorrectAnswers = true;
+		}
 		$correctText = null;
 		$correctAnswers = null;
 		if($filterForCorrectAnswers) {
@@ -143,7 +144,7 @@ class LTIProcessor {
 				}
 				
 			});
-		})->flatten()->unique(function ($userCollection) {
+		})->flatten(1)->unique(function ($userCollection) {
 			return $userCollection["user"]->id;
 		});
 		
