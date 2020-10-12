@@ -143,8 +143,8 @@ class LTIProcessor {
 				}
 				
 			});
-		})->flatten()->unique(function ($user) {
-			return $user->id;
+		})->flatten()->unique(function ($userCollection) {
+			return $userCollection["user"]->id;
 		});
 		
 		foreach($users as $userCollection) {
