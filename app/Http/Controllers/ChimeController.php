@@ -323,9 +323,12 @@ class ChimeController extends Controller
             $folder = $chime->folders()->find($req->route('folder_id'));
             foreach($folder->questions as $question) {
                 $currentSession = $question->current_session;
-                $question->current_session()->dissociate();
-                $question->save();
-                event(new EndSession($chime, $currentSession));
+                if($currentSession) {
+                    $question->current_session()->dissociate();
+                    $question->save();
+                    event(new EndSession($chime, $currentSession));
+                }
+                
             }
             $chime->folders()->find($req->route('folder_id'))->delete();
         
