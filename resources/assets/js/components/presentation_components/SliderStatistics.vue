@@ -81,7 +81,7 @@ export default {
         labels() {
 
             if(!this.question.question_info.question_responses.range_type || this.question.question_info.question_responses.range_type == "Qualitative") {
-                return [this.question.question_info.question_responses.left_choice_text, "", "", "", "", "", "", "", "", "", "", "", "", "", this.question.question_info.question_responses.right_choice_text];
+                return [this.question.question_info.question_responses.left_choice_text,"", "", "", "", "", "", "", "", "", "", "", "", "", "", this.question.question_info.question_responses.right_choice_text];
             }
             else if(this.question.question_info.question_responses.range_type == "Numeric (Linear)") {
                 let leftValue = parseInt(this.question.question_info.question_responses.left_choice_text);

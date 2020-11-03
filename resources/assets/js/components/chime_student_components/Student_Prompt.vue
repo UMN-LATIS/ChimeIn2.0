@@ -18,7 +18,7 @@
            <transition name="fade">
                <p class="alert alert-info" v-if="responseUpdated">Response Updated</p>
            </transition>
-           <p class="alert alert-warning" v-if="error">{{ error }}.  Please reload.</p>
+           <p class="alert alert-warning" v-if="error">{{ error }}  Please reload.</p>
             <hr>
         </div>
         <!-- <div class="card-content" v-else>
@@ -96,7 +96,13 @@ export default {
             .catch(err => {
                 console.error(
                     'error', 'error recording response', err.response);
-                this.error = err.response;
+                if(!err.response) {
+                    this.error = "Error recording response. Your internet connection may be down. ";
+                }
+                else {
+                    this.error = err.response;
+                }
+                
             });
             // document.activeElement.blur();
         }

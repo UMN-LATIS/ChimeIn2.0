@@ -101,7 +101,10 @@ class PresentController extends Controller
             $currentSession = $question->current_session;
             $question->current_session()->dissociate();
             $question->save();
-            event(new EndSession($chime, $currentSession));
+            if($currentSession) {
+                event(new EndSession($chime, $currentSession));
+            }
+            
 
             return response()->json($question);
         } else {

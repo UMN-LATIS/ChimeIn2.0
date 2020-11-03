@@ -80,6 +80,7 @@ class LTIHandler extends Controller
             else {
                 $chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first();
                 if($chime && $chime->lti_setup_complete) {
+                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                     if(!$chime->single_chime_for_lti) {
                         $folder = new \App\Folder;
                         $folder->chime()->associate($chime);

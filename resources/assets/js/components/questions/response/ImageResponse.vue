@@ -98,6 +98,7 @@ export default {
             // this.isInitial= true;
               this.$emit('recordresponse', response, this.create_new_response);
               this.create_new_response = false;
+              this.error = null;
             })
             .catch( err => {
               

@@ -32,6 +32,7 @@ window.Vue = require('vue');
 
 window.axios = require('axios');
 window.io = require('socket.io-client');
+
 // window.Pusher = require('pusher-js');
 
 // todo: fetch environment variables from .env file
