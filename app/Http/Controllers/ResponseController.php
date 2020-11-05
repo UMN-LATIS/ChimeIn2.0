@@ -54,6 +54,9 @@ class ResponseController extends Controller
             $response->response_info = $request->get('response_info');
         }
         else {
+            if(!$request->get("response_info")) {
+                return response('Responses cannot be blank', 400);
+            }
             $response = $session->responses()->create([
                 'response_info' => $request->get('response_info'),
                 'user_id' => $user->id
