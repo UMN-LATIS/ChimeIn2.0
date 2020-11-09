@@ -57,6 +57,7 @@ export default {
         'multiple_choice_statistics': multiplechoicestatistics,
         'image_response_statistics': ImageResponseStatistics,
         'free_response_statistics': FreeResponseStatistics,
+        'no_response_statistics': FreeResponseStatistics,
         'heatmap_response_statistics': HeatmapResponseStatistics
     },
     methods: {

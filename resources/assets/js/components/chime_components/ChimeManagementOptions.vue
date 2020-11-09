@@ -22,7 +22,7 @@
                     presenting</label>
             </div>
         </li>
-        <li>
+        <li v-if="!new_chime">
              <fieldset class="form-group border p-2 pt-0 mt-2">
                 <legend class="col-form-label w-auto mb-0 pb-0">Grading Options (for Canvas-linked Chimes)</legend>
             <div class="form-check">
@@ -62,10 +62,10 @@ export default {
                 require_login_local: this.require_login,
                 students_can_view_local: this.students_can_view,
                 join_instructions_local: this.join_instructions,
-                only_correct_answers_lti_local: this.only_correct_answers_lti
+                only_correct_answers_lti_local: this.only_correct_answers_lti,
             }
         },
-        props: ['require_login','students_can_view', 'join_instructions', 'only_correct_answers_lti'],
+        props: ['require_login','students_can_view', 'join_instructions', 'only_correct_answers_lti','new_chime'],
 
 }
 </script>

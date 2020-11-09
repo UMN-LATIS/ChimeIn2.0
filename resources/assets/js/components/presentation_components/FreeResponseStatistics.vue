@@ -114,6 +114,7 @@ export default {
                 var filteredWords = words;
                 
                 for(var i=0; i < topics.length; i++) {
+                    // remove topics words from our filtered words
                     filteredWords = filteredWords.replace(new RegExp('\\b' + topics[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b',"gi"),'');
                 }
                 
@@ -122,7 +123,10 @@ export default {
                 var filteredWords = words;
                 var topics = [];
             }
-             
+            
+            if(filteredWords.length == 0) {
+                return;
+            }
             
             var wordsWithoutStops = sw.removeStopwords(filteredWords.match(/"(.*?)"|\w+/g));
 

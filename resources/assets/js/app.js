@@ -91,7 +91,9 @@ Vue.component('image_response',
     require('./components/questions/response/ImageResponse.vue').default);
 Vue.component('free_response',
     require('./components/questions/response/FreeResponse.vue').default);
-Vue.component('slider_response',
+Vue.component('no_response',
+    require('./components/questions/response/NoResponse.vue').default);
+    Vue.component('slider_response',
     require('./components/questions/response/Slider.vue').default);
 Vue.component('heatmap_response',
     require('./components/questions/response/HeatmapResponse.vue').default);
@@ -110,6 +112,8 @@ Vue.component('multiple_choice_display',
 Vue.component('slider_response_display',
     require('./components/questions/display/Slider.vue').default);
 Vue.component('free_response_display',
+    require('./components/questions/display/FreeResponse.vue').default);
+Vue.component('no_response_display',
     require('./components/questions/display/FreeResponse.vue').default);
 Vue.component('image_response_display',
     require('./components/questions/display/ImageResponse.vue').default);

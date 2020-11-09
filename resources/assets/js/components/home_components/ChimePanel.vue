@@ -17,7 +17,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                 <ChimeManagementOptions :require_login.sync="requireLogin" :students_can_view.sync="studentsCanView" :join_instructions.sync="joinInstructions"></ChimeManagementOptions>
+                                 <ChimeManagementOptions :require_login.sync="requireLogin" :students_can_view.sync="studentsCanView" :join_instructions.sync="joinInstructions" :new_chime="true"></ChimeManagementOptions>
                             </div>
                             <div class="row">
                                 <div class="col">

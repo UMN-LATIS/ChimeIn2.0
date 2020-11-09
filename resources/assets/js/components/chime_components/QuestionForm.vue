@@ -95,6 +95,7 @@
     import SliderResponse from "./response_components/SliderResponse.vue";
     import FreeResponse from "./response_components/FreeResponse.vue";
     import HeatmapResponse from "./response_components/HeatmapResponse.vue";
+    import NoResponse from "./response_components/FreeResponse.vue";
 
     import VueSelect from 'vue-select';
 
@@ -129,6 +130,7 @@
             'slider_response_response': SliderResponse,
             'free_response_response': FreeResponse,
             'heatmap_response_response': HeatmapResponse,
+            'no_response_response': NoResponse,
             'v-select': VueSelect
         },
         data: function () {
@@ -155,11 +157,15 @@
                     },
                     {
                         id: "slider_response",
-                        label: "Slider Response"
+                        label: "Slider"
                     },
                     {
                         id: "heatmap_response",
-                        label: "Heatmap Response"
+                        label: "Heatmap"
+                    },
+                    {
+                        id: "no_response",
+                        label: "No Response"
                     }
                 ],
                 toolbar: [
@@ -197,7 +203,7 @@
                     this.folders = res.data.folders;
                 })
                 .catch(err => {
-                    console.log(err);
+                    this.$store.commit('message', "Could not load this form. The full error was: " + JSON.stringify(err.response).slice(0, 100));
                 });
         },
         methods: {
@@ -224,6 +230,7 @@
                 var question = {};
                 question.text = this.question_text;
 
+
                 question.question_info = {
                     question_type: this.question_type,
                     question_responses: this.question_responses
@@ -244,7 +251,7 @@
                             this.$emit('edited');
                         })
                         .catch(err => {
-                            console.log(err.response);
+                            this.$store.commit('message', "Could not store this question.  The full error was: " + JSON.stringify(err.response).slice(0, 100));
                         });
                 } else {
                     axios.post(url, responseBlock)
@@ -253,7 +260,7 @@
                             this.close();
                         })
                         .catch(err => {
-                            console.log(err.response);
+                            this.$store.commit('message', "Could not store this question.  The full error was: " + JSON.stringify(err.response).slice(0, 100));
                         });
                 }
 
@@ -276,7 +283,7 @@
                         reset();
                     })
                     .catch(err => {
-                        console.log(err.response)
+                        this.$store.commit('message', "Could not store this image. Please contact support at latis@umn.edu. The full error was: " + err.response);
                     });
             }
         }
