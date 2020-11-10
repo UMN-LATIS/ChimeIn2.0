@@ -17,8 +17,7 @@
                 <div class="radio">
                     <label>
                         {{ Form::radio('single_chime_for_lti', 1, true, ['class'=>'']) }}
-                        I don't want ChimeIn results in the Canvas gradebook
-                        
+                        No ChimeIn results in the Canvas gradebook
                     </label>
                 </div>
                 <div class="radio">
@@ -49,7 +48,7 @@
                     <label>
                         {{ Form::radio('only_correct_answers_lti', 0, true, ['class'=>'']) }}
                         Count any participation
-                        <small id="passwordHelpBlock" class="form-text text-muted">
+                        <small id="passwordHelpBlock" class="form-text">
                             Any response counts towards the grade in the gradebook.
                         </small>
                     </label>
@@ -58,7 +57,7 @@
                     <label>
                         {{ Form::radio('only_correct_answers_lti', 1, null, ['class'=>'']) }}
                         Only count "correct" answers
-                        <small id="passwordHelpBlock" class="form-text text-muted">
+                        <small id="passwordHelpBlock" class="form-text">
 Multiple Choice questions in ChimeIn can have a "correct" answer assigned. When this option is selected, students responding to multiple choice questions will only recieve credit for correct answers. Any participation in other types of questions (free response, heatmap, etc) counts towards the grade..
 </small>
                     </label>
