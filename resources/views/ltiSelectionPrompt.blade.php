@@ -24,7 +24,7 @@
                 <div class="radio">
                     <label>
                         {{ Form::radio('single_chime_for_lti', 0, true, ['class'=>'']) }}
-                        Individual gradebook entry for each lecture/week
+                        Multiple gradebook entries (one per lecture/week/etc)
                         
                     </label>
                 </div>
@@ -61,6 +61,13 @@
                         <small id="passwordHelpBlock" class="form-text text-muted">
 Multiple Choice questions in ChimeIn can have a "correct" answer assigned. When this option is selected, students responding to multiple choice questions will only recieve credit for correct answers. Any participation in other types of questions (free response, heatmap, etc) counts towards the grade..
 </small>
+                    </label>
+                </div>
+                 <div class="radio">
+                    <label>
+                        {{ Form::radio('only_correct_answers_lti', 2, null, ['class'=>'']) }}
+                        Half credit for participation, full credit for "correct" answers
+                        
                     </label>
                 </div>
             </div>
