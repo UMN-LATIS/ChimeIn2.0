@@ -156,6 +156,8 @@ class LTIHandler extends Controller
         $folder->name = $resource_link_title;
         if(!$chime->single_chime_for_lti) {
             $folder->resource_link_pk = $resource_link_pk;
+            $chime->resource_link_pk = null;
+            $chime->save();
         }
         else {
             $chime->resource_link_pk = $resource_link_pk;

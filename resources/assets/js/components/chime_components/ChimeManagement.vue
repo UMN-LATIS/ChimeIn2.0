@@ -27,6 +27,7 @@
         <ChimeManagementOptions :require_login.sync="require_login" :students_can_view.sync="students_can_view"
           :join_instructions.sync="join_instructions" :only_correct_answers_lti.sync="only_correct_answers_lti">
         </ChimeManagementOptions>
+
         <button class="btn btn-outline-success btn-sm align-items-center d-flex" @click="sync" v-if="chime.resource_link_pk">
             Force Sync with Canvas <span
               class="material-icons md-18" v-if="synced">check_circle</span> 
