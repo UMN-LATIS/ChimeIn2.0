@@ -106,17 +106,17 @@ class LTIHandler extends Controller
                     $chime->save();
                     $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
 
-                    // // temporary
-                    // $chime->lti_setup_complete = true;
-                    // $chime->single_chime_for_lti = false;
-                    // $folder = new \App\Folder;
-                    // $folder->chime()->associate($chime);
-                    // $folder->name = $tool->resourceLink->title;
-                    // $folder->resource_link_pk = $tool->resourceLink->getRecordId();
-                    // $chime->save();
-                    // $folder->save();
-                    // return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-                    return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
+                    // temporary while we figure out our LTI future
+                    $chime->lti_setup_complete = true;
+                    $chime->single_chime_for_lti = false;
+                    $folder = new \App\Folder;
+                    $folder->chime()->associate($chime);
+                    $folder->name = $tool->resourceLink->title;
+                    $folder->resource_link_pk = $tool->resourceLink->getRecordId();
+                    $chime->save();
+                    $folder->save();
+                    return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+                    // return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
                 }                
             }
         }
