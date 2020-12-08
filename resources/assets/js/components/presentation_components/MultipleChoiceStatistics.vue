@@ -41,6 +41,7 @@ export default {
             visible_responses: [],
             response_search: '',
             options: {
+                
                 height: "100%",
                 animation:{
                     duration: 1000,
@@ -57,8 +58,11 @@ export default {
                 },
                 vAxis: {
                     baseline: 0,
-                    format: "#",
-                }
+                    format: "%",
+                },
+                tooltip: {
+                    isHtml: false
+                    }
             }
         }
     },
@@ -88,13 +92,16 @@ export default {
                 if(this.isObject(q) && q.correct == true) {
                     formattedQuestion = formattedQuestion + " ✓";
                 }
+                var totalResponsesForAnswer = this.responses.filter(r => Array.isArray(r.response_info.choice)?r.response_info.choice.includes(questionText):(r.response_info.choice == questionText)).length;
+                var totalResponsesForQuestion = this.question.question_info.question_responses.length;
                 return [
                     formattedQuestion, 
-                    this.responses.filter(r => Array.isArray(r.response_info.choice)?r.response_info.choice.includes(questionText):(r.response_info.choice == questionText)).length, 
-                    'color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2'
+                    totalResponsesForAnswer / totalResponsesForQuestion,
+                    'color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2',
+                    "Number of Responses:  " + totalResponsesForAnswer + "\n" + "Percentage: " + Math.round((totalResponsesForAnswer / totalResponsesForQuestion) * 10000)/100 + "%"
                     ] 
             });
-            questionArray.unshift(['Answer', 'Number of Responses', { role: 'style' }]);
+            questionArray.unshift(['Answer', 'Number of Responses', { role: 'style' }, { type: 'string', role: 'tooltip', 'p': {'html': false} }]);
             return questionArray;
         }
     }
