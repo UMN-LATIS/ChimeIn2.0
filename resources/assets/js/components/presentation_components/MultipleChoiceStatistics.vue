@@ -93,7 +93,7 @@ export default {
                     formattedQuestion = formattedQuestion + " ✓";
                 }
                 var totalResponsesForAnswer = this.responses.filter(r => Array.isArray(r.response_info.choice)?r.response_info.choice.includes(questionText):(r.response_info.choice == questionText)).length;
-                var totalResponsesForQuestion = this.question.question_info.question_responses.length;
+                var totalResponsesForQuestion = this.responses.length;
                 return [
                     formattedQuestion, 
                     totalResponsesForAnswer / totalResponsesForQuestion,
