@@ -324,9 +324,9 @@ class ChimeController extends Controller
             foreach($folder->questions as $question) {
                 $currentSession = $question->current_session;
                 if($currentSession) {
+                    event(new EndSession($chime, $currentSession));
                     $question->current_session()->dissociate();
                     $question->save();
-                    event(new EndSession($chime, $currentSession));
                 }
                 
             }
