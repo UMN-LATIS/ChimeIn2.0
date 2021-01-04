@@ -192,6 +192,6 @@ return [
     |
     */
 
-    'same_site' => 'none',
+    'same_site' => env('SESSION_SAME_SITE', "none"),
 
 ];

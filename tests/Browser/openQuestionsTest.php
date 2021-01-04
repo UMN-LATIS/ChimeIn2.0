@@ -6,7 +6,7 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class openQuestions extends DuskTestCase
+class openQuestionsTest extends DuskTestCase
 {
     // use DatabaseMigrations;
     public $admin = null;
@@ -22,9 +22,14 @@ class openQuestions extends DuskTestCase
             'permission_number' => 300
         ]);
 
-        $question = ["question_text"=>"<p>test</p>", "question_info"=>["question_type"=>"multiple_choice","question_responses"=>["one","two","three"]],"folder_id"=>1];
-        $this->post('/api/chime/' . $this->chime->id . "/folder/" . $this->folder->id, $question);
-        
+        $new_question = \App\Question::create([
+                'text' => "<p>test</p>",
+                'order' => 0,
+                'question_info' => ["question_type"=>"multiple_choice","question_responses"=>["one","two","three"]],
+                'anonymous'=>0,
+                'folder_id'=>$this->folder->id,
+                'allow_multiple' => 0
+            ]);
     }
 
     public function testOpenQuestion() {
@@ -37,9 +42,7 @@ class openQuestions extends DuskTestCase
         $this->browse(function (Browser $browser1, Browser $browser2) {
             $browser1->loginAs($this->admin)->visit('/chime/' . $this->chime->id . '/folder/' . $this->folder->id);
             $browser1->pause(500)->assertSee("test");
-
             $browser2->visit('/join/' . $this->chime->access_code)->pause(500)->assertSee("No Open Questions");
-
             $browser1->click("@open-all-button");
             $browser2->pause(1000)->assertSee("test");
             $browser1->click("@close-all-button");

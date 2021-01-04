@@ -13,7 +13,7 @@ class createQuestionsTest extends DuskTestCase
     public $chime = null;
     public function setUp(): void {
         parent::setUp();
-
+        
         $this->admin = factory(\App\User::class)->create();
         $this->chime = factory(\App\Chime::class)->create();
         $this->folder = factory(\App\Folder::class)->make();

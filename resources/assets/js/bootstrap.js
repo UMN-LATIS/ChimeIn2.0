@@ -41,9 +41,9 @@ window.io = require('socket.io-client');
 const env = process.env.NODE_ENV || 'development';
 // use our internal hostnames so we can work with docker
 var host = window.location.hostname;
-if(env == "development") {
-    host = "echo.knowfear.net";
-}
+// if(env == "development") {
+//     host = "echo.knowfear.net";
+// }
 
 window.Echo = new Echo({
     broadcaster: 'socket.io',

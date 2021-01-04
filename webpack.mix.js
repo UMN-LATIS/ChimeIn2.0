@@ -19,12 +19,12 @@ let mix = require('laravel-mix');
  */
 
 
-mix.options({
-	hmrOptions: {
-		host: 'node.knowfear.net',
-		port: 8080
-	}
-})
+// mix.options({
+// 	hmrOptions: {
+// 		host: 'node.knowfear.net',
+// 		port: 8080
+// 	}
+// })
 
  mix.js('resources/assets/js/app.js', 'public/js')
  .sass('resources/assets/sass/app.scss', 'public/css');

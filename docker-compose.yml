@@ -1,142 +1,148 @@
-version: "3.4"
+  version: "3.4"
 
-services:
-  app:
-    image: laravel-www
-    container_name: laravel-www
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    depends_on:
-      - redis
-      - mysql
-    ports:
-      - 8000:80
-    volumes:
-      - .:/var/www/html/:cached
-      - /var/www/html/node_modules
-      - /var/www/html/vendor
-      # - /var/www/html/public
-    environment:
-      APP_ENV: local
-      CONTAINER_ROLE: app
-    env_file:
-      - .env
-    networks:
-       chimein:    
+  services:
+    app:
+      image: laravel-www
+      container_name: laravel-www
+      build:
+        context: .
+        dockerfile: docker/Dockerfile
+      depends_on:
+        - redis
+        - mysql
+      ports:
+        - 8000:80
+      volumes:
+        - .:/var/www/html/:cached
+        - /var/www/html/node_modules
+        - /var/www/html/vendor
+        # - /var/www/html/public
+      environment:
+        APP_ENV: local
+        CONTAINER_ROLE: app
+      env_file:
+        - .env
+      networks:
+        chimein:
           aliases:
-            - app.knowfear.net
-  node:
-    image: laravel-node
-    container_name: laravel-node
-    build:
-      context: .
-      dockerfile: docker/node.Dockerfile
-    depends_on:
+              - app.test   
+      #       aliases:
+      #         - app.knowfear.net
+    node:
+      image: laravel-node
+      container_name: laravel-node
+      build:
+        context: .
+        dockerfile: docker/node.Dockerfile
+      depends_on:
+          - app
+      ports:
+        - 8080:8080
+      volumes:
+        - .:/app:cached
+        - /app/vendor
+        - /app/node_modules
+      networks:
+        chimein:    
+          aliases:
+            - app.test
+      #       aliases:
+      #         - node.knowfear.net
+      env_file:
+        - .env
+    scheduler:
+      image: laravel-www
+      container_name: laravel-scheduler
+      depends_on:
         - app
-    ports:
-      - 8080:8080
-    volumes:
-      - .:/app:cached
-      - /app/vendor
-      - /app/node_modules
-    networks:
-       chimein:    
+      volumes:
+        - .:/var/www/html:cached
+        - /var/www/html/node_modules
+        - /var/www/html/vendor
+      environment:
+        CONTAINER_ROLE: scheduler
+      env_file:
+        - .env
+      networks:
+        chimein:
+    queue:
+      image: laravel-www
+      container_name: laravel-queue
+      depends_on:
+        - app
+        - redis
+      volumes:
+        - .:/var/www/html:cached
+        - /var/www/html/node_modules
+        - /var/www/html/vendor
+      environment:
+        CONTAINER_ROLE: queue
+      env_file:
+      - .env
+      networks:
+        chimein: 
+    redis:
+      container_name: laravel-redis
+      image: redis:4-alpine
+      ports:
+        - 16379:6379
+      volumes:
+        - redis:/data
+      networks:
+        chimein: 
+      env_file:
+        - .env
+    mysql:
+      container_name: laravel-mysql
+      image: mysql:5.7
+      ports:
+        - 13306:3306
+      volumes:
+        - mysql:/var/lib/mysql
+      env_file:
+        - .env
+      environment:
+        MYSQL_DATABASE: ${DB_DATABASE}
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_USER: ${DB_USERNAME}
+        MYSQL_PASSWORD: ${DB_PASSWORD}
+      networks:
+        chimein: 
           aliases:
-            - node.knowfear.net
-    env_file:
-      - .env
-  scheduler:
-    image: laravel-www
-    container_name: laravel-scheduler
-    depends_on:
-      - app
-    volumes:
-      - .:/var/www/html:cached
-      - /var/www/html/node_modules
-      - /var/www/html/vendor
-    environment:
-      CONTAINER_ROLE: scheduler
-    env_file:
-      - .env
-    networks:
-       chimein:
-  queue:
-    image: laravel-www
-    container_name: laravel-queue
-    depends_on:
-      - app
-      - redis
-    volumes:
-      - .:/var/www/html:cached
-      - /var/www/html/node_modules
-      - /var/www/html/vendor
-    environment:
-      CONTAINER_ROLE: queue
-    env_file:
-    - .env
-    networks:
-       chimein: 
-  redis:
-    container_name: laravel-redis
-    image: redis:4-alpine
-    ports:
-      - 16379:6379
-    volumes:
-      - redis:/data
-    networks:
-       chimein: 
-    env_file:
-      - .env
-  mysql:
-    container_name: laravel-mysql
-    image: mysql:5.7
-    ports:
-      - 13306:3306
-    volumes:
-      - mysql:/var/lib/mysql
-    env_file:
-      - .env
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    networks:
-       chimein: 
-  echo:
-    image: oanhnn/laravel-echo-server
-    container_name: laravel-echo
-    ports:
-      - 6001:6001
-    depends_on:
-      - redis
-      - app
-    env_file:
-      - .env
-    environment:
-      LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
-      LARAVEL_ECHO_SERVER_DEBUG: "true"
-    networks:
-       chimein:    
-          aliases:
-            - echo.knowfear.net
-  selenium:
-    image: selenium/standalone-chrome:3.11.0-antimony
-    depends_on:
-      - app
-    volumes:
-      - /dev/shm:/dev/shm
-    env_file:
-      - .env
-    networks:
-       chimein: 
-          aliases:
-          - selenium.knowfear.net
-volumes:
-  redis:
-    driver: "local"
-  mysql:
-    driver: "local"
-networks: 
-  chimein:
+            - app.test
+    echo:
+      image: oanhnn/laravel-echo-server
+      container_name: laravel-echo
+      ports:
+        - 6001:6001
+      depends_on:
+        - redis
+        - app
+      env_file:
+        - .env
+      environment:
+        LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
+        LARAVEL_ECHO_SERVER_DEBUG: "true"
+      networks:
+        chimein:    
+            aliases:
+              - app.test
+    selenium:
+      image: selenium/standalone-chrome:3.11.0-antimony
+      depends_on:
+        - app
+      volumes:
+        - /dev/shm:/dev/shm
+      env_file:
+        - .env
+      networks:
+        chimein: 
+      #       aliases:
+      #       - selenium.knowfear.net
+  volumes:
+    redis:
+      driver: "local"
+    mysql:
+      driver: "local"
+  networks: 
+    chimein:
