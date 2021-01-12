@@ -6,9 +6,9 @@ ChimeIn is designed to run in Docker via docker-compose.
 
 To get started, copy "env-demo" to ".env" in the root of the project. 
 
-Run "docker-compose up" to begin the process of building the docker images. Once they're built, the application will be running on http://localhost:8000.
+Run `docker-compose up` to begin the process of building the docker images. Once they're built, the application will be running on http://localhost:8000.
 
-Once the application is running, run `docker-compose exec app php artisan migrate` to run the database migrations, and then `docker-compose exec app php artisan key:generate` to great an application key.
+Once the application is running, run `docker-compose exec app php artisan migrate` to run the database migrations, and then `docker-compose exec app php artisan key:generate` to create an application key.
 
 ## Using the application
 
