@@ -43,7 +43,6 @@ COPY docker/start.sh /usr/local/bin/start
 
 COPY . /var/www/html
 RUN chown -R www-data:www-data /var/www/html  && \
-    rm /var/www/html/public/storage && \
     ln -s /var/www/html/storage/app/public /var/www/html/public/storage && \
     chmod -R 777 /var/www/html/storage && \
     chmod u+x /usr/local/bin/start && \
