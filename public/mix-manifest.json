@@ -1,13 +1,13 @@
 {
-    "/js/vendors~FreeResponseStatistics~ImageResponseStatistics~folder~multiplechoicestatistics.e3f95e44231f98418062.bundle.js": "/js/vendors~FreeResponseStatistics~ImageResponseStatistics~folder~multiplechoicestatistics.e3f95e44231f98418062.bundle.js?id=99bd4a8eb39b445e71cb",
-    "/js/app.js": "/js/app.js?id=76429c183a93481905e0",
-    "/css/app.css": "/css/app.css?id=4e3f3f20b67ea5aaf36f",
-    "/js/FreeResponseStatistics.d7e69869ca90650cdabf.bundle.js": "/js/FreeResponseStatistics.d7e69869ca90650cdabf.bundle.js?id=2ea6fd8a31be95173d65",
-    "/js/ImageResponseStatistics.53ebe5f15ba10ce39e4b.bundle.js": "/js/ImageResponseStatistics.53ebe5f15ba10ce39e4b.bundle.js?id=f44b88a73ee343295259",
-    "/js/QuestionForm.236d33ea85558083b7ca.bundle.js": "/js/QuestionForm.236d33ea85558083b7ca.bundle.js?id=f5bb9e41cde2889589e1",
-    "/js/folder.a54b19eacad69174effe.bundle.js": "/js/folder.a54b19eacad69174effe.bundle.js?id=e418b153056e03782880",
-    "/js/multiplechoicestatistics.708113be3e068e4b794b.bundle.js": "/js/multiplechoicestatistics.708113be3e068e4b794b.bundle.js?id=70a87f69ab3b5cd447e5",
-    "/js/vendors~FreeResponseStatistics.cee20a51f1de77a6e1b9.bundle.js": "/js/vendors~FreeResponseStatistics.cee20a51f1de77a6e1b9.bundle.js?id=0ad362689c79dadaf331",
-    "/js/vendors~ImageResponseStatistics.9061a00049e9b7ea44ba.bundle.js": "/js/vendors~ImageResponseStatistics.9061a00049e9b7ea44ba.bundle.js?id=da9592e46b7171426ea8",
-    "/js/vendors~QuestionForm.23c49d40e98c22d0dc49.bundle.js": "/js/vendors~QuestionForm.23c49d40e98c22d0dc49.bundle.js?id=484b48a640301650aa49"
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/FreeResponseStatistics.js": "/FreeResponseStatistics.js",
+    "/ImageResponseStatistics.js": "/ImageResponseStatistics.js",
+    "/QuestionForm.js": "/QuestionForm.js",
+    "/folder.js": "/folder.js",
+    "/multiplechoicestatistics.js": "/multiplechoicestatistics.js",
+    "/vendors~FreeResponseStatistics.js": "/vendors~FreeResponseStatistics.js",
+    "/vendors~FreeResponseStatistics~ImageResponseStatistics~folder~multiplechoicestatistics.js": "/vendors~FreeResponseStatistics~ImageResponseStatistics~folder~multiplechoicestatistics.js",
+    "/vendors~ImageResponseStatistics.js": "/vendors~ImageResponseStatistics.js",
+    "/vendors~QuestionForm.js": "/vendors~QuestionForm.js"
 }
