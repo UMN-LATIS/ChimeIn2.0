@@ -51,6 +51,10 @@ class FolderController extends Controller
                 $order_num = $highest + 1;
             }
 
+            if(!$req->get('question_text')) {
+                return response('Question Text Cannot be Blank', 500);
+            }
+
             $new_question = \App\Question::create([
                 'text' => $req->get('question_text'),
                 'order' => $order_num,
