@@ -28,7 +28,6 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^6.1",
         "predis/predis": "^1.1",
-        "pusher/pusher-php-server": "~3.0",
         "razorbacks/laravel-shibboleth": "dev-umn",
         "yadahan/laravel-authentication-log": "^1.3"
     },
