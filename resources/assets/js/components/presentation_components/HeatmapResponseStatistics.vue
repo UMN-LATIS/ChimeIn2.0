@@ -1,6 +1,5 @@
 <template>
 <div class="col-sm-12">
-    <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
     <div class="overlayContainer">
         <canvas ref="targetCanvas" id="simpleheat"  ></canvas>
         <img ref="targetImage" class="img-fluid max-height-image" v-bind:src="'/storage/' + question.question_info.question_responses.image" @load="drawImage">
@@ -24,13 +23,9 @@ img {
 
 
 <script>
-import JsonCSV from 'vue-json-csv'
 
 export default {
     props: ['responses', 'question'],
-    components: {
-        "downloadCsv": JsonCSV
-    },
     data: function () {
         return {
         }
@@ -58,21 +53,6 @@ export default {
         responses: function() {
             this.drawImage();
         }
-    },
-    computed: {
-
-        csv_data: function () {
-            const rows = this.responses.map(r => {
-                return {
-                    "user": this.question.anonymous?"Anonymous":r.user.name,
-                    "email": this.question.anonymous?"Anonymous":r.user.email,
-                    "session": r.session_id,
-                    "response": r.response_info.image_coordinates.coordinate_x + ", " + r.response_info.image_coordinates.coordinate_y
-                }
-            });
-            return rows;
-        },
-
     },
     created() {
         window.addEventListener("resize", this.drawImage);

@@ -2,7 +2,6 @@
 <div>
 
     <div v-if="responses.length > 0">
-        <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
         <div class="d-flex justify-content-center" v-if="!word_groups">
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
@@ -39,7 +38,6 @@
 </template>
 
 <script>
-import JsonCSV from 'vue-json-csv'
 
 import wordcloud from 'vue-wordcloud/src/components/WordCloud'
 
@@ -60,7 +58,6 @@ Vue.directive('tooltip', function(el, binding){
 
 export default {
     components: {
-        "downloadCsv": JsonCSV,
         'word-cloud': wordcloud,
     },
     props: ['responses', 'question'],
@@ -173,19 +170,6 @@ export default {
         },
         textProcessing: function() {
             setTimeout(() => this.buildWords(), 100);
-        }
-    },
-    computed: {
-        csv_data: function () {
-            const rows = this.responses.map(r => {
-                return {
-                    "user": this.question.anonymous?"Anonymous":r.user.name,
-                    "email": this.question.anonymous?"Anonymous":r.user.email,
-                    "session": r.session_id,
-                    "response": r.response_info.text
-                }
-            });
-            return rows;
         }
     },
     mounted: function() {

@@ -2,7 +2,6 @@
 <div>
     <div v-if="responses.length > 0" class="row">
         <div class="col">
-            <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
             <button class="btn btn-warning" data-toggle="button" v-bind:class="{ active: filterImages}" @click="filterImages=!filterImages">Manage Images</button>
             <lightbox v-if="!filterImages" v-bind:id="'lightbox' + question.id " :images="images" image_class="img-responsive img-rounded" :options="options">
             </lightbox>
@@ -40,12 +39,10 @@
 
 <script>
 import Lightbox from 'vue-simple-lightbox'
-import JsonCSV from 'vue-json-csv'
 
 export default {
     components: {
         Lightbox,
-        "downloadCsv": JsonCSV
     },
     props: ['responses', 'question', "chimeId"],
     data: function () {
@@ -71,17 +68,6 @@ export default {
                     "title": ""
                 }
             });
-        },
-        csv_data: function () {
-            const rows = this.responses.map(r => {
-                return {
-                    "user": r.user.name,
-                    "email": r.user.email,
-                    "session": r.session_id,
-                    "image": r.response_info.image
-                }
-            });
-            return rows;
         }
     }
 }
