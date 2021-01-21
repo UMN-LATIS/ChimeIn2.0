@@ -1,6 +1,5 @@
 <template>
 <div class="chartContainer">
-    <download-csv class="btn btn-info" :data="csv_data">Export CSV</download-csv>
     <GChart
     type="ColumnChart"
     :resizeDebounce="100"
@@ -25,16 +24,13 @@
 </style>
 
 <script>
-import JsonCSV from 'vue-json-csv'
 
 import { GChart } from 'vue-google-charts'
-
 
 export default {
     props: ['responses', 'question'],
     components: {
         GChart,
-        "downloadCsv": JsonCSV
     },
     data: function () {
         return {
@@ -73,18 +69,7 @@ export default {
                 position: 'relative'
             }
         },
-        csv_data: function () {
-            const rows = this.responses.map(r => {
-                return {
-                    "user": this.question.anonymous?"Anonymous":r.user.name,
-                    "email": this.question.anonymous?"Anonymous":r.user.email,
-                    "session": r.session_id,
-                    "response": r.response_info.choice
-                }
-            });
-            return rows;
-        },
-        chartData: function () {
+                chartData: function () {
             var questionArray = this.question.question_info.question_responses.map(q => 
             { 
                 var questionText = this.isObject(q)?q.text:q; 
