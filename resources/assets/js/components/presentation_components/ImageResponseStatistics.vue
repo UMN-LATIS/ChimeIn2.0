@@ -65,7 +65,8 @@ export default {
             return this.responses.map(elem => {
                 return {
                     "src": '/storage/' + elem.response_info.image,
-                    "title": ""
+                    "title": "",
+                    "alt": elem.response_info.alt_text ? elem.response_info.alt_text : ""
                 }
             });
         }
