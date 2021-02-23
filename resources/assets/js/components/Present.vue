@@ -5,7 +5,8 @@
         :user="user"
         :access_code="hyphenatedCode"
         :host="host"
-        :link="{name:'folder', params:{chimeId: chimeId, folderId: folderId}}">
+        :link="{name:'folder', params:{chimeId: chimeId, folderId: folderId}}"
+        v-if="!folder.student_view">
     </navbar>
     <error-dialog />
 
