@@ -86,6 +86,10 @@
 </style>
 
 <script>
+
+    import katex from 'katex';
+    window.katex = katex;
+
     import {
         VueEditor,
         Quill
@@ -179,12 +183,14 @@
                         "script": "sub"
                     }, {
                         "script": "super"
-                    }],
+                    },
+                    'formula'],
                     ['link', 'image']
                 ],
                 editorOptions: {
                     bounds: ".modal-body",
                     modules: {
+                        formula: true,
                         keyboard: {
                         bindings: {
                             'list autofill': {
