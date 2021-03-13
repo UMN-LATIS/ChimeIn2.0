@@ -6,7 +6,7 @@
         <div class="modal-body">
             <div class="row">
                 <div class="col-sm-3">
-                    <label for="fodler" class="col-form-label">Folder</label>
+                    <label for="folder" class="col-form-label">Folder</label>
                 </div>
                 <div class="col-sm-9">
                     <div class="form-group" v-if="folders">

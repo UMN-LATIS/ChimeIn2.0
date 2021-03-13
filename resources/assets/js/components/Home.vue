@@ -16,7 +16,7 @@
             <div class="col-12 col-md-9">
                   <div class="alert alert-info" role="alert" v-if="user.guest_user">
                     <strong>New to ChimeIn 2?</strong>
-                        We've documentation available on our <a href="https://umn-latis.github.io/ChimeIn2.0/" class="alert-link">help site</a>.  You can also <a href="mailto:clatel@umn.edu" class="alert-link">drop us a line</a> and we can arrange a person introduction.
+                        We've got documentation available on our <a href="https://umn-latis.github.io/ChimeIn2.0/" class="alert-link">help site</a>.  You can also <a href="mailto:clatel@umn.edu" class="alert-link">drop us a line</a> and we can arrange a personal introduction.
                     </div>
 
                 <chime-panel :user="user">
