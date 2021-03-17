@@ -25,9 +25,9 @@ COPY artisan /app
 
 RUN npm run prod
 
-FROM php:7.2-apache-stretch
+FROM php:7.3-apache-stretch
 
-RUN apt-get update && apt-get install -y zlib1g-dev git libjpeg-dev libpng-dev libfreetype6-dev imagemagick libmagickwand-dev  && \
+RUN apt-get update && apt-get install -y libzip-dev zlib1g-dev git libjpeg-dev libpng-dev libfreetype6-dev imagemagick libmagickwand-dev  && \
     pecl install imagick  && \
     docker-php-ext-install pdo pdo_mysql zip  pcntl && \
     docker-php-ext-enable imagick

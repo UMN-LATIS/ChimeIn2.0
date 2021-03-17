@@ -118,7 +118,8 @@ if (config('shibboleth.emulate_idp') ) {
 
 Route::post('lti', 'LTIHandler@launch');
 Route::get('ltiConfig', 'LTIHandler@configInfo');
-
-
+Route::post('lti13/login', 'LTI13Handler@login');
+Route::post('lti13/launch', 'LTI13Handler@launch');
+Route::get('lti13/config', 'LTI13Handler@config');
 
 Route::any('{all}','HomeController@index')->where(['all' => '.*']);

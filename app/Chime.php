@@ -6,7 +6,7 @@ use Sessions;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Iatstuti\Database\Support\CascadeSoftDeletes;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 
 
 class Chime extends Model
@@ -43,8 +43,11 @@ FROM (
 WHERE random_num NOT IN (SELECT access_code FROM chimes WHERE access_Code IS NOT NULL)
 LIMIT 1');
         return $accessCode[0]->code;
-
-
+    }
+    
+    
+    public function lti13_resource_link() {
+        return $this->belongsTo(LTI13ResourceLink::class);
     }
 }
 

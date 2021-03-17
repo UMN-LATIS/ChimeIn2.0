@@ -5,7 +5,7 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "platform": {
-            "php": "7.2.24"
+            "php": "7.3.20"
         }
     },
     "description": "The Laravel Framework.",
@@ -13,28 +13,33 @@
     "license": "MIT",
     "type": "project",
     "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/UMN-LATIS/laravel-shibboleth"
-    },
         {
-      "type": "git",
-      "url": "https://github.com/UMN-LATIS/LTI-Tool-Provider-Library-PHP"
-    }
+            "type": "vcs",
+            "url": "https://github.com/UMN-LATIS/laravel-shibboleth"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/UMN-LATIS/LTI-Tool-Provider-Library-PHP"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/cmcfadden/lti-1-3-php-library"
+        }
     ],
     "require": {
         "php": "~7.2",
         "deployer/deployer": "^6.3",
         "deployer/dist": "^6.3",
         "doctrine/dbal": "^2.7",
-        "iatstuti/laravel-cascade-soft-deletes": "^2.0",
+        "dyrynda/laravel-cascade-soft-deletes": "^4.1",
         "imsglobal/lti": "dev-master",
         "intervention/image": "^2.4",
         "lab404/laravel-impersonate": "^1.4",
-        "laravel/framework": "6.*",
-        "laravel/helpers": "^1.1",
-        "laravel/tinker": "~1.0",
+        "laravel/framework": "8.*",
+        "laravel/helpers": "^1.4",
+        "laravel/tinker": "~2.0",
         "laravelcollective/html": "^6.1",
+        "packbackbooks/lti-1p3-tool": "dev-develop",
         "predis/predis": "^1.1",
         "razorbacks/laravel-shibboleth": "dev-umn",
         "yadahan/laravel-authentication-log": "^1.3"
@@ -45,7 +50,7 @@
         "deployer/recipes": "^6.1",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
-        "laravel/dusk": "^5",
+        "laravel/dusk": "^6",
         "mockery/mockery": "~1.0",
         "phpunit/phpunit": "~6.0",
         "symfony/thanks": "^1.0"
