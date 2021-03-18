@@ -43,9 +43,8 @@
             <div v-if="responses.length < 1" class="text-center">
                 <h1>No Closed Questions</h1>
             </div>
-            <response
-            v-else
-            v-for="response, i in responses"
+            <response v-else
+            v-for="response, i in sortedResponses"
             v-bind:key="i"
             :chime="chime"
             :response="response"
@@ -132,6 +131,17 @@
                 else {
                     return this.sessions;
                 }
+            },
+            sortedResponses: function() {
+                function compare(a, b) {
+                    if (a.updated_at > b.updated_at)
+                        return -1;
+                    if (a.updated_at < b.updated_at)
+                        return 1;
+                    return 0;
+                    }
+
+                return this.responses.sort(compare);
             }
         },
         mounted: function () {
