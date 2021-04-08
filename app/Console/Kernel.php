@@ -35,16 +35,7 @@ class Kernel extends ConsoleKernel
         
         $schedule->call(function() {
             Log::warning("Schedule: Running LTI sync");
-            $folders = \App\Folder::join("questions", "folders.id", "=", "questions.folder_id")->join("sessions", "questions.id","=","sessions.question_id")
-            ->join("responses", "sessions.id","=","responses.session_id")
-            ->select("folders.*")
-            ->whereNotNull("folders.resource_link_pk")
-            ->whereBetween('responses.updated_at', [now()->subMinutes(10), now()])->get()->unique();
-
-            foreach($folders as $folder) {
-                \App\Library\LTIProcessor::syncFolder($folder);
-            }
-
+            \App\Library\LTI13Processor::periodicTask();
             // $chimes = \App\Chime::join("folders", "chimes.id", "=", "folders.chime_id")->join("questions", "folders.id", "=", "questions.folder_id")->join("sessions", "questions.id","=","sessions.question_id")
             // ->join("responses", "sessions.id","=","responses.session_id")
             // ->select("chimes.*")

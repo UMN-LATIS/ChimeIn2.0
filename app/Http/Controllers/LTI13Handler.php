@@ -37,30 +37,16 @@ class LTI13Handler extends Controller
 
 
     public function launch() {
+
         $launch = LtiMessageLaunch::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
         ->validate();
         $launchData = $launch->getLaunchData();
-        dd($launchData);
-        $userData = $launchData["https://purl.imsglobal.org/spec/lti/claim/custom"];
-        $resourceData = $launchData["https://purl.imsglobal.org/spec/lti/claim/resource_link"];
-        $contextData = $launchData["https://purl.imsglobal.org/spec/lti/claim/context"];
-        $launchPresentationData = $launchData["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"];
-        $rolesData = $launchData["https://purl.imsglobal.org/spec/lti/claim/roles"];
-        $lisData = $launchData["https://purl.imsglobal.org/spec/lti/claim/lis"];
         
-        // TODO: Need to track deployment
-        $resourceLinks = LTI13ResourceLink::where("resource_link", $resourceData["id"])->get();
-        if($resourceLinks->count() > 0) {
-            $resourceLink = $resourceLinks->first();
-        }
-        else {
-            $resourceLink = new Lti13ResourceLink;
-            $resourceLink->resource_link = $resourceData["id"];
-            $resourceLink->launch_data = $launchData;
-            $resourceLink->save();
-        }
-
-        // TODO: strip after debugging
+        $lisData = $launchData["https://purl.imsglobal.org/spec/lti/claim/lis"];
+        $rolesData = $launchData["https://purl.imsglobal.org/spec/lti/claim/roles"];
+        $contextData = $launchData["https://purl.imsglobal.org/spec/lti/claim/context"];
+        $endpointData = $launchData["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
+        $resourceData = $launchData["https://purl.imsglobal.org/spec/lti/claim/resource_link"];
         if($lisData["person_sourcedid"] == "SISIDformcfa0086") {
             $lisData["person_sourcedid"] = 2328381;
         }
@@ -68,11 +54,39 @@ class LTI13Handler extends Controller
             $lisData["person_sourcedid"] = 2328384;
         }
 
+        $resourceLinks = LTI13ResourceLink::where("resource_link", $resourceData["id"])->get();    
+        if($resourceLinks->count() > 0) {
+            $resourceLink = $resourceLinks->first();
+        }
+        else {
+
+            $deploymentId = $launchData['https://purl.imsglobal.org/spec/lti/claim/deployment_id'];
+            try {
+                $deployment = \App\LTI13Deployment::where("deployment_id", $deploymentId)->firstOrFail();
+            }
+            catch (ModelNotFoundException $ex) {
+                Log::error("Model not found launching from Canvas", $ex);
+                return view("errors.500", ["exception"=>$ex]);
+            }
+            
+
+            $resourceLink = new Lti13ResourceLink;
+            $resourceLink->resource_link = $resourceData["id"];
+            $resourceLink->endpoint = $endpointData;
+            $resourceLink->deployment_id = $deployment->id;
+            $resourceLink->save();
+        }
+        
+     
+
+        
+
         if(!$lisData["person_sourcedid"] || !is_numeric($lisData["person_sourcedid"])) {
-            return view("errors.emplid");    
+            return view("errors.emplid");
         }
         
         
+
         if(Auth::attempt(["emplid"=>$lisData["person_sourcedid"]]) || Auth::attempt(["email"=>$launchData["email"]])) {
             Auth::user()->lti13_sub_id = $launchData["sub"];
             Auth::user()->save();
@@ -88,69 +102,58 @@ class LTI13Handler extends Controller
         }
 
         if(count(array_intersect($rolesData, $this->staffRoles)) > 0) {
+            // update our resoruceLink 
 
+            $chime = \App\Chime::where('lti_course_id', $contextData["id"])->first();
             // it's an instructor, let's check if this assingment exists
-            if($chime = $resourceLink->chime) {
-                if($folder && !$chime) {
-                    $chime = $folder->chime;
-                }
+            if($chime && $chime->lti_setup_complete) {
                 
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 $chime->save();
 
-                if($folder->chime->folders->filter(function($folder) { return !$folder->resource_link_pk;})->count() > 0) {
-                    return \Redirect::to("/chime/" . $chime->id);
-                }
-                else {
-                    return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-                }
-                
-            }
-            else {
-                $chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first();
-                if($chime && $chime->lti_setup_complete) {
-                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                    if(!$chime->single_chime_for_lti) {
-                        $folder = new \App\Folder;
-                        $folder->chime()->associate($chime);
-                        $folder->name = $tool->resourceLink->title;
-                        $folder->resource_link_pk = $tool->resourceLink->getRecordId();
-                        $folder->save();
-                    }
-                    return \Redirect::to("/chime/" . $chime->id);
-                }
-                else if($chime && !$chime->lti_setup_complete) {
-                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                    return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
-                }
-                else {
-                    $chime = new \App\Chime;
-                    $chime->lti_return_url = $tool->returnUrl;
-                    $chime->lti_course_title = $tool->context->title;
-                    $chime->lti_course_id = $tool->context->ltiContextId;
-                    $chime->name = $tool->context->title;
-                    $chime->require_login = true;
-                    // $chime->single_chime_for_lti = true;
-                    $chime->access_code = $chime->getUniqueCode();
-                    $chime->save();
-                    $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
+                // if they've launched from an assignment, we can get them to the right folder
+                if(isset($endpointData["lineitem"]) && $chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
 
-                    // temporary while we figure out our LTI future
-                    $chime->lti_setup_complete = true;
-                    $chime->single_chime_for_lti = false;
+                    // check if the lineitem attached matches a folder
+                    $folder = \App\Folder::where("lti_lineitem", $endpointData["lineitem"])->first();
+                    if($folder) {
+                        return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+                    }
+
+                    // we need to make a new folder
                     $folder = new \App\Folder;
                     $folder->chime()->associate($chime);
-                    $folder->name = $tool->resourceLink->title;
-                    $folder->resource_link_pk = $tool->resourceLink->getRecordId();
-                    $chime->save();
+                    $folder->name = $resourceData["title"];
+                    $folder->lti_lineitem = $endpointData["lineitem"];
                     $folder->save();
                     return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-                    // return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
-                }                
+                }
+                return \Redirect::to("/chime/" . $chime->id);
+                
             }
+            else if($chime && !$chime->lti_setup_complete) {
+                $chime->lti13_resource_link_id = $resourceLink->id;
+                $chime->save();
+                $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
+                return view("ltiSelectionPrompt", ["chime"=>$chime, "haveLineItem"=>isset($endpointData["lineitem"]), "lti_resource_title"=>$resourceData["title"]]);
+            }
+            else {
+                $chime = new \App\Chime;
+                $chime->lti_course_title = $contextData["title"];
+                $chime->lti_course_id = $contextData["id"];
+                $chime->lti13_resource_link_id = $resourceLink->id;
+                $chime->name = $contextData["title"];
+                $chime->require_login = true;
+                $chime->access_code = $chime->getUniqueCode();
+                $chime->save();
+                $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
+;
+                // return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+                return view("ltiSelectionPrompt", ["chime"=>$chime, "haveLineItem"=>isset($endpointData["lineitem"]), "lti_resource_title"=>$resourceData["title"]]);
+            }                
         }
         else {
-            if($chime = \App\Chime::where("lti_course_id",$tool->context->ltiContextId)->first()) {
+            if($chime = \App\Chime::where("lti_course_id",$contextData["id"])->first()) {
                 if(!Auth::user()->chimes->contains($chime)) {
                     Auth::user()->chimes()->attach($chime, [
                         'permission_number' => 100
@@ -158,42 +161,61 @@ class LTI13Handler extends Controller
                 }
 
                 $folderId = null;
-                if($folder = \App\Folder::where("resource_link_pk", $tool->resourceLink->getRecordId())->first()) {
+                if(isset($endpointData["lineitem"]) && $folder = \App\Folder::where("lti_lineitem", $endpointData["lineitem"])->first()) {
                     $folderId = $folder->id;
-                    if($folder->chime->folders->filter(function($folder) { return !$folder->resource_link_pk;})->count() > 0) {
+                    if($folder->chime->folders->filter(function($folder) { return !$folder->lti_lineitem;})->count() > 0) {
                         $folderId = null;
                     }
                 }
                 return \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
             }
             else {
-
-                // TODO??
+                return view("errors.not_setup");
             }
         }
 
     }
 
     public function saveLTISettings(Request $req, Chime $chime) {
+        
         $chime->fill($req->all());
         $chime->lti_setup_complete = true;
         $chime->save();
-        $resource_link_title = $req->get("resource_link_title");
-        $resource_link_pk = $req->get("resource_link_pk");
-        $folder = new \App\Folder;
-        $folder->chime()->associate($chime);
-        $folder->name = $resource_link_title;
-        if(!$chime->single_chime_for_lti) {
-            $folder->resource_link_pk = $resource_link_pk;
-            $chime->resource_link_pk = null;
-            $chime->save();
+        $resourceLink = $chime->lti13_resource_link;
+        
+        if($chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
+            $folder = new \App\Folder;
+            $folder->chime()->associate($chime);
+            $folder->name = $req->get("lti_resource_title");
+            $folder->lti_lineitem = $resourceLink->endpoint["lineitem"];
+            $folder->save();
+            return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
         }
-        else {
-            $chime->resource_link_pk = $resource_link_pk;
-            $chime->save();
+        else if($chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_ONE_GRADE && !isset($resourceLink->endpoint["lineitem"])) {
+            // we don't have a gradebook entry - they must not be accessing via an assignment. We'll push an entry and they can modify it.
+
+            $deployment = $resourceLink->deployment;
+            $registration = $db->findRegistrationByIssuer($deployment->issuer->host,$deployment->issuer->client_id);
+            $endpoint = $resourceLink->endpoint;
+            $ags = new \Packback\Lti1p3\LtiAssignmentsGradesService(
+                new \Packback\Lti1p3\LtiServiceConnector($registration),
+                $endpoint);
+            
+            $score_lineitem = \Packback\Lti1p3\LtiLineitem::new()
+            ->setTag('chimein_grade')
+            ->setScoreMaximum(10)
+            ->setLabel('ChimeIn')
+            ->setResourceId($resourceLink->resource_link);
+            $result = $ags->findOrCreateLineitem($score_lineitem);
+            $resourceLink->created_line_item = $result->getId();
+            $resourceLink->save();
+            $req->session()->flash('created_grade_entry', 'ChimeIn created a new gradebook entry in your Canvas course. By default, the ChimeIn entry is worth 10 points. Feel free to adjust this in Canvas.');
+            
         }
-        $folder->save();
-        return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+
+        return \Redirect::to("/chime/" . $chime->id);
+        
+        
         
     }
 
@@ -220,14 +242,14 @@ class LTI13Handler extends Controller
                         "text" => "Launch ChimeIn",
                         "icon_url" => url("/library/images/home/record-icon.png"),
                         "placements" => [
-                                [
-                                    "text" => "ChimeIn",
-                                    "enabled" => true,
-                                    "placement" => "assignment_selection",
-                                    "message_type" => "LtiResourceLinkRequest",
-                                    "target_link_uri" => url("lti13/launch"),
-                                    "canvas_icon_class" => "icon-lti"
-                                ],
+                                // [
+                                //     "text" => "ChimeIn",
+                                //     "enabled" => true,
+                                //     "placement" => "assignment_selection",
+                                //     "message_type" => "LtiResourceLinkRequest",
+                                //     "target_link_uri" => url("lti13/launch"),
+                                //     "canvas_icon_class" => "icon-lti"
+                                // ],
                                 [
                                     "text"=>"ChimeIn",
                                     "enabled"=>true,

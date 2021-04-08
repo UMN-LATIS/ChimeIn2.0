@@ -92,8 +92,6 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
     
     
-    
-    Route::put('saveLTISettings/{chime}', 'LTIHandler@saveLTISettings')->name("ltisettings.update");
 });
     // Auth::routes();
 
@@ -121,5 +119,5 @@ Route::get('ltiConfig', 'LTIHandler@configInfo');
 Route::post('lti13/login', 'LTI13Handler@login');
 Route::post('lti13/launch', 'LTI13Handler@launch');
 Route::get('lti13/config', 'LTI13Handler@config');
-
+Route::put('lti13/saveLTISettings/{chime}', 'LTI13Handler@saveLTISettings')->name("ltisettings.update");
 Route::any('{all}','HomeController@index')->where(['all' => '.*']);
