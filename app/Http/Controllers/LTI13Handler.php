@@ -242,14 +242,14 @@ class LTI13Handler extends Controller
                         "text" => "Launch ChimeIn",
                         "icon_url" => url("/library/images/home/record-icon.png"),
                         "placements" => [
-                                // [
-                                //     "text" => "ChimeIn",
-                                //     "enabled" => true,
-                                //     "placement" => "assignment_selection",
-                                //     "message_type" => "LtiResourceLinkRequest",
-                                //     "target_link_uri" => url("lti13/launch"),
-                                //     "canvas_icon_class" => "icon-lti"
-                                // ],
+                                [
+                                    "text" => "ChimeIn",
+                                    "enabled" => true,
+                                    "placement" => "assignment_selection",
+                                    "message_type" => "LtiResourceLinkRequest",
+                                    "target_link_uri" => url("lti13/launch"),
+                                    "canvas_icon_class" => "icon-lti"
+                                ],
                                 [
                                     "text"=>"ChimeIn",
                                     "enabled"=>true,

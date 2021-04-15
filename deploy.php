@@ -46,6 +46,11 @@ task('assets:generate', function() {
   run('npm run production');
 })->desc('Assets generation');
 
+task('deploy:makecache', function() {
+  cd('{{release_path}}');
+  run('mkdir -p bootstrap/cache');
+})->desc('Make Cache');
+
 
 task('fix_storage_perms', '
     touch storage/logs/laravel.log
@@ -72,5 +77,6 @@ after('deploy:failed', 'deploy:unlock');
 before('deploy:symlink', 'artisan:migrate');
 after('deploy:update_code', 'npm:install');
 after('npm:install', 'assets:generate');
+after('npm:install', 'deploy:makecache');
 after('artisan:queue:restart', 'fix_storage_perms');
 after('artisan:migrate', 'artisan:queue:restart');
