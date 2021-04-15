@@ -11,6 +11,7 @@ use \App\Chime;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\LtiMessageLaunch;
 use \App\LTI13ResourceLink;
+use \App\Library\LTI13Processor;
 
 class LTI13Handler extends Controller
 {
@@ -194,13 +195,7 @@ class LTI13Handler extends Controller
         else if($chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_ONE_GRADE && !isset($resourceLink->endpoint["lineitem"])) {
             // we don't have a gradebook entry - they must not be accessing via an assignment. We'll push an entry and they can modify it.
 
-            $deployment = $resourceLink->deployment;
-            $registration = $db->findRegistrationByIssuer($deployment->issuer->host,$deployment->issuer->client_id);
-            $endpoint = $resourceLink->endpoint;
-            $ags = new \Packback\Lti1p3\LtiAssignmentsGradesService(
-                new \Packback\Lti1p3\LtiServiceConnector($registration),
-                $endpoint);
-            
+            $ags = LTI13Processor::getAGS($chime);     
             $score_lineitem = \Packback\Lti1p3\LtiLineitem::new()
             ->setTag('chimein_grade')
             ->setScoreMaximum(10)
