@@ -22,7 +22,7 @@ host('dev')
     ->user('mcfa0086')
     ->stage('development')
     // ->identityFile()
-    ->set('bin/php', '/opt/rh/rh-php72/root/usr/bin/php')
+    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
 	->set('deploy_path', '/swadm/var/www/html/');
 
 host('stage')
@@ -30,7 +30,7 @@ host('stage')
     ->user('mcfa0086')
     ->stage('stage')
     // ->identityFile()
-    ->set('bin/php', '/opt/rh/rh-php72/root/usr/bin/php')
+    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
 host('prod')
@@ -38,7 +38,7 @@ host('prod')
     ->user('mcfa0086')
     ->stage('production')
     // ->identityFile()
-    ->set('bin/php', '/opt/rh/rh-php72/root/usr/bin/php')
+    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
 	->set('deploy_path', '/swadm/var/www/html/');
 
 task('assets:generate', function() {
