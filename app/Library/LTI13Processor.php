@@ -16,6 +16,7 @@ class LTI13Processor {
 	}
 	
     static function periodicTask() {
+		// Lti1.1 sync
         $folders = \App\Folder::join("questions", "folders.id", "=", "questions.folder_id")->join("sessions", "questions.id","=","sessions.question_id")
         ->join("responses", "sessions.id","=","responses.session_id")
         ->select("folders.*")
@@ -26,6 +27,7 @@ class LTI13Processor {
             \App\Library\LTIProcessor::syncFolder($folder);
         }
 
+		// Lti1.3 folder sync
         $folders = \App\Folder::join("questions", "folders.id", "=", "questions.folder_id")->join("sessions", "questions.id","=","sessions.question_id")
         ->join("responses", "sessions.id","=","responses.session_id")
         ->select("folders.*")
@@ -36,6 +38,7 @@ class LTI13Processor {
             \App\Library\LTI13Processor::syncFolder($folder);
         }
 
+		// Lti1.3 chime
         $chimes = \App\Chime::join("folders", "chimes.id", "=", "folders.chime_id")->join("questions", "folders.id", "=", "questions.folder_id")->join("sessions", "questions.id","=","sessions.question_id")
         ->join("responses", "sessions.id","=","responses.session_id")
         ->select("chimes.*")
