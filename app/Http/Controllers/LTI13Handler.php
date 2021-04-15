@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cookie;
 use \App\Chime;
 use Packback\Lti1p3\LtiOidcLogin;
 use Packback\Lti1p3\LtiMessageLaunch;
+use Packback\Lti1p3\LtiException;
 use \App\LTI13ResourceLink;
 use \App\Library\LTI13Processor;
 
@@ -39,8 +40,36 @@ class LTI13Handler extends Controller
 
     public function launch() {
 
-        $launch = LtiMessageLaunch::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
-        ->validate();
+         try {
+            $launch = LtiMessageLaunch::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
+            ->validate();
+        }
+        catch (LtiException $e) {
+
+            // canvas needs to update for new window to work https://github.com/instructure/canvas-lms/commit/811a1194cabccc1b3fb22aa3d13d64cde547116d#diff-79b6cd1bab1e82354966238b3d72cfa8fffb6357a61d2454bf4aba1c85b96a5e
+//             echo '<script>
+//             window.parent.postMessage(
+//   {
+//     messageType: "requestFullWindowLaunch",
+//     data: {
+//       url: "https://cla-chimein-dev.oit.umn.edu/lti13/launch",
+//       launchType: "new_window",
+//     }
+//   },
+//   "*"
+// )           
+            // </script>';
+            echo '<script>
+            window.parent.postMessage(
+  {
+    messageType: "requestFullWindowLaunch",
+    data: "' . url("lti13/launch") . '"
+  },
+  "*"
+)           
+            </script>';
+            return;
+        }
         $launchData = $launch->getLaunchData();
         
         $lisData = $launchData["https://purl.imsglobal.org/spec/lti/claim/lis"];
