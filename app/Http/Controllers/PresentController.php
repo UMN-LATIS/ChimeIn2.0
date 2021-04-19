@@ -50,6 +50,7 @@ class PresentController extends Controller
         foreach($folder->questions as $question) {
             $currentSession = $question->current_session;
             if($currentSession) {
+                $currentSession->touch();
                 $question->current_session()->dissociate();
                 $question->save();
                 event(new EndSession($chime, $currentSession));
@@ -99,6 +100,7 @@ class PresentController extends Controller
             
             $question = $folder->questions()->find($req->route('question_id'));
             $currentSession = $question->current_session;
+            $currentSession->touch();
             $question->current_session()->dissociate();
             $question->save();
             if($currentSession) {
