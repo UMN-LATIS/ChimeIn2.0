@@ -30,7 +30,7 @@ class ResponseController extends Controller
         $responses = DB::table('responses')->where("user_id", $user->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->join('chimes', 'folders.chime_id', '=', 'chimes.id')->where('chimes.id', $req->route('chime_id'))->select('responses.*')->get();
 
         $responseModels = \App\Response::hydrate($responses->toArray()); 
-        $responseModels->load("session.question");
+        $responseModels->load("session.question", "session.question.folder");
         return response()->json($responseModels);
     }
 

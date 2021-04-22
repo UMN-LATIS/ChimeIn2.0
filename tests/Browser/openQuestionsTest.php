@@ -43,8 +43,8 @@ class openQuestionsTest extends DuskTestCase
             $browser1->loginAs($this->admin)->visit('/chime/' . $this->chime->id . '/folder/' . $this->folder->id);
             $browser1->pause(500)->assertSee("test");
             $browser2->visit('/join/' . $this->chime->access_code)->pause(500)->assertSee("No Open Questions");
-            $browser1->click("@open-all-button");
-            $browser2->pause(1000)->assertSee("test");
+            $browser1->pause(300)->click("@open-all-button");
+            $browser2->pause(2000)->assertSee("test");
             $browser1->click("@close-all-button");
             $browser2->pause(1000)->assertSee("No Open Questions");
         });

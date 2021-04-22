@@ -15,10 +15,12 @@
                 :disabled="false"
                 v-on:recordresponse="record_response">
             </component>
-           <transition name="fade">
+           <transition name="fade"> 
                <p class="alert alert-info" v-if="responseUpdated">Response Updated</p>
            </transition>
            <p class="alert alert-warning" v-if="error">{{ error }}  Please reload.</p>
+
+            <small class="text-muted" v-if="chime.show_folder_title_to_participants"><strong>Folder</strong>: {{ session.question.folder.name }} </small>
             <hr>
         </div>
         <!-- <div class="card-content" v-else>

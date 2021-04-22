@@ -356,7 +356,7 @@ class ChimeController extends Controller
         }
 
 
-        $questions = \App\Question::join('folders', 'folders.id','=','questions.folder_id')->join('chimes','folders.chime_id','=','chimes.id')->whereNotNull('questions.current_session_id')->where('chimes.id', $chime->id)->select('questions.*')->with('current_session')->with('current_session.question')->get(); 
+        $questions = \App\Question::join('folders', 'folders.id','=','questions.folder_id')->join('chimes','folders.chime_id','=','chimes.id')->whereNotNull('questions.current_session_id')->where('chimes.id', $chime->id)->select('questions.*')->with('current_session')->with('current_session.question')->with('current_session.question.folder')->get(); 
         $sessions = [];
 
 

@@ -25,7 +25,7 @@
           </li>
         </ul>
         <ChimeManagementOptions :require_login.sync="require_login" :students_can_view.sync="students_can_view"
-          :join_instructions.sync="join_instructions" :only_correct_answers_lti.sync="only_correct_answers_lti">
+          :join_instructions.sync="join_instructions" :only_correct_answers_lti.sync="only_correct_answers_lti" :show_folder_title_to_participants.sync="show_folder_title_to_participants">
         </ChimeManagementOptions>
 
         <button class="btn btn-outline-success btn-sm align-items-center d-flex" @click="sync" v-if="chime.resource_link_pk">
@@ -98,6 +98,7 @@
         students_can_view: this.chime.students_can_view,
         require_login: this.chime.require_login,
         only_correct_answers_lti: this.chime.only_correct_answers_lti,
+        show_folder_title_to_participants: this.chime.show_folder_title_to_participants,
         synced: false
       };
     },
@@ -112,6 +113,9 @@
         this.saveChime();
       },
       only_correct_answers_lti: function (val) {
+        this.saveChime();
+      },
+      show_folder_title_to_participants: function (val) {
         this.saveChime();
       }
     },
@@ -153,6 +157,7 @@
         localChime.students_can_view = this.students_can_view;
         localChime.require_login = this.require_login;
         localChime.only_correct_answers_lti = this.only_correct_answers_lti;
+        localChime.show_folder_title_to_participants = this.show_folder_title_to_participants;
         localChime.name = this.chime_name;
         axios.patch('/api/chime/' + this.chime.id, localChime)
           .then(res => {
