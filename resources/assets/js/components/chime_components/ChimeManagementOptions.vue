@@ -22,6 +22,13 @@
                     presenting</label>
             </div>
         </li>
+        <li>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="showFolderTitle" id="showFolderTitle"
+                    v-model="show_folder_title_to_participants_local" @change="$emit('update:show_folder_title_to_participants', $event.target.checked)">
+                <label class="form-check-label" for="showFolderTitle">Reveal folder titles to participants</label>
+            </div>
+        </li>
         <li v-if="!new_chime">
              <fieldset class="form-group border p-2 pt-0 mt-2">
                 <legend class="col-form-label w-auto mb-0 pb-0">Grading Options (for Canvas-linked Chimes)</legend>
@@ -63,9 +70,10 @@ export default {
                 students_can_view_local: this.students_can_view,
                 join_instructions_local: this.join_instructions,
                 only_correct_answers_lti_local: this.only_correct_answers_lti,
+                show_folder_title_to_participants_local: this.show_folder_title_to_participants,
             }
         },
-        props: ['require_login','students_can_view', 'join_instructions', 'only_correct_answers_lti','new_chime'],
+        props: ['require_login','students_can_view', 'join_instructions', 'only_correct_answers_lti','new_chime', 'show_folder_title_to_participants'],
 
 }
 </script>

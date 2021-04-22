@@ -138,7 +138,7 @@
 							</ul>
 						</nav>
 						<div class="container">
-							<small>&copy; <span id="cdate">2015</span> Regents of the University of Minnesota. All rights reserved. The University of Minnesota is an equal opportunity educator and employer. <a href="http://privacy.umn.edu">Privacy Statement</a></small>
+							<small>&copy; <span id="cdate">2015</span> Regents of the University of Minnesota. All rights reserved. The University of Minnesota is an equal opportunity educator and employer. <a href="http://privacy.umn.edu">Privacy Statement</a> <a href="https://accessibility.umn.edu/laws-policies/university-policy">Accessibility Statement</a></small>
 						</div>
 						<!-- Optional last updated link-->
 					</footer>

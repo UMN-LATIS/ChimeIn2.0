@@ -13,7 +13,8 @@ class Chime extends Model
 {
     use SoftDeletes, CascadeSoftDeletes;
     
-    protected $fillable = ['name', 'access_code', 'require_login', 'students_can_view', 'join_instructions', 'only_correct_answers_lti', 'resource_link_pk', 'lti_grade_mode'];
+    protected $fillable = ['name', 'access_code', 'require_login', 'students_can_view', 'join_instructions', 'only_correct_answers_lti', 'resource_link_pk', 'lti_grade_mode', 'show_folder_title_to_participants'];
+    
     protected $dates = ['deleted_at'];
     protected $cascadeDeletes = ['folders'];
 
