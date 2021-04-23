@@ -10,12 +10,11 @@ require 'recipe/sentry.php';
 set('sentry', [
     'organization' => 'latis-technology-architecture', 
     'projects' => ['chimein'], 
-    'token' => '23c013a79e7846d6ae58cd6222299908b96f1a77e3524475a292d000a4817449'
+    'token' => getenv('SENTRY_TOKEN')
 ]);
 
 // Configuration
 
-set('git_cache', false);
 set('ssh_type', 'native');
 set('ssh_multiplexing', true);
 
@@ -32,7 +31,6 @@ host('dev')
     ->hostname("cla-chimein-dev.oit.umn.edu")
     ->user('mcfa0086')
     ->stage('development')
-    ->set('symfony_env', 'development')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
 	->set('deploy_path', '/swadm/var/www/html/');
@@ -41,7 +39,6 @@ host('stage')
     ->hostname("cla-chimein-tst.oit.umn.edu")
     ->user('mcfa0086')
     ->stage('staging')
-    ->set('symfony_env', 'staging')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
@@ -50,7 +47,6 @@ host('prod')
     ->hostname("cla-chimein-prd.oit.umn.edu")
     ->user('mcfa0086')
     ->stage('production')
-    ->set('symfony_env', 'production')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
 	->set('deploy_path', '/swadm/var/www/html/');
