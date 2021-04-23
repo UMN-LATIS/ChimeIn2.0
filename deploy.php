@@ -38,7 +38,7 @@ host('dev')
 host('stage')
     ->hostname("cla-chimein-tst.oit.umn.edu")
     ->user('mcfa0086')
-    ->stage('staging')
+    ->stage('stage')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
