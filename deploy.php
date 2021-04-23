@@ -90,4 +90,3 @@ after('npm:install', 'assets:generate');
 after('npm:install', 'deploy:makecache');
 after('artisan:queue:restart', 'fix_storage_perms');
 after('artisan:migrate', 'artisan:queue:restart');
-after('deploy', 'deploy:sentry');
