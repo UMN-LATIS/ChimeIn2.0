@@ -41,7 +41,7 @@ class LTI13Database implements Database {
     }
 
     public function findDeployment($iss, $deployment_id, $client_id = null) {
-        
+
         $deployment = \App\LTI13Deployment::where("deployment_id", $deployment_id)->firstOr(function () use($iss, $deployment_id, $client_id) {
             $deployment = new \App\LTI13Deployment;
             $deployment->deployment_id = $deployment_id;

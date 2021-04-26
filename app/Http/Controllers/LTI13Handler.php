@@ -67,9 +67,12 @@ class LTI13Handler extends Controller
   },
   "*"
 )           
-            </script>';
+            </script>
+            <h1>Canvas Launch Error</h1>
+            <p>' . $e->getMessage() . "</p>";
             return;
         }
+
         $launchData = $launch->getLaunchData();
         
         $lisData = $launchData["https://purl.imsglobal.org/spec/lti/claim/lis"];
@@ -191,13 +194,19 @@ class LTI13Handler extends Controller
                 }
 
                 $folderId = null;
+                $folder = null;
                 if(isset($endpointData["lineitem"]) && $folder = \App\Folder::where("lti_lineitem", $endpointData["lineitem"])->first()) {
                     $folderId = $folder->id;
                     if($folder->chime->folders->filter(function($folder) { return !$folder->lti_lineitem;})->count() > 0) {
                         $folderId = null;
                     }
                 }
-                return \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
+                $response = \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
+                if(isset($endpointData["lineitem"]) && !$folder) {
+                    $response = $response->with('lti_error', 'There are no questions created for this assignment, so we\'re showing you all of the open questions for this course. This could be because your instructor hasn\'t added any questions yet. Check with them if you\'re not sure.');
+                }
+                return $response;
+
             }
             else {
                 return view("errors.not_setup");
@@ -233,7 +242,7 @@ class LTI13Handler extends Controller
             $result = $ags->findOrCreateLineitem($score_lineitem);
             $resourceLink->created_line_item = $result->getId();
             $resourceLink->save();
-            $req->session()->flash('created_grade_entry', 'ChimeIn created a new gradebook entry in your Canvas course. By default, the ChimeIn entry is worth 10 points. Feel free to adjust this in Canvas.');
+            $req->session()->flash('lti_notice', 'ChimeIn created a new gradebook entry in your Canvas course. By default, the ChimeIn entry is worth 10 points. Feel free to adjust this in Canvas.');
             
         }
 
