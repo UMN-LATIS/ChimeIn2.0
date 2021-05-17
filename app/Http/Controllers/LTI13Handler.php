@@ -80,12 +80,6 @@ class LTI13Handler extends Controller
         $contextData = $launchData["https://purl.imsglobal.org/spec/lti/claim/context"];
         $endpointData = $launchData["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
         $resourceData = $launchData["https://purl.imsglobal.org/spec/lti/claim/resource_link"];
-        if($lisData["person_sourcedid"] == "SISIDformcfa0086") {
-            $lisData["person_sourcedid"] = 2328381;
-        }
-        if($lisData["person_sourcedid"] == "SISID4elevator") {
-            $lisData["person_sourcedid"] = 2328384;
-        }
 
         $resourceLinks = LTI13ResourceLink::where("resource_link", $resourceData["id"])->get();    
         if($resourceLinks->count() > 0) {

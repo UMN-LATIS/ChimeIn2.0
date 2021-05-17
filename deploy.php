@@ -2,16 +2,9 @@
 namespace Deployer;
 require 'recipe/laravel.php';
 require 'recipe/npm.php';
-require 'recipe/sentry.php';
 
 
 
-
-set('sentry', [
-    'organization' => 'latis-technology-architecture', 
-    'projects' => ['chimein'], 
-    'token' => getenv('SENTRY_TOKEN')
-]);
 
 // Configuration
 
