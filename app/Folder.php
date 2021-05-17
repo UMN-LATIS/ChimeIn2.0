@@ -19,4 +19,8 @@ class Folder extends Model
     public function questions() {
         return $this->hasMany(Question::class);
     }
+
+    public function lti13_resource_link() {
+        return $this->belongsTo(LTI13ResourceLink::class);
+    }
 }
