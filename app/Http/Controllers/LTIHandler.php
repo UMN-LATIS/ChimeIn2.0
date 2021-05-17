@@ -108,7 +108,6 @@ class LTIHandler extends Controller
 
                     // temporary while we figure out our LTI future
                     $chime->lti_setup_complete = true;
-                    $chime->single_chime_for_lti = false;
                     $folder = new \App\Folder;
                     $folder->chime()->associate($chime);
                     $folder->name = $tool->resourceLink->title;
