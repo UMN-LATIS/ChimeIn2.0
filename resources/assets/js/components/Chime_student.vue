@@ -42,7 +42,7 @@
                         </div>
 
                     </div>
-                    <small class="text-muted" v-if="chime.lti_course_title">Not seeing the prompts you're looking for? Make sure you've followed the correct assignment link from Canvas</small>
+                    <p class="text-center m-0"><small class="text-muted" v-if="chime.lti_course_title">Not seeing the prompts you're looking for? Make sure you've followed the correct assignment link from Canvas</small></p>
                 </div>
             </div>
         </div>

@@ -121,7 +121,7 @@
       env_file:
         - .env
       environment:
-        LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app/"
+        LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app"
         LARAVEL_ECHO_SERVER_DEBUG: "true"
       networks:
         chimein:    

@@ -3,6 +3,9 @@ namespace Deployer;
 require 'recipe/laravel.php';
 require 'recipe/npm.php';
 
+
+
+
 // Configuration
 
 set('ssh_type', 'native');
@@ -22,7 +25,7 @@ host('dev')
     ->user('mcfa0086')
     ->stage('development')
     // ->identityFile()
-    ->set('bin/php', '/opt/rh/rh-php72/root/usr/bin/php')
+    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
 	->set('deploy_path', '/swadm/var/www/html/');
 
 host('stage')
@@ -30,7 +33,7 @@ host('stage')
     ->user('mcfa0086')
     ->stage('stage')
     // ->identityFile()
-    ->set('bin/php', '/opt/rh/rh-php72/root/usr/bin/php')
+    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
 host('prod')
@@ -38,13 +41,18 @@ host('prod')
     ->user('mcfa0086')
     ->stage('production')
     // ->identityFile()
-    ->set('bin/php', '/opt/rh/rh-php72/root/usr/bin/php')
+    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
 	->set('deploy_path', '/swadm/var/www/html/');
 
 task('assets:generate', function() {
   cd('{{release_path}}');
   run('npm run production');
 })->desc('Assets generation');
+
+task('deploy:makecache', function() {
+  cd('{{release_path}}');
+  run('mkdir -p bootstrap/cache');
+})->desc('Make Cache');
 
 
 task('fix_storage_perms', '
@@ -72,5 +80,6 @@ after('deploy:failed', 'deploy:unlock');
 before('deploy:symlink', 'artisan:migrate');
 after('deploy:update_code', 'npm:install');
 after('npm:install', 'assets:generate');
+after('npm:install', 'deploy:makecache');
 after('artisan:queue:restart', 'fix_storage_perms');
 after('artisan:migrate', 'artisan:queue:restart');
