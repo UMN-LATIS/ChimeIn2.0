@@ -40,16 +40,21 @@ export default {
     },
     watch: {
         response: function(value) {
-            if(this.response && this.response.response_info) {
-                this.updateScaledCoordinates();
-            }
-            
+            this.updateScaledCoordinates();
         }
     },
     methods: {
         updateScaledCoordinates: function() {
+
+            
+            if(!this.response || !this.response.response_info || !this.response.response_info.image_coordinates) {
+                return;
+            }
+
+            
             var targetImage =  this.$refs["targetImage"];
             var boundingRect = targetImage.getBoundingClientRect();
+            
             var left=boundingRect.left;
             var top=boundingRect.top;
             // var x = targetImage.clientX - left;
@@ -64,6 +69,7 @@ export default {
                 coordinate_x: px,
                 coordinate_y: py
             };
+            
 
         },
         new_response: function() {
