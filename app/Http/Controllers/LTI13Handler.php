@@ -195,14 +195,16 @@ class LTI13Handler extends Controller
 
                 $folderId = null;
                 $folder = null;
+                $courseHasNonLTIFolders = false;
                 if(isset($endpointData["lineitem"]) && $folder = \App\Folder::where("lti_lineitem", $endpointData["lineitem"])->first()) {
                     $folderId = $folder->id;
                     if($folder->chime->folders->filter(function($folder) { return !$folder->lti_lineitem;})->count() > 0) {
                         $folderId = null;
+                        $courseHasNonLTIFolders = true;
                     }
                 }
                 $response = \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
-                if(isset($endpointData["lineitem"]) && !$folder) {
+                if(isset($endpointData["lineitem"]) && !$folder && !$courseHasNonLTIFolders) {
                     $response = $response->with('lti_error', 'There are no questions created for this assignment, so we\'re showing you all of the open questions for this course. This could be because your instructor hasn\'t added any questions yet. Check with them if you\'re not sure.');
                 }
                 return $response;
