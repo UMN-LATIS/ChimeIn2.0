@@ -36,6 +36,10 @@ const FreeResponseStatistics = () => import(
     /* webpackChunkName: "FreeResponseStatistics" */
     './FreeResponseStatistics.vue'
 );
+const TextHeatmapResponseStatistics = () => import(
+    /* webpackChunkName: "FreeResponseStatistics" */
+    './TextHeatmapResponseStatistics.vue'
+);
 const ImageResponseStatistics = () => import(
     /* webpackChunkName: "ImageResponseStatistics" */
     './ImageResponseStatistics.vue'
@@ -57,6 +61,7 @@ export default {
         'multiple_choice_statistics': multiplechoicestatistics,
         'image_response_statistics': ImageResponseStatistics,
         'free_response_statistics': FreeResponseStatistics,
+        'text_heatmap_response_statistics': TextHeatmapResponseStatistics,
         'no_response_statistics': FreeResponseStatistics,
         'heatmap_response_statistics': HeatmapResponseStatistics
     },

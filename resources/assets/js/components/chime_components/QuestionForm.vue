@@ -98,6 +98,7 @@
     import ImageResponse from "./response_components/ImageResponse.vue";
     import SliderResponse from "./response_components/SliderResponse.vue";
     import FreeResponse from "./response_components/FreeResponse.vue";
+    import TextHeatmapResponse from "./response_components/TextHeatmapResponse.vue";
     import HeatmapResponse from "./response_components/HeatmapResponse.vue";
     import NoResponse from "./response_components/FreeResponse.vue";
 
@@ -133,6 +134,7 @@
             'image_response_response': ImageResponse,
             'slider_response_response': SliderResponse,
             'free_response_response': FreeResponse,
+            'text_heatmap_response_response': TextHeatmapResponse,
             'heatmap_response_response': HeatmapResponse,
             'no_response_response': NoResponse,
             'v-select': VueSelect
@@ -154,6 +156,10 @@
                     {
                         id: "free_response",
                         label: "Free Response"
+                    },
+                    {
+                        id: "text_heatmap_response",
+                        label: "Text Heatmap"
                     },
                     {
                         id: "image_response",
