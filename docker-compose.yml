@@ -128,7 +128,7 @@
             aliases:
               - app.test
     selenium:
-      image: selenium/standalone-chrome:3.11.0-antimony
+      image: seleniarm/standalone-chromium:4.0.0-beta-1-20210215
       depends_on:
         - app
       volumes:
