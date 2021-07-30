@@ -2,7 +2,7 @@
 <div>
 
     <div v-if="responses.length > 0">
-         <p v-html="highlightedText"></p>
+         <p v-html="highlightedText" class="highlightTextBlock"></p>
     </div>
     <div v-else>No Responses Yet!</div>
 
@@ -60,17 +60,17 @@ export default {
                 // super easy way to make a heatmap gradient based on https://stackoverflow.com/questions/12875486/what-is-the-algorithm-to-create-colors-for-a-heatmap
                 
                 var colorString = null;
-                if(positionArray[i] == 0) {
-                    colorString = "black";
+                if(positionArray[i] === 0 || !positionArray[i]) {
+                    colorString = "white";
                 }
                 else {
                     colorString =
-                    "hsl(" + (1.0 - positionArray[i]/countRange) * 240 + ", 100%, 40%)";
+                    "hsl(" + (1.0 - positionArray[i]/countRange) * 240 + ", 100%, 80%)";
                 }
                 
                 outputString =
                     outputString +
-                    "<span style='color: " +
+                    "<span style='padding-top: 5px; padding-bottom:5px; background-color: " +
                     colorString +
                     "'>" +
                     currentCharacter +
@@ -92,3 +92,10 @@ export default {
 };
 
 </script>
+
+<style scoped>
+.highlightTextBlock {
+    line-height: 2em;
+    font-size: 1.5em;
+}
+</style>
