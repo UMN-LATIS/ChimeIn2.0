@@ -22,7 +22,7 @@ export default {
     methods: {
         buildTextMap: function() {
             let positionArray = [];
-            for(let i=0; i<this.question.text.length; i++) {
+            for(let i=0; i<this.question.question_info.question_responses.heatmap_text.length; i++) {
                 positionArray[i] = 0;
                 for(let response of this.responses) {
                     if(i >= response.response_info.startOffset  && i < response.response_info.endOffset) {
@@ -30,6 +30,7 @@ export default {
                     }
                 }
             }
+
 
             const maxCount = Math.max(...positionArray);
             const minCount = Math.min(...positionArray);
