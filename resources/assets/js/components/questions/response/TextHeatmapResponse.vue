@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="col-sm-12" >
-             <div class="form-group" v-html="highlightedText" >
+             <div class="form-group" v-html="highlightedText">
             </div>
             <div class="col-sm-12">
-                <button v-if="(!disabled && !response.id) || create_new_response" class="btn btn-primary" variant="primary" @click="record_response">Submit Selection</button>
-                <button v-if="!disabled && response.id && !create_new_response && response.response_info.startOffset < 0" class="btn btn-primary" variant="primary" @click="record_response">Update</button>
+                <button v-if="(!disabled && !response.id) || create_new_response" class="btn btn-primary" variant="primary" @click="record_response" :disabled="disableSubmission">Submit Selection</button>
+                <button v-if="!disabled && response.id && !create_new_response && response.response_info.startOffset < 0" class="btn btn-primary" variant="primary" @click="record_response" :disabled="disableSubmission">Update</button>
                 <button v-if="!disabled && response.id && !create_new_response && response.response_info.startOffset >= 0" class="btn btn-primary" variant="primary" @click="resetSelection">Reset Selection</button>
                 <button v-if="!disabled && response.id && !create_new_response && question.allow_multiple" class="btn btn-primary" variant="primary" @click="new_response">Clear and Start a New Response</button>
             </div>
@@ -18,7 +18,8 @@ export default {
     props: ['question', 'response', 'disabled'],
     data() {
         return {
-            create_new_response: false
+            create_new_response: false,
+            disableSubmission: true
         }
     },
     watch: {
@@ -142,12 +143,28 @@ export default {
         new_response: function() {
             window.getSelection().removeAllRanges();
             this.create_new_response = true;
+        },
+        testForHighlight: function() {
+            console.log("Hey");
+            const mySelection = window.getSelection();
+            if(mySelection.isCollapsed) {
+                this.disableSubmission = true;
+            }
+            else {
+                this.disableSubmission = false;
+            }
         }
     },
     mounted() {
         if(this.response && this.response.hasOwnProperty('response_info') && this.response.response_info.hasOwnProperty('startOffset')) {
             // this.response_text = this.response.response_info.text;
         }
+    },
+    created: function() {
+        window.addEventListener('mouseup',this.testForHighlight);
+    },
+    destroyed: function() {
+        window.removeEventListener('mouseup', this.testForHighlight);
     }
 };
 </script>
