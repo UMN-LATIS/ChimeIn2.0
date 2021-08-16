@@ -41,6 +41,13 @@
                                 Questions (no responses)
                             </label>
                         </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="export_type" id="export_type_question_full_sessions"
+                                    value="question_sessions">
+                                Individual sessions
+                            </label>
+                        </div>
                     </div>
                 </div>
             </fieldset>

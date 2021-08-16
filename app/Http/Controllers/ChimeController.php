@@ -453,6 +453,8 @@ class ChimeController extends Controller
             $selectedFolders = $req->get('selectedFolder');
         }
 
+        $exportType = $req->get("export_type");
+
         foreach($chime->folders as $folder) {
             if($selectedFolders && !in_array($folder->id, $selectedFolders)) {
                 continue;
@@ -460,15 +462,22 @@ class ChimeController extends Controller
             $folder->load('questions', 'questions.sessions', 'questions.sessions.responses');
             $folderArray[$folder->id] = ["name"=>$folder->name, "questions"=>$folder->questions->count(), "folder"=>$folder];
             foreach($folder->questions()->orderBy("order")->get() as $question) {
-                $questionArray[$question->id] = strip_tags($question->text);
+                if($exportType == "question_sessions") {
+                    foreach($question->sessions as $session) {
+                        $questionArray[$question->id . "_" . $session->id] = strip_tags($question->text) . " : " . $session->created_at;
+                    }
+                }
+                else {
+                    $questionArray[$question->id] = strip_tags($question->text);
+                }
+                
             }
         }
 
 
 
-        $exportType = $req->get("export_type");
+       
         $onlyCorrectAnswers = $req->get("only_correct_answers");
-
         $headers = array(
                 "Content-type" => "text/csv",
                 "Pragma" => "no-cache",
@@ -557,39 +566,7 @@ class ChimeController extends Controller
                                     return $value->responses->where("user_id", $participant->id);
                                 });
                                 $responses = $userResponses->pluck('response_info');
-                                foreach($responses as $key=>$value) {
-                                    switch($value["question_type"]) {
-                                        case "multiple_choice": 
-                                        case "slider": 
-                                            $responses[$key] = $value["choice"];
-                                            break;
-                                        case "free_response": 
-                                            $responses[$key] = $value["text"];
-                                            break;
-                                        case "image_response":
-                                            $responses[$key] = $value["image_name"];
-                                            break;
-                                        case "heatmap_response":
-                                            $responses[$key] = $value["image_coordinates"]["coordinate_x"] . "," . $value["image_coordinates"]["coordinate_y"];
-                                            break;
-                                    }
-                                }
-                                
-                                if(count($responses) > 1) {
-                                    $row[] = json_encode($responses);
-                                }
-                                else if(count($responses) == 0) {
-                                    $row[] = "";
-                                }
-                                else {
-                                    if(is_array($responses[0])) {
-                                        $row[] = json_encode($responses[0]);
-                                    }
-                                    else {
-                                        $row[] = $responses[0];
-                                    }
-                                    
-                                }
+                                $row[] = $this->getRowForResponses($responses);
                             }
                         }
                         fputcsv($file, $row);
@@ -607,6 +584,37 @@ class ChimeController extends Controller
                             
                         }
                     break;
+                    case 'question_sessions':
+
+                        foreach($questionArray as $questionId => $questionText) {
+                            $headers[] = $questionText;
+                            $secondHeaders[] = 1;
+                        }
+                        fputcsv($file, $headers);
+                        fputcsv($file, $secondHeaders);
+
+                        foreach($chime->users as $participant) {
+                            $row = [];
+                            $row[] =  $participant->name;
+                            $row[] = '';
+                            $row[] = '';
+                            $row[] = $participant->email;
+                            $row[] = '';
+                            foreach($folderArray as $folderId => $folderInfo) {
+                                foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
+                                    
+                                    foreach($question->sessions as $session) {
+                                        $userResponses = $session->responses->where("user_id", $participant->id);
+                                        $responses = $userResponses->pluck('response_info');
+                                        $row[] = $this->getRowForResponses($responses);
+
+                                    }
+                                    
+                                }
+                            }
+                            fputcsv($file, $row);
+                        }
+                        break;
                     default:
                     # code...
                     break;
@@ -617,6 +625,46 @@ class ChimeController extends Controller
         return Response()->streamDownload($callback, "chimeExport.csv", $headers);
 
 
+    }
+
+    private function getRowForResponses(object $responses): string {
+        foreach($responses as $key=>$value) {
+            switch($value["question_type"]) {
+                case "multiple_choice": 
+                case "slider": 
+                    $responses[$key] = $value["choice"];
+                    break;
+                case "free_response": 
+                    $responses[$key] = $value["text"];
+                    break;
+                case "image_response":
+                    $responses[$key] = $value["image_name"];
+                    break;
+                case "heatmap_response":
+                    $responses[$key] = $value["image_coordinates"]["coordinate_x"] . "," . $value["image_coordinates"]["coordinate_y"];
+                    break;
+                case "text_heatmap_response":
+                    $responses[$key] = $value["startOffset"] . " - " . $value["endOffset"];
+                    break;
+            }
+        }
+        $row = "";
+        if(count($responses) > 1) {
+            $row = json_encode($responses);
+        }
+        else if(count($responses) == 0) {
+            $row = "";
+        }
+        else {
+            if(is_array($responses[0])) {
+                $row = json_encode($responses[0]);
+            }
+            else {
+                $row = $responses[0];
+            }
+            
+        }
+        return $row;
     }
 
     public function forceSync(Request $req, $chime) {
