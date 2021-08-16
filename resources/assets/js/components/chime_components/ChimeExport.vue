@@ -45,7 +45,7 @@
                             <label class="form-check-label">
                                 <input type="radio" class="form-check-input" name="export_type" id="export_type_question_full_sessions"
                                     value="question_sessions">
-                                Individual sessions
+                                Individual Sessions with Responses
                             </label>
                         </div>
                     </div>
