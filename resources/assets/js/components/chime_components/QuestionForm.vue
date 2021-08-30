@@ -47,7 +47,7 @@
                 <div class="col">
                     <vue-editor v-model="question_text" placeholder="Question Text" v-bind:editorToolbar="toolbar"
                         v-bind:editorOptions="editorOptions" v-bind:useCustomImageHandler="true"
-                        v-on:imageAdded="handle_image_added">
+                        v-on:image-added="handle_image_added">
                     </vue-editor>
                 </div>
             </div>
@@ -280,7 +280,6 @@
             },
             handle_image_added: function (file, editor, cursor, reset) {
                 console.log('file:', file);
-
                 let form_data = new FormData();
                 form_data.append('image', file);
 
