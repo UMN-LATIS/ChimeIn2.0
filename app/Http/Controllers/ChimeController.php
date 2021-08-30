@@ -627,7 +627,7 @@ class ChimeController extends Controller
 
     }
 
-    private function getRowForResponses(object $responses): string {
+    private function getRowForResponses(object $responses) {
         foreach($responses as $key=>$value) {
             switch($value["question_type"]) {
                 case "multiple_choice": 
