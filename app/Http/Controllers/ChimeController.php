@@ -565,8 +565,7 @@ class ChimeController extends Controller
                                 $userResponses = $question->sessions->flatmap(function($value) use ($participant) {
                                     return $value->responses->where("user_id", $participant->id);
                                 });
-                                $responses = $userResponses->pluck('response_info');
-                                $row[] = $this->getRowForResponses($responses);
+                                $row[] = $this->getRowForResponses($userResponses);
                             }
                         }
                         fputcsv($file, $row);
@@ -605,8 +604,7 @@ class ChimeController extends Controller
                                     
                                     foreach($question->sessions as $session) {
                                         $userResponses = $session->responses->where("user_id", $participant->id);
-                                        $responses = $userResponses->pluck('response_info');
-                                        $row[] = $this->getRowForResponses($responses);
+                                        $row[] = $this->getRowForResponses($userResponses);
 
                                     }
                                     
@@ -629,24 +627,7 @@ class ChimeController extends Controller
 
     private function getRowForResponses(object $responses) {
         foreach($responses as $key=>$value) {
-            switch($value["question_type"]) {
-                case "multiple_choice": 
-                case "slider": 
-                    $responses[$key] = $value["choice"];
-                    break;
-                case "free_response": 
-                    $responses[$key] = $value["text"];
-                    break;
-                case "image_response":
-                    $responses[$key] = $value["image_name"];
-                    break;
-                case "heatmap_response":
-                    $responses[$key] = $value["image_coordinates"]["coordinate_x"] . "," . $value["image_coordinates"]["coordinate_y"];
-                    break;
-                case "text_heatmap_response":
-                    $responses[$key] = $value["startOffset"] . " - " . $value["endOffset"];
-                    break;
-            }
+            $responses[$key] = $value->response_text;
         }
         $row = "";
         if(count($responses) > 1) {
@@ -663,6 +644,9 @@ class ChimeController extends Controller
                 $row = $responses[0];
             }
             
+        }
+        if(!is_string($row)) {
+            return "";
         }
         return $row;
     }
