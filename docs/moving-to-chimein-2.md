@@ -4,7 +4,7 @@ ChimeIn 2 works a little differently from the original version.  The biggest cha
 
 ChimeIn 2 also uses some new language.  ChimeIn has been used in many non-course situations, so the course-centric interface created confusion.  In ChimeIn 2, you create _chimes_.  Chimes contain folders, and folders contain questions.  You'll never enter a "course designator" or any other course-specific information. 
 
-If you'd like some personal help migrating from the old ChimeIn to the new, please [contact us](mailto:mcfa0086@umn.edu).  One important note: ChimeIn 2 doesn't support a text-messaging interface for non-smartphone interaction.  This was both unreliable and expensive in the old ChimeIn, and was very rarely used.
+If you'd like some personal help migrating from the old ChimeIn to the new, please [contact us](mailto:latistecharch@umn.edu).  One important note: ChimeIn 2 doesn't support a text-messaging interface for non-smartphone interaction.  This was both unreliable and expensive in the old ChimeIn, and was very rarely used.
 
 ## Using ChimeIn 2 with a course ##
 
