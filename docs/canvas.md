@@ -48,7 +48,7 @@ When you first setup ChimeIn in Canvas, you'll be asked to select how you'd like
 
 ## Approaches to using ChimeIn within Canvas
 
-If you're using ChimeIn repeatedly throughout a course, there are a couple different approaches to setting up your Canvas course.  If you'd like to keep track of student participation on a weekly or per-lecture basis, you should create separate assignments. Just repeat the steps in the previous section each time.  That way, the gradebook will reflect participation in individual course sessions.  Alternatively, you can create a single assignment for an entire semester, and collect an overall grade.  If you'd like to discuss different approaches, just [contact us](mailto:latistecharch@umn.edu). 
+If you're using ChimeIn repeatedly throughout a course, there are a couple different approaches to setting up your Canvas course.  If you'd like to keep track of student participation on a weekly or per-lecture basis, you should create separate assignments. Just repeat the steps in the previous section each time.  That way, the gradebook will reflect participation in individual course sessions.  Alternatively, you can create a single assignment for an entire semester, and collect an overall grade.  If you'd like to discuss different approaches, just [contact us](mailto:mcfa0086@umn.edu). 
 
 ## Presenting to students
 
