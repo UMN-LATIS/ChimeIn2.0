@@ -103,7 +103,7 @@
 
 
 
-								<img alt="College of Liberal Arts" class="logo" src="https://cla.umn.edu/sites/cla.umn.edu/themes/cla_base/prd/img/CLAwordmark_DarkGray.svg">
+								<img alt="College of Liberal Arts" class="logo" src="https://cla.umn.edu/sites/cla.umn.edu/themes/custom/cla_folwell/dist/img/branding/cla-wordmark_grey-xdark.svg">
 
 								<div class="field-campus-address">
 
