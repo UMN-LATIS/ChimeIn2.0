@@ -26,6 +26,11 @@ use App\Http\Controllers\PresentController;
 // this might be wrong
 Route::impersonate();
 
+Route::get("/ltiSelectionPromptDemo", function() {
+    $chime = \App\Chime::first();
+    return view("ltiSelectionPrompt", ["lti_resource_title"=>"test course", "resource_link_pk"=>"1111", "chime"=>$chime]);
+});
+
 Route::group(['middleware' => ['shibinjection']], function () {
     
     Route::resource('admin/users', 'Admin\UsersController');

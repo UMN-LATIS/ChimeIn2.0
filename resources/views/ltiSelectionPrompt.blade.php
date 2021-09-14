@@ -105,6 +105,7 @@
 
         {{ Form::model($chime, array('route' => ['ltisettings.update', $chime->id],  'method' => 'put')) }}
         {{ Form::hidden("lti_resource_title", $lti_resource_title)}}
+        {{ Form::hidden("resource_link_pk", $resource_link_pk)}}
         <div class="checkbox_options">
             
                 <div>
@@ -115,13 +116,10 @@
                      </label>
                 </div>
                 <div>
-                        {{ Form::radio('lti_grade_mode', \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES, false, ['class'=>'', 'id'=>'multiple_gradebook',  $haveLineItem?null:"disabled"]) }}
+                        {{ Form::radio('lti_grade_mode', \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES, false, ['class'=>'', 'id'=>'multiple_gradebook']) }}
                         <label for="multiple_gradebook">
                             <h2>Multiple gradebook entries </h2>
                          <p>This will allow you to seperately track grades for each week/lecture/etc. You'll create multiple assignments in Canvas, and manage your points in Canvas.</p>
-                         @if(!$haveLineItem)
-                        <b style="color:black">You must create an assignment in Canvas to select this option</b>    
-                    @endif   
                     </label>
                 </div>
                 <div>

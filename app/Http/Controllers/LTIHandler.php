@@ -149,7 +149,7 @@ class LTIHandler extends Controller
         $chime->fill($req->all());
         $chime->lti_setup_complete = true;
         $chime->save();
-        $resource_link_title = $req->get("resource_link_title");
+        $resource_link_title = $req->get("lti_resource_title");
         $resource_link_pk = $req->get("resource_link_pk");
         $folder = new \App\Folder;
         $folder->chime()->associate($chime);
