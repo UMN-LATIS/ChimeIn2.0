@@ -91,8 +91,13 @@ class LTIHandler extends Controller
                     return \Redirect::to("/chime/" . $chime->id);
                 }
                 else if($chime && !$chime->lti_setup_complete) {
+                    
+                    $explodedName = explode(" ", $chime->name);
+                    $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
+                    $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+
                     $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                    return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
+                    return view("ltiSelectionPrompt", ["similar_chimes"=>$similarChimes, "resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
                 }
                 else {
                     $chime = new \App\Chime;
@@ -115,8 +120,14 @@ class LTIHandler extends Controller
                     $folder->resource_link_pk = $tool->resourceLink->getRecordId();
                     $chime->save();
                     $folder->save();
+                    
+                    $explodedName = explode(" ", $chime->name);
+                    $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
+                    $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+
+
                     return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-                    // return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
+                    // return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "similar_chimes"=>$similarChimes, "chime"=>$chime]);
                 }                
             }
         }
