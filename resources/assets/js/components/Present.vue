@@ -14,7 +14,7 @@
         <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
             <present-question v-if="current_question_item" :usersCount="usersCount" :question="current_question_item" :chimeId="chimeId" :folder="folder" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle" @reload="reload">
             </present-question>
-            <div v-if="fullscreen" class="alert alert-info text-center fixed-bottom joinbox" role="alert">
+            <div v-if="fullscreen && host" class="alert alert-info text-center fixed-bottom joinbox" role="alert">
                 <span class="text-center">Go to <strong>{{ host }}</strong> and enter code <strong>{{ hyphenatedCode }}</strong></span>
             </div>
         </fullscreen>

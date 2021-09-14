@@ -57,11 +57,11 @@ export default {
         response: function(){
             if(this.responses.length > 0 && this.session) {
                 var foundResponse = null;
-                this.responses.forEach(response=> {
-                    if(response.session_id == this.session.id) {
-                        foundResponse = response
-                    }
-                });  
+                var sessionResponses = this.responses.filter(r => r.session_id == this.session.id);
+                if(sessionResponses.length > 0) {
+                    foundResponse = sessionResponses.reduce((prev, current) => {return (prev.id > current.id)? prev: current} );
+                }
+                
                 if(foundResponse) {
                     return foundResponse;      
                 }

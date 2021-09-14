@@ -127,18 +127,6 @@
         chimein:    
             aliases:
               - app.test
-    selenium:
-      image: selenium/standalone-chrome:3.11.0-antimony
-      depends_on:
-        - app
-      volumes:
-        - /dev/shm:/dev/shm
-      env_file:
-        - .env
-      networks:
-        chimein: 
-      #       aliases:
-      #       - selenium.knowfear.net
   volumes:
     redis:
       driver: "local"

@@ -77,6 +77,17 @@ A heatmap question allows you to upload an image and present it to your particip
 ![Example Heatmap](./heatmap.jpg)
 
 
+### Text Heatmap
+
+A text heatmap question allows you to present a written prompt along with a paragraph of text. Participants will highlight a portion of the text. The presenter view will show which sections of text are most frequently highlighted.
+
+* Identify hyperbolic statements within a paragraph from a political speech
+* Flag grammatical issues in a sample text in a language class
+
+![Example Text Heatmap](./textheatmap.png)
+
+
+
 
 ### Free Response
 

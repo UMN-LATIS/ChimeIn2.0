@@ -81,13 +81,13 @@ class LTIHandler extends Controller
                 $chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first();
                 if($chime && $chime->lti_setup_complete) {
                     $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                    if(!$chime->single_chime_for_lti) {
+                    // if(!$chime->single_chime_for_lti) {
                         $folder = new \App\Folder;
                         $folder->chime()->associate($chime);
                         $folder->name = $tool->resourceLink->title;
                         $folder->resource_link_pk = $tool->resourceLink->getRecordId();
                         $folder->save();
-                    }
+                    // }
                     return \Redirect::to("/chime/" . $chime->id);
                 }
                 else if($chime && !$chime->lti_setup_complete) {
@@ -108,6 +108,7 @@ class LTIHandler extends Controller
 
                     // temporary while we figure out our LTI future
                     $chime->lti_setup_complete = true;
+                    // $chime->single_chime_for_lti = false;
                     $folder = new \App\Folder;
                     $folder->chime()->associate($chime);
                     $folder->name = $tool->resourceLink->title;

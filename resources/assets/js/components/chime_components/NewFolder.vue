@@ -13,7 +13,7 @@
                     </div>
                     </div>  
                     <div class="alert alert-warning mt-2" role="alert" v-if="chime.lti_grade_mode == 'multiple_grades'">
-                        <strong>Warning:</strong> Creating a new folder will not add a new gradebook entry in Canvas. If you'd like to  track participation by week/lecture in the gradebook, start by creating a new assignment in Canvas. See <a href="https://umn-latis.github.io/ChimeIn2.0/canvas.html">our help</a> or <a href="mailto:mcfa0086@umn.edu">contact us</a> for assistance. You can still create folders to assist with your own organization.
+                        <strong>Warning:</strong> Creating a new folder will not add a new gradebook entry in Canvas. If you'd like to  track participation by week/lecture in the gradebook, start by creating a new assignment in Canvas. See <a href="https://umn-latis.github.io/ChimeIn2.0/canvas.html">our help</a> or <a href="mailto:latistecharch@umn.edu">contact us</a> for assistance. You can still create folders to assist with your own organization.
                     </div>
                 </div>
                 

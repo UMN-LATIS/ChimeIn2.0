@@ -100,16 +100,12 @@ class PresentController extends Controller
             
             $question = $folder->questions()->find($req->route('question_id'));
             $currentSession = $question->current_session;
-            if(isset($currentSession)) {
+            if($currentSession) {
                 $currentSession->touch();
                 $question->current_session()->dissociate();
-            }
-            
-            $question->save();
-            if($currentSession) {
+                $question->save();
                 event(new EndSession($chime, $currentSession));
             }
-            
 
             return response()->json($question);
         } else {

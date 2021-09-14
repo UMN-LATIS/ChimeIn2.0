@@ -49,7 +49,6 @@ class LTIProcessor {
 				if(array_key_exists($user->ltiUserId, $globalUsers)) {
 					$score = $globalUsers[$user->ltiUserId] / $totalQuestions;
 				}
-				
 				$lti_outcome = new ToolProvider\Outcome($score, null);
 				$resource_link->doOutcomesService(ToolProvider\ResourceLink::EXT_WRITE, $lti_outcome, $user);
 			}
