@@ -49,5 +49,6 @@ RUN chown -R www-data:www-data /var/www/html  && \
     chmod u+x /usr/local/bin/start && \
     a2enmod rewrite
 
+RUN composer dump-autoload
 
 CMD ["/usr/local/bin/start"]
