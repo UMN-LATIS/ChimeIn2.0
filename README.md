@@ -8,6 +8,10 @@ ChimeIn is designed to run in Docker via `docker compose`.
 # Create a .env file
 cp .env.example .env
 
+# Edit `.env` as needed.
+# The default `.env.example` will probably be sufficient,
+# but if you're a Safari user, change SESSION_SAME_SITE="none"
+
 # generate an app key
 php artisan key:generate
 
