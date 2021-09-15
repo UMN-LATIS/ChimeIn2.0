@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y libzip-dev zlib1g-dev git libjpeg-dev l
     docker-php-ext-install pdo pdo_mysql zip  pcntl && \
     docker-php-ext-enable imagick
 
+COPY --from=vendor /usr/bin/composer /usr/local/bin/composer
 COPY --from=vendor /app/vendor/ /var/www/html/vendor/
 COPY --from=frontend /app/public/js/ /var/www/html/public/js/
 COPY --from=frontend /app/public/css/ /var/www/html/public/css/
