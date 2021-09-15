@@ -2,17 +2,45 @@
 
 ## Setting up ChimeIn Locally
 
-ChimeIn is designed to run in Docker via docker-compose. 
+ChimeIn is designed to run in Docker via `docker compose`.
 
-To get started, copy "env-demo" to ".env" in the root of the project. 
+```sh
+# Create a .env file
+cp .env.example .env
 
-Run `docker-compose up` to begin the process of building the docker images. Once they're built, the application will be running on http://localhost:8000.
+# Edit `.env` as needed.
+# The default `.env.example` will probably be sufficient,
+# but if you're a Safari user, change SESSION_SAME_SITE="none"
 
-Once the application is running, run `docker-compose exec app php artisan migrate` to run the database migrations, and then `docker-compose exec app php artisan key:generate` to create an application key.
+# generate an app key
+php artisan key:generate
 
-## Using the application
+# build the docker images
+docker compose build
 
-Start the application by running `docker-compose up`. To access the application, load http://localhost:8000 in your browser. You can login with the username `admin` and the password `admin`. Additional users can be configured in `config/shibboleth.php`.
+# start docker containers
+docker compose up
 
-To stop the application, either exit docker-compose or run `docker-compose down`.
+# generate an app key
+docker compose exec app php artisan key:generate
 
+# migrate the database
+docker compose exec app php artisan migrate:fresh
+```
+
+The application will be running on <http://localhost:8000>.
+
+## Using the Application
+
+Start the app: `docker-compose up`.
+
+Load <http://localhost:8000> in your browser.
+
+Login with:
+
+- username: `admin`
+- password: `admin`
+
+Additional users can be configured in `config/shibboleth.php`.
+
+Stop the application: `docker compose down`.
