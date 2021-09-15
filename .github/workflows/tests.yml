@@ -1,0 +1,31 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build docker
+        run: |
+          echo ---Building and starting docker---
+          docker-compose -f docker-compose.test.yml up --build --detach
+          echo ---Containers up---
+      - name: Create app key
+        run: |
+          echo ---Creating app key---
+          docker-compose exec app php artisan key:generate
+          echo ---App key created---
+      - name: Migrate Database
+        run: |
+          echo ---Migrating database---
+          docker-compose exec app php artisan migrate
+          echo ---Migrations complete---
+      - name: Run tests
+        run: |
+          echo ---Running tests---
+          docker-compose exec app php artisan dusk
+          echo ---Tests complete---
