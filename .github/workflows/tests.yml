@@ -12,20 +12,21 @@ jobs:
       - name: Build docker
         run: |
           echo ---Building and starting docker---
-          docker-compose -f docker-compose.test.yml up --build --detach
+          docker compose -f docker-compose.test.yml build
+          docker compose -f docker-compose.test.yml up --detach
           echo ---Containers up---
       - name: Create app key
         run: |
           echo ---Creating app key---
-          docker-compose exec app php artisan key:generate
+          docker compose exec app php artisan key:generate
           echo ---App key created---
       - name: Migrate Database
         run: |
           echo ---Migrating database---
-          docker-compose exec app php artisan migrate
+          docker compose exec app php artisan migrate:fresh
           echo ---Migrations complete---
       - name: Run tests
         run: |
           echo ---Running tests---
-          docker-compose exec app php artisan dusk
+          docker compose exec app php artisan dusk
           echo ---Tests complete---
