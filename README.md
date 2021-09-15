@@ -12,20 +12,14 @@ cp .env.example .env
 # The default `.env.example` will probably be sufficient,
 # but if you're a Safari user, change SESSION_SAME_SITE="none"
 
-# generate an app key
-php artisan key:generate
-
-# build the docker images
-docker compose build
-
-# start docker containers
-docker compose up
+# build and start docker containers
+docker-compose up --build
 
 # generate an app key
-docker compose exec app php artisan key:generate
+docker-compose exec app php artisan key:generate
 
 # migrate the database
-docker compose exec app php artisan migrate:fresh
+docker-compose exec app php artisan migrate:fresh
 ```
 
 The application will be running on <http://localhost:8000>.
@@ -44,3 +38,20 @@ Login with:
 Additional users can be configured in `config/shibboleth.php`.
 
 Stop the application: `docker compose down`.
+
+## Running Tests
+
+```sh
+# build and spawn the test containers
+docker-compose -f docker-compose.test.yml up --build
+
+# generate an app key
+docker-compose exec app php artisan key:generate
+
+# migrate the database
+docker-compose exec app php artisan migrate:fresh
+
+# run tests
+docker-compose exec app php artisan dusk
+
+```
