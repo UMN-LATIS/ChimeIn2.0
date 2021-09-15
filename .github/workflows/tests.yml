@@ -9,16 +9,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build docker
-        run: |
-          echo ---Building and starting docker---
-          docker-compose -f docker-compose.test.yml build
-          docker-compose -f docker-compose.test.yml up --detach
-          echo ---Containers up---
+      # - name: Build docker
+      #   run: |
+      #     echo ---Building and starting docker---
+      #     docker-compose -f docker-compose.test.yml build
+      #     docker-compose -f docker-compose.test.yml up --detach
+      #     echo ---Containers up---
       - name: Create app key
         run: |
           echo ---Creating app key---
-          docker-compose exec app php artisan key:generate
+          docker-compose exec -T app php artisan key:generate
           echo ---App key created---
       - name: Migrate Database
         run: |
