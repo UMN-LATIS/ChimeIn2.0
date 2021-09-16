@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Run NPM
+npm run prod
+
 # Generate Key
 php artisan key:generate
 

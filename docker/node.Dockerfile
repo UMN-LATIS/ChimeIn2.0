@@ -7,4 +7,4 @@ COPY .babelrc /app
 COPY artisan /app
 EXPOSE 8080
 
-CMD ["npm","run","prod"]
+CMD ["npm","run","hot"]
