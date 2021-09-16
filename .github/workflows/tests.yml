@@ -24,8 +24,6 @@ jobs:
         run: |
           docker-compose exec -T app bin/ci.sh
       - name: Run tests
-        env:
-          APP_URL: "http://127.0.0.1:8000"
         run: |
           docker-compose exec -T app php artisan dusk
       - name: Logs
