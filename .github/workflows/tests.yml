@@ -29,3 +29,15 @@ jobs:
         if: ${{ always() }}
         run: |
           docker-compose -f docker-compose.test.yml logs
+      - name: Upload Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: tests/Browser/screenshots
+      - name: Upload Console Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: console
+          path: tests/Browser/console
