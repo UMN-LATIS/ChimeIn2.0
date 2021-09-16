@@ -9,8 +9,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      # - name: Setup config
-      #   run: cp .env.test .env
+      - name: Setup config
+        run: cp .env.test .env
       - name: Build docker
         run: |
           docker-compose -f docker-compose.test.yml build
@@ -21,9 +21,11 @@ jobs:
           docker-compose -f docker-compose.test.yml exec -T app php artisan key:generate
           docker-compose -f docker-compose.test.yml exec -T app php artisan migrate:fresh 2>&1
       - name: Run tests
+        env:
+          APP_URL: "http://127.0.0.1:8000"
         run: |
           docker-compose -f docker-compose.test.yml exec -T app php artisan dusk
-      - name: The job has failed
+      - name: Logs
         if: ${{ always() }}
         run: |
           docker-compose -f docker-compose.test.yml logs
