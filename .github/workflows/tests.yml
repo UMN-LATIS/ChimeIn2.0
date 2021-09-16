@@ -15,7 +15,7 @@ jobs:
           docker-compose -f docker-compose.test.yml up --detach
       - name: Init App
         run: |
-          docker-compose ps
+          docker-compose ps -f docker-compose.test.yml
           docker-compose exec -T -f docker-compose.test.yml app php artisan key:generate
           docker-compose exec -T -f docker-compose.test.yml app php artisan migrate:fresh 2>&1
       - name: Run tests
