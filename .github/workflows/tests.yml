@@ -22,9 +22,7 @@ jobs:
       #     echo ---App key created---
       - name: Migrate Database
         run: |
-          echo ---Migrating database---
-          docker-compose exec app php artisan migrate:fresh
-          echo ---Migrations complete---
+          docker-compose exec app php artisan migrate:fresh 2>&1
       - name: Run tests
         run: |
           echo ---Running tests---
