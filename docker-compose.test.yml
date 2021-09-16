@@ -16,7 +16,7 @@ services:
       - .:/var/www/html/:cached
       - /var/www/html/node_modules
       - /var/www/html/vendor
-      # - /var/www/html/public
+      - /var/www/html/public
     environment:
       APP_ENV: local
       CONTAINER_ROLE: app
