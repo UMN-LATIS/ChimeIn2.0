@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Run NPM
-npm run prod
-
 # Generate Key
 php artisan key:generate
 
@@ -16,11 +13,6 @@ chmod -R 777 ./bootstrap/cache
 php artisan config:cache
 chmod -R 0755 ./vendor/laravel/dusk/bin
 
-# Upgrade Chrome Driver
-# php artisan dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
-
-# Start Chrome Driver
-# ./vendor/laravel/dusk/bin/chromedriver-linux &
 
 
 
