@@ -24,7 +24,7 @@ jobs:
         env:
           APP_URL: "http://127.0.0.1:8000"
         run: |
-          docker-compose -f docker-compose.test.yml exec -T app php artisan dusk
+          docker-compose -f docker-compose.test.yml exec app php artisan dusk
       - name: Logs
         if: ${{ always() }}
         run: |
