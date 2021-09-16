@@ -15,11 +15,18 @@ jobs:
         run: |
           docker-compose -f docker-compose.test.yml build
           docker-compose -f docker-compose.test.yml up --detach
-      - name: Init App
+      - name: Check
+        run: docker-compose -f docker-compose.test.yml ps --all
+      - name: Generate Key
+        run: docker-compose -f docker-compose.test.yml exec -T app php artisan key:generate
+      - name: Directory Permissions
         run: |
-          docker-compose -f docker-compose.test.yml ps --all 
-          docker-compose -f docker-compose.test.yml exec -T app php artisan key:generate
-          docker-compose -f docker-compose.test.yml exec -T app php artisan migrate:fresh 2>&1
+          docker-compose exec -T app php artisan storage:link
+          docker-compose exec -T app chmod -R 777 storage
+          docker-compose exec -T app chmod -R 777 bootstrap/cache
+          docker-compose exec -T app php artisan config:cache
+      - name: Migrate DB
+        run: docker-compose -f docker-compose.test.yml exec -T app php artisan migrate:fresh 2>&1
       - name: Run tests
         env:
           APP_URL: "http://127.0.0.1:8000"
