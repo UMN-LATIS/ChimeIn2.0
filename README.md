@@ -42,22 +42,19 @@ Additional users can be configured in `config/shibboleth.php`.
 
 Stop the application: `docker compose down`.
 
-## Running Tests
+## Running Tests Locally
 
 ```sh
 # build docker images
-docker compose -f docker-compose.test.ym build
+docker compose -f docker-compose.test.yml --env-file .env.test build
 
 # start the containers
-docker compose -f docker-compose.test.yml up
+docker compose -f docker-compose.test.yml --env-file .env.test up -d
 
-# generate an app key
-docker compose exec app php artisan key:generate
-
-# migrate the database
-docker compose exec app php artisan migrate:fresh
+# configure the app, migrate the db, etc.
+docker compose -f docker-compose.test.yml exec app ./bin/ci.sh
 
 # run tests
-docker compose exec app php artisan dusk
+docker compose -f docker-compose.test.yml exec app php artisan dusk
 
 ```
