@@ -9,19 +9,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Setup config
+        run: cp .env.test .env
       - name: Build docker
         run: |
           docker-compose -f docker-compose.test.yml build
           docker-compose -f docker-compose.test.yml up --detach
       - name: Init App
         run: |
-          docker-compose ps -f docker-compose.test.yml
-          docker-compose exec -T -f docker-compose.test.yml app php artisan key:generate
-          docker-compose exec -T -f docker-compose.test.yml app php artisan migrate:fresh 2>&1
+          docker-compose -f docker-compose.test.yml ps --all 
+          docker-compose -f docker-compose.test.yml exec -T app php artisan key:generate
+          docker-compose -f docker-compose.test.yml exec -T app php artisan migrate:fresh 2>&1
       - name: Run tests
         run: |
-          docker-compose exec -T -f docker-compose.test.yml app php artisan dusk
+          docker-compose -f docker-compose.test.yml exec -T app php artisan dusk
       - name: The job has failed
-        if: ${{ failure() }}
+        if: ${{ always() }}
         run: |
-          docker-compose logs -f docker-compose.test.yml
+          docker-compose -f docker-compose.test.yml logs
