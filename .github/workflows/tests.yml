@@ -16,12 +16,12 @@ jobs:
       - name: Init App
         run: |
           docker-compose ps
-          docker-compose exec -T app php artisan key:generate
-          docker-compose exec -T app php artisan migrate:fresh 2>&1
+          docker-compose exec -T -f docker-compose.test.yml app php artisan key:generate
+          docker-compose exec -T -f docker-compose.test.yml app php artisan migrate:fresh 2>&1
       - name: Run tests
         run: |
-          docker-compose exec -T app php artisan dusk
+          docker-compose exec -T -f docker-compose.test.yml app php artisan dusk
       - name: The job has failed
         if: ${{ failure() }}
         run: |
-          docker-compose logs
+          docker-compose logs -f docker-compose.test.yml
