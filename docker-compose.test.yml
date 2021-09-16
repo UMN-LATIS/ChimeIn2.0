@@ -26,27 +26,6 @@ services:
       chimein:
         aliases:
           - app.test
-    #       aliases:
-    #         - app.knowfear.net
-  # node:
-  #   image: laravel-node
-  #   container_name: laravel-node
-  #   build:
-  #     context: .
-  #     dockerfile: docker/node.Dockerfile
-  #   depends_on:
-  #     - app
-  #   ports:
-  #    - 8080:8080
-  #   volumes:
-  #     - .:/app:cached
-  #     - /app/vendor
-  #     - /app/node_modules
-  #   entrypoint: ["npm", "run", "prod"]
-  #   networks:
-  #     chimein:
-  #       aliases:
-  #         - app.test
   scheduler:
     image: laravel-www
     container_name: laravel-scheduler
@@ -134,8 +113,6 @@ services:
       - .env.test
     networks:
       chimein:
-    #       aliases:
-    #       - selenium.knowfear.net
 volumes:
   redis:
     driver: "local"
