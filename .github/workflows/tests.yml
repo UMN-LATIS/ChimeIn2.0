@@ -18,22 +18,11 @@ jobs:
           docker-compose build
           docker-compose up --detach
       - name: Check
-        run: docker-compose ps --all
-      - name: Generate Key
-        run: docker-compose exec -T app php artisan key:generate
-      - name: Directory Permissions
         run: |
-          docker-compose exec -T app php artisan storage:link
-          docker-compose exec -T app chmod -R 777 storage
-          docker-compose exec -T app chmod -R 777 bootstrap/cache
-          docker-compose exec -T app php artisan config:cache
-          docker-compose exec -T app chmod -R 0755 vendor/laravel/dusk/bin
-      - name: Upgrade Chrome Driver
-        run: dockerphp artisan dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
-      - name: Start Chrome Driver
-        run: ./vendor/laravel/dusk/bin/chromedriver-linux &
-      - name: Migrate DB
-        run: docker-compose exec -T app php artisan migrate:fresh 2>&1
+          docker-compose ps --all
+      - name: Config App for Dusk
+        run: |
+          docker-compose exec -T app bin/ci.sh
       - name: Run tests
         env:
           APP_URL: "http://127.0.0.1:8000"
