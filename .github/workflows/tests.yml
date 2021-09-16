@@ -9,17 +9,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      # - name: Build docker
-      #   run: |
-      #     echo ---Building and starting docker---
-      #     docker-compose -f docker-compose.test.yml build
-      #     docker-compose -f docker-compose.test.yml up --detach
-      #     echo ---Containers up---
-      - name: Create app key
+      - name: Build docker
         run: |
-          echo ---Creating app key---
-          docker-compose exec -T app php artisan key:generate
-          echo ---App key created---
+          echo ---Building and starting docker---
+          docker-compose -f docker-compose.test.yml build
+          docker-compose -f docker-compose.test.yml up --detach
+          echo ---Containers up---
+      # - name: Create app key
+      #   run: |
+      #     echo ---Creating app key---
+      #     docker-compose exec app php artisan key:generate 2>&1
+      #     echo ---App key created---
       - name: Migrate Database
         run: |
           echo ---Migrating database---
@@ -30,3 +30,7 @@ jobs:
           echo ---Running tests---
           docker-compose exec app php artisan dusk
           echo ---Tests complete---
+      - name: The job has failed
+        if: ${{ failure() }}
+        run: |
+          docker-compose logs
