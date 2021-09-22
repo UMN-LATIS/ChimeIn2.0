@@ -52,7 +52,7 @@ class LTI13Processor {
         ->groupBy("chimes.id")
 		->havingRaw("max(`responses`.`created_at`) > ?", [$oldestResponse])
 		->havingRaw("max(`responses`.`created_at`) < ?", [$newestResponse])->get()->unique()->pluck("id");
-		$chimes = \App\Chimes::find($chimeIds);
+		$chimes = \App\Chime::find($chimeIds);
         foreach($chimes as $chime) {
             \App\Library\LTIProcessor::syncChime($chime);
         }
@@ -62,9 +62,10 @@ class LTI13Processor {
 		->join("questions", "folders.id", "=", "questions.folder_id")
 		->join("sessions", "questions.id","=","sessions.question_id")
         ->join("responses", "sessions.id","=","responses.session_id")
-        ->select("folders.*")
+        ->select("folders.id")
         ->whereNotNull("folders.lti_lineitem")
         ->groupBy("responses.session_id")
+        ->groupBy("folders.id")
 		->havingRaw("max(`responses`.`created_at`) > ?", [$oldestResponse])
 		->havingRaw("max(`responses`.`created_at`) < ?", [$newestResponse])->get()->unique()->pluck("id");
 		$folders = \App\Folder::find($folderIds);
@@ -78,13 +79,15 @@ class LTI13Processor {
 		->join("questions", "folders.id", "=", "questions.folder_id")
 		->join("sessions", "questions.id","=","sessions.question_id")
         ->join("responses", "sessions.id","=","responses.session_id")
-        ->select("chimes.*")
+        ->select("chimes.id")
         ->whereNotNull("chimes.lti13_resource_link_id")
         ->where("chimes.lti_grade_mode", LTI13ResourceLink::LTI_GRADE_MODE_ONE_GRADE)
+		->groupBy("responses.session_id")
+        ->groupBy("chimes.id")
         ->havingRaw("max(`responses`.`created_at`) > ?", [$oldestResponse])
 		->havingRaw("max(`responses`.`created_at`) < ?", [$newestResponse])->get()->unique()->pluck("id");
 		
-		$chimes = \App\Chimes::find($chimeIds);
+		$chimes = \App\Chime::find($chimeIds);
         foreach($chimes as $chime) {
             \App\Library\LTI13Processor::syncChime($chime);
         }
