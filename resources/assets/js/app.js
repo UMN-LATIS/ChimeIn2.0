@@ -126,6 +126,16 @@ Vue.component('heatmap_response_display',
 
 
 
+Vue.component('lti-launch',
+    require('./components/lti/ltiLaunch.vue').default);
+
+Vue.component('lti-import-selector',
+    require('./components/lti/ltiImportSelector.vue').default);
+
+Vue.component('lti-setup-preferences',
+    require('./components/lti/ltiSetupPreferences.vue').default);
+
+
 
 const store = new Vuex.Store({
     state: {

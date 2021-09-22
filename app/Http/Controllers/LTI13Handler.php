@@ -166,7 +166,7 @@ class LTI13Handler extends Controller
                 $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
 
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                return view("ltiSelectionPrompt", ["chime"=>$chime,"similar_chimes"=>$similarChimes, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
+                return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
             }
             else {
                 $chime = new \App\Chime;
@@ -184,7 +184,7 @@ class LTI13Handler extends Controller
                 $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
 
                 // return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-                return view("ltiSelectionPrompt", ["chime"=>$chime, "similar_chimes"=>$similarChimes, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
+                return view("ltiSelectionPrompt", ["ltiLaunch"=>["chime"=>$chime], "similar_chimes"=>$similarChimes, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
             }                
         }
         else {

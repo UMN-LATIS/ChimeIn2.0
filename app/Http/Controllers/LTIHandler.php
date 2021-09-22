@@ -39,8 +39,15 @@ class LTIHandler extends Controller
         if(!\App::environment('local') && !in_array($launchDomain, $this->allowedDomains)) {
             abort(401, 'LTI Launch from an invalid domain');
         }
-// $tool->user->sourceId = 2328381;
-// $tool->user->email = "mcfa0086@umn.edu";
+        
+        // our dev instance sends this value. need to make it a real emplid
+        if($tool->user->sourceId == "SISIDformcfa0086") {
+            $tool->user->sourceId = 2328381;
+        }
+        // our dev instance sends this value. need to make it a real emplid
+        if($tool->user->sourceId == "SISID4elevator") {
+            $tool->user->sourceId = 1111111;
+        }
 
         if(!$tool->user->sourceId) {
             return view("errors.emplid");    
@@ -62,10 +69,22 @@ class LTIHandler extends Controller
             Auth::login($user);
         }
 
+
+        $resource_link_pk = $tool->resourceLink->getRecordId();
+        $resource_link_title = $tool->resourceLink->title;
+
         if($tool->user->isStaff() || $tool->user->isAdmin()) {
 
-            // it's an instructor, let's check if this assingment exists
-            if($folder = \App\Folder::where("resource_link_pk", $tool->resourceLink->getRecordId())->first()) {             
+            // it's an instructor, let's check if this assignment exists
+            $folder = \App\Folder::where("resource_link_pk", $resource_link_pk)->first();
+            $chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first();
+            
+            if(!$folder && $chime) {
+                // let's check if the chime has this folder created without a resource link
+                $folder = $this->relinkSimilarFolder($chime, $resource_link_title, $resource_link_pk);
+            }
+
+            if($folder) {             
                 $chime = $folder->chime;
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 $chime->save();
@@ -78,26 +97,24 @@ class LTIHandler extends Controller
                 
             }
             else {
-                $chime = \App\Chime::where('lti_course_id', $tool->context->ltiContextId)->first();
+                
                 if($chime && $chime->lti_setup_complete) {
                     $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                    // if(!$chime->single_chime_for_lti) {
+                    if($chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
                         $folder = new \App\Folder;
                         $folder->chime()->associate($chime);
-                        $folder->name = $tool->resourceLink->title;
-                        $folder->resource_link_pk = $tool->resourceLink->getRecordId();
+                        $folder->name = $resource_link_title;
+                        $folder->resource_link_pk = $resource_link_pk;
                         $folder->save();
-                    // }
+                    }
                     return \Redirect::to("/chime/" . $chime->id);
                 }
                 else if($chime && !$chime->lti_setup_complete) {
                     
-                    $explodedName = explode(" ", $chime->name);
-                    $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
-                    $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+                    $similarChimes = $this->getSimilarChimes($chime);
 
                     $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                    return view("ltiSelectionPrompt", ["similar_chimes"=>$similarChimes, "resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "chime"=>$chime]);
+                    return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "lti_resource_title"=>$resource_link_title, "resource_link_pk"=>$resource_link_pk, "chime"=>$chime]);
                 }
                 else {
                     $chime = new \App\Chime;
@@ -110,24 +127,12 @@ class LTIHandler extends Controller
                     $chime->access_code = $chime->getUniqueCode();
                     $chime->save();
                     $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
-
-                    // temporary while we figure out our LTI future
-                    $chime->lti_setup_complete = true;
-                    // $chime->single_chime_for_lti = false;
-                    $folder = new \App\Folder;
-                    $folder->chime()->associate($chime);
-                    $folder->name = $tool->resourceLink->title;
-                    $folder->resource_link_pk = $tool->resourceLink->getRecordId();
-                    $chime->save();
-                    $folder->save();
                     
-                    $explodedName = explode(" ", $chime->name);
-                    $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
-                    $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+                    $similarChimes = $this->getSimilarChimes($chime);
 
 
-                    return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-                    // return view("ltiSelectionPrompt", ["resource_link_title"=>$tool->resourceLink->title, "resource_link_pk"=>$tool->resourceLink->getRecordId(), "similar_chimes"=>$similarChimes, "chime"=>$chime]);
+
+                    return view("ltiSelectionPrompt", ["lti_resource_title"=>$resource_link_title, "resource_link_pk"=>$resource_link_pk, "ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime]);
                 }                
             }
         }
@@ -140,7 +145,14 @@ class LTIHandler extends Controller
                 }
 
                 $folderId = null;
-                if($folder = \App\Folder::where("resource_link_pk", $tool->resourceLink->getRecordId())->first()) {
+                $folder = \App\Folder::where("resource_link_pk", $resource_link_pk)->first();
+                
+                if(!$folder && $chime) {
+                    // let's check if the chime has this folder created without a resource link
+                    $folder = $this->relinkSimilarFolder($chime, $resource_link_title, $resource_link_pk);
+                }
+
+                if($folder) {
                     $folderId = $folder->id;
                     if($folder->chime->folders->filter(function($folder) { return !$folder->resource_link_pk;})->count() > 0) {
                         $folderId = null;
@@ -156,26 +168,82 @@ class LTIHandler extends Controller
 
     }
 
+    private function relinkSimilarFolder($chime, $folderTitle, $resourceLink) {
+        $folder = $chime->folders->where("name", $folderTitle)->where("resource_link_pk", null)->first();
+        // this is an imported folder, update it
+        if($folder) {
+            $folder->resource_link_pk = $resourceLink;
+            $folder->save();
+            return $folder;
+        }
+        return false;
+    }
+
+    private function getSimilarChimes($chime) {
+        $explodedName = explode(" ", $chime->name);
+        $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
+        $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->where("chimes.id", "!=", $chime->id)->get();
+        if($similarChimes->count() == 0) {
+            return false;
+        }
+        return $similarChimes;
+    }
+
     public function saveLTISettings(Request $req, Chime $chime) {
         $chime->fill($req->all());
         $chime->lti_setup_complete = true;
         $chime->save();
         $resource_link_title = $req->get("lti_resource_title");
         $resource_link_pk = $req->get("resource_link_pk");
-        $folder = new \App\Folder;
-        $folder->chime()->associate($chime);
-        $folder->name = $resource_link_title;
-        if(!$chime->single_chime_for_lti) {
-            $folder->resource_link_pk = $resource_link_pk;
-            $chime->resource_link_pk = null;
+        $targetFolder = false;
+        if($req->get("import_chime") && is_numeric($req->get("import_chime"))) {
+            $oldChime = \App\Chime::find($req->get("import_chime"));
+            $chime->lti_grade_mode = $oldChime->lti_grade_mode;
+            $chime->students_can_view = $oldChime->students_can_view;
+            $chime->join_instructions= $oldChime->join_instructions;
+            $chime->only_correct_answers_lti= $oldChime->only_correct_answers_lti;
+            if($chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_ONE_GRADE) {
+                $chime->resource_link_pk = $resource_link_pk;
+            }
+            foreach($oldChime->folders as $sourceFolder) {
+                $folder = new \App\Folder;
+                $folder->chime()->associate($chime);
+                $folder->name = $sourceFolder->name;
+                $folder->order = $sourceFolder->order;
+                if($folder->name == $resource_link_title && $chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
+                    $folder->resource_link_pk = $resource_link_pk;
+                    $targetFolder = $folder;
+                }
+                
+                $folder->save();
+                foreach($sourceFolder->questions as $question) {
+                    $newQuestion = $question->replicate();
+                    $newQuestion->folder()->associate($folder);
+                    $newQuestion->current_session_id = null;
+                    $newQuestion->save();
+                }
+
+            }
             $chime->save();
+
         }
         else {
-            $chime->resource_link_pk = $resource_link_pk;
-            $chime->save();
+            $folder = new \App\Folder;
+            $folder->chime()->associate($chime);
+            $folder->name = $resource_link_title;
+            if($chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
+                $folder->resource_link_pk = $resource_link_pk;
+                $chime->resource_link_pk = null;
+                $chime->save();
+            }
+            else {
+                $chime->resource_link_pk = $resource_link_pk;
+                $chime->save();
+            }
+            $folder->save();
+            $targetFolder = $folder;
         }
-        $folder->save();
-        return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+        return \Redirect::to("/chime/" . $chime->id. "/folder/" . ($targetFolder?$targetFolder->id:null));
         
     }
 }
