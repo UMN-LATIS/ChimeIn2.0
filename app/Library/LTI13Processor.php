@@ -53,7 +53,10 @@ class LTI13Processor {
 		->havingRaw("max(`responses`.`created_at`) > ?", [$oldestResponse])
 		->havingRaw("max(`responses`.`created_at`) < ?", [$newestResponse])->get()->unique()->pluck("id");
 		$chimes = \App\Chime::find($chimeIds);
-        foreach($chimes as $chime) {
+        
+		echo "Syncing LTI 1.1 Chime\n";
+		foreach($chimes as $chime) {
+			echo "Syncing chime: " . $chime->id . "\n";
             \App\Library\LTIProcessor::syncChime($chime);
         }
 
@@ -202,46 +205,62 @@ class LTI13Processor {
 		$correctText = null;
 		$correctAnswers = null;
 		if($filterForCorrectAnswers) {
-			$correctAnswers = array_filter($question->question_info["question_responses"], function($k) { if(isset($k["correct"])) { return $k["correct"]==true;} return false;});
-			$correctText = array_map(function($k) { return $k["text"];}, $correctAnswers);
-		}
-		
-		$users = $question->sessions->map(function ($session) use($correctText, $chime, $userKey) {
-			return $session->responses->map(function ($response) use ($correctText, $chime, $userKey) {
-				// if this question has "correct" answers, see if the respondent got at least one correct
-				// if so pass it back.  
-				if($correctText) {
-					$choice = [];
-					if(isset($response->response_info["choice"])) {
-						if(is_array($response->response_info["choice"])) {
-							$choice = $response->response_info["choice"];
-						}
-						else {
-							$choice = [$response->response_info["choice"]];
-						}
-						
-					}
-					if(count(array_intersect($choice, $correctText)) > 0 && $response->user->{$userKey}) {
-						return ["user"=>$response->user, "points"=>1];
-					}
-					else if($chime->only_correct_answers_lti == 2) { // partial credit
-						return ["user"=>$response->user, "points"=>0.5];
-					}
+			$correctAnswers = array_filter($question->question_info["question_responses"], 
+				function($k) { 
+					if(isset($k["correct"])) { 
+						return $k["correct"]==true;
+					} 
 					return false;
 				}
-				else {
-					return $response->user->{$userKey}?["user"=>$response->user, "points"=>1]:false;
+			);
+			$correctText = array_map(
+				function($k) { 
+					return $k["text"];
+				}, $correctAnswers
+			);
+		}
+		
+		$users = $question->sessions->map(
+			function ($session) use($correctText, $chime, $userKey) {
+				return $session->responses->map(
+					function ($response) use ($correctText, $chime, $userKey) {
+						// if this question has "correct" answers, see if the respondent got at least one correct
+						// if so pass it back.  
+						if($correctText) {
+							$choice = [];
+							if(isset($response->response_info["choice"])) {
+								if(is_array($response->response_info["choice"])) {
+									$choice = $response->response_info["choice"];
+								}
+								else {
+									$choice = [$response->response_info["choice"]];
+								}
+								
+							}
+							if(count(array_intersect($choice, $correctText)) > 0 && $response->user->{$userKey}) {
+								return ["user"=>$response->user, "points"=>1];
+							}
+							else if($chime->only_correct_answers_lti == 2) { // partial credit
+								return ["user"=>$response->user, "points"=>0.5];
+							}
+							return false;
+						}
+						else {
+							return $response->user->{$userKey}?["user"=>$response->user, "points"=>1]:false;
+						}
+					}
+				);
+			}
+		)->flatten(1)->unique(
+			function ($userCollection) {
+				if(isset($userCollection["user"])) {
+					return $userCollection["user"]->id;
 				}
-				
-			});
-		})->flatten(1)->unique(function ($userCollection) {
-			if(isset($userCollection["user"])) {
-				return $userCollection["user"]->id;
+				else {
+					return $userCollection;
+				}
 			}
-			else {
-				return $userCollection;
-			}
-		});
+		);
 		
 		foreach($users as $userCollection) {
 			$user = $userCollection["user"];
@@ -259,11 +278,11 @@ class LTI13Processor {
 		}
 	}
 	
-	static function getQuestionsWithResponsesCount($question) {
-		return $question->filter(function($q) {
+	static function getQuestionsWithResponsesCount($questions) {
+		return $questions->filter(function($q) {
 			return $q->sessions->filter(function($s) {
 				return $s->responses->count() > 0;
-			});
+			})->count() > 0;
 		})->count();
 	}
 
