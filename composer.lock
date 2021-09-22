@@ -1294,7 +1294,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/UMN-LATIS/LTI-Tool-Provider-Library-PHP",
-                "reference": "78f17cee228433340fe0371e1e68044fb8980a5e"
+                "reference": "76f80e4d24a3cd5087552c803ae3e261fe7a3f90"
             },
             "require": {
                 "php": ">=5.6.0"
@@ -1320,7 +1320,7 @@
             "keywords": [
                 "lti"
             ],
-            "time": "2018-05-17T15:23:32+00:00"
+            "time": "2021-06-10T17:05:16+00:00"
         },
         {
             "name": "intervention/image",
