@@ -48,6 +48,10 @@ class LTIHandler extends Controller
         if($tool->user->sourceId == "SISID4elevator") {
             $tool->user->sourceId = 1111111;
         }
+        // our dev instance sends this value. need to make it a real emplid
+        if($tool->user->sourceId == "emplidFORjohnsojr") {
+            $tool->user->sourceId = 1111112;
+        }
 
         if(!$tool->user->sourceId) {
             return view("errors.emplid");    
