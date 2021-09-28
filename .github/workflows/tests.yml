@@ -5,37 +5,68 @@ on: [push, pull_request]
 jobs:
   tests:
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: 127.0.0.1
+
+    services:
+      mysql:
+        image: mysql
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: chimein2
+          MYSQL_USER: chimein2
+          MYSQL_PASSWORD: chimein2
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
+      - name: Verify mysql connection
+        run: |
+          mysql --host 127.0.0.1 --port 3306 -uroot -proot -e "SHOW DATABASES"
+
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Setup config
-        run: |
-          cp .env.test .env
-          cp docker-compose.test.yml docker-compose.yml
-      - name: Build docker
-        run: |
-          docker-compose build
-          docker-compose up --detach
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          extensions: mbstring, dom, fileinfo, mysql, curl
+
+      - run: cp .env.example .env
+      - run: composer install --no-interaction --prefer-dist
+      - run: yarn install --frozen-lockfile
+      - run: yarn run prod
+
+      - name: Build
+        run: docker-compose build
+
+      - name: Start
+        run: docker-compose up --detach
+
       - name: Check
-        run: |
-          docker-compose ps --all
-      - name: Config App for Dusk
-        run: |
-          docker-compose exec -T app bin/ci.sh
-      - name: Run tests
-        run: |
-          docker-compose exec -T app php artisan dusk
-      - name: Logs
-        if: ${{ always() }}
-        run: |
-          docker-compose logs
+        run: docker-compose ps --all
+
+      - name: Config
+        run: docker-compose exec -T app bin/ci.sh
+
+      - name: Test
+        run: docker-compose exec -T app php artisan dusk
+
+      # Dusk testing goes here
+
       - name: Upload Screenshots
         if: failure()
         uses: actions/upload-artifact@v2
         with:
           name: screenshots
           path: tests/Browser/screenshots
+
       - name: Upload Console Logs
         if: failure()
         uses: actions/upload-artifact@v2

@@ -1,91 +1,94 @@
-version: "3.4"
-
+# For more information: https://laravel.com/docs/sail
+version: "3"
 services:
+  # Default Web App
   app:
-    image: laravel-www
-    container_name: laravel-www
     build:
-      context: .
-      dockerfile: docker/Dockerfile
-    depends_on:
-      - redis
-      - mysql
+      context: ./vendor/laravel/sail/runtimes/7.4
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: "${WWWGROUP}"
+    image: sail-8.0/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
-      - 8000:80
-    volumes:
-      - .:/var/www/html/:cached
-      - /var/www/html/node_modules
-      - /var/www/html/vendor
-      - /var/www/html/public
+      - "${APP_PORT:-80}:80"
     environment:
-      APP_ENV: local
+      WWWUSER: "${WWWUSER}"
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
+      XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
       CONTAINER_ROLE: app
-    env_file:
-      - .env.test
+    volumes:
+      - ".:/var/www/html"
     networks:
-      chimein:
-        aliases:
-          - app.test
+      - sail
+    depends_on:
+      - mysql
+      - redis
+      - selenium
+    entrypoint: "./docker/start.sh"
   scheduler:
-    image: laravel-www
+    image: sail-8.0/app
     container_name: laravel-scheduler
     depends_on:
       - app
     volumes:
-      - .:/var/www/html:cached
-      - /var/www/html/node_modules
-      - /var/www/html/vendor
+      - ".:/var/www/html"
     environment:
       CONTAINER_ROLE: scheduler
-    env_file:
-      - .env.test
     networks:
-      chimein:
+      - sail
+    entrypoint: "./docker/start.sh"
   queue:
-    image: laravel-www
+    image: sail-8.0/app
     container_name: laravel-queue
     depends_on:
       - app
       - redis
     volumes:
-      - .:/var/www/html:cached
-      - /var/www/html/node_modules
-      - /var/www/html/vendor
+      - ".:/var/www/html"
     environment:
       CONTAINER_ROLE: queue
-    env_file:
-      - .env.test
     networks:
-      chimein:
-  redis:
-    container_name: laravel-redis
-    image: redis:4-alpine
-    ports:
-      - 16379:6379
-    volumes:
-      - redis:/data
-    networks:
-      chimein:
-    env_file:
-      - .env.test
+      - sail
+    entrypoint: "./docker/start.sh"
   mysql:
-    container_name: laravel-mysql
-    image: mariadb:10.5.8
+    image: "mariadb"
     ports:
-      - 13306:3306
-    volumes:
-      - mysql:/var/lib/mysql
-    env_file:
-      - .env.test
+      - "${FORWARD_DB_PORT:-3306}:3306"
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - "sailmysql:/var/lib/mysql"
     networks:
-      chimein:
-        aliases:
-          - app.test
+      - sail
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+      retries: 3
+      timeout: 5s
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "${FORWARD_REDIS_PORT:-6379}:6379"
+    volumes:
+      - "sailredis:/data"
+    networks:
+      - sail
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      retries: 3
+      timeout: 5s
+  selenium:
+    image: "selenium/standalone-chrome"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    networks:
+      - sail
   echo:
     image: oanhnn/laravel-echo-server
     container_name: laravel-echo
@@ -94,29 +97,16 @@ services:
     depends_on:
       - redis
       - app
-    env_file:
-      - .env.test
     environment:
       LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app"
       LARAVEL_ECHO_SERVER_DEBUG: "true"
     networks:
-      chimein:
-        aliases:
-          - app.test
-  selenium:
-    image: seleniarm/standalone-chromium:4.0.0-beta-1-20210215
-    depends_on:
-      - app
-    volumes:
-      - /dev/shm:/dev/shm
-    env_file:
-      - .env.test
-    networks:
-      chimein:
-volumes:
-  redis:
-    driver: "local"
-  mysql:
-    driver: "local"
+      - sail
 networks:
-  chimein:
+  sail:
+    driver: bridge
+volumes:
+  sailmysql:
+    driver: local
+  sailredis:
+    driver: local

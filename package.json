@@ -14,6 +14,7 @@
     "axios": "^0.21",
     "babel-plugin-dynamic-import-webpack": "^1.1.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "caniuse-lite": "^1.0.30001260",
     "cross-env": "^5.2.1",
     "jquery": "^3.5.1",
     "laravel-mix": "^5.0.9",
@@ -61,12 +62,17 @@
     "vue-katex": "^0.5.0",
     "vue-router": "^3.5.1",
     "vue-select": "^3.11.2",
-    "vue-simple-lightbox": "github:cmcfadden/vue-simple-lightbox#master",
+    "vue-simple-lightbox": "https://github.com/cmcfadden/vue-simple-lightbox.git",
     "vue-template-compiler": "^2.6.12",
     "vue-wordcloud": "https://github.com/UMN-LATIS/vue-wordcloud/tarball/master",
     "vue2-editor": "^2.10.2",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2",
     "winston": "^2.4.5"
-  }
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ]
 }
