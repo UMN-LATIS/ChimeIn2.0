@@ -5,60 +5,38 @@ on: [push, pull_request]
 jobs:
   tests:
     runs-on: ubuntu-latest
-    env:
-      DB_HOST: 127.0.0.1
-
-    services:
-      mysql:
-        image: mysql
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: chimein2
-          MYSQL_USER: chimein2
-          MYSQL_PASSWORD: chimein2
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-
     steps:
-      - name: Verify mysql connection
-        run: |
-          mysql --host 127.0.0.1 --port 3306 -uroot -proot -e "SHOW DATABASES"
-
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup PHP
+      - run: cp .env.example .env
+
+      - name: Setup PHP 7.4 to match server
         uses: shivammathur/setup-php@v2
         with:
           php-version: "7.4"
-          extensions: mbstring, dom, fileinfo, mysql, curl
 
-      - run: cp .env.example .env
       - run: composer install --no-interaction --prefer-dist
-      - run: yarn install --frozen-lockfile
-      - run: yarn run prod
 
       - name: Build
         run: docker-compose build
 
       - name: Start
-        run: docker-compose up --detach
+        run: docker-compose up -d
 
       - name: Check
-        run: docker-compose ps --all
+        run: |
+          docker-compose ps --all
 
-      - name: Config
-        run: docker-compose exec -T app bin/ci.sh
+      - run: docker-compose exec -T app ./bin/ci.sh
+      - run: yarn install --frozen-lockfile
+      - run: yarn run prod
+      - run: docker-compose exec -T app php artisan key:generate
+      - run: docker-compose exec -T app php artisan migrate:fresh
+      - run: docker-compose exec -T app php artisan db:seed
 
       - name: Test
-        run: docker-compose exec -T app php artisan dusk
-
-      # Dusk testing goes here
+        run: docker-compose exec -T -e "APP_URL=http://${APP_SERVICE}" -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" app php artisan dusk
 
       - name: Upload Screenshots
         if: failure()
