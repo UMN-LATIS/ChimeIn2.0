@@ -19,26 +19,26 @@ jobs:
       - run: composer install --no-interaction --prefer-dist
 
       - name: Build
-        run: sail build
+        run: ./vendor/bin/sail build
 
       - name: Start
-        run: sail up -d
+        run: ./vendor/bin/sail up -d
 
       - name: Check
         run: |
-          sail ps --all
+          ./vendor/bin/sail ps --all
 
-      - run: sail ./bin/ci.sh
+      - run: ./vendor/bin/sail ./bin/ci.sh
       - run: yarn install --frozen-lockfile
       - run: yarn run prod
-      - run: sail artisan key:generate
-      - run: sail artisan migrate:fresh --seed
+      - run: ./vendor/bin/sail artisan key:generate
+      - run: ./vendor/bin/sail artisan migrate:fresh --seed
 
       - name: Run E2E tests with Cypress
         uses: cypress-io/github-action@v2
         with:
-          wait-on: "http://localhost"
-          config: baseUrl=http://localhost
+          wait-on: "http://app"
+          config: baseUrl=http://app
 
       - name: Upload test screenshots if any
         uses: actions/upload-artifact@v2
