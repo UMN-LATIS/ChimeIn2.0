@@ -35,19 +35,22 @@ jobs:
       - run: docker-compose exec -T app php artisan migrate:fresh
       - run: docker-compose exec -T app php artisan db:seed
 
-      # - name: Test
-      #   run: docker-compose exec -T -e "APP_URL=http://${APP_SERVICE}" -e "DUSK_DRIVER_URL=http://selenium:4444/wd/hub" app php artisan dusk
-
-      - name: Upload Screenshots
-        if: failure()
-        uses: actions/upload-artifact@v2
+      - name: Run E2E tests with Cypress
+        uses: cypress-io/github-action@v2
         with:
-          name: screenshots
-          path: tests/Browser/screenshots
+          wait-on: "http://localhost"
+          config: baseUrl=http://localhost
 
-      - name: Upload Console Logs
-        if: failure()
+      - name: Upload test screenshots if any
         uses: actions/upload-artifact@v2
+        if: failure()
         with:
-          name: console
-          path: tests/Browser/console
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Upload test videos
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
