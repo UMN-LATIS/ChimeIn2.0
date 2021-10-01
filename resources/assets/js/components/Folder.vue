@@ -172,7 +172,7 @@
 
       <div class="row border-top mt-3 pt-3">
         <div class="col-sm-12">
-          <ul>
+          <ul data-cy="question-list">
             <draggable
               v-model="questions"
               @end="swap_question"
