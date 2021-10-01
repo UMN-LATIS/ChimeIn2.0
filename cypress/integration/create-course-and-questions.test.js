@@ -44,15 +44,8 @@ describe("Chime", () => {
       cy.get("[data-cy=new-question-button]").click();
       cy.get("h3").should("contain", "Add a Question");
 
-      // Choose Multiple choice by opening select
-      // then clicking "multiple choice". Multiple choice is the default
-      // but we want to be sure we can click it.
-      // Note that this isn't a true select, but a search
-      // input
-      // cy.get("[data-cy=question-type]").click();
-      // cy.get("[data-cy=question-type]")
-      //   .contains("Multiple Choice")
-      //   .click();
+      // select multiple choice (not a true select)
+      cy.get("[data-cy=question-type]").type("Multiple Choice{enter}");
 
       // Fill in the question
       cy.get("[data-cy=question-editor]").type("What is your favorite color?");
@@ -69,6 +62,32 @@ describe("Chime", () => {
         .should("contain", "Blue");
 
       cy.contains("Save").click();
+
+      // check that the question was created
+      cy.get("[data-cy=question-list] li").should(
+        "contain",
+        "What is your favorite color?"
+      );
+
+      // open the question
+      cy.get("[data-cy=toggle-open-question]").click();
+      cy.request("/api/chime").its("body").then(chimes => {
+        expect(chimes.length).to.equal(1);
+        expect(chimes[0].name).to.equal("Test Chime");
+      });
     });
+
+    it('opens a question to students');
+    it('can require login to participate');
+    it('shows access code on presentation screen');
+    it('previews the question');
+
+  });
+
+  context("when user is a guest participant", () => {
+    it("shows no questions if none are open");
+    it("show open questions that do not require login");
+    it("does not show open questions that require a login");
+    it("records the submitted response to a question");
   });
 });
