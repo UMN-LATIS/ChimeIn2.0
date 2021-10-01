@@ -86,16 +86,6 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       retries: 3
       timeout: 5s
-  # selenium:
-  #   image: "seleniarm/standalone-chromium:4.0.0-beta-1-20210215"
-  #   depends_on:
-  #     - app
-  #   ports:
-  #     - "4444:4444"
-  #   volumes:
-  #     - "/dev/shm:/dev/shm"
-  #   networks:
-  #     sail:
   echo:
     image: oanhnn/laravel-echo-server
     container_name: laravel-echo
