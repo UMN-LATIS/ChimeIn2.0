@@ -8,7 +8,9 @@
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js --host 0.0.0.0 --disableHostCheck true",
     "prod": "npm run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "cypress": "cypress open",
+    "cypress:headless": "cypress run"
   },
   "devDependencies": {
     "axios": "^0.21",
@@ -16,7 +18,7 @@
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "caniuse-lite": "^1.0.30001260",
     "cross-env": "^5.2.1",
-    "cypress": "laracasts/cypress",
+    "cypress": "^8.5.0",
     "jquery": "^3.5.1",
     "laravel-mix": "^5.0.9",
     "lodash": "^4.17.21",
