@@ -1,7 +1,6 @@
 # For more information: https://laravel.com/docs/sail
 version: "3"
 services:
-  # Default Web App
   app:
     build:
       context: ./docker/7.4
@@ -22,11 +21,14 @@ services:
     volumes:
       - ".:/var/www/html"
     networks:
-      - sail
+      sail:
+        # http://app.test is an alias
+        # chrome won't set cookies on things that aren't FQDN
+        aliases:
+          - app.test
     depends_on:
       - mysql
       - redis
-      - selenium
     entrypoint: "./docker/start.sh"
   scheduler:
     image: sail-8.0/app
@@ -84,14 +86,16 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       retries: 3
       timeout: 5s
-  selenium:
-    image: "selenium/standalone-chrome"
-    ports:
-      - 4444:4444
-    volumes:
-      - "/dev/shm:/dev/shm"
-    networks:
-      - sail
+  # selenium:
+  #   image: "seleniarm/standalone-chromium:4.0.0-beta-1-20210215"
+  #   depends_on:
+  #     - app
+  #   ports:
+  #     - "4444:4444"
+  #   volumes:
+  #     - "/dev/shm:/dev/shm"
+  #   networks:
+  #     sail:
   echo:
     image: oanhnn/laravel-echo-server
     container_name: laravel-echo
@@ -104,7 +108,12 @@ services:
       LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app"
       LARAVEL_ECHO_SERVER_DEBUG: "true"
     networks:
-      - sail
+      sail:
+        # Make it appear that echo and the app service
+        # are on the same host `app.test`, just running
+        # on different ports
+        aliases:
+          - app.test
 networks:
   sail:
     driver: bridge
