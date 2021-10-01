@@ -37,29 +37,31 @@ return array(
             'displayName' => 'Admin User',
             'givenName'   => 'Admin',
             'sn'          => 'User',
-            'eppn'        => 'admin@uwm.edu',
-            'umnDID'      => 'fdsklj25',
-            'umnEmplId'      => '2328381',
+            'eppn'        => 'chimein+admin@umn.edu',
+            'umnDID'      => 'admin',
+            'umnEmplId'      => '1',
             'eduPersonAffiliation' =>'faculty',
             'https://www.umn.edu/shibboleth/attributes/umnCourse' => ['1051ARTS3604_001sD0040_022239__','1051GDES2351_001sD0030_016625__','1051GDES4131W001_D0040_018297__']
         ),
-        'staff' => array(
-            'uid'         => 'staff',
-            'displayName' => 'Staff User',
-            'givenName'   => 'Staff',
+        'faculty' => array(
+            'uid'         => 'faculty',
+            'displayName' => 'Faculty User',
+            'givenName'   => 'Faculty',
             'sn'          => 'User',
-            'eppn'        => 'staff@uwm.edu',
-            'umnDID'      => 'fdskl225',
+            'eppn'        => 'chimein+faculty@umn.edu',
+            'umnDID'      => 'faculty',
+            'umnEmplId'      => '2',
             'eduPersonAffiliation' =>'faculty'
         ),
-        'user'  => array(
-            'uid'         => 'user',
-            'displayName' => 'User User',
-            'givenName'   => 'User',
+        'student' => array(
+            'uid'         => 'student',
+            'displayName' => 'Student User',
+            'givenName'   => 'Student',
             'sn'          => 'User',
-            'mail'        => 'user@uwm.edu',
-            'umnDID'      => 'fdsk2j25',
-            'eduPersonAffiliation' =>'faculty'
+            'eppn'        => 'chimein+student@umn.edu',
+            'umnDID'      => 'student',
+            'umnEmplId'      => '3',
+            'eduPersonAffiliation' =>'student'
         ),
     ),
 
