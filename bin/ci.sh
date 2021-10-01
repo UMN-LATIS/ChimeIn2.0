@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# Generate Key
-php artisan key:generate
-
-# Migrate DB
-php artisan migrate:fresh
-
 # Directory Permissions
 php artisan storage:link
 chmod -R 777 ./storage
