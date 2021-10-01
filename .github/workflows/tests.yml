@@ -5,40 +5,52 @@ on: [push, pull_request]
 jobs:
   tests:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Setup config
-        run: |
-          cp .env.test .env
-          cp docker-compose.test.yml docker-compose.yml
-      - name: Build docker
-        run: |
-          docker-compose build
-          docker-compose up --detach
+
+      - run: cp .env.example .env
+
+      - name: Setup PHP 7.4 to match server
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+
+      - run: composer install --no-interaction --prefer-dist
+
+      - name: Build
+        run: docker-compose build
+
+      - name: Start
+        run: docker-compose up -d
+
       - name: Check
         run: |
           docker-compose ps --all
-      - name: Config App for Dusk
-        run: |
-          docker-compose exec -T app bin/ci.sh
-      - name: Run tests
-        run: |
-          docker-compose exec -T app php artisan dusk
-      - name: Logs
-        if: ${{ always() }}
-        run: |
-          docker-compose logs
-      - name: Upload Screenshots
-        if: failure()
-        uses: actions/upload-artifact@v2
+
+      - run: docker-compose exec -T app ./bin/ci.sh
+      - run: yarn install --frozen-lockfile
+      - run: yarn run prod
+      - run: docker-compose exec -T app php artisan key:generate
+      - run: docker-compose exec -T app php artisan migrate:fresh
+      - run: docker-compose exec -T app php artisan db:seed
+
+      - name: Run E2E tests with Cypress
+        uses: cypress-io/github-action@v2
         with:
-          name: screenshots
-          path: tests/Browser/screenshots
-      - name: Upload Console Logs
-        if: failure()
+          wait-on: "http://localhost"
+          config: baseUrl=http://localhost
+
+      - name: Upload test screenshots if any
         uses: actions/upload-artifact@v2
+        if: failure()
         with:
-          name: console
-          path: tests/Browser/console
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Upload test videos
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
