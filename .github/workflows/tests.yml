@@ -19,26 +19,27 @@ jobs:
       - run: composer install --no-interaction --prefer-dist
 
       - name: Build
-        run: ./vendor/bin/sail build
+        run: docker-compose build
 
       - name: Start
-        run: ./vendor/bin/sail up -d
+        run: docker-compose up -d
 
       - name: Check
         run: |
-          ./vendor/bin/sail ps --all
+          docker-compose ps --all
 
-      - run: ./vendor/bin/sail ./bin/ci.sh
+      - run: docker-compose exec -T app ./bin/ci.sh
       - run: yarn install --frozen-lockfile
       - run: yarn run prod
-      - run: ./vendor/bin/sail artisan key:generate
-      - run: ./vendor/bin/sail artisan migrate:fresh --seed
+      - run: docker-compose exec -T app php artisan key:generate
+      - run: docker-compose exec -T app php artisan migrate:fresh
+      - run: docker-compose exec -T app php artisan db:seed
 
       - name: Run E2E tests with Cypress
         uses: cypress-io/github-action@v2
         with:
-          wait-on: "http://app"
-          config: baseUrl=http://app
+          wait-on: "http://localhost"
+          config: baseUrl=http://localhost
 
       - name: Upload test screenshots if any
         uses: actions/upload-artifact@v2
