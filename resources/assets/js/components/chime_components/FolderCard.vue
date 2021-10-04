@@ -1,5 +1,5 @@
 <template>
-    <div class="card hoverable">
+    <div class="card hoverable" data-cy="folder-card">
         <div class="card-body">
             <div class="row">
                 

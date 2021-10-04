@@ -32,7 +32,7 @@ Vue.use(VueAnnouncer);
 
 // filters
 
-Vue.filter('pluralize', (word, amount) => amount > 1 ? `${word}s` : word)
+Vue.filter('pluralize', (word, amount) => amount === 1 ? word : `${word}s`)
 
 Vue.component('modal',
     require('./components/modal.vue').default);

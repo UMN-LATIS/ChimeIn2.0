@@ -9,7 +9,7 @@
                         <input type="text" class="form-control" v-model="folder_name" @keyup.enter="new_folder" name="createFolder" id="createFolder" placeholder="Folder Name">
                     </div>
                     <div class="col-2">
-                        <button dusk="create-folder" type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>
+                        <button data-cy="create-folder-button" type="button"  class="btn btn-primary" v-on:click="new_folder">Create</button>
                     </div>
                     </div>  
                     <div class="alert alert-warning mt-2" role="alert" v-if="chime.lti_grade_mode == 'multiple_grades'">

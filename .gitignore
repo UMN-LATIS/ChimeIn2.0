@@ -1,6 +1,5 @@
 /node_modules
-/public/hot
-/public/storage
+
 /storage/*.key
 /vendor
 /.idea
@@ -10,10 +9,12 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 .env
-public/js/app.js
-public/*.js
-public/css
+/public/hot
+/public/storage
+/public/*.js
+/public/css
+/public/js/
+/public/mix-manifest.json
 *.DS_Store
 .phpintel
-public/js/
 docs/.vuepress/dist

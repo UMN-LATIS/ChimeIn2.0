@@ -18,13 +18,16 @@
                         </div>
                     </h1> 
                 <transition name="dropdown">
-                <ChimeManagement  v-if="showSettings" :chime.sync="chime" />
-                <ChimeExport  v-if="exportPanel" :chime="chime" />
+                    <div>
+                        <ChimeManagement  v-if="showSettings" :chime.sync="chime" />
+                        <ChimeExport  v-if="exportPanel" :chime="chime" />
+                    </div>
                 </transition>
                 </div>
             </div>
 
-            <div class="center-align">
+            <Spinner v-if="!isReady" />
+            <div class="center-align" v-if="isReady">
                 <div v-if="ordered_folders.length > 0">
                     <draggable v-model="ordered_folders"  handle=".draghandle" :forceFallback="true">
                     <!-- <transition-group name="fade"> -->
@@ -57,19 +60,21 @@
 </style>
 
 <script>
-
-import draggable from 'vuedraggable'
+import draggable from 'vuedraggable';
+import Spinner from './Spinner.vue';
 
     export default {
+        components: {
+            draggable,
+            Spinner
+        },
         data() {
             return {
+                isReady: false,
                 chime: {},
                 showSettings: false,
                 exportPanel: false
             };
-        },
-        components: {
-            draggable
         },
         props: ['user', 'chimeId'],
         methods: {
@@ -92,15 +97,18 @@ import draggable from 'vuedraggable'
                 }
             },
             reloadChime: function() {
+                this.isReady = false;
                 axios.get('/api/chime/' + this.chimeId)
                 .then(res => {
-                    console.log(res);
                     this.chime = res.data;
                     document.title = this.chime.name;
                 })
                 .catch(err => {
                     this.$store.commit('message', "Could not load Chime. You may not have permission to view this page. ");
                     console.log(err);
+                })
+                .finally(() => {
+                    this.isReady = true;
                 });
             }
         },
