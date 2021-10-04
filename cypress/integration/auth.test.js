@@ -7,7 +7,7 @@ describe("authentication", () => {
 
   context("when the user isnt authenticated", () => {
     it("greets them as guest user", () => {
-      cy.get("main h1").contains("guest user");
+      cy.get("main h1").contains("Guest User");
     });
 
     it("lets user login with valid credentials", () => {
