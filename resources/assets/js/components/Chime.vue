@@ -18,8 +18,10 @@
                         </div>
                     </h1> 
                 <transition name="dropdown">
-                <ChimeManagement  v-if="showSettings" :chime.sync="chime" />
-                <ChimeExport  v-if="exportPanel" :chime="chime" />
+                    <div>
+                        <ChimeManagement  v-if="showSettings" :chime.sync="chime" />
+                        <ChimeExport  v-if="exportPanel" :chime="chime" />
+                    </div>
                 </transition>
                 </div>
             </div>
