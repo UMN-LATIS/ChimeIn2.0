@@ -26,13 +26,7 @@
                 </div>
             </div>
 
-            <div class="spinner" v-if="!isReady">
-                <div class="d-flex justify-content-center py-5">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                </div>
-            </div>
+            <Spinner v-if="!isReady" />
             <div class="center-align" v-if="isReady">
                 <div v-if="ordered_folders.length > 0">
                     <draggable v-model="ordered_folders"  handle=".draghandle" :forceFallback="true">
@@ -66,10 +60,14 @@
 </style>
 
 <script>
-
-import draggable from 'vuedraggable'
+import draggable from 'vuedraggable';
+import Spinner from './Spinner.vue';
 
     export default {
+        components: {
+            draggable,
+            Spinner
+        },
         data() {
             return {
                 isReady: false,
@@ -77,9 +75,6 @@ import draggable from 'vuedraggable'
                 showSettings: false,
                 exportPanel: false
             };
-        },
-        components: {
-            draggable
         },
         props: ['user', 'chimeId'],
         methods: {
