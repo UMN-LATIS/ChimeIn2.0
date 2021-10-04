@@ -2,7 +2,7 @@
 <div>
     <div class="row">
         <div class="col-12">
-            <p data-cy="chime-count-summary">You have access to {{ chimes.length }} chimes</p>
+            <p data-cy="chime-count-summary">You have access to {{ chimes.length }} {{ 'chime' | pluralize(chimes.length) }}.</p>
             <button dusk="add-chime-button" class="btn btn-outline-primary align-items-center d-flex"
                     @click="showAdd = !showAdd" v-if="!user.guest_user"><span class="material-icons">add</span>Add a
                     Chime</button>
@@ -37,7 +37,7 @@
                     </chime-card>
                 </transition-group>
             </div>
-            <div v-else>
+            <div class="my-3" v-else>
                 <p v-if="user.guest_user">You're currently browsing as a guest. If you have a Chime access code, you
                     can enter it on the right. Otherwise, <a href="/login">log in</a> to get started.</p>
                 <p v-else>You don't currently have any Chimes.</p>
