@@ -32,11 +32,12 @@ describe("Chime", () => {
       cy.get("h1").should("contain", "Test Chime");
 
       // create a folder
-      cy.get("#createFolder").type("Test Folder 1");
+      cy.get("#createFolder").type("Test Folder 1{enter}");
+      cy.get("[data-cy=folder-card]").contains("Test Folder 1").click();
       cy.contains("Create").click();
 
       // go into the folder
-      cy.contains("Test Folder 1").click();
+      cy.get('main h1').contains("Test Folder 1").click();
       cy.url().should("match", /chime\/[0-9]+\/folder\/[0-9]+$/);
       cy.get("h1").should("contain", "Test Folder 1");
 

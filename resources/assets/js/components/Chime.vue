@@ -26,7 +26,14 @@
                 </div>
             </div>
 
-            <div class="center-align">
+            <div class="spinner" v-if="!isReady">
+                <div class="d-flex justify-content-center py-5">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="center-align" v-if="isReady">
                 <div v-if="ordered_folders.length > 0">
                     <draggable v-model="ordered_folders"  handle=".draghandle" :forceFallback="true">
                     <!-- <transition-group name="fade"> -->
@@ -65,6 +72,7 @@ import draggable from 'vuedraggable'
     export default {
         data() {
             return {
+                isReady: false,
                 chime: {},
                 showSettings: false,
                 exportPanel: false
@@ -94,15 +102,18 @@ import draggable from 'vuedraggable'
                 }
             },
             reloadChime: function() {
+                this.isReady = false;
                 axios.get('/api/chime/' + this.chimeId)
                 .then(res => {
-                    console.log(res);
                     this.chime = res.data;
                     document.title = this.chime.name;
                 })
                 .catch(err => {
                     this.$store.commit('message', "Could not load Chime. You may not have permission to view this page. ");
                     console.log(err);
+                })
+                .finally(() => {
+                    this.isReady = true;
                 });
             }
         },

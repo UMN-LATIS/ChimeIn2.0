@@ -2,7 +2,7 @@
 <div>
     <div class="row">
         <div class="col-12">
-            <p>You have access to {{ chimes.length }} chimes</p>
+            <p data-cy="chime-count-summary">You have access to {{ chimes.length }} chimes</p>
             <button dusk="add-chime-button" class="btn btn-outline-primary align-items-center d-flex"
                     @click="showAdd = !showAdd" v-if="!user.guest_user"><span class="material-icons">add</span>Add a
                     Chime</button>
