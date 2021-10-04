@@ -78,7 +78,7 @@ describe("Chime", () => {
       });
     });
 
-    it.only('show a spinner while waiting for chime data to load', () => {
+    it('show a spinner while waiting for chime data to load', () => {
       // set up a delayed response time
       cy.delayResponse('/api/chime*', 1000);
 
