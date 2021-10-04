@@ -78,6 +78,23 @@ describe("Chime", () => {
       });
     });
 
+    it.only('show a spinner while waiting for chime data to load', () => {
+      // set up a delayed response time
+      cy.delayResponse('/api/chime*', 1000);
+
+      // create a chime
+      cy.contains("Add a Chime").click();
+      cy.get("#chime_name_input").type("Test Chime")
+      cy.get("[data-cy=create-chime-button]").click();
+
+      // expect a spinner while loading
+      cy.get('.spinner');
+
+      // and then expect Test Chime
+      cy.get('main h1').should('contain.text', 'Test Chime');
+    });
+
+
     it('opens a question to students');
     it('can require login to participate');
     it('shows access code on presentation screen');

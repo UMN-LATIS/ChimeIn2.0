@@ -1,13 +1,13 @@
 {
-    "/js/app.js": "/js/app.js?id=7a120c43e8a3ce4819c3",
-    "/css/app.css": "/css/app.css?id=1b4d8093ae6650cc4d83",
-    "/js/FreeResponseStatistics.7b349bd87fd7332cc009.bundle.js": "/js/FreeResponseStatistics.7b349bd87fd7332cc009.bundle.js?id=6bbc23b743d073382a72",
-    "/js/ImageResponseStatistics.fa08706c1261dc691bdf.bundle.js": "/js/ImageResponseStatistics.fa08706c1261dc691bdf.bundle.js?id=9ed03d394e1f2479cc93",
-    "/js/QuestionForm.c72de64423ab16195676.bundle.js": "/js/QuestionForm.c72de64423ab16195676.bundle.js?id=d31a098b429dab4916ca",
-    "/js/folder.607d06ca493cf548cde9.bundle.js": "/js/folder.607d06ca493cf548cde9.bundle.js?id=6f75bd65a28da2066431",
-    "/js/multiplechoicestatistics.f7f645efd809aaf48c70.bundle.js": "/js/multiplechoicestatistics.f7f645efd809aaf48c70.bundle.js?id=d66e148a962d80f54f78",
-    "/js/vendors~FreeResponseStatistics.2701bc04c8816ab66dd2.bundle.js": "/js/vendors~FreeResponseStatistics.2701bc04c8816ab66dd2.bundle.js?id=c265360a3ab2d30b4c0e",
-    "/js/vendors~ImageResponseStatistics.cb6c3edfd2fd7aaee86f.bundle.js": "/js/vendors~ImageResponseStatistics.cb6c3edfd2fd7aaee86f.bundle.js?id=6f202755f45a6031db19",
-    "/js/vendors~QuestionForm.51910f8dc42b94271762.bundle.js": "/js/vendors~QuestionForm.51910f8dc42b94271762.bundle.js?id=30a02ba44c2f02bffb00",
-    "/js/vendors~folder.63dde453536e7df56edb.bundle.js": "/js/vendors~folder.63dde453536e7df56edb.bundle.js?id=b7cf606a2bc577f1f264"
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/FreeResponseStatistics.js": "/FreeResponseStatistics.js",
+    "/ImageResponseStatistics.js": "/ImageResponseStatistics.js",
+    "/QuestionForm.js": "/QuestionForm.js",
+    "/folder.js": "/folder.js",
+    "/multiplechoicestatistics.js": "/multiplechoicestatistics.js",
+    "/vendors~FreeResponseStatistics.js": "/vendors~FreeResponseStatistics.js",
+    "/vendors~ImageResponseStatistics.js": "/vendors~ImageResponseStatistics.js",
+    "/vendors~QuestionForm.js": "/vendors~QuestionForm.js",
+    "/vendors~folder.js": "/vendors~folder.js"
 }

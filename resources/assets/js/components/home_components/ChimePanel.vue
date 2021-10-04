@@ -22,7 +22,7 @@
                             <div class="row">
                                 <div class="col">
 
-                                    <button dusk="create-chime-button" class="btn btn-primary" v-on:click="create_chime"
+                                    <button data-cy="create-chime-button" class="btn btn-primary" v-on:click="create_chime"
                                         type="button">
                                         Create
                                     </button>
