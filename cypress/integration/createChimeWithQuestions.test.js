@@ -37,7 +37,7 @@ describe("Chime", () => {
       cy.contains("Create").click();
 
       // go into the folder
-      cy.get('main h1').contains("Test Folder 1").click();
+      cy.get('main').contains("Test Folder 1").click();
       cy.url().should("match", /chime\/[0-9]+\/folder\/[0-9]+$/);
       cy.get("h1").should("contain", "Test Folder 1");
 
