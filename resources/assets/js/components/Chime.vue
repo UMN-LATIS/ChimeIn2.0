@@ -29,18 +29,19 @@
             <Spinner v-if="!isReady" />
             <div class="center-align" v-if="isReady">
                 <div v-if="ordered_folders.length > 0">
-                    <draggable v-model="ordered_folders"  handle=".draghandle" :forceFallback="true">
-                    <!-- <transition-group name="fade"> -->
-                        
-                        <folder-card 
+                    <draggable
+                        v-model="ordered_folders"
+                        handle=".draghandle"
+                        :forceFallback="true"
+                    >
+                        <folder-card
                             v-for="folder in ordered_folders"
                             :folder="folder"
                             :chime="chime"
                             :key="folder.id"
-                            :draggable="ordered_folders.length>1?true:false"
-                        />    
-                        
-                    <!-- </transition-group> -->
+                            :draggable="ordered_folders.length > 1"
+                            :ltiLink="getLtiLink(folder)"
+                        />
                     </draggable>
                 </div>
                 <div v-else>
@@ -54,8 +55,8 @@
 
 <style scoped>
 .card {
-    margin-top: 5px;
-    margin-bottom:5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 </style>
 
@@ -110,7 +111,16 @@ import Spinner from './Spinner.vue';
                 .finally(() => {
                     this.isReady = true;
                 });
-            }
+            },
+            getLtiLink(folder) {
+                // check if there's an lti link for this folder
+                // scrub the url in case it has
+                // `/external_content/success/external_tool_redirect`
+                // at the end
+                return folder.resource_link_pk &&
+                    this.chime.lti_return_url &&
+                    this.chime.lti_return_url.replace(/external_content.*/, '');
+            },
         },
         computed: {
             ordered_folders: {
