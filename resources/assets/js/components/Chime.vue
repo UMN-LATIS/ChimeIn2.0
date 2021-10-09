@@ -123,9 +123,21 @@
   line-height: 1.5;
   border-radius: 0.25rem;
   box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 40%);
+  overflow: auto;
 }
 .chime__settings-panel--isOpen {
   display: block;
+}
+
+@media (max-width: 768px) {
+  .chime__name {
+    font-size: 1.5rem;
+  }
+  .chime__header-container {
+    display: block;
+  }
+  .chime__settings-panel {
+  }
 }
 </style>
 

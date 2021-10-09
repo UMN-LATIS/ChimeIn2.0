@@ -4,13 +4,13 @@
       <i class="material-icons handle draghandle">drag_handle</i>
     </div>
     <router-link
-      class="folder-card__name"
+      class="folder-card__name-wrapper"
       :to="{
         name: 'folder',
         params: { chimeId: chime.id, folderId: folder.id },
       }"
     >
-      <h2>
+      <h2 class="folder-card__name">
         {{ folder.name }}
       </h2>
     </router-link>
@@ -88,7 +88,7 @@ a:hover {
   background: #eaeaea;
   border-radius: 0.25rem;
   display: flex;
-  /* align-items: center; */
+  align-items: center;
   line-height: 1;
   margin-bottom: 1rem;
   overflow: hidden;
@@ -105,11 +105,11 @@ a:hover {
   padding: 0.5rem;
   padding-left: 1rem;
 }
-.folder-card__name {
+.folder-card__name-wrapper {
   padding: 1.5rem 0.5rem;
   flex-grow: 1;
 }
-.folder-card__name h2 {
+.folder-card__name {
   margin: 0;
   font-size: 1.5rem;
 }
@@ -130,6 +130,21 @@ a:hover {
 }
 .folder-card__action-label {
   font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .folder-card__name-wrapper {
+    padding: 1rem 0.5rem;
+  }
+  .folder-card__name {
+    font-size: 1rem;
+  }
+  .folder-card__action-label {
+    display: none;
+  }
+  .folder-card__action {
+    display: none;
+  }
 }
 .folder-card__utils a {
   height: 100%;

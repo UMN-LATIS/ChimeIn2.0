@@ -4,7 +4,7 @@
       >Add a folder</label
     >
     <div class="row">
-      <div class="col-6">
+      <div class="col-8 col-6-md">
         <input
           type="text"
           class="form-control new-folder__input"
@@ -15,7 +15,7 @@
           placeholder="Folder Name"
         />
       </div>
-      <div class="col-2">
+      <div class="col-1 col-2-md">
         <button
           data-cy="create-folder-button"
           type="button"
@@ -42,6 +42,9 @@
   </div>
 </template>
 <style>
+.new-folder {
+  max-width: 40rem;
+}
 .new-folder:focus-within .new-folder__input {
   box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 20%);
 }
