@@ -1,20 +1,19 @@
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+
+// Vendor
+@import '~bootstrap/scss/bootstrap';
+@import "~vue-select/src/scss/vue-select.scss";
+@import '~pretty-checkbox';
+@import "~katex/dist/katex.min.css";
 
 // Variables
 @import "variables";
-
-// CSS libraries
-@import '~bootstrap/scss/bootstrap';
-
 @import "footer";
 
-@import '~pretty-checkbox';
 
-@import "~vue-select/src/scss/vue-select.scss";
 
-@import "~katex/dist/katex.min.css";
 
 .fade-enter-active,
 .fade-leave-active {
@@ -57,18 +56,21 @@
     
 }
 
-
-body {
-    height: 100%;
-}
-
-#umn-main {
-    min-height: 70%;
-}
-
 html {
     height: 100%;
 }
+
+body {
+    height: 100%;
+    font-family: "Open Sans", sans-serif;
+    color: #5a5a5a;
+    line-height: 1.4;
+}
+h1, h2, h3, h4, h5 {
+    color: #333;
+    line-height: 1.2;
+}
+
 
 .material-icons.md-12 {
     font-size: 12px;
