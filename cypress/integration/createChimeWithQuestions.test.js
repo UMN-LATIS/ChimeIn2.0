@@ -24,7 +24,9 @@ describe("Chime", () => {
 
     it("creates a new chime, folder, and multiple choice question", () => {
       // create a chime
-      cy.contains("Add a Chime").click();
+      cy.get("main")
+        .contains("Add a Chime")
+        .click();
       cy.get("#chime_name_input").type("Test Chime");
       cy.get("#joinInstructions").check();
       cy.get("[data-cy=create-chime-button]").click();
@@ -36,12 +38,9 @@ describe("Chime", () => {
       cy.get("[data-cy=create-folder-button]")
         .contains("Create")
         .click();
-      cy.get("[data-cy=folder-card]")
-        .contains("Test Folder 1")
-        .click();
 
       // go into the folder
-      cy.get("main")
+      cy.get("[data-cy=folder-card]")
         .contains("Test Folder 1")
         .click();
       cy.url().should("match", /chime\/[0-9]+\/folder\/[0-9]+$/);
@@ -101,11 +100,6 @@ describe("Chime", () => {
       // and then expect Test Chime
       cy.get("main h1").should("contain.text", "Test Chime");
     });
-
-    it("opens a question to students");
-    it("can require login to participate");
-    it("shows access code on presentation screen");
-    it("previews the question");
   });
 
   context("when user is a guest participant", () => {
