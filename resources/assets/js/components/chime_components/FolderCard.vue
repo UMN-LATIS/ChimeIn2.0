@@ -49,12 +49,7 @@
 
 <script>
 export default {
-  props: ["folder", "chime", "draggable"],
-  data() {
-    return {
-      ltiLink: "http://canvas.umn.edu",
-    };
-  },
+  props: ["folder", "chime", "draggable", "ltiLink"],
 };
 </script>
 
