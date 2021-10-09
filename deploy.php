@@ -3,9 +3,6 @@ namespace Deployer;
 require 'recipe/laravel.php';
 require 'recipe/npm.php';
 
-
-
-
 // Configuration
 
 set('ssh_type', 'native');
@@ -15,7 +12,6 @@ set('repository', 'https://github.com/UMN-LATIS/ChimeIn2.0.git');
 
 add('shared_files', []);
 add('shared_dirs', []);
-
 add('writable_dirs', []);
 
 // Servers
@@ -26,7 +22,7 @@ host('dev')
     ->stage('development')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
-	->set('deploy_path', '/swadm/var/www/html/');
+    ->set('deploy_path', '/swadm/var/www/html/');
 
 host('stage')
     ->hostname("cla-chimein-tst.oit.umn.edu")
@@ -42,7 +38,7 @@ host('prod')
     ->stage('production')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
-	->set('deploy_path', '/swadm/var/www/html/');
+    ->set('deploy_path', '/swadm/var/www/html/');
 
 task('assets:generate', function() {
   cd('{{release_path}}');
