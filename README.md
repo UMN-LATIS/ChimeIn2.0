@@ -1,8 +1,12 @@
 # ChimeIn
 
+> Real time polling for your presentations
+
+Chime-In is a web-based "clicker" tool for doing live polling in interactive presentations.
+
 ## Setting up ChimeIn Locally
 
-ChimeIn is designed to run in Docker via `docker compose`.
+Chime in uses Laravel's docker environment, [Laravel Sail](https://laravel.com/docs/8.x/sail) for development. To get sarted:
 
 ```sh
 # Create a .env file
@@ -12,26 +16,32 @@ cp .env.example .env
 # The default `.env.example` will probably be sufficient,
 # but if you're a Safari user, change SESSION_SAME_SITE="none"
 
-# build docker images
-docker compose build
+# Start Sail
+sail up
 
-# start the containers
-docker compose up
 
 # generate an app key
-docker compose exec app php artisan key:generate
+sail artisan key:generate
 
 # migrate the database
-docker compose exec app php artisan migrate:fresh
+sail artisan migrate:fresh
+
+# Start Laravel Mix to compile Vue
+# and start hot module replacement
+sail npm run dev && sail npm run hot
+
 ```
 
-The application will be running on <http://localhost:8000>.
+The application will be running on <http://localhost>.
 
 ## Using the Application
 
-Start the app: `docker-compose up`.
+```sh
+sail up
+npm run dev
+```
 
-Load <http://localhost:8000> in your browser.
+Load <http://localhost> in your browser.
 
 Login with:
 
@@ -40,21 +50,24 @@ Login with:
 
 Additional users can be configured in `config/shibboleth.php`.
 
-Stop the application: `docker compose down`.
+Stop the application: `sail down`.
 
 ## Running Tests Locally
 
+⚠️ Stop laravel mix's hot module reloading before running cypress.
+
 ```sh
-# build docker images
-docker compose -f docker-compose.test.yml --env-file .env.test build
+npm run cypress
+```
 
-# start the containers
-docker compose -f docker-compose.test.yml --env-file .env.test up -d
+## Deploy
 
-# configure the app, migrate the db, etc.
-docker compose -f docker-compose.test.yml exec app ./bin/ci.sh
+Servers:
 
-# run tests
-docker compose -f docker-compose.test.yml exec app php artisan dusk
+- Development: https://cla-chimein-dev.oit.umn.edu
+- Test (Staging): https://cla-chimein-tst.oit.umn.edu
+- Production: https://chimein.umn.edu
 
+```sh
+./vendor/bin/dep deploy <environment name>
 ```

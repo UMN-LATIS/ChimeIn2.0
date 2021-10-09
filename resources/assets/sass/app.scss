@@ -1,91 +1,96 @@
-
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap");
+
+// Vendor
+@import "~bootstrap/scss/bootstrap";
+@import "~vue-select/src/scss/vue-select.scss";
+@import "~pretty-checkbox";
+@import "~katex/dist/katex.min.css";
 
 // Variables
 @import "variables";
-
-// CSS libraries
-@import '~bootstrap/scss/bootstrap';
-
 @import "footer";
-
-@import '~pretty-checkbox';
-
-@import "~vue-select/src/scss/vue-select.scss";
-
-@import "~katex/dist/katex.min.css";
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: all 1s;
-    // position: absolute;
+  transition: all 1s;
+  // position: absolute;
 }
 
 .fade-enter,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 .fade-move {
-    transition: transform 1s;
+  transition: transform 1s;
 }
 
 .dropdown-enter-active,
 .dropdown-leave-active {
-    transition: all 0.2s;
-    max-height: 600px;
+  transition: all 0.2s;
+  max-height: 600px;
 }
 .dropdown-enter,
-.dropdown-leave-to
-{
-    opacity: 0;
-    max-height: 0px;
+.dropdown-leave-to {
+  opacity: 0;
+  max-height: 0px;
 }
 
 /**
 * To make the cards hover with a dropshadow
 */
 .hoverable {
-    margin-top: 5px;
-    margin-bottom: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .hoverable:hover {
-    cursor:pointer;
-    transition: 0.2s;
-    box-shadow: 2px 2px 18px lightgray;
-    
-}
-
-
-body {
-    height: 100%;
-}
-
-#umn-main {
-    min-height: 70%;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 2px 2px 18px lightgray;
 }
 
 html {
-    height: 100%;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  font-family: "Open Sans", sans-serif;
+  color: #5a5a5a;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex-grow: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: #333;
+  line-height: 1.2;
 }
 
 .material-icons.md-12 {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .material-icons.md-18 {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .material-icons.md-24 {
-    font-size: 24px;
+  font-size: 24px;
 }
 
 .material-icons.md-36 {
-    font-size: 36px;
+  font-size: 36px;
 }
 
 .material-icons.md-48 {
-    font-size: 48px;
+  font-size: 48px;
 }
