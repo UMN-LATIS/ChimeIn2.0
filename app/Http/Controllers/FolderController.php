@@ -175,7 +175,19 @@ class FolderController extends Controller
         
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
-            $folder->questions()->find($req->route('question_id'))->delete();
+            
+            
+            $question = $folder->questions()->find($req->route('question_id'));
+
+            $currentSession = $question->current_session;
+            if($currentSession) {
+                $currentSession->touch();
+                $question->current_session()->dissociate();
+                $question->save();
+                event(new EndSession($chime, $currentSession));
+            }
+            
+            $question->delete();
             
             $i = 1;
 
