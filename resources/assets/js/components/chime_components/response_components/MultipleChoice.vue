@@ -11,7 +11,7 @@
         <div class="row choiceRow">
             <div class="col">
                 <p>Responses:</p>
-                <ol type="A">
+                <ol type="A" data-cy="response-choice-list">
                     <draggable :list="question_responses">
                     <li v-for="(r, i) in question_responses"
                     :key="i"
@@ -46,12 +46,13 @@
             <div class="input-group">
                  <div class="input-group-prepend">
                     <div class="input-group-text">
-                        <input type="checkbox" v-model="choice_correct" aria-label="Correct Answer">
+                        <input type="checkbox" v-model="choice_correct" data-cy="response-is-correct-checkbox" aria-label="Correct Answer">
                     </div>
                 </div>
                 <input
                 id="choice_text"
                 v-model="choice_text"
+                data-cy="response-text-input"
                 type="text"
                 @keyup.enter="add_choice"
                 class="validate form-control"

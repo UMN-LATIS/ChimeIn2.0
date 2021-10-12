@@ -22,7 +22,7 @@
                             @click="show_edit_folder = !show_edit_folder">Folder Settings <i
                                 class="material-icons pointer">edit</i></button>
                         
-                        <button dusk="new-question-button" class="btn btn-sm btn-outline-info align-items-center d-flex"
+                        <button dusk="new-question-button" data-cy="new-question-button" class="btn btn-sm btn-outline-info align-items-center d-flex"
                             @click="showModal = true">New Question <i class="material-icons pointer">add</i></button>
                         <button dusk="open-all-button" class="btn btn-sm btn-outline-info align-items-center d-flex"
                             @click="openAll">Open All <i class="material-icons pointer">visibility</i></button>
@@ -103,7 +103,7 @@
             <div class="row border-top mt-3 pt-3">
                 <div class="col-sm-12">
                     <ul>
-                        <draggable v-model="questions" @end="swap_question" handle=".draghandle">
+                        <draggable v-model="questions" data-cy="question-list" @end="swap_question" handle=".draghandle">
                             <question v-for="q in questions" :key="q.id" :folder="folder" :question="q"
                                 v-on:editquestion="load_questions" v-on:deletequestion="delete_question">
                             </question>

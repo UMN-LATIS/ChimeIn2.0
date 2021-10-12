@@ -8,8 +8,9 @@
     <div class="container">
 
        <div class="col-sm-12">
-        <h1 class="center" v-if="!user.guest_user">{{ welcome }}, {{ user.name }}</h1>
-        <h1 class="center" v-else>Welcome, guest user</h1>
+        <h1 class="user-greeting my-3">
+            {{ welcome}}, {{ user.guest_user ? 'Guest User' : user.name }}
+        </h1>
 
       
         <div class="row">

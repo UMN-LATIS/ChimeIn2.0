@@ -1,0 +1,28 @@
+:root {
+  // golds
+  --gold: #fc3;
+  --gold-light: #ffde7a;
+  --gold-header: #ffd75f;
+  --gold-dark: #ffb71e;
+
+  // maroons
+  --maroon: #7a0019;
+  --maroon-light: #900021;
+  --maroon-dark: #4d0010;
+  --maroon-darker: #5b0013;
+
+  //secondaries
+  --green: #58a616;
+  --orange: #e37222;
+  --blue: #00759a;
+
+  // grays
+  --black: #000;
+  --gray-darker: #333;
+  --gray-dark: #5a5a5a;
+  --gray-medium: #777677;
+  --gray-light: #d5d6d2;
+  --gray: var(--gray-light);
+  --gray-lighter: #f0efee;
+  --white: #fff;
+}

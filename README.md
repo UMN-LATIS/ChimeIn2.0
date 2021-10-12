@@ -1,18 +1,73 @@
 # ChimeIn
 
+> Real time polling for your presentations
+
+Chime-In is a web-based "clicker" tool for doing live polling in interactive presentations.
+
 ## Setting up ChimeIn Locally
 
-ChimeIn is designed to run in Docker via docker-compose. 
+Chime in uses Laravel's docker environment, [Laravel Sail](https://laravel.com/docs/8.x/sail) for development. To get sarted:
 
-To get started, copy "env-demo" to ".env" in the root of the project. 
+```sh
+# Create a .env file
+cp .env.example .env
 
-Run `docker-compose up` to begin the process of building the docker images. Once they're built, the application will be running on http://localhost:8000.
+# Edit `.env` as needed.
+# The default `.env.example` will probably be sufficient,
+# but if you're a Safari user, change SESSION_SAME_SITE="none"
 
-Once the application is running, run `docker-compose exec app php artisan migrate` to run the database migrations, and then `docker-compose exec app php artisan key:generate` to create an application key.
+# Start Sail
+sail up
 
-## Using the application
 
-Start the application by running `docker-compose up`. To access the application, load http://localhost:8000 in your browser. You can login with the username `admin` and the password `admin`. Additional users can be configured in `config/shibboleth.php`.
+# generate an app key
+sail artisan key:generate
 
-To stop the application, either exit docker-compose or run `docker-compose down`.
+# migrate the database
+sail artisan migrate:fresh
 
+# Start Laravel Mix to compile Vue
+# and start hot module replacement
+sail npm run dev && sail npm run hot
+
+```
+
+The application will be running on <http://localhost>.
+
+## Using the Application
+
+```sh
+sail up
+npm run dev
+```
+
+Load <http://localhost> in your browser.
+
+Login with:
+
+- username: `admin`
+- password: `admin`
+
+Additional users can be configured in `config/shibboleth.php`.
+
+Stop the application: `sail down`.
+
+## Running Tests Locally
+
+⚠️ Stop laravel mix's hot module reloading before running cypress.
+
+```sh
+npm run cypress
+```
+
+## Deploy
+
+Servers:
+
+- Development: https://cla-chimein-dev.oit.umn.edu
+- Test (Staging): https://cla-chimein-tst.oit.umn.edu
+- Production: https://chimein.umn.edu
+
+```sh
+./vendor/bin/dep deploy <environment name>
+```
