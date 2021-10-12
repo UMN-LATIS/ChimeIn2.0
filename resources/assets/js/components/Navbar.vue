@@ -1,5 +1,6 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light align-center">
+        <div class="container">
         <router-link v-if="title" :to="link" class="navbar-brand">{{ title }}</router-link>
         
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -23,6 +24,7 @@
                             </a>
                 </li>
             </ul>
+            </div>
 
         </div>
 
