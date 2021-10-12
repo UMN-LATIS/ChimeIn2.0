@@ -18,7 +18,7 @@ class LTI13Processor {
     static function periodicTask() {
 
 		$oldestResponse = now()->subMinutes(200);
-		$newestResponse = now()->subMinutes(0);
+		$newestResponse = now()->subMinutes(180);
 
 		// Lti1.1 sync
         $folderIds = DB::table('folders')
