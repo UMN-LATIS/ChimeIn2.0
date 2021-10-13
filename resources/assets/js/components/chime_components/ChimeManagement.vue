@@ -1,6 +1,7 @@
 <template>
   <div class="chime-management">
-    <div class="form-group row">
+    <h2 class="chime-management__heading">Chime Settings</h2>
+    <div class="form-group">
       <label class="sr-only" for="chimeName"
         ><strong>Chime Name:</strong></label
       >
@@ -113,8 +114,12 @@
 
 <style scoped>
 .chime-management {
+  padding: 1rem;
   max-width: 50rem;
-  margin: auto;
+}
+.chime-management__heading {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
 }
 ul li {
   list-style: none;
