@@ -94,3 +94,14 @@ h5 {
 .material-icons.md-48 {
   font-size: 48px;
 }
+
+.btn-outline-secondary {
+  border-color: var(--gray-dark);
+  color:  var(--gray-dark);
+}
+
+.btn-outline-secondary:hover {
+  color: #fff;
+  background-color: var(--gray-dark);
+  border-color: var(--gray-dark);
+}

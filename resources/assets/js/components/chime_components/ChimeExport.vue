@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="chime-export">
+        <h2 class="chime-export__heading">Export</h2>
         <form method="post" :action="'/api/chime/'+ chime.id + '/export'">
             <input type="hidden" name="_token" :value="csrf">
 
@@ -96,7 +97,14 @@
 </template>
 
 <style scoped>
-
+.chime-export{
+    padding: 1rem;
+    max-width: 40rem;
+}
+.chime-export__heading {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
 </style>
 
 <script>
