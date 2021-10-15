@@ -626,22 +626,23 @@ class ChimeController extends Controller
     }
 
     private function getRowForResponses(object $responses) {
+        $textResponses = array();
         foreach($responses as $key=>$value) {
-            $responses[$key] = $value->response_text;
+            $textResponses[] = $value->response_text;
         }
         $row = "";
-        if(count($responses) > 1) {
-            $row = json_encode($responses);
+        if(count($textResponses) > 1) {
+            $row = json_encode($textResponses);
         }
-        else if(count($responses) == 0) {
+        else if(count($textResponses) == 0) {
             $row = "";
         }
         else {
-            if(is_array($responses[0])) {
-                $row = json_encode($responses[0]);
+            if(is_array($textResponses[0])) {
+                $row = json_encode($textResponses[0]);
             }
             else {
-                $row = $responses[0];
+                $row = $textResponses[0];
             }
             
         }
