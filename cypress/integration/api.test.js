@@ -2,21 +2,31 @@
 
 const POST = "POST";
 const GET = "GET";
+const PATCH = "PATCH";
+const PUT = "PUT";
 
-const api = {
-  getAllChimes: () =>
-    cy.request({
+function getAllChimes() {
+  return cy
+    .request({
       method: GET,
       url: "/api/chime",
-    }),
-  getChime: (chimeId) =>
-    cy.request({
+    })
+    .its("body");
+}
+
+function getChime(chimeId) {
+  return cy
+    .request({
       method: GET,
       url: `/api/chime/${chimeId}`,
-    }),
-  createChime: (name) =>
-    cy.csrfToken().then((_token) =>
-      cy.request({
+    })
+    .its("body");
+}
+
+function createChime(name) {
+  return cy.csrfToken().then((_token) => {
+    return cy
+      .request({
         method: POST,
         url: "/api/chime",
         body: {
@@ -24,7 +34,31 @@ const api = {
           _token,
         },
       })
-    ),
+      .its("body");
+  });
+}
+
+function updateChime(chimeId, updates) {
+  return cy.csrfToken().then((_token) => {
+    return cy
+      .request({
+        method: POST,
+        url: `/api/chime/${chimeId}`,
+        body: {
+          _token,
+          _method: PATCH,
+          ...updates,
+        },
+      })
+      .its("body");
+  });
+}
+
+const api = {
+  getAllChimes,
+  getChime,
+  createChime,
+  updateChime,
 };
 
 describe("/api", () => {
@@ -36,36 +70,50 @@ describe("/api", () => {
 
   describe("/api/chime", () => {
     it("gets a list of current chimes", () => {
-      api
-        .getAllChimes()
-        .its("body")
-        .should("deep.equal", []);
+      api.getAllChimes().should("deep.equal", []);
     });
 
     it("creates a new chime", () => {
       api
         .createChime("New Chime")
-        .its("status")
-        .should("equal", 200);
+        .its("name")
+        .should("equal", "New Chime");
 
-      api.getAllChimes().then(({ body }) => {
-        expect(body.length).to.equal(1);
-        expect(body[0].name).to.equal("New Chime");
+      api.getAllChimes().then((chimes) => {
+        expect(chimes.length).to.equal(1);
+        expect(chimes[0].name).to.equal("New Chime");
       });
     });
 
-    it("gets a single chime", () => {
+    it("gets a given chime by id", () => {
       let chimeName = "New Chime";
       let chimeId = null;
       api
         .createChime(chimeName)
-        .then((res) => {
-          chimeId = res.body.id;
+        .then((chime) => {
+          chimeId = chime.id;
           return api.getChime(chimeId);
         })
-        .then((res) => {
-          expect(res.body.id).to.equal(chimeId);
-          expect(res.body.name).to.equal(chimeName);
+        .then((chime) => {
+          expect(chime.id).to.equal(chimeId);
+          expect(chime.name).to.equal(chimeName);
+        });
+    });
+
+    it("updates a given chime", () => {
+      let chimeId = null;
+      api
+        .createChime("Test Chime")
+        .then((chime) => {
+          chimeId = chime.id;
+          return api.updateChime(chimeId, { name: "Updated Chime Name" });
+        })
+        .then((body) => {
+          expect(body.success).to.equal(true);
+          api
+            .getChime(chimeId)
+            .its("name")
+            .should("equal", "Updated Chime Name");
         });
     });
   });
