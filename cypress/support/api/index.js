@@ -2,6 +2,7 @@ const POST = "POST";
 const GET = "GET";
 const PATCH = "PATCH";
 const PUT = "PUT";
+const DELETE = "DELETE";
 
 export function getAllChimes() {
   return cy
@@ -46,6 +47,20 @@ export function updateChime(chimeId, updates) {
           _token,
           _method: PATCH,
           ...updates,
+        },
+      })
+      .its("body");
+  });
+}
+
+export function deleteChime(chimeId) {
+  return cy.csrfToken().then((_token) => {
+    return cy
+      .request({
+        method: DELETE,
+        url: `/api/chime/${chimeId}`,
+        body: {
+          _token,
         },
       })
       .its("body");

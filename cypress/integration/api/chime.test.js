@@ -57,5 +57,18 @@ describe("/api", () => {
             .should("equal", "Updated Chime Name");
         });
     });
+
+    it("deletes a given chime", () => {
+      let chimeId = null;
+      api
+        .createChime("Test Chime")
+        .then((chime) => {
+          chimeId = chime.id;
+          return api.deleteChime(chimeId);
+        })
+        .then((body) => {
+          api.getAllChimes().should("deep.equal", []);
+        });
+    });
   });
 });
