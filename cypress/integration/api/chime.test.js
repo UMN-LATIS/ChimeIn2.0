@@ -1,65 +1,6 @@
 /// <reference types="Cypress" />
 
-const POST = "POST";
-const GET = "GET";
-const PATCH = "PATCH";
-const PUT = "PUT";
-
-function getAllChimes() {
-  return cy
-    .request({
-      method: GET,
-      url: "/api/chime",
-    })
-    .its("body");
-}
-
-function getChime(chimeId) {
-  return cy
-    .request({
-      method: GET,
-      url: `/api/chime/${chimeId}`,
-    })
-    .its("body");
-}
-
-function createChime(name) {
-  return cy.csrfToken().then((_token) => {
-    return cy
-      .request({
-        method: POST,
-        url: "/api/chime",
-        body: {
-          name,
-          _token,
-        },
-      })
-      .its("body");
-  });
-}
-
-function updateChime(chimeId, updates) {
-  return cy.csrfToken().then((_token) => {
-    return cy
-      .request({
-        method: POST,
-        url: `/api/chime/${chimeId}`,
-        body: {
-          _token,
-          _method: PATCH,
-          ...updates,
-        },
-      })
-      .its("body");
-  });
-}
-
-const api = {
-  getAllChimes,
-  getChime,
-  createChime,
-  updateChime,
-};
+import * as api from "../../support/api/index.js";
 
 describe("/api", () => {
   beforeEach(() => {
