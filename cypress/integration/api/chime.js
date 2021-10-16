@@ -1,8 +1,4 @@
-const POST = "POST";
-const GET = "GET";
-const PATCH = "PATCH";
-const PUT = "PUT";
-const DELETE = "DELETE";
+import { GET, POST, PATCH, DELETE } from "./methods";
 
 export function getAllChimes() {
   return cy
