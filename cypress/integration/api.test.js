@@ -4,10 +4,15 @@ const POST = "POST";
 const GET = "GET";
 
 const api = {
-  getChimes: () =>
+  getAllChimes: () =>
     cy.request({
       method: GET,
       url: "/api/chime",
+    }),
+  getChime: (chimeId) =>
+    cy.request({
+      method: GET,
+      url: `/api/chime/${chimeId}`,
     }),
   createChime: (name) =>
     cy.csrfToken().then((_token) =>
@@ -32,7 +37,7 @@ describe("/api", () => {
   describe("/api/chime", () => {
     it("gets a list of current chimes", () => {
       api
-        .getChimes()
+        .getAllChimes()
         .its("body")
         .should("deep.equal", []);
     });
@@ -43,10 +48,25 @@ describe("/api", () => {
         .its("status")
         .should("equal", 200);
 
-      api.getChimes().then(({ body }) => {
+      api.getAllChimes().then(({ body }) => {
         expect(body.length).to.equal(1);
         expect(body[0].name).to.equal("New Chime");
       });
+    });
+
+    it("gets a single chime", () => {
+      let chimeName = "New Chime";
+      let chimeId = null;
+      api
+        .createChime(chimeName)
+        .then((res) => {
+          chimeId = res.body.id;
+          return api.getChime(chimeId);
+        })
+        .then((res) => {
+          expect(res.body.id).to.equal(chimeId);
+          expect(res.body.name).to.equal(chimeName);
+        });
     });
   });
 });
