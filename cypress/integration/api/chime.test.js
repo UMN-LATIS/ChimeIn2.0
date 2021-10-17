@@ -2,7 +2,7 @@
 
 import * as api from "./chime.js";
 
-describe("/api/chime", () => {
+describe("chime api", () => {
   beforeEach(() => {
     cy.refreshDatabase();
     cy.seed();

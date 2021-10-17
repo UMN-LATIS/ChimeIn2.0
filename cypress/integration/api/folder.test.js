@@ -1,15 +1,8 @@
 /// <reference types="Cypress" />
 
-import * as chimeApi from "./chime.js";
-import * as folderApi from "./folder.js";
-import { GET, POST, PATCH, DELETE, PUT } from "./methods";
+import api from "./index.js";
 
-const api = {
-  ...chimeApi,
-  ...folderApi,
-};
-
-describe("/api folder", () => {
+describe("folder api", () => {
   let chime = null;
 
   beforeEach(() => {
@@ -62,6 +55,19 @@ describe("/api folder", () => {
       .then((folder) => {
         expect(folder.id).to.equal(folderId);
         expect(folder.name).to.equal("Updated Name");
+      });
+  });
+
+  it("deletes a folder", () => {
+    let folderId = null;
+    api
+      .createFolderInChime(chime.id, { name: "Test Folder" })
+      .then((folder) => {
+        folderId = folder.id;
+        api.deleteFolderInChime(chime.id, folderId);
+      })
+      .then(() => {
+        api.getAllFoldersInChime(chime.id).should("deep.equal", []);
       });
   });
 });
