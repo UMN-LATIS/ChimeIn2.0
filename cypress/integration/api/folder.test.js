@@ -8,7 +8,7 @@ describe("folder api", () => {
   beforeEach(() => {
     cy.refreshDatabase();
     cy.seed();
-    cy.login({ umndid: "faculty" });
+    cy.login("faculty");
     api
       .createChime({ name: "Test Chime" })
       .then((newChime) => (chime = newChime));

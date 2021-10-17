@@ -6,7 +6,7 @@ describe("chime api", () => {
   beforeEach(() => {
     cy.refreshDatabase();
     cy.seed();
-    cy.login({ umndid: "faculty" });
+    cy.login("faculty");
   });
 
   it("gets a list of current chimes", () => {

@@ -1,5 +1,7 @@
 /// <reference types="Cypress" />
 
+import api from "./api/index.js";
+
 describe("Chime", () => {
   beforeEach(() => {
     cy.refreshDatabase();
@@ -18,7 +20,7 @@ describe("Chime", () => {
 
   context("when authenticated as faculty", () => {
     beforeEach(() => {
-      cy.login({ umndid: "faculty" });
+      cy.login("faculty");
       cy.visit("/");
     });
 
@@ -103,8 +105,49 @@ describe("Chime", () => {
   });
 
   context("when user is a guest participant", () => {
-    it("shows no questions if none are open");
-    it("show open questions that do not require login");
+    // as faculty create chime with a question
+    let testChime;
+    let testFolder;
+    let testQuestion;
+    beforeEach(() => {
+      cy.login("faculty");
+      api
+        .createChime({ name: "Test Chime" })
+        .then((chime) => {
+          testChime = chime;
+          return api.createFolder({
+            chimeId: testChime.id,
+            name: "Test Folder",
+          });
+        })
+        .then((folder) => {
+          testFolder = folder;
+          return api.createQuestion({
+            chimeId: testChime.id,
+            folderId: testFolder.id,
+            question_text: "Test Questions",
+            question_info: {
+              question_type: "multiple_choice",
+              responses: ["A", "B", "C"],
+            },
+          });
+        })
+        .then((question) => {
+          testQuestion = question;
+        });
+
+      cy.logout();
+    });
+
+    it("shows no questions to participants if none are open", () => {
+      // guests should see no chime open
+      cy.visit(`/join/${testChime.access_code}`)
+        .get("#currentQuestions")
+        .should("contain.text", "No Open Questions");
+    });
+    it("show open questions to guests", () => {
+      cy.login("faculty");
+    });
     it("does not show open questions that require a login");
     it("records the submitted response to a question");
   });
