@@ -24,6 +24,7 @@ describe("question api", () => {
       .getAllQuestionsInFolder({ chimeId: chime.id, folderId: folder.id })
       .should("deep.equal", []);
   });
+
   it("creates a question within a chime folder", () => {
     const question_info = {
       question_type: "multiple_choice",
@@ -135,6 +136,50 @@ describe("question api", () => {
       })
       .then((question) => {
         expect(question.current_session_id).to.be.null;
+      });
+  });
+
+  it("updates a question", () => {
+    const initialQuestion = {
+      chimeId: chime.id,
+      folderId: folder.id,
+      question_text: `<p>What?</p>`,
+      question_info: {
+        question_type: "multiple_choice",
+        question_responses: [
+          {
+            text: "This",
+            correct: false,
+          },
+          {
+            text: "That",
+            correct: true,
+          },
+        ],
+      },
+    };
+
+    let questionId = null;
+
+    api
+      .createQuestion(initialQuestion)
+      .then((question) => {
+        questionId = question.id;
+        return api.updateQuestion({
+          ...initialQuestion,
+          questionId,
+          question_text: `<p>Updated!</p>`,
+        });
+      })
+      .then(() => {
+        api
+          .getQuestion({
+            chimeId: chime.id,
+            folderId: folder.id,
+            questionId,
+          })
+          .its("text")
+          .should("equal", `<p>Updated!</p>`);
       });
   });
 });

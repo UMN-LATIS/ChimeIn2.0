@@ -75,3 +75,24 @@ export function getQuestion({ chimeId, folderId, questionId }) {
     questions.find((q) => q.id === questionId)
   );
 }
+
+export function updateQuestion({ chimeId, folderId, questionId, ...question }) {
+  if (!chimeId) throw Error("chimeId is required");
+  if (!folderId) throw Error("folderId is required");
+  if (!questionId) throw Error("questionId is required");
+
+  return cy.csrfToken().then((_token) => {
+    return cy
+      .request({
+        method: POST,
+        url: `/api/chime/${chimeId}/folder/${folderId}/question/${questionId}`,
+        body: {
+          _token,
+          _method: PUT,
+          folder_id: folderId,
+          ...question,
+        },
+      })
+      .its("body");
+  });
+}
