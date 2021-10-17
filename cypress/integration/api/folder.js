@@ -1,13 +1,13 @@
 import { getChime } from "./chime";
 import { GET, POST, PATCH, DELETE, PUT } from "./methods";
 
-export function getAllFolders(chimeId) {
+export function getAllFolders({ chimeId }) {
   if (!chimeId) throw Error("chimeId is required");
 
-  return getChime(chimeId).its("folders");
+  return getChime({ chimeId }).its("folders");
 }
 
-export function createFolder(chimeId, { name, folder_name, ...rest }) {
+export function createFolder({ chimeId, name, folder_name, ...rest }) {
   if (!chimeId) throw Error("chimeId is required");
   if (!name && !folder_name) throw Error("folder_name (or name) is required");
 
@@ -26,7 +26,7 @@ export function createFolder(chimeId, { name, folder_name, ...rest }) {
   });
 }
 
-export function getFolder(chimeId, folderId) {
+export function getFolder({ chimeId, folderId }) {
   if (!chimeId) throw Error("chimeId is required");
   if (!folderId) throw Error("folderId is required");
 
@@ -40,11 +40,13 @@ export function getFolder(chimeId, folderId) {
   });
 }
 
-export function updateFolder(
+export function updateFolder({
   chimeId,
   folderId,
-  { name, folder_name, ...rest }
-) {
+  name,
+  folder_name,
+  ...rest
+}) {
   if (!chimeId) throw Error("chimeId is required");
   if (!folderId) throw Error("folderId is required");
 
@@ -64,7 +66,7 @@ export function updateFolder(
   });
 }
 
-export function deleteFolder(chimeId, folderId) {
+export function deleteFolder({ chimeId, folderId }) {
   if (!chimeId) throw Error("chimeId is required");
   if (!folderId) throw Error("folderId is required");
 

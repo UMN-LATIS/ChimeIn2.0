@@ -9,32 +9,36 @@ describe("folder api", () => {
     cy.refreshDatabase();
     cy.seed();
     cy.login({ umndid: "faculty" });
-    api.createChime("Test Chime").then((newChime) => (chime = newChime));
+    api
+      .createChime({ name: "Test Chime" })
+      .then((newChime) => (chime = newChime));
   });
 
   it("gets all folders within a given chime", () => {
-    api.getAllFolders(chime.id).then((folders) => {
+    api.getAllFolders({ chimeId: chime.id }).then((folders) => {
       expect(folders).to.deep.equal([]);
     });
   });
 
   it("creates a folder within a chime", () => {
-    api.createFolder(chime.id, { name: "New Folder" }).then((folder) => {
-      expect(folder.name).to.equal("New Folder");
+    api
+      .createFolder({ chimeId: chime.id, name: "New Folder" })
+      .then((folder) => {
+        expect(folder.name).to.equal("New Folder");
 
-      api.getAllFolders(chime.id).then((folders) => {
-        expect(folders[0].name).to.equal("New Folder");
+        api.getAllFolders({ chimeId: chime.id }).then((folders) => {
+          expect(folders[0].name).to.equal("New Folder");
+        });
       });
-    });
   });
 
   it("gets a single folder", () => {
     let folderId = null;
     api
-      .createFolder(chime.id, { name: "Test Folder" })
+      .createFolder({ chimeId: chime.id, name: "Test Folder" })
       .then((folder) => {
         folderId = folder.id;
-        return api.getFolder(chime.id, folder.id);
+        return api.getFolder({ chimeId: chime.id, folderId: folder.id });
       })
       .then((folder) => {
         expect(folder.id).to.equal(folderId);
@@ -45,10 +49,12 @@ describe("folder api", () => {
   it("updates a folder", () => {
     let folderId = null;
     api
-      .createFolder(chime.id, { name: "Test Folder" })
+      .createFolder({ chimeId: chime.id, name: "Test Folder" })
       .then((folder) => {
         folderId = folder.id;
-        return api.updateFolder(chime.id, folderId, {
+        return api.updateFolder({
+          chimeId: chime.id,
+          folderId,
           name: "Updated Name",
         });
       })
@@ -61,13 +67,13 @@ describe("folder api", () => {
   it("deletes a folder", () => {
     let folderId = null;
     api
-      .createFolder(chime.id, { name: "Test Folder" })
+      .createFolder({ chimeId: chime.id, name: "Test Folder" })
       .then((folder) => {
         folderId = folder.id;
-        api.deleteFolder(chime.id, folderId);
+        api.deleteFolder({ chimeId: chime.id, folderId });
       })
       .then(() => {
-        api.getAllFolders(chime.id).should("deep.equal", []);
+        api.getAllFolders({ chimeId: chime.id }).should("deep.equal", []);
       });
   });
 });

@@ -11,10 +11,10 @@ describe("question api", () => {
     cy.seed();
     cy.login({ umndid: "faculty" });
     api
-      .createChime("Test Chime")
+      .createChime({ name: "Test Chime" })
       .then((newChime) => {
         chime = newChime;
-        return api.createFolder(chime.id, { name: "Test Folder" });
+        return api.createFolder({ chimeId: chime.id, name: "Test Folder" });
       })
       .then((newFolder) => (folder = newFolder));
   });

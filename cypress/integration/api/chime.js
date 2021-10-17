@@ -9,7 +9,7 @@ export function getAllChimes() {
     .its("body");
 }
 
-export function getChime(chimeId) {
+export function getChime({ chimeId }) {
   if (!chimeId) throw Error("chimeId is required");
 
   return cy
@@ -20,7 +20,7 @@ export function getChime(chimeId) {
     .its("body");
 }
 
-export function createChime(name) {
+export function createChime({ name }) {
   if (!name) throw Error("name is required");
 
   return cy.csrfToken().then((_token) => {
@@ -37,7 +37,7 @@ export function createChime(name) {
   });
 }
 
-export function updateChime(chimeId, updates) {
+export function updateChime({ chimeId, ...updates }) {
   if (!chimeId) throw Error("chimeId is required");
 
   return cy.csrfToken().then((_token) => {
@@ -55,7 +55,7 @@ export function updateChime(chimeId, updates) {
   });
 }
 
-export function deleteChime(chimeId) {
+export function deleteChime({ chimeId }) {
   if (!chimeId) throw Error("chimeId is required");
 
   return cy.csrfToken().then((_token) => {

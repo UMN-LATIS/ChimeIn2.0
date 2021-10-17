@@ -15,7 +15,7 @@ describe("chime api", () => {
 
   it("creates a new chime", () => {
     api
-      .createChime("New Chime")
+      .createChime({ name: "New Chime" })
       .its("name")
       .should("equal", "New Chime");
 
@@ -29,10 +29,10 @@ describe("chime api", () => {
     let chimeName = "New Chime";
     let chimeId = null;
     api
-      .createChime(chimeName)
+      .createChime({ name: chimeName })
       .then((chime) => {
         chimeId = chime.id;
-        return api.getChime(chimeId);
+        return api.getChime({ chimeId });
       })
       .then((chime) => {
         expect(chime.id).to.equal(chimeId);
@@ -43,15 +43,15 @@ describe("chime api", () => {
   it("updates a given chime", () => {
     let chimeId = null;
     api
-      .createChime("Test Chime")
+      .createChime({ name: "Test Chime" })
       .then((chime) => {
         chimeId = chime.id;
-        return api.updateChime(chimeId, { name: "Updated Chime Name" });
+        return api.updateChime({ chimeId, name: "Updated Chime Name" });
       })
       .then((body) => {
         expect(body.success).to.equal(true);
         api
-          .getChime(chimeId)
+          .getChime({ chimeId })
           .its("name")
           .should("equal", "Updated Chime Name");
       });
@@ -60,12 +60,12 @@ describe("chime api", () => {
   it("deletes a given chime", () => {
     let chimeId = null;
     api
-      .createChime("Test Chime")
+      .createChime({ name: "Test Chime" })
       .then((chime) => {
         chimeId = chime.id;
-        return api.deleteChime(chimeId);
+        api.deleteChime({ chimeId });
       })
-      .then((body) => {
+      .then(() => {
         api.getAllChimes().should("deep.equal", []);
       });
   });
