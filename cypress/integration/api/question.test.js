@@ -182,4 +182,53 @@ describe("question api", () => {
           .should("equal", `<p>Updated!</p>`);
       });
   });
+
+  it("deletes a question", () => {
+    const initialQuestion = {
+      chimeId: chime.id,
+      folderId: folder.id,
+      question_text: `<p>What?</p>`,
+      question_info: {
+        question_type: "multiple_choice",
+        question_responses: [
+          {
+            text: "This",
+            correct: false,
+          },
+          {
+            text: "That",
+            correct: true,
+          },
+        ],
+      },
+    };
+
+    let questionId = null;
+
+    api
+      .createQuestion(initialQuestion)
+      .then((question) => {
+        questionId = question.id;
+        return api.updateQuestion({
+          ...initialQuestion,
+          questionId,
+          question_text: `<p>Updated!</p>`,
+        });
+      })
+      .then(() => {
+        api.deleteQuestion({
+          folderId: folder.id,
+          chimeId: chime.id,
+          questionId,
+        });
+      })
+      .then(() => {
+        api
+          .getAllQuestionsInFolder({
+            folderId: folder.id,
+            chimeId: chime.id,
+          })
+          .should("deep.equal", []);
+      });
+  });
 });

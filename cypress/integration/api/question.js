@@ -96,3 +96,19 @@ export function updateQuestion({ chimeId, folderId, questionId, ...question }) {
       .its("body");
   });
 }
+
+export function deleteQuestion({ chimeId, folderId, questionId }) {
+  if (!chimeId) throw Error("chimeId is required");
+  if (!folderId) throw Error("folderId is required");
+  if (!questionId) throw Error("questionId is required");
+
+  return cy.csrfToken().then((_token) => {
+    return cy.request({
+      method: DELETE,
+      url: `/api/chime/${chimeId}/folder/${folderId}/question/${questionId}`,
+      body: {
+        _token,
+      },
+    });
+  });
+}
