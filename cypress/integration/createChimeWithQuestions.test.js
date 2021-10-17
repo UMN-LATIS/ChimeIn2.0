@@ -79,11 +79,27 @@ describe("Chime", () => {
 
       // open the question
       cy.get("[data-cy=toggle-open-question]").click();
-      cy.request("/api/chime")
-        .its("body")
+
+      let testChime;
+      let testFolder;
+      api
+        .getAllChimes()
         .then((chimes) => {
-          expect(chimes.length).to.equal(1);
-          expect(chimes[0].name).to.equal("Test Chime");
+          testChime = chimes[0];
+          return api.getAllFolders({ chimeId: testChime.id });
+        })
+        .then((folders) => {
+          testFolder = folders[0];
+          return api.getAllQuestions({
+            chimeId: testChime.id,
+            folderId: testFolder.id,
+          });
+        })
+        .then((questions) => {
+          const testQuestion = questions[0];
+
+          // current_session_id is set if and only if question is open
+          expect(testQuestion.current_session_id).to.be.greaterThan(0);
         });
     });
 
@@ -125,10 +141,23 @@ describe("Chime", () => {
           return api.createQuestion({
             chimeId: testChime.id,
             folderId: testFolder.id,
-            question_text: "Test Questions",
+            question_text: "Test Question",
             question_info: {
               question_type: "multiple_choice",
-              responses: ["A", "B", "C"],
+              question_responses: [
+                {
+                  text: "A",
+                  correct: false,
+                },
+                {
+                  text: "B",
+                  correct: false,
+                },
+                {
+                  text: "C",
+                  correct: false,
+                },
+              ],
             },
           });
         })
@@ -145,10 +174,71 @@ describe("Chime", () => {
         .get("#currentQuestions")
         .should("contain.text", "No Open Questions");
     });
+
     it("show open questions to guests", () => {
+      // open testQuestion
       cy.login("faculty");
+      cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+      cy.get("[data-cy=toggle-open-question]").click();
+      cy.logout();
+
+      // check that chime is now available to guests
+      cy.visit(`/join/${testChime.access_code}`)
+        .get("#currentQuestions")
+        .should("contain.text", testQuestion.text);
+
+      cy.get("#radio1_0").click();
+      cy.contains("Response Updated");
     });
-    it("does not show open questions that require a login");
-    it("records the submitted response to a question");
+
+    it("does not show open questions that require a login", () => {
+      //set chime to require login
+      cy.login("faculty");
+      cy.visit(`/chime/${testChime.id}`);
+      cy.contains("Chime Settings").click();
+      cy.contains("Require Login").click();
+      cy.logout();
+
+      // try accessing chime as guest
+      cy.visit(`/join/${testChime.access_code}`);
+      cy.contains("Login to Continue");
+    });
+
+    it("records a submitted response to a question", () => {
+      // open testQuestion
+      cy.login("faculty");
+      api.openQuestion({
+        chimeId: testChime.id,
+        folderId: testFolder.id,
+        questionId: testQuestion.id,
+      });
+      cy.logout();
+
+      // as a guest, record a response
+      cy.visit(`/join/${testChime.access_code}`);
+
+      cy.get("#radio1_0").click();
+      cy.contains("Response Updated");
+
+      // as faculty, verify that the response is recorded
+      cy.login("faculty");
+      api
+        .getQuestion({
+          folderId: testFolder.id,
+          chimeId: testChime.id,
+          questionId: testQuestion.id,
+        })
+        .then((question) => {
+          const activeSession = question.sessions.find(
+            (session) => session.id === question.current_session_id
+          );
+
+          expect(activeSession.responses.length).to.equal(1);
+          expect(activeSession.responses[0].response_info).to.deep.equal({
+            question_type: "multiple_choice",
+            choice: "A",
+          });
+        });
+    });
   });
 });
