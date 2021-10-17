@@ -35,6 +35,7 @@
           </div>
         </div>
         <div
+          v-if="isReady"
           class="chime__settings-panel"
           :class="{
             'chime__settings-panel--isOpen': showSettings || exportPanel,
