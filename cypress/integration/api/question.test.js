@@ -14,14 +14,14 @@ describe("question api", () => {
       .createChime("Test Chime")
       .then((newChime) => {
         chime = newChime;
-        return api.createFolderInChime(chime.id, { name: "Test Folder" });
+        return api.createFolder(chime.id, { name: "Test Folder" });
       })
       .then((newFolder) => (folder = newFolder));
   });
 
   it("gets all the questions within a chime folder", () => {
     api
-      .getAllQuestionsInFolder({ chimeId: chime.id, folderId: folder.id })
+      .getAllQuestions({ chimeId: chime.id, folderId: folder.id })
       .should("deep.equal", []);
   });
 
@@ -66,7 +66,7 @@ describe("question api", () => {
         });
       })
       .then(() => {
-        return api.getAllQuestionsInFolder({
+        return api.getAllQuestions({
           chimeId: chime.id,
           folderId: folder.id,
         });
@@ -224,7 +224,7 @@ describe("question api", () => {
       })
       .then(() => {
         api
-          .getAllQuestionsInFolder({
+          .getAllQuestions({
             folderId: folder.id,
             chimeId: chime.id,
           })

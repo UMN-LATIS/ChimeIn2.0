@@ -1,6 +1,6 @@
 import { GET, POST, PATCH, DELETE, PUT } from "./methods";
 
-export function getAllQuestionsInFolder({ chimeId, folderId }) {
+export function getAllQuestions({ chimeId, folderId }) {
   if (!chimeId) throw Error("chimeId is required");
   if (!folderId) throw Error("folderId is required");
 
@@ -71,7 +71,7 @@ export function getQuestion({ chimeId, folderId, questionId }) {
   if (!folderId) throw Error("folderId is required");
   if (!questionId) throw Error("questionId is required");
 
-  return getAllQuestionsInFolder({ chimeId, folderId }).then((questions) =>
+  return getAllQuestions({ chimeId, folderId }).then((questions) =>
     questions.find((q) => q.id === questionId)
   );
 }
