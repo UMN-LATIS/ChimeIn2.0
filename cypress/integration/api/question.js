@@ -31,7 +31,23 @@ export function createQuestion({ chimeId, folderId, ...question }) {
   });
 }
 
-export function openQuestion({ chimeId, folderId, questionId, ...question }) {
+export function openQuestion({ chimeId, folderId, questionId }) {
+  if (!chimeId) throw Error("chimeId is required");
+  if (!folderId) throw Error("folderId is required");
+  if (!questionId) throw Error("questionId is required");
+
+  return cy.csrfToken().then((_token) => {
+    return cy.request({
+      method: POST,
+      url: `/api/chime/${chimeId}/folder/${folderId}/question/${questionId}`,
+      body: {
+        _token,
+      },
+    });
+  });
+}
+
+export function closeQuestion({ chimeId, folderId, questionId }) {
   if (!chimeId) throw Error("chimeId is required");
   if (!folderId) throw Error("folderId is required");
   if (!questionId) throw Error("questionId is required");
@@ -40,12 +56,22 @@ export function openQuestion({ chimeId, folderId, questionId, ...question }) {
     return cy
       .request({
         method: POST,
-        url: `/api/chime/${chimeId}/folder/${folderId}/question/${questionId}`,
+        url: `/api/chime/${chimeId}/folder/${folderId}/question/${questionId}/stopSession`,
         body: {
           _token,
-          ...question,
+          _method: PUT,
         },
       })
       .its("body");
   });
+}
+
+export function getQuestion({ chimeId, folderId, questionId }) {
+  if (!chimeId) throw Error("chimeId is required");
+  if (!folderId) throw Error("folderId is required");
+  if (!questionId) throw Error("questionId is required");
+
+  return getAllQuestionsInFolder({ chimeId, folderId }).then((questions) =>
+    questions.find((q) => q.id === questionId)
+  );
 }

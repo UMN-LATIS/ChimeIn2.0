@@ -84,4 +84,57 @@ describe("question api", () => {
         expect(currentSession.question_id).to.equal(questionId);
       });
   });
+
+  it("closes an open question", () => {
+    let testQuestion = null;
+
+    api
+      .createQuestion({
+        chimeId: chime.id,
+        folderId: folder.id,
+        question_text: `<p>What?</p>`,
+        question_info: {
+          question_type: "multiple_choice",
+          question_responses: ["This", "That"],
+        },
+      })
+      .then((newQuestion) => {
+        // open question
+        testQuestion = newQuestion;
+        return api.openQuestion({
+          chimeId: chime.id,
+          folderId: folder.id,
+          questionId: testQuestion.id,
+        });
+      })
+      .then(() => {
+        // check that its open
+        api
+          .getQuestion({
+            chimeId: chime.id,
+            folderId: folder.id,
+            questionId: testQuestion.id,
+          })
+          .then((question) => {
+            expect(question.current_session_id).to.be.greaterThan(0);
+          });
+
+        // now close it
+        api.closeQuestion({
+          chimeId: chime.id,
+          folderId: folder.id,
+          questionId: testQuestion.id,
+        });
+      })
+      .then(() => {
+        return api.getQuestion({
+          chimeId: chime.id,
+          folderId: folder.id,
+          questionId: testQuestion.id,
+        });
+      })
+      .then((question) => {
+        expect(question.current_session_id).to.be.null;
+      });
+  });
 });
