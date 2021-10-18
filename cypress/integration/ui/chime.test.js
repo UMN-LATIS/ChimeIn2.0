@@ -124,7 +124,20 @@ describe("chime UI", () => {
         );
       });
 
-      it("reveals folder titles to participants");
+      it("reveals folder titles to participants", () => {
+        cy.get('#showFolderTitle').check();
+        api.openQuestion({
+          chimeId: testChime.id,
+          folderId: testFolder.id,
+          questionId: testQuestion.id,
+        });
+        cy.logout();
+
+        cy.visit(`/join/${testChime.access_code}`);
+        cy.get('[data-cy=show-folder-to-participants]').should('contain.text',testFolder.name);
+      });
+
+
       it("removes users from chime");
       it("promotes participants to presenters");
       it("demotes presenters to participants");
