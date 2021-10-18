@@ -170,7 +170,60 @@ describe("chime UI", () => {
         );
       });
 
-      it("promotes participants to presenters");
+      it("promotes participants to presenters", () => {
+        api.openQuestion({
+          chimeId: testChime.id,
+          folderId: testFolder.id,
+          questionId: testQuestion.id,
+        });
+        cy.logout();
+
+        // login as student to create user
+        cy.login("student");
+
+        // student can join chime
+        cy.visit(`/join/${testChime.access_code}`);
+
+        // student should not be permitted to access chime settings
+        cy.visit(`/chime/${testChime.id}`);
+        cy.contains("You may not have permission to view this page");
+
+        cy.logout();
+
+        // login as faculty and open panel
+        cy.login("faculty");
+        cy.visit(`/chime/${testChime.id}`);
+        cy.get("[data-cy=toggle-chime-settings-panel]").click();
+
+        // promote student to presenter
+        cy.get("[data-cy=chime-users-list]")
+          .contains("student@umn.edu")
+          .parent()
+          .as("student-row");
+
+        // activate select (currently not active by default?)
+        cy.get("@student-row")
+          .contains("Participant")
+          .click();
+        cy.get("@student-row")
+          .find("select")
+          .select("Presenter");
+        cy.logout();
+
+        // now student user should have view access to chime
+        cy.login("student");
+        cy.visit(`/chime/${testChime.id}`);
+        cy.contains(testFolder.name);
+
+        // test that student can edit chime
+        cy.get("[data-cy=toggle-chime-settings-panel]").click();
+        cy.get("[data-cy=chime-name-input]")
+          .clear()
+          .type("Updated Name");
+        cy.get("[data-cy=save-chime-name-button]").click();
+        cy.get(".chime__name").should("contain.text", "Updated Name");
+      });
+
       it("demotes presenters to participants");
     });
 
