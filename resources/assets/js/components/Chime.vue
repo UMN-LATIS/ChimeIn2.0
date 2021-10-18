@@ -21,6 +21,7 @@
               @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
               class="btn btn-outline-secondary align-items-center d-flex"
               :class="{ 'btn--is-active': showSettings }"
+              data-cy="toggle-chime-settings-panel"
             >
               Chime Settings <span class="material-icons">settings</span>
             </button>
@@ -29,12 +30,14 @@
               @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
               class="btn btn-outline-secondary align-items-center d-flex"
               :class="{ 'btn--is-active': exportPanel }"
+              data-cy="toggle-chime-export-panel"
             >
               Export <span class="material-icons">save_alt</span>
             </button>
           </div>
         </div>
         <div
+          v-if="isReady"
           class="chime__settings-panel"
           :class="{
             'chime__settings-panel--isOpen': showSettings || exportPanel,

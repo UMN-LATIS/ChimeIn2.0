@@ -6,14 +6,19 @@
  * @example cy.login();
  *          cy.login({ name: 'JohnDoe' });
  */
-Cypress.Commands.add("login", (attributes = {}) => {
+Cypress.Commands.add("login", (umndid) => {
   return cy
     .csrfToken()
     .then((token) => {
       return cy.request({
         method: "POST",
         url: "/__cypress__/login",
-        body: { attributes, _token: token },
+        body: {
+          attributes: {
+            umndid,
+          },
+          _token: token,
+        },
         log: false,
       });
     })
@@ -22,7 +27,7 @@ Cypress.Commands.add("login", (attributes = {}) => {
 
       Cypress.log({
         name: "login",
-        message: attributes,
+        message: { umndid },
         consoleProps: () => ({ user: body }),
       });
     })

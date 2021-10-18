@@ -1,12 +1,6 @@
-let mix = require('laravel-mix');
+const mix = require("laravel-mix");
+const webpack = require("webpack");
 
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
-// mix.webpackConfig({
-//   plugins: [
-//     new BundleAnalyzerPlugin(),
-//   ],
-// });
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -18,37 +12,18 @@ let mix = require('laravel-mix');
  |
  */
 
+mix
+  .js("resources/assets/js/app.js", "public/js")
+  .sass("resources/assets/sass/app.scss", "public/css");
 
-// mix.options({
-// 	hmrOptions: {
-// 		host: 'node.knowfear.net',
-// 		port: 8080
-// 	}
-// })
-
- mix.js('resources/assets/js/app.js', 'public/js')
- .sass('resources/assets/sass/app.scss', 'public/css');
- 
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-// const BundleAnalyzerPlugin = require('babel-plugin-syntax-dynamic-import').BundleAnalyzerPlugin;
-
-
-const webpack = require('webpack');
-
- mix.webpackConfig({
- 	plugins: [
- 	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
- 	// new BundleAnalyzerPlugin()
- 	]
- })
-
-
-// breaks hot updating?
+mix.webpackConfig({
+  plugins: [new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],
+});
 
 if (mix.inProduction()) {
- 	mix.config.webpackConfig.output = {
-    	chunkFilename: 'js/[name].[chunkhash].bundle.js',
-    	publicPath: '/',
-	};
-	mix.version();
+  mix.config.webpackConfig.output = {
+    chunkFilename: "js/[name].[chunkhash].bundle.js",
+    publicPath: "/",
+  };
+  mix.version();
 }
