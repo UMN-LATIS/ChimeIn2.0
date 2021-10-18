@@ -89,12 +89,12 @@ describe("chime UI", () => {
           })
           .then((question) => {
             testQuestion = question;
+            cy.visit(`/chime/${testChime.id}`);
+            cy.get("[data-cy=toggle-chime-settings-panel]").click();
           });
       });
 
       it("updates a chime name", () => {
-        cy.visit(`/chime/${testChime.id}`);
-        cy.get("[data-cy=toggle-chime-settings-panel]").click();
         cy.get("[data-cy=chime-name-input]")
           .clear()
           .type("Updated Name");
@@ -102,7 +102,15 @@ describe("chime UI", () => {
         cy.get(".chime__name").should("contain.text", "Updated Name");
       });
 
-      it("requires login to access");
+      it.only("requires login to access", () => {
+        cy.get("#requireLogin").check();
+        cy.logout();
+
+        // accessing chime as guest should redirect to login page
+        cy.visit(`/join/${testChime.access_code}`);
+        cy.get(".title").should("contain.text", "Login to Continue");
+      });
+
       it("displays join instructions when presenting", () => {});
 
       it("reveals folder titles to participants");
