@@ -8,7 +8,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="ml-auto navbar-text" v-if="host">Go to <strong>{{ host }}</strong> and enter code <strong>{{ access_code }}</strong></div>
+            <div class="ml-auto navbar-text" data-cy="show-join-code" v-if="host">Go to <strong>{{ host }}</strong> and enter code <strong>{{ access_code }}</strong></div>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link align-items-center d-flex"
                         href="https://umn-latis.github.io/ChimeIn2.0/">Help <i class="material-icons">help</i></a>

@@ -1,6 +1,7 @@
 /// <reference types="Cypress" />
 
 import api from "../api/index.js";
+import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode.mjs";
 
 describe("chime UI", () => {
   beforeEach(() => {
@@ -102,7 +103,7 @@ describe("chime UI", () => {
         cy.get(".chime__name").should("contain.text", "Updated Name");
       });
 
-      it.only("requires login to access", () => {
+      it("requires login to access", () => {
         cy.get("#requireLogin").check();
         cy.logout();
 
@@ -111,7 +112,17 @@ describe("chime UI", () => {
         cy.get(".title").should("contain.text", "Login to Continue");
       });
 
-      it("displays join instructions when presenting", () => {});
+      it("displays join instructions when presenting", () => {
+        cy.get("#joinInstructions").check();
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}/present`);
+
+        // FIXME: This text is in the navbar and will be hidden on small screens
+
+        cy.get("[data-cy=show-join-code]").should(
+          "contain.text",
+          toHyphenatedCode(testChime.access_code)
+        );
+      });
 
       it("reveals folder titles to participants");
       it("removes users from chime");
