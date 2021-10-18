@@ -125,7 +125,7 @@ describe("chime UI", () => {
       });
 
       it("reveals folder titles to participants", () => {
-        cy.get('#showFolderTitle').check();
+        cy.get("#showFolderTitle").check();
         api.openQuestion({
           chimeId: testChime.id,
           folderId: testFolder.id,
@@ -134,11 +134,42 @@ describe("chime UI", () => {
         cy.logout();
 
         cy.visit(`/join/${testChime.access_code}`);
-        cy.get('[data-cy=show-folder-to-participants]').should('contain.text',testFolder.name);
+        cy.get("[data-cy=show-folder-to-participants]").should(
+          "contain.text",
+          testFolder.name
+        );
       });
 
+      it("removes users from chime", () => {
+        api.openQuestion({
+          chimeId: testChime.id,
+          folderId: testFolder.id,
+          questionId: testQuestion.id,
+        });
+        cy.logout();
 
-      it("removes users from chime");
+        // login as student
+        cy.login("student");
+        cy.visit(`/join/${testChime.access_code}`);
+        cy.logout();
+
+        // login as faculty and check that
+        // student shows up in chime users
+        cy.login("faculty");
+        cy.visit(`/chime/${testChime.id}`);
+        cy.get("[data-cy=toggle-chime-settings-panel]").click();
+        cy.get("[data-cy=chime-users-list]")
+          .contains("student@umn.edu")
+          .parent()
+          .find("[data-cy=remove-user-from-chime-button]")
+          .click();
+
+        cy.get("[data-cy=chime-users-list]").should(
+          "not.contain.text",
+          "student@umn.edu"
+        );
+      });
+
       it("promotes participants to presenters");
       it("demotes presenters to participants");
     });

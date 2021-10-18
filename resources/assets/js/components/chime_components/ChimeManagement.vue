@@ -61,7 +61,7 @@
     </div>
     <hr />
 
-    <div class="row">
+    <div class="row" data-cy="chime-users-list">
       <div class="col-sm-12">
         <h4>Users</h4>
         <table class="table">
@@ -102,7 +102,7 @@
                 </span>
               </td>
               <td>
-                <button class="btn btn-sm btn-danger" @click="deleteUser(key)">
+                <button data-cy="remove-user-from-chime-button" class="btn btn-sm btn-danger" @click="deleteUser(key)">
                   Remove User
                 </button>
               </td>
