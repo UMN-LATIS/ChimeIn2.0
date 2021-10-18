@@ -12,6 +12,8 @@
     "docs:build": "vuepress build docs",
     "cypress": "cypress open",
     "cypress:headless": "cypress run",
+    "jest": "cross-env NODE_OPTIONS=--experimental-vm-modules jest ./resources",
+    "jest:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest  --watch ./resources",
     "test:e2e": "npm run cypress:headless",
     "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules jest ./resources",
     "test": "npm run test:unit && npm run test:e2e"
