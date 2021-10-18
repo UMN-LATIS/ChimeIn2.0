@@ -1,4 +1,5 @@
 {
   "baseUrl": "http://localhost",
-  "testFiles": "**/*.{test,spec}.js"
+  "testFiles": "**/*.{test,spec}.js",
+  "pluginsFile": false
 }
