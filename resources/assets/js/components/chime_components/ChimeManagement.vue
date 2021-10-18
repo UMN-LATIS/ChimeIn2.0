@@ -1,6 +1,7 @@
 <template>
   <div class="chime-management">
-    <div class="form-group row">
+    <h2 class="chime-management__heading">Chime Settings</h2>
+    <div class="form-group">
       <label class="sr-only" for="chimeName"
         ><strong>Chime Name:</strong></label
       >
@@ -10,11 +11,13 @@
           class="form-control"
           id="chimeName"
           v-model="chime_name"
+          data-cy="chime-name-input"
         />
         <div class="input-group-append">
           <button
             class="btn btn-outline-primary align-items-center d-flex btn-sm"
             @click="saveChime"
+            data-cy="save-chime-name-button"
           >
             <span class="material-icons pointer md-18">save</span> Update Chime
             Name
@@ -113,8 +116,12 @@
 
 <style scoped>
 .chime-management {
+  padding: 1rem;
   max-width: 50rem;
-  margin: auto;
+}
+.chime-management__heading {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 ul li {
   list-style: none;

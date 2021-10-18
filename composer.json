@@ -53,7 +53,6 @@
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "laracasts/cypress": "^1.4",
-        "laravel/dusk": "^6",
         "laravel/sail": "^1.10",
         "mockery/mockery": "~1.0",
         "phpunit/phpunit": "~6.0",

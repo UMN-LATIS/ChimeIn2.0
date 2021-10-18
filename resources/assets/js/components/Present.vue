@@ -35,9 +35,8 @@
 </style>
 
 <script>
-
     import { questionsListener } from './mixins/questionsListener'
-    
+    import toHyphenatedCode from '../helpers/toHyphenatedCode.mjs';
 
     export default {
         mixins: [questionsListener],
@@ -95,7 +94,7 @@
             if(!this.chime || !this.chime.join_instructions) {
                 return "";
             }
-            return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
+            return toHyphenatedCode(this.chime.access_code);
         }
     },
     watch: {

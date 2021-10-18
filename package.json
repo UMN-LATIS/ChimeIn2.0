@@ -10,15 +10,21 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "docs:build": "vuepress build docs",
     "cypress": "cypress open",
-    "cypress:headless": "cypress run"
+    "cypress:headless": "cypress run",
+    "jest": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "npm run jest -- --watch",
+    "test:e2e": "npm run cypress:headless",
+    "test:unit": "npm run jest",
+    "test": "npm run test:unit && npm run test:e2e"
   },
   "devDependencies": {
     "axios": "^0.21",
     "babel-plugin-dynamic-import-webpack": "^1.1.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "caniuse-lite": "^1.0.30001260",
-    "cross-env": "^5.2.1",
+    "cross-env": "^7.0.3",
     "cypress": "^8.5.0",
+    "jest": "^27.3.0",
     "jquery": "^3.5.1",
     "laravel-mix": "^5.0.9",
     "lodash": "^4.17.21",

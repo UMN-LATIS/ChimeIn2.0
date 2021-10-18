@@ -84,17 +84,17 @@ a:hover {
   align-items: center;
 }
 .folder-card {
-  /* border: 1px solid #ddd; */
-  background: #eaeaea;
+  border: 1px solid #ddd;
   border-radius: 0.25rem;
   display: flex;
   align-items: center;
   line-height: 1;
   margin-bottom: 1rem;
   overflow: hidden;
+  background: #fafafa;
 }
 .folder-card:hover {
-  box-shadow: 0 0.25rem 0.5rem hsla(0, 0%, 0%, 0.2);
+  box-shadow: 0 0.2rem 0.25rem hsla(0, 0%, 0%, 0.1);
   transition: ease-in-out 0.3s;
   border-color: #aaa;
 }
@@ -119,10 +119,6 @@ a:hover {
 }
 .folder-card__utils {
   padding: 0;
-}
-
-.folder-card__action {
-  background: #fafafa;
 }
 
 .folder-card i {
