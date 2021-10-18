@@ -20,10 +20,10 @@ describe("chime UI", () => {
   context("when authenticated as faculty", () => {
     beforeEach(() => {
       cy.login("faculty");
-      cy.visit("/");
     });
 
     it("creates a new chime", () => {
+      cy.visit("/");
       cy.get("main")
         .contains("Add a Chime")
         .click();
@@ -35,6 +35,7 @@ describe("chime UI", () => {
     });
 
     it("show a spinner while waiting for chime data to load", () => {
+      cy.visit("/");
       // set up a delayed response time
       cy.delayResponse("/api/chime*", 1000);
 
@@ -51,9 +52,59 @@ describe("chime UI", () => {
     });
 
     describe("change chime settings", () => {
-      it("updates a chime name");
+      let testChime;
+      let testFolder;
+      let testQuestion;
+
+      beforeEach(() => {
+        api
+          .createChime({ name: "TestChime" })
+          .then((chime) => {
+            testChime = chime;
+            return api.createFolder({
+              chimeId: testChime.id,
+              name: "Test Folder",
+            });
+          })
+          .then((folder) => {
+            testFolder = folder;
+            return api.createQuestion({
+              chimeId: testChime.id,
+              folderId: testFolder.id,
+              question_text: "<p>What?</p>",
+              question_info: {
+                question_type: "multiple_choice",
+                question_responses: [
+                  {
+                    text: "This",
+                    correct: false,
+                  },
+                  {
+                    text: "That",
+                    correct: true,
+                  },
+                ],
+              },
+            });
+          })
+          .then((question) => {
+            testQuestion = question;
+          });
+      });
+
+      it("updates a chime name", () => {
+        cy.visit(`/chime/${testChime.id}`);
+        cy.get("[data-cy=toggle-chime-settings-panel]").click();
+        cy.get("[data-cy=chime-name-input]")
+          .clear()
+          .type("Updated Name");
+        cy.get("[data-cy=save-chime-name-button]").click();
+        cy.get(".chime__name").should("contain.text", "Updated Name");
+      });
+
       it("requires login to access");
-      it("displays join instructions when presenting");
+      it("displays join instructions when presenting", () => {});
+
       it("reveals folder titles to participants");
       it("removes users from chime");
       it("promotes participants to presenters");
