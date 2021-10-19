@@ -196,7 +196,7 @@ describe("chime UI", () => {
         );
       });
 
-      it("promotes participants to presenters", () => {
+      it("can promote/demote users to presenters/participants", () => {
         api.openQuestion({
           chimeId: testChime.id,
           folderId: testFolder.id,
