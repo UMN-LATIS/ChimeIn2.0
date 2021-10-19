@@ -40,7 +40,6 @@ export const questionsListener = {
         .then(res => {                
             this.folder = res.data;
             this.questions = res.data.questions.sort((a,b) => a.order - b.order);
-            console.log(this.questions);
             })
         .catch(err => {
             this.$store.commit('message', "Could not load questions. You may not have permission to view this page. ");
