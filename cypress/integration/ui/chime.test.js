@@ -222,9 +222,25 @@ describe("chime UI", () => {
           .type("Updated Name");
         cy.get("[data-cy=save-chime-name-button]").click();
         cy.get(".chime__name").should("contain.text", "Updated Name");
-      });
 
-      it("demotes presenters to participants");
+        // test that student can demote faculty from presenter to participant
+        cy.get("[data-cy=chime-users-list]")
+          .contains("faculty@umn.edu")
+          .parent()
+          .as("faculty-row");
+        cy.get("@faculty-row")
+          .contains("Presenter")
+          .click();
+        cy.get("@faculty-row")
+          .find("select")
+          .select("Participant");
+        cy.logout();
+
+        // now faculty should not be able to access chime settings
+        cy.login("faculty");
+        cy.visit(`/chime/${testChime.id}`);
+        cy.contains("You may not have permission to view this page");
+      });
     });
 
     describe("chime export", () => {
