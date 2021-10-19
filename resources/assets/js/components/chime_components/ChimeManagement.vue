@@ -61,7 +61,7 @@
     </div>
     <hr />
 
-    <div class="row">
+    <div class="row" data-cy="chime-users-list">
       <div class="col-sm-12">
         <h4>Users</h4>
         <table class="table">
@@ -77,7 +77,7 @@
             <tr v-for="(u, key) in sorted_users" :key="key">
               <td>{{ u.name }}</td>
               <td>{{ u.email }}</td>
-              <td>
+              <td data-cy="select-user-permissions-in-chime">
                 <template v-if="u.editPermission">
                   <select
                     class="form-control form-control-sm"
@@ -102,7 +102,11 @@
                 </span>
               </td>
               <td>
-                <button class="btn btn-sm btn-danger" @click="deleteUser(key)">
+                <button
+                  data-cy="remove-user-from-chime-button"
+                  class="btn btn-sm btn-danger"
+                  @click="deleteUser(key)"
+                >
                   Remove User
                 </button>
               </td>

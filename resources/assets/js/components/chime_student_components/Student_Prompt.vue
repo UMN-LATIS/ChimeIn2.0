@@ -20,7 +20,7 @@
            </transition>
            <p class="alert alert-warning" v-if="error">{{ error }}  Please reload.</p>
 
-            <small class="text-muted" v-if="chime.show_folder_title_to_participants"><strong>Folder</strong>: {{ session.question.folder.name }} </small>
+            <small class="text-muted" data-cy="show-folder-to-participants" v-if="chime.show_folder_title_to_participants"><strong>Folder</strong>: {{ session.question.folder.name }} </small>
             <hr>
         </div>
         <!-- <div class="card-content" v-else>
