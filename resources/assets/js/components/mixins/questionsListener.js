@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 export const questionsListener = {
     data() {
         return {
@@ -108,7 +106,7 @@ mounted(){
             if(m.isEdit) {
                 targetSession.responses.forEach((response, index) => {
                     if(response.id == m.response.id) {
-                        Vue.set(targetSession.responses, index, m.response);
+                        this.$set(targetSession.responses, index, m.response);
                         updateInPlace = true;
                     }
                 });
