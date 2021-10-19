@@ -3,6 +3,12 @@
 import api from "../api/index.js";
 import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode.mjs";
 
+const questionText = "<p>What?</p>";
+const questionResponses = [
+  { text: "This", correct: false },
+  { text: "That", correct: true },
+];
+
 describe("chime UI", () => {
   beforeEach(() => {
     cy.refreshDatabase();
@@ -15,7 +21,49 @@ describe("chime UI", () => {
       cy.contains("Add a chime").should("not.exist");
     });
 
-    it("joins upon entering an access code");
+    it("joins upon entering an access code", () => {
+      let testChime, testFolder, testQuestion;
+
+      cy.login("faculty");
+      api
+        .createChimeFolderQuestion({
+          chimeName: "Test Chime",
+          folderName: "Test Folder",
+          questionText,
+          questionResponses,
+        })
+        .then(({ chime, folder, question }) => {
+          testChime = chime;
+          testFolder = folder;
+          testQuestion = question;
+
+          api.openQuestion({
+            chimeId: chime.id,
+            folderId: folder.id,
+            questionId: question.id,
+          });
+        })
+        .then(() => {
+          cy.logout();
+
+          // check that we can access the chime with the access code
+          // try with both hyphenated and unhyphenated join codes
+          [
+            testChime.access_code,
+            toHyphenatedCode(testChime.access_code),
+          ].forEach((joinCode) => {
+            cy.visit("/");
+            cy.get("#access_code")
+              .type(joinCode)
+              .type("{enter}");
+
+            cy.get("main").should("contain.html", questionText);
+            questionResponses.forEach((response) => {
+              cy.get("main").should("contain.text", response.text);
+            });
+          });
+        });
+    });
   });
 
   context("when authenticated as faculty", () => {
@@ -59,36 +107,15 @@ describe("chime UI", () => {
 
       beforeEach(() => {
         api
-          .createChime({ name: "TestChime" })
-          .then((chime) => {
+          .createChimeFolderQuestion({
+            chimeName: "Test Chime",
+            folderName: "Test Folder",
+            questionText,
+            questionResponses,
+          })
+          .then(({ chime, folder, question }) => {
             testChime = chime;
-            return api.createFolder({
-              chimeId: testChime.id,
-              name: "Test Folder",
-            });
-          })
-          .then((folder) => {
             testFolder = folder;
-            return api.createQuestion({
-              chimeId: testChime.id,
-              folderId: testFolder.id,
-              question_text: "<p>What?</p>",
-              question_info: {
-                question_type: "multiple_choice",
-                question_responses: [
-                  {
-                    text: "This",
-                    correct: false,
-                  },
-                  {
-                    text: "That",
-                    correct: true,
-                  },
-                ],
-              },
-            });
-          })
-          .then((question) => {
             testQuestion = question;
             cy.visit(`/chime/${testChime.id}`);
             cy.get("[data-cy=toggle-chime-settings-panel]").click();
@@ -117,7 +144,6 @@ describe("chime UI", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}/present`);
 
         // FIXME: This text is in the navbar and will be hidden on small screens
-
         cy.get("[data-cy=show-join-code]").should(
           "contain.text",
           toHyphenatedCode(testChime.access_code)
@@ -244,7 +270,6 @@ describe("chime UI", () => {
     });
 
     describe("chime export", () => {
-      // TODO: Ask Colin about intended functionality and use case for each Export option.
       it("exports folder participation");
       it("exports question participation");
       it("exports full responses");
