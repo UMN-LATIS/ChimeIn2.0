@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export const questionsListener = {
     data() {
         return {

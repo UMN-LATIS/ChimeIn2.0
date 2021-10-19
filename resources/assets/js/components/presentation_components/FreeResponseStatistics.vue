@@ -38,7 +38,7 @@
 </template>
 
 <script>
-
+import Vue from 'vue';
 import wordcloud from 'vue-wordcloud/src/components/WordCloud'
 
 const nlp = require('compromise');
