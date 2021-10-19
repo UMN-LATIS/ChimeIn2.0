@@ -7,11 +7,6 @@ window.queryString = require('query-string');
 
 window.simpleheat = require('simpleheat');
 
-Vue.mixin({
-    methods: {
-        isObject: obj => typeof obj == "object"
-    }
-});
 
 import EventBus from './event-bus';
 
