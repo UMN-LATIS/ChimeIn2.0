@@ -366,8 +366,7 @@ class ChimeController extends Controller
 
         usort($sessions, function($a, $b) {
             if(strtotime($a->updated_at) == strtotime($b->updated_at)) {
-                return $a->question->order < $b->question->order;
-                // return 0;
+                return $a->question->order - $b->question->order;
             }
             return strtotime($a->updated_at)<strtotime($b->updated_at)?-1:1;
         });
