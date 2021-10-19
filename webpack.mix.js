@@ -18,9 +18,5 @@ mix
   .sass("resources/assets/sass/app.scss", "public/css");
 
 if (mix.inProduction()) {
-  mix.config.webpackConfig.output = {
-    chunkFilename: "js/[name].[chunkhash].bundle.js",
-    publicPath: "/",
-  };
   mix.version();
 }
