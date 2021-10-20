@@ -16,7 +16,9 @@
     "test:watch": "npm run jest -- --watch",
     "test:e2e": "npm run cypress:headless",
     "test:unit": "npm run jest",
-    "test": "npm run test:unit && npm run test:e2e"
+    "test": "npm run test:unit && npm run test:e2e",
+    "lint": "eslint .",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "axios": "^0.21",
@@ -45,7 +47,8 @@
     "vue-loader": "^15.9.7",
     "vuepress-plugin-medium-zoom": "^1.1.9",
     "webpack": "^5.58.2",
-    "webpack-bundle-analyzer": "^4.5.0"
+    "webpack-bundle-analyzer": "^4.5.0",
+    "husky": "^7.0.0"
   },
   "dependencies": {
     "bootstrap": "^4.6.0",
