@@ -35,11 +35,15 @@
 </style>
 
 <script>
+    import { component as fullscreen } from 'vue-fullscreen';
     import { questionsListener } from './mixins/questionsListener'
     import toHyphenatedCode from '../helpers/toHyphenatedCode.mjs';
 
     export default {
         mixins: [questionsListener],
+        components: {
+            fullscreen,
+        },
         data() {
             return {
                 folder: {name:""},
