@@ -19,7 +19,6 @@ cp .env.example .env
 # Start Sail
 sail up
 
-
 # generate an app key
 sail artisan key:generate
 
