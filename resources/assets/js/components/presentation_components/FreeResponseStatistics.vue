@@ -38,7 +38,6 @@
 </template>
 
 <script>
-
 import wordcloud from 'vue-wordcloud/src/components/WordCloud'
 
 const nlp = require('compromise');
@@ -47,14 +46,6 @@ const stemmer = require('stemmer');
 // const wordcloud = require('vue-wordcloud').default;
 const difflib = require('difflib');
 const cluster = require('set-clustering');
-
-Vue.directive('tooltip', function(el, binding){
-    $(el).tooltip({
-             title: binding.value,
-             placement: binding.arg,
-             trigger: 'hover'             
-         })
-})
 
 export default {
     components: {
