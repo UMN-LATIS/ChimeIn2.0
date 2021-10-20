@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "npm run development",
     "development": "mix",
@@ -25,6 +26,10 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.4.0",
     "cypress": "8.6.0",
+    "eslint": "^8.0.1",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-jest": "^25.2.2",
+    "eslint-plugin-vue": "^7.20.0",
     "jest": "^27.3.0",
     "jquery": "^3.5.1",
     "laravel-mix": "^6.0.34",
