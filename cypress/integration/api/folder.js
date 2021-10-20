@@ -1,5 +1,5 @@
 import { getChime } from "./chime";
-import { GET, POST, PATCH, DELETE, PUT } from "./methods";
+import { GET, POST, DELETE, PUT } from "./methods";
 
 export function getAllFolders({ chimeId }) {
   if (!chimeId) throw Error("chimeId is required");
@@ -30,7 +30,7 @@ export function getFolder({ chimeId, folderId }) {
   if (!chimeId) throw Error("chimeId is required");
   if (!folderId) throw Error("folderId is required");
 
-  return cy.csrfToken().then((_token) => {
+  return cy.csrfToken().then(() => {
     return cy
       .request({
         method: GET,

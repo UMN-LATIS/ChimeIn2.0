@@ -138,6 +138,7 @@
 <script>
 import draggable from "vuedraggable";
 import Spinner from "./Spinner.vue";
+import orderBy from 'lodash/orderBy';
 
 export default {
   components: {
@@ -219,7 +220,7 @@ export default {
         if (!this.chime || !this.chime.folders) {
           return [];
         }
-        return _.orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
+        return orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
       },
       set(value) {
         console.log(value);
@@ -229,7 +230,7 @@ export default {
           .put(url, {
             folders: this.chime.folders,
           })
-          .then((res) => {
+          .then(() => {
             this.chime.folders = value;
           })
           .catch((err) => {
