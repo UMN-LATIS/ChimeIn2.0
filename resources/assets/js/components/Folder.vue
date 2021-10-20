@@ -129,6 +129,7 @@
         questionsListener
     } from './mixins/questionsListener'
     import JsonCSV from 'vue-json-csv'
+    import orderBy from 'lodash/orderBy';
 
 
 
@@ -350,7 +351,7 @@
 
                 axios.get('/api/chime')
                     .then(res => {
-                        this.existing_chimes = _.orderBy(res.data, 'created_at', ['desc'])
+                        this.existing_chimes = orderBy(res.data, 'created_at', ['desc'])
                     })
                     .catch(err => {
                         console.error(
@@ -360,7 +361,7 @@
             update_folders: function () {
                 axios.get('/api/chime/' + this.selected_chime)
                     .then(res => {
-                        this.existing_folders = _.orderBy(res.data.folders.filter(f => f.id != this.folderId),
+                        this.existing_folders = orderBy(res.data.folders.filter(f => f.id != this.folderId),
                             'created_at', ['desc'])
                     })
                     .catch(err => {

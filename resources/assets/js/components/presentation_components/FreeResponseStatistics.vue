@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import throttle from 'lodash/throttle';
 import wordcloud from 'vue-wordcloud/src/components/WordCloud'
 
 const nlp = require('compromise');
@@ -82,7 +83,7 @@ export default {
         wordClicked: function(word, event) {
             this.filterWords.push(word);
         },
-        buildWords: _.throttle(function()  {
+        buildWords: throttle(function()  {
             var start = performance.now()
             const words = (
                 this
