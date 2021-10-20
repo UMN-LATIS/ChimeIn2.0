@@ -36,7 +36,7 @@ describe("happy path", () => {
 
     // create a question
     cy.get("[data-cy=new-question-button]").click();
-    cy.get("h3").should("contain", "Add a Question");
+    cy.get("[data-cy=add-question-form] h3").should("contain", "Add a Question");
 
     // select multiple choice (not a true select)
     cy.get("[data-cy=question-type]").type("Multiple Choice{enter}");

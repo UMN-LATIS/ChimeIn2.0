@@ -57,6 +57,7 @@
     }
 </style>
 <script>
+
     export default {
         data() {
             return {
@@ -74,7 +75,7 @@
                 this.responses.forEach((response, index) => {
                     if (response.id == newResponse.id) {
                         updateInPlace = true;
-                        Vue.set(this.responses, index, newResponse);
+                        this.$set(this.responses, index, newResponse);
                     }
                 })
                 if (!updateInPlace) {

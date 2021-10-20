@@ -1,12 +1,12 @@
 <template>
 <div class="chartContainer">
     <GChart
-    type="ColumnChart"
-    :resizeDebounce="100"
-    :data="chartData"
-    :options="options"
-    class="googleChart"
-  />
+        type="ColumnChart"
+        :resizeDebounce="100"
+        :data="chartData"
+        :options="options"
+        class="googleChart"
+    />
 </div>
 </template>
 
@@ -25,7 +25,8 @@
 
 <script>
 
-import { GChart } from 'vue-google-charts'
+import { GChart } from 'vue-google-charts';
+import isObject from 'lodash/isObject';
 
 export default {
     props: ['responses', 'question'],
@@ -37,7 +38,6 @@ export default {
             visible_responses: [],
             response_search: '',
             options: {
-                
                 height: "100%",
                 animation:{
                     duration: 1000,
@@ -58,7 +58,7 @@ export default {
                 },
                 tooltip: {
                     isHtml: false
-                    }
+                },
             }
         }
     },
@@ -72,9 +72,9 @@ export default {
                 chartData: function () {
             var questionArray = this.question.question_info.question_responses.map(q => 
             { 
-                var questionText = this.isObject(q)?q.text:q; 
+                var questionText = isObject(q) ? q.text : q; 
                 var formattedQuestion = questionText;
-                if(this.isObject(q) && q.correct == true) {
+                if(isObject(q) && q.correct == true) {
                     formattedQuestion = formattedQuestion + " ✓";
                 }
                 var totalResponsesForAnswer = this.responses.filter(r => Array.isArray(r.response_info.choice)?r.response_info.choice.includes(questionText):(r.response_info.choice == questionText)).length;

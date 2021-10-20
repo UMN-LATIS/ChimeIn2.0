@@ -1,3 +1,4 @@
+import Vue from 'vue';
 
 require('./bootstrap');
 
@@ -7,11 +8,6 @@ window.queryString = require('query-string');
 
 window.simpleheat = require('simpleheat');
 
-Vue.mixin({
-    methods: {
-        isObject: obj => typeof obj == "object"
-    }
-});
 
 import EventBus from './event-bus';
 
@@ -31,8 +27,15 @@ import VueAnnouncer from 'vue-announcer';
 Vue.use(VueAnnouncer);
 
 // filters
-
 Vue.filter('pluralize', (word, amount) => amount === 1 ? word : `${word}s`)
+
+Vue.directive('tooltip', function(el, binding){
+    $(el).tooltip({
+        title: binding.value,
+        placement: binding.arg,
+        trigger: 'hover'             
+    });
+});
 
 Vue.component('modal',
     require('./components/modal.vue').default);

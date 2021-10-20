@@ -19,16 +19,18 @@ cp .env.example .env
 # Start Sail
 sail up
 
-
 # generate an app key
 sail artisan key:generate
 
 # migrate the database
 sail artisan migrate:fresh
 
+# Install node modules
+yarn install
+
 # Start Laravel Mix to compile Vue
 # and start hot module replacement
-sail npm run dev && sail npm run hot
+yarn run dev && yarn run hot
 
 ```
 
@@ -38,7 +40,8 @@ The application will be running on <http://localhost>.
 
 ```sh
 sail up
-npm run dev
+yarn run dev && yarn run watch
+# or yarn run hot
 ```
 
 Load <http://localhost> in your browser.
@@ -57,7 +60,7 @@ Stop the application: `sail down`.
 ⚠️ Stop laravel mix's hot module reloading before running cypress.
 
 ```sh
-npm run cypress
+yarn run cypress
 ```
 
 ## Deploy
