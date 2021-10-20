@@ -8,9 +8,6 @@ window.queryString = require('query-string');
 
 window.simpleheat = require('simpleheat');
 
-
-import EventBus from './event-bus';
-
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
@@ -159,7 +156,7 @@ const router = new VueRouter({
   ]
 })
 
-const app = new Vue({
+new Vue({
     router,
     store
 }).$mount('#app');
