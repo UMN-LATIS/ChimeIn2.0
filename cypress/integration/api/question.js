@@ -1,4 +1,4 @@
-import { GET, POST, PATCH, DELETE, PUT } from "./methods";
+import { GET, POST, DELETE, PUT } from "./methods";
 
 export function getAllQuestions({ chimeId, folderId }) {
   if (!chimeId) throw Error("chimeId is required");

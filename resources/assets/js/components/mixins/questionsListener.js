@@ -49,9 +49,6 @@ export const questionsListener = {
     }
 },
 mounted(){
-
-
-    var self=this;
     Echo.join('session-status.' + this.get_chime())
     .here((users) => {
             this.usersCount = users.length;
@@ -72,10 +69,10 @@ mounted(){
             }
         }
     })
-    .joining((user) => {
+    .joining(() => {
         this.usersCount = this.usersCount + 1;
     })
-    .leaving((user) => {
+    .leaving(() => {
         this.usersCount = this.usersCount - 1;
     });
 
@@ -97,6 +94,7 @@ mounted(){
                 return;
             }
 
+            // eslint-disable-next-line no-prototype-builtins
             if(!targetSession.hasOwnProperty('responses')) {
                 targetSession.responses = new Array();
             }

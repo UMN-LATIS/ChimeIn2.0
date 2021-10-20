@@ -3,6 +3,7 @@ Cypress.Laravel = {
 
   route: (name, parameters = {}) => {
     assert(
+      // eslint-disable-next-line no-prototype-builtins
       Cypress.Laravel.routes.hasOwnProperty(name),
       `Laravel route "${name}" exists.`
     );
