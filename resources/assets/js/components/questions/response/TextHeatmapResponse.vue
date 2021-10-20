@@ -145,7 +145,6 @@ export default {
             this.create_new_response = true;
         },
         testForHighlight: function() {
-            console.log("Hey");
             const mySelection = window.getSelection();
             if(mySelection.isCollapsed) {
                 this.disableSubmission = true;

@@ -22,7 +22,7 @@ describe("chime UI", () => {
     });
 
     it("joins upon entering an access code", () => {
-      let testChime, testFolder, testQuestion;
+      let testChime;
 
       cy.login("faculty");
       api
@@ -34,8 +34,6 @@ describe("chime UI", () => {
         })
         .then(({ chime, folder, question }) => {
           testChime = chime;
-          testFolder = folder;
-          testQuestion = question;
 
           api.openQuestion({
             chimeId: chime.id,

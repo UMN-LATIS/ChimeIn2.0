@@ -1,14 +1,9 @@
 import Echo from "laravel-echo";
 
-
 window._ = {};
 window._.sortBy = require('lodash/sortBy');
 window._.orderBy = require('lodash/orderBy')
 window._.throttle = require('lodash/throttle')
-
-// window._ = require('lodash');
-
-// import _sortBy from 'lodash';
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -19,7 +14,9 @@ window._.throttle = require('lodash/throttle')
 try {
     window.$ = window.jQuery = require('jquery');
     require('bootstrap');
-} catch (e) {}
+} catch (err) {
+    console.error(err);
+}
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -27,34 +24,20 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-
-window.Vue = require('vue');
-
 window.axios = require('axios');
 window.io = require('socket.io-client');
-
-// window.Pusher = require('pusher-js');
 
 // todo: fetch environment variables from .env file
 // note: will not send if encryption is true
 // when curl permissions are updated for encryption, reset cache (php artisan config:cache)
-const env = process.env.NODE_ENV || 'development';
+
 // use our internal hostnames so we can work with docker
-var host = window.location.hostname;
-// if(env == "development") {
-//     host = "echo.knowfear.net";
-// }
+const host = window.location.hostname;
 
 window.Echo = new Echo({
     broadcaster: 'socket.io',
     host: host + ':6001',
-    // auth: {
-    //     headers: {
-    //         Authorization: 'Bearer ' + "2b54f921c0e9394855626e3641cb91c4",
-    //     },
-    // },
 });
-
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -71,7 +54,6 @@ if (token) {
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
-
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

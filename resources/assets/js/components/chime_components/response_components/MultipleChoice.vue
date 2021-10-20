@@ -18,11 +18,11 @@
                     >
                     <div class="row">
                         <div class="col-9 dragItem">
-                            {{ isObject(r)?r.text:r }}
+                            {{ isObject(r) ? r.text : r }}
                         </div>
-                         <div class="col-1">
+                        <div class="col-1">
                             <i
-                        class="material-icons inline-icon" v-if="isObject(r)?r.correct:false">check</i>
+                        class="material-icons inline-icon" v-if="isObject(r) ? r.correct : false">check</i>
                         </div>
                         <div class="col-2">
                         <i
@@ -44,7 +44,7 @@
             <label for="choice_text" class="form-control-label">Add a response <small id="emailHelp" class="form-text text-muted">Optionally use the checkbox to mark correct responses.</small></label>
             
             <div class="input-group">
-                 <div class="input-group-prepend">
+                <div class="input-group-prepend">
                     <div class="input-group-text">
                         <input type="checkbox" v-model="choice_correct" data-cy="response-is-correct-checkbox" aria-label="Correct Answer">
                     </div>
@@ -85,7 +85,9 @@
 
 <script>
 // TODO this is mutating a prop from the parent, it shouldn't do that.
-// 
+
+import isObject from 'lodash/isObject';
+
 import draggable from 'vuedraggable'
     export default {
         props: ['question_responses'],
@@ -101,11 +103,12 @@ import draggable from 'vuedraggable'
          }
      },
      methods: {
+        isObject,
         edit: function(response_index) {
             var response = this.question_responses[response_index];
 
-            this.choice_text = this.isObject(response)?response.text:response;
-            this.choice_correct = this.isObject(response)?response.correct:false;
+            this.choice_text = isObject(response) ? response.text : response;
+            this.choice_correct = isObject(response) ? response.correct : false;
             this.editing_index = response_index;
         },
         remove: function(response_index) {
