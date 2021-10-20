@@ -40,13 +40,9 @@
 <script>
 import throttle from 'lodash/throttle';
 import wordcloud from 'vue-wordcloud/src/components/WordCloud'
-
-const nlp = require('compromise');
-
-const stemmer = require('stemmer');
-// const wordcloud = require('vue-wordcloud').default;
-const difflib = require('difflib');
-const cluster = require('set-clustering');
+import nlp from 'compromise';
+import stemmer from 'stemmer';
+import difflib from 'difflib';
 
 export default {
     components: {
@@ -80,7 +76,7 @@ export default {
         similarity: function (x, y) {
             return (new difflib.SequenceMatcher(null, x, y)).ratio();
         },
-        wordClicked: function(word, event) {
+        wordClicked: function(word) {
             this.filterWords.push(word);
         },
         buildWords: throttle(function()  {
@@ -90,8 +86,6 @@ export default {
                 .responses
                 .map(r => r.response_info.text)
                 .join('\n '));
-                // .match(/\w+/g))
-                // .filter(w=>!this.filterWords.includes(w));
             
             if(this.textProcessing) {
                 
@@ -120,8 +114,6 @@ export default {
             var wordsWithoutStops = sw.removeStopwords(filteredWords.match(/"(.*?)"|\w+/g));
 
             var finalizedWords = wordsWithoutStops.concat(topics).filter(w=>!this.filterWords.includes(w));
-            // var wordsStemmed = wordsWithoutStops.map(word => stemmer(word).toLowerCase());
-
 
             const groups = finalizedWords.reduce((acc, w) => {
                 if (w.length < 2 || !isNaN(w)) {
@@ -143,9 +135,7 @@ export default {
                 return acc;
             }, []);
             
-            // groups =  cluster(
-            //     this.responses.map(r => r.response_info.text),
-            //     this.similarity).groups(0.9);
+
             var end = performance.now()
             this.buildtime = end - start
             var sortedArray = groups.sort((a,b) => { return b.value - a.value});
