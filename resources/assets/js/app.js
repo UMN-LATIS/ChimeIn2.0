@@ -27,7 +27,7 @@ Vue.use(VueAnnouncer);
 Vue.filter('pluralize', (word, amount) => amount === 1 ? word : `${word}s`)
 
 Vue.directive('tooltip', function(el, binding){
-    $(el).tooltip({
+    document.querySelector(el).tooltip({
         title: binding.value,
         placement: binding.arg,
         trigger: 'hover'             
