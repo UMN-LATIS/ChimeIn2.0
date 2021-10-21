@@ -19,7 +19,7 @@
                 <router-link :to="{ name: 'present', params: {chimeId: folder.chime_id, folderId: folder.id, questionId:question.order - 1} }" class="text-dark">
                 <i class="material-icons">play_arrow</i>
                 </router-link>
-            <a class="pointer text-dark" @click="show_edit = !show_edit">
+            <a class="pointer text-dark" @click="show_edit = !show_edit" data-cy="edit-question-button">
                 <i class="material-icons">edit</i>
             </a>
             <a class="pointer text-dark" @click="delete_question">

@@ -1,4 +1,15 @@
-import api from '../api/index.js';
+import api from "../api/index.js";
+
+const favoriteColorQuestion = {
+  chimeName: "Test Chime",
+  folderName: "Test Folder",
+  questionText: "What is your favorite color?",
+  questionResponses: [
+    { text: "Red", correct: false },
+    { text: "Green", correct: false },
+    { text: "Blue", correct: false },
+  ],
+};
 
 describe("question", () => {
   beforeEach(() => {
@@ -8,63 +19,108 @@ describe("question", () => {
   });
 
   it("creates a question", () => {
-    let testChime; 
+    let testChime;
     let testFolder;
-    api.createChime({ name: "Test Chime"}).then(chime => {
-      testChime = chime;
-      return api.createFolder({ name: "Test Folder", chimeId: chime.id });
-    }).then(folder => {
-      testFolder = folder;
-    }).then(() => {
-      cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+    api
+      .createChime({ name: "Test Chime" })
+      .then((chime) => {
+        testChime = chime;
+        return api.createFolder({ name: "Test Folder", chimeId: chime.id });
+      })
+      .then((folder) => {
+        testFolder = folder;
+      })
+      .then(() => {
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
 
-      // create the question
-      cy.get('[data-cy=new-question-button]').click();
-      cy.get("[data-cy=question-type]").type("Multiple Choice{enter}");
-      cy.get("[data-cy=question-editor]").type("What is your favorite color?");
-      
-      // add multiple choice options
-      cy.get("[data-cy=response-text-input]").type("Red{enter}");
-      cy.get("[data-cy=response-text-input]").type("Green{enter}");
-      cy.get("[data-cy=response-text-input]").type("Blue{enter}");
-      cy.contains("Save").click();
-      
-      // check that the question was created
-      cy.get("[data-cy=question-list] li").should(
-        "contain",
-        "What is your favorite color?"
-      );
-    });
+        // create the question
+        cy.get("[data-cy=new-question-button]").click();
+        cy.get("[data-cy=question-type]").type("Multiple Choice{enter}");
+        cy.get("[data-cy=question-editor]").type(
+          "What is your favorite color?"
+        );
+
+        // add multiple choice options
+        cy.get("[data-cy=response-text-input]").type("Red{enter}");
+        cy.get("[data-cy=response-text-input]").type("Green{enter}");
+        cy.get("[data-cy=response-text-input]").type("Blue{enter}");
+        cy.contains("Save").click();
+
+        // check that the question was created
+        cy.get("[data-cy=question-list] li").should(
+          "contain",
+          "What is your favorite color?"
+        );
+      });
   });
 
   it("opens a question", () => {
     let testChime, testFolder, testQuestion;
-    api.createChimeFolderQuestion({ chimeName: "Test Chime", folderName: "Test Folder", questionText: "What is your favorite color?", questionResponses: [
-      { text: "Red", correct: false },
-      { text: "Green", correct: false },
-      { text: "Blue", correct: false },
-    ]}).then(({chime, folder, question }) => {
-      testChime = chime;
-      testFolder = folder;
-      testQuestion = question;
-    }).then(() => {
-      cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
-
-      // open the question
-      cy.get("[data-cy=toggle-open-question]").click();
-    }).then(() => {
-      return api.getQuestion({
-        chimeId: testChime.id,
-        folderId: testFolder.id,
-        questionId: testQuestion.id,
+    api
+      .createChimeFolderQuestion(favoriteColorQuestion)
+      .then(({ chime, folder, question }) => {
+        testChime = chime;
+        testFolder = folder;
+        testQuestion = question;
       })
-    }).then((question) => {
-      // if question is open, current_session_id should be set
-      expect(question.current_session_id).to.be.greaterThan(0);
-    })
+      .then(() => {
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+        // open the question
+        cy.get("[data-cy=toggle-open-question]").click();
+      })
+      .then(() => {
+        return api.getQuestion({
+          chimeId: testChime.id,
+          folderId: testFolder.id,
+          questionId: testQuestion.id,
+        });
+      })
+      .then((question) => {
+        // if question is open, current_session_id should be set
+        expect(question.current_session_id).to.be.greaterThan(0);
+      });
   });
 
-  it("edits a question");
+  it.only("edits a question", () => {
+    let testChime, testFolder, testQuestion;
+    api
+      .createChimeFolderQuestion(favoriteColorQuestion)
+      .then(({ chime, folder, question }) => {
+        testChime = chime;
+        testFolder = folder;
+        testQuestion = question;
+      })
+      .then(() => {
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+        // edit the question
+        cy.get("[data-cy=edit-question-button]").click();
+
+        // change the question text
+        cy.get("[data-cy=question-editor]")
+          .clear()
+          .type("Updated question prompt");
+
+        // change a response option
+        cy.contains("Red").parent();
+
+        // expect that the UI is updated
+      })
+      .then(() => {
+        // also check that the API returns updated question
+        return api.getQuestion({
+          chimeId: testChime.id,
+          folderId: testFolder.id,
+          questionId: testQuestion.id,
+        });
+      })
+      .then((question) => {
+        expect(question.text).to.contain("Updated question prompt");
+        expect(question.responses[0].text).to.contain("Updated first response");
+      });
+  });
+
   it("deletes a question");
   it("changes the folder");
   it("allows multiple reponses");
