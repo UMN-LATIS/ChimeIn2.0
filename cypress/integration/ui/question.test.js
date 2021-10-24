@@ -99,12 +99,18 @@ describe("question", () => {
 
         // change the question text
         cy.get("[data-cy=question-editor]")
+          .find(".ql-editor")
           .clear()
           .type("Updated question prompt");
 
         // change a response option
-        cy.contains("Red").parent();
+        cy.contains("Red").as("test-response")
+        cy.get("@test-response").parent().find("[data-cy=edit-response]").click();
+        cy.get("[data-cy=response-text-input]").clear().type("Updated response");
+        cy.get("[data-cy=save-response-button]").click();
+        cy.get("@test-response").should("contain.text", "Updated response");
 
+        cy.contains("Save").click();
         // expect that the UI is updated
       })
       .then(() => {
@@ -117,7 +123,8 @@ describe("question", () => {
       })
       .then((question) => {
         expect(question.text).to.contain("Updated question prompt");
-        expect(question.responses[0].text).to.contain("Updated first response");
+        const responses = question.question_info.question_responses;
+        expect(responses[0].text).to.contain("Updated response");
       });
   });
 
