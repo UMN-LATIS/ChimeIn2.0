@@ -22,7 +22,7 @@
             <a class="pointer text-dark" @click="show_edit = !show_edit" data-cy="edit-question-button">
                 <i class="material-icons">edit</i>
             </a>
-            <a class="pointer text-dark" @click="delete_question">
+            <a class="pointer text-dark" @click="delete_question" data-cy="delete-question-button">
                 <i class="material-icons ">delete</i>
             </a>
 </div>

@@ -82,7 +82,7 @@ describe("question", () => {
       });
   });
 
-  it.only("edits a question", () => {
+  it("edits a question", () => {
     let testChime, testFolder, testQuestion;
     api
       .createChimeFolderQuestion(favoriteColorQuestion)
@@ -128,7 +128,23 @@ describe("question", () => {
       });
   });
 
-  it("deletes a question");
+  it("deletes a question", () => {
+    let testChime, testFolder;
+    api
+      .createChimeFolderQuestion(favoriteColorQuestion)
+      .then(({ chime, folder }) => {
+        testChime = chime;
+        testFolder = folder;
+      })
+      .then(() => {
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+        cy.get("[data-cy=delete-question-button]").click();
+
+        // should not exist
+        cy.get('[data-cy=question-list]').should('not.contain.text', favoriteColorQuestion.questionText);
+      });
+  });
+
   it("changes the folder");
   it("allows multiple reponses");
   it("supports rich text formatting in the question text");
