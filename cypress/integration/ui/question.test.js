@@ -140,8 +140,13 @@ describe("question", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
         cy.get("[data-cy=delete-question-button]").click();
 
-        // should not exist
+        // check UI that question does not exist
         cy.get('[data-cy=question-list]').should('not.contain.text', favoriteColorQuestion.questionText);
+
+        // check API too
+        return api.getAllQuestions({ chimeId: testChime.id, folderId: testFolder.id });
+      }).then((questions) => {
+        expect(questions).to.equal([]);
       });
   });
 
