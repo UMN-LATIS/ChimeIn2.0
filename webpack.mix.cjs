@@ -15,11 +15,8 @@ const webpack = require("webpack");
 mix
   .js("resources/assets/js/app.js", "public/js")
   .vue()
-  .sass("resources/assets/sass/app.scss", "public/css");
-
-if (!mix.inProduction()) {
-  mix.sourceMaps();
-}
+  .sass("resources/assets/sass/app.scss", "public/css")
+  .sourceMaps(false, "source-map");
 
 if (mix.inProduction()) {
   mix.version();
