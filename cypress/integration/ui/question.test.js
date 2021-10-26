@@ -18,7 +18,7 @@ describe("question", () => {
     cy.login("faculty");
   });
 
-  it("creates a question", () => {
+  it("creates a question (multiple choice)", () => {
     let testChime;
     let testFolder;
     api
@@ -146,7 +146,7 @@ describe("question", () => {
         // check API too
         return api.getAllQuestions({ chimeId: testChime.id, folderId: testFolder.id });
       }).then((questions) => {
-        expect(questions).to.equal([]);
+        expect(questions).to.deep.equal([]);
       });
   });
 
@@ -157,14 +157,62 @@ describe("question", () => {
   it("creates an anonymous question");
 
   describe("multiple choice", () => {
-    it("adds a multiple choice question with responses");
     it("marks correct responses");
     it("edits responses");
     it("removes respones");
   });
 
   describe("free response question", () => {
-    it("creates a free response question");
+    it("creates a free response question", () => {
+      let testChime;
+      let testFolder;
+      api
+        .createChime({ name: "Test Chime" })
+        .then((chime) => {
+          testChime = chime;
+          return api.createFolder({ name: "Test Folder", chimeId: chime.id });
+        })
+        .then((folder) => {
+          testFolder = folder;
+        })
+        .then(() => {
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+  
+          // create the question
+          cy.get("[data-cy=new-question-button]").click();
+          cy.get("[data-cy=question-type]").type("Free Response{enter}");
+          cy.get("[data-cy=question-editor]").type(
+            "Free Response Question?"
+          );
+          cy.contains("Save").click();
+
+          // check that the question was created
+          cy.get("[data-cy=question-list] li").should(
+            "contain",
+            "Free Response Question?"
+          );
+
+          // open question
+          cy.get("[data-cy=toggle-open-question]").click();
+
+          // logout faculty, become guest user
+          cy.logout();
+
+          // as a guest, record a response
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.get("[data-cy=free-response-textarea]").type("Guest response");
+          cy.contains("Save").click();
+
+          // login as faculty
+          cy.login("faculty");
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+          // TODO: it should show wordcloud
+          
+
+        });
+    });
+
     it("hides wordcloud");
   });
 
