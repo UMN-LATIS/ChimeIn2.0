@@ -66,11 +66,11 @@ export default {
   font-weight: normal;
   padding: 0.25rem 0.5rem;
   background: var(--gold-light);
-  color: #333;
+  color: var(--black);
   border: 1px solid var(--gold-dark);
 }
 a {
-  color: #333;
+  color: var(--black)
 }
 
 a:hover {
