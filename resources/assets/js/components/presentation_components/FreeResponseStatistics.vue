@@ -23,7 +23,7 @@
         <h2 class="smallHeader">Responses</h2>
         <ul>
             <transition-group name="fade">
-                <li class="userResponse" v-for="r in responses.slice().reverse()" v-bind:key="r">
+                <li class="userResponse" v-for="r in responses.slice().reverse()" :key="r.id">
                     <p><strong>{{ question.anonymous?"Anonymous":r.user.name}}</strong></p>
                     <p>{{ r.response_info.text }}</p>
                 </li>
