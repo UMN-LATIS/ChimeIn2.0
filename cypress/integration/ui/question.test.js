@@ -240,7 +240,7 @@ describe("question", () => {
   });
 
   describe("text heatmap", () => {
-    it.only("creates a text heatmap question and lets partipants select parts", () => {
+    it("creates a text heatmap question and lets partipants select parts", () => {
       let testChime;
       let testFolder;
       api
