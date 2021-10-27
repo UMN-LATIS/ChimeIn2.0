@@ -15,6 +15,7 @@
 
 import "./commands";
 import "./laravel-commands";
+import "./selection-commands";
 import "./laravel-routes";
 import "./assertions";
 
