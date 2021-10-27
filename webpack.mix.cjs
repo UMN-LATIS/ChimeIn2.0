@@ -14,16 +14,10 @@ const webpack = require("webpack");
 
 mix
   .js("resources/assets/js/app.js", "public/js")
-  .sass("resources/assets/sass/app.scss", "public/css");
-
-mix.webpackConfig({
-  plugins: [new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],
-});
+  .vue()
+  .sass("resources/assets/sass/app.scss", "public/css")
+  .sourceMaps(false, "source-map");
 
 if (mix.inProduction()) {
-  mix.config.webpackConfig.output = {
-    chunkFilename: "js/[name].[chunkhash].bundle.js",
-    publicPath: "/",
-  };
   mix.version();
 }

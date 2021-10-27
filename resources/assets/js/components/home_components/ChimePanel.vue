@@ -48,9 +48,8 @@
 </template>
 
 <script>
-import {
-    EventBus
-} from '../../event-bus.js';
+import orderBy from 'lodash/orderBy'
+import { EventBus } from '../../event-bus.js';
 
 export default {
     props: ['user'],
@@ -105,7 +104,7 @@ export default {
     },
     computed: {
         orderedChimes: function () {
-            return _.orderBy(this.chimes, 'created_at', ['desc'])
+            return orderBy(this.chimes, 'created_at', ['desc'])
         },
     },
     created: function () {

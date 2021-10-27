@@ -40,7 +40,6 @@ export const questionsListener = {
         .then(res => {                
             this.folder = res.data;
             this.questions = res.data.questions.sort((a,b) => a.order - b.order);
-            console.log(this.questions);
             })
         .catch(err => {
             this.$store.commit('message', "Could not load questions. You may not have permission to view this page. ");
@@ -50,9 +49,6 @@ export const questionsListener = {
     }
 },
 mounted(){
-
-
-    var self=this;
     Echo.join('session-status.' + this.get_chime())
     .here((users) => {
             this.usersCount = users.length;
@@ -73,10 +69,10 @@ mounted(){
             }
         }
     })
-    .joining((user) => {
+    .joining(() => {
         this.usersCount = this.usersCount + 1;
     })
-    .leaving((user) => {
+    .leaving(() => {
         this.usersCount = this.usersCount - 1;
     });
 
@@ -98,6 +94,7 @@ mounted(){
                 return;
             }
 
+            // eslint-disable-next-line no-prototype-builtins
             if(!targetSession.hasOwnProperty('responses')) {
                 targetSession.responses = new Array();
             }
@@ -106,7 +103,7 @@ mounted(){
             if(m.isEdit) {
                 targetSession.responses.forEach((response, index) => {
                     if(response.id == m.response.id) {
-                        Vue.set(targetSession.responses, index, m.response);
+                        this.$set(targetSession.responses, index, m.response);
                         updateInPlace = true;
                     }
                 });

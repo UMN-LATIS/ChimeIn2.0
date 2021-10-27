@@ -1,6 +1,6 @@
 <template>
   <modal :show="show" @close="close">
-    <div class="modal-header">
+    <div class="modal-header" data-cy="add-question-form">
       <h3>Add a Question</h3>
     </div>
     <div class="modal-body">

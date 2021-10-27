@@ -162,6 +162,7 @@
 
 .pretty {
     margin-right: 0;
+    font-size: 15px;
 }
 
 .p-switch {

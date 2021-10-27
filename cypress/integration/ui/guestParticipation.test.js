@@ -15,40 +15,28 @@ describe("participating as a guest", () => {
     // as a faculty member
     cy.login("faculty");
     api
-      .createChime({ name: "Test Chime" })
-      .then((chime) => {
-        testChime = chime;
-        return api.createFolder({
-          chimeId: testChime.id,
-          name: "Test Folder",
-        });
-      })
-      .then((folder) => {
-        testFolder = folder;
-        return api.createQuestion({
-          chimeId: testChime.id,
-          folderId: testFolder.id,
-          question_text: "Test Question",
-          question_info: {
-            question_type: "multiple_choice",
-            question_responses: [
-              {
-                text: "A",
-                correct: false,
-              },
-              {
-                text: "B",
-                correct: false,
-              },
-              {
-                text: "C",
-                correct: false,
-              },
-            ],
+      .createChimeFolderQuestion({
+        chimeName: "Test Chime",
+        folderName: "Test Folder",
+        questionText: "Test Question",
+        questionResponses: [
+          {
+            text: "A",
+            correct: false,
           },
-        });
+          {
+            text: "B",
+            correct: false,
+          },
+          {
+            text: "C",
+            correct: false,
+          },
+        ],
       })
-      .then((question) => {
+      .then(({ chime, folder, question }) => {
+        testChime = chime;
+        testFolder = folder;
         testQuestion = question;
       });
 
