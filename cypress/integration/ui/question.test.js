@@ -116,7 +116,17 @@ describe("question", () => {
         cy.get("@test-response").should("contain.text", "Updated response");
 
         cy.contains("Save").click();
-        // expect that the UI is updated
+
+        // expect that the UI is updated on question list page
+        cy.get("[data-cy=question-list] li").should(
+          "contain",
+          "Updated question prompt"
+        );
+
+        // expect that question is updated in presentation view
+        cy.get("[data-cy=present-question-button]").click();
+        cy.contains("Updated question prompt");
+        cy.contains("Updated response");
       })
       .then(() => {
         // also check that the API returns updated question
@@ -175,7 +185,7 @@ describe("question", () => {
   });
 
   describe("free response question", () => {
-    it.only("creates a free response question", () => {
+    it("creates a free response question", () => {
       let testChime;
       let testFolder;
       api
