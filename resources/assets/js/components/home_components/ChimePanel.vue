@@ -10,6 +10,13 @@
                 <div class="card mt-1" v-if="!user.guest_user && showAdd">
                     <div class="card-body">
                         <div class="form-group row">
+                            <div class="col-sm-12">
+                                <b>Using ChimeIn with Canvas?</b> Don't create your Chime here - follow our <a
+                                    href="https://umn-latis.github.io/ChimeIn2.0/canvas.html">ChimeIn/Canvas
+                                    guide</a>.
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="chime_name_input" class="col-sm-2 col-form-label">Chime Name</label>
                             <div class="col-sm-8">
                                 <input id="chime_name_input" class="form-control" type="text"
