@@ -19,7 +19,7 @@
                     <i class="material-icons left">stop</i>
                     Close Question
                 </button>
-                <button class="btn btn-outline-primary align-items-center d-flex" v-on:click="show_results = !show_results">
+                <button data-cy="show-results-button" class="btn btn-outline-primary align-items-center d-flex" v-on:click="show_results = !show_results">
                     <i class="material-icons left">zoom_in</i>
                     <span v-if="show_results">
                         Hide Results

@@ -25,13 +25,17 @@
                         class="material-icons inline-icon" v-if="isObject(r) ? r.correct : false">check</i>
                         </div>
                         <div class="col-2">
-                        <i
-                        class="material-icons pointer inline-icon"
-                        v-on:click="edit(i)">edit</i>
-                        
+                            <i 
+                                data-cy="edit-response"
+                                class="material-icons pointer inline-icon"
+                                v-on:click="edit(i)">
+                                edit
+                            </i>
                             <i
-                        class="material-icons pointer inline-icon"
-                        v-on:click="remove(i)">delete</i>
+                                class="material-icons pointer inline-icon"
+                                v-on:click="remove(i)">
+                                delete
+                            </i>
                         </div>
                     </div>
                     </li>
@@ -58,7 +62,7 @@
                 class="validate form-control"
                 v-bind:disabled="truefalse">
                 <div class="input-group-append ">
-                    <button @click="add_choice" class="btn btn-outline-primary  align-items-center d-flex"><span class="material-icons ">{{ editing_index !==null ? "save":"add" }}</span></button>
+                    <button @click="add_choice" data-cy="save-response-button" class="btn btn-outline-primary  align-items-center d-flex"><span class="material-icons ">{{ editing_index !==null ? "save":"add" }}</span></button>
                 </div>
             </div>
         </div>

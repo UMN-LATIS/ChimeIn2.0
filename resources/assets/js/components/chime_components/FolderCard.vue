@@ -33,7 +33,7 @@
         </router-link>
       </li>
       <li class="folder-card__action">
-        <router-link
+        <router-link 
           :to="{
             name: 'present',
             params: { chimeId: chime.id, folderId: folder.id },
