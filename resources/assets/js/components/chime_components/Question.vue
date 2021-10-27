@@ -16,7 +16,7 @@
             <div class="float-right">
                 <p-check name="check" data-cy="toggle-open-question" class="p-switch p-outline" color="success" v-model="check"> &nbsp;
                 </p-check>
-                <router-link :to="{ name: 'present', params: {chimeId: folder.chime_id, folderId: folder.id, questionId:question.order - 1} }" class="text-dark">
+                <router-link data-cy="present-question-button" :to="{ name: 'present', params: {chimeId: folder.chime_id, folderId: folder.id, questionId:question.order - 1} }" class="text-dark">
                 <i class="material-icons">play_arrow</i>
                 </router-link>
             <a class="pointer text-dark" @click="show_edit = !show_edit" data-cy="edit-question-button">

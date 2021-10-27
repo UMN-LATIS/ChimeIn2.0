@@ -104,9 +104,14 @@ describe("question", () => {
           .type("Updated question prompt");
 
         // change a response option
-        cy.contains("Red").as("test-response")
-        cy.get("@test-response").parent().find("[data-cy=edit-response]").click();
-        cy.get("[data-cy=response-text-input]").clear().type("Updated response");
+        cy.contains("Red").as("test-response");
+        cy.get("@test-response")
+          .parent()
+          .find("[data-cy=edit-response]")
+          .click();
+        cy.get("[data-cy=response-text-input]")
+          .clear()
+          .type("Updated response");
         cy.get("[data-cy=save-response-button]").click();
         cy.get("@test-response").should("contain.text", "Updated response");
 
@@ -141,11 +146,18 @@ describe("question", () => {
         cy.get("[data-cy=delete-question-button]").click();
 
         // check UI that question does not exist
-        cy.get('[data-cy=question-list]').should('not.contain.text', favoriteColorQuestion.questionText);
+        cy.get("[data-cy=question-list]").should(
+          "not.contain.text",
+          favoriteColorQuestion.questionText
+        );
 
         // check API too
-        return api.getAllQuestions({ chimeId: testChime.id, folderId: testFolder.id });
-      }).then((questions) => {
+        return api.getAllQuestions({
+          chimeId: testChime.id,
+          folderId: testFolder.id,
+        });
+      })
+      .then((questions) => {
         expect(questions).to.deep.equal([]);
       });
   });
@@ -163,7 +175,7 @@ describe("question", () => {
   });
 
   describe("free response question", () => {
-    it("creates a free response question", () => {
+    it.only("creates a free response question", () => {
       let testChime;
       let testFolder;
       api
@@ -177,19 +189,17 @@ describe("question", () => {
         })
         .then(() => {
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
-  
+
           // create the question
           cy.get("[data-cy=new-question-button]").click();
           cy.get("[data-cy=question-type]").type("Free Response{enter}");
-          cy.get("[data-cy=question-editor]").type(
-            "Free Response Question?"
-          );
+          cy.get("[data-cy=question-editor]").type("Free response question?");
           cy.contains("Save").click();
 
           // check that the question was created
-          cy.get("[data-cy=question-list] li").should(
+          cy.get("[data-cy=question-list]").should(
             "contain",
-            "Free Response Question?"
+            "Free response question?"
           );
 
           // open question
@@ -206,10 +216,13 @@ describe("question", () => {
           // login as faculty
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+          cy.get("[data-cy=present-question-button]").click();
+          cy.get("[data-cy=show-results-button").click();
 
-          // TODO: it should show wordcloud
-          
-
+          // "Guest" and "response" should be in the SVG word cloud
+          cy.get("[data-cy=word-cloud]")
+            .contains("svg", "Guest")
+            .contains("svg", "response");
         });
     });
 
