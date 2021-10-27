@@ -13,8 +13,14 @@
 
 
 <script>
+import { VueEditor } from "vue2-editor";
+
   export default {
+    name: 'TextHeatmapResponse',
     props: ["question_responses"],
+    components: {
+      'vue-editor': VueEditor
+    },
     data: function () {
       return {
         heatmap_text: this.question_responses.heatmap_text,

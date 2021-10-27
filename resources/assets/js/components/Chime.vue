@@ -6,9 +6,6 @@
       <header class="chime__header">
         <div class="chime__header-container">
           <div>
-            <p class="chime__header-label">
-              Chime
-            </p>
             <h1 class="chime__name">{{ chime.name }}</h1>
           </div>
 
@@ -24,6 +21,7 @@
               @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
               class="btn btn-outline-secondary align-items-center d-flex"
               :class="{ 'btn--is-active': showSettings }"
+              data-cy="toggle-chime-settings-panel"
             >
               Chime Settings <span class="material-icons">settings</span>
             </button>
@@ -32,12 +30,14 @@
               @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
               class="btn btn-outline-secondary align-items-center d-flex"
               :class="{ 'btn--is-active': exportPanel }"
+              data-cy="toggle-chime-export-panel"
             >
               Export <span class="material-icons">save_alt</span>
             </button>
           </div>
         </div>
         <div
+          v-if="isReady"
           class="chime__settings-panel"
           :class="{
             'chime__settings-panel--isOpen': showSettings || exportPanel,
@@ -106,24 +106,20 @@
   margin-left: 0.25rem;
 }
 
-.chime__control-buttons--is-active {
-  box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 20%);
-}
-
 .chime__control-buttons .btn--is-active {
-  background-color: var(--gold-light);
-  color: var(--gray-dark);
+  background: var(--gray-dark);
+  color: #fff;
 }
 
 .chime__settings-panel {
   display: none;
   margin-top: 1rem;
   padding: 2rem;
-  background-color: #eee;
+  background-color: #fafafa;
   line-height: 1.5;
   border-radius: 0.25rem;
-  box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 40%);
   overflow: auto;
+  border: 1px solid var(--gray-light);
 }
 .chime__settings-panel--isOpen {
   display: block;
@@ -136,14 +132,13 @@
   .chime__header-container {
     display: block;
   }
-  .chime__settings-panel {
-  }
 }
 </style>
 
 <script>
 import draggable from "vuedraggable";
 import Spinner from "./Spinner.vue";
+import orderBy from 'lodash/orderBy';
 
 export default {
   components: {
@@ -225,7 +220,7 @@ export default {
         if (!this.chime || !this.chime.folders) {
           return [];
         }
-        return _.orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
+        return orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
       },
       set(value) {
         console.log(value);
@@ -235,7 +230,7 @@ export default {
           .put(url, {
             folders: this.chime.folders,
           })
-          .then((res) => {
+          .then(() => {
             this.chime.folders = value;
           })
           .catch((err) => {

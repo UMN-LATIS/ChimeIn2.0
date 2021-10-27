@@ -35,12 +35,15 @@
 </style>
 
 <script>
-
+    import { component as fullscreen } from 'vue-fullscreen';
     import { questionsListener } from './mixins/questionsListener'
-    
+    import toHyphenatedCode from '../helpers/toHyphenatedCode.mjs';
 
     export default {
         mixins: [questionsListener],
+        components: {
+            fullscreen,
+        },
         data() {
             return {
                 folder: {name:""},
@@ -95,7 +98,7 @@
             if(!this.chime || !this.chime.join_instructions) {
                 return "";
             }
-            return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
+            return toHyphenatedCode(this.chime.access_code);
         }
     },
     watch: {

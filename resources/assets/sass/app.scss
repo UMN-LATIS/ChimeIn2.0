@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap");
 
 // Vendor
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~vue-select/src/scss/vue-select.scss";
 @import "~pretty-checkbox";
 @import "~katex/dist/katex.min.css";
@@ -57,7 +57,7 @@ html {
 body {
   height: 100%;
   font-family: "Open Sans", sans-serif;
-  color: #5a5a5a;
+  color: var(--black);
   line-height: 1.4;
   display: flex;
   flex-direction: column;
@@ -71,7 +71,6 @@ h2,
 h3,
 h4,
 h5 {
-  color: #333;
   line-height: 1.2;
 }
 
@@ -93,4 +92,19 @@ h5 {
 
 .material-icons.md-48 {
   font-size: 48px;
+}
+
+.btn-outline-secondary {
+  border-color: var(--gray-dark);
+  color:  var(--gray-dark);
+}
+
+.btn-outline-secondary:hover {
+  color: #fff;
+  background-color: var(--gray-dark);
+  border-color: var(--gray-dark);
+}
+
+.navbar-light .navbar-nav .nav-link {
+  font-size: 14px;
 }

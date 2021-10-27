@@ -39,7 +39,7 @@ describe("authentication", () => {
   context("when the user has previously authenticated", () => {
     it("recognizes the user", () => {
       // login successfully (faking this using the api)
-      cy.login({ umndid: "admin" });
+      cy.login("admin");
 
       // now test that it recognizes our credentials
       cy.visit("/");

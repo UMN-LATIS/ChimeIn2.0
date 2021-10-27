@@ -45,12 +45,6 @@
 .new-folder {
   max-width: 40rem;
 }
-.new-folder:focus-within .new-folder__input {
-  box-shadow: 0 0.25rem 0.5rem rgb(0 0 0 / 20%);
-}
-.new-folder:focus-within .new-folder__button {
-  box-shadow: 0 0.25rem 0.5rem #007bff;
-}
 </style>
 
 <script>

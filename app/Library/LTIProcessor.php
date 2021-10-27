@@ -2,7 +2,7 @@
 
 
 namespace App\Library;
-
+use Illuminate\Support\Facades\Log;
 use DB;
 
 use IMSGlobal\LTI\ToolProvider;
@@ -45,7 +45,9 @@ class LTIProcessor {
 					$score = $globalUsers[$user->ltiUserId] / $totalQuestions;
 				}
 				$lti_outcome = new ToolProvider\Outcome($score, null);
-				$resource_link->doOutcomesService(ToolProvider\ResourceLink::EXT_WRITE, $lti_outcome, $user);
+				if(!$resource_link->doOutcomesService(ToolProvider\ResourceLink::EXT_WRITE, $lti_outcome, $user)) {
+					Log::error("Error synchronizing LTI Outcome", ["user"=>$user->ltiUserId, "score"=>$score, "resource"=>$folder->resource_link_pk, "request"=>$resource_link->extRequest]);
+				}
 			}
 		}
 		

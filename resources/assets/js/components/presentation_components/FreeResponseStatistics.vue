@@ -23,7 +23,7 @@
         <h2 class="smallHeader">Responses</h2>
         <ul>
             <transition-group name="fade">
-                <li class="userResponse" v-for="r in responses.slice().reverse()" v-bind:key="r">
+                <li class="userResponse" v-for="r in responses.slice().reverse()" :key="r.id">
                     <p><strong>{{ question.anonymous?"Anonymous":r.user.name}}</strong></p>
                     <p>{{ r.response_info.text }}</p>
                 </li>
@@ -38,23 +38,11 @@
 </template>
 
 <script>
-
+import throttle from 'lodash/throttle';
 import wordcloud from 'vue-wordcloud/src/components/WordCloud'
-
-const nlp = require('compromise');
-
-const stemmer = require('stemmer');
-// const wordcloud = require('vue-wordcloud').default;
-const difflib = require('difflib');
-const cluster = require('set-clustering');
-
-Vue.directive('tooltip', function(el, binding){
-    $(el).tooltip({
-             title: binding.value,
-             placement: binding.arg,
-             trigger: 'hover'             
-         })
-})
+import nlp from 'compromise';
+import stemmer from 'stemmer';
+import difflib from 'difflib';
 
 export default {
     components: {
@@ -88,18 +76,16 @@ export default {
         similarity: function (x, y) {
             return (new difflib.SequenceMatcher(null, x, y)).ratio();
         },
-        wordClicked: function(word, event) {
+        wordClicked: function(word) {
             this.filterWords.push(word);
         },
-        buildWords: _.throttle(function()  {
+        buildWords: throttle(function()  {
             var start = performance.now()
             const words = (
                 this
                 .responses
                 .map(r => r.response_info.text)
                 .join('\n '));
-                // .match(/\w+/g))
-                // .filter(w=>!this.filterWords.includes(w));
             
             if(this.textProcessing) {
                 
@@ -128,8 +114,6 @@ export default {
             var wordsWithoutStops = sw.removeStopwords(filteredWords.match(/"(.*?)"|\w+/g));
 
             var finalizedWords = wordsWithoutStops.concat(topics).filter(w=>!this.filterWords.includes(w));
-            // var wordsStemmed = wordsWithoutStops.map(word => stemmer(word).toLowerCase());
-
 
             const groups = finalizedWords.reduce((acc, w) => {
                 if (w.length < 2 || !isNaN(w)) {
@@ -151,9 +135,7 @@ export default {
                 return acc;
             }, []);
             
-            // groups =  cluster(
-            //     this.responses.map(r => r.response_info.text),
-            //     this.similarity).groups(0.9);
+
             var end = performance.now()
             this.buildtime = end - start
             var sortedArray = groups.sort((a,b) => { return b.value - a.value});

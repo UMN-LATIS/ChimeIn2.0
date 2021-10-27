@@ -1,6 +1,7 @@
 <template>
   <div class="chime-management">
-    <div class="form-group row">
+    <h2 class="chime-management__heading">Chime Settings</h2>
+    <div class="form-group">
       <label class="sr-only" for="chimeName"
         ><strong>Chime Name:</strong></label
       >
@@ -10,11 +11,13 @@
           class="form-control"
           id="chimeName"
           v-model="chime_name"
+          data-cy="chime-name-input"
         />
         <div class="input-group-append">
           <button
             class="btn btn-outline-primary align-items-center d-flex btn-sm"
             @click="saveChime"
+            data-cy="save-chime-name-button"
           >
             <span class="material-icons pointer md-18">save</span> Update Chime
             Name
@@ -58,7 +61,7 @@
     </div>
     <hr />
 
-    <div class="row">
+    <div class="row" data-cy="chime-users-list">
       <div class="col-sm-12">
         <h4>Users</h4>
         <table class="table">
@@ -74,7 +77,7 @@
             <tr v-for="(u, key) in sorted_users" :key="key">
               <td>{{ u.name }}</td>
               <td>{{ u.email }}</td>
-              <td>
+              <td data-cy="select-user-permissions-in-chime">
                 <template v-if="u.editPermission">
                   <select
                     class="form-control form-control-sm"
@@ -99,7 +102,11 @@
                 </span>
               </td>
               <td>
-                <button class="btn btn-sm btn-danger" @click="deleteUser(key)">
+                <button
+                  data-cy="remove-user-from-chime-button"
+                  class="btn btn-sm btn-danger"
+                  @click="deleteUser(key)"
+                >
                   Remove User
                 </button>
               </td>
@@ -113,8 +120,12 @@
 
 <style scoped>
 .chime-management {
+  padding: 1rem;
   max-width: 50rem;
-  margin: auto;
+}
+.chime-management__heading {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 ul li {
   list-style: none;

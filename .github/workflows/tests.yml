@@ -35,6 +35,12 @@ jobs:
       - run: docker-compose exec -T app php artisan migrate:fresh
       - run: docker-compose exec -T app php artisan db:seed
 
+      - name: Lint code
+        run: docker-compose exec -T app yarn run lint
+
+      - name: Run unit tests with Jest
+        run: docker-compose exec -T app yarn run test:unit
+
       - name: Run E2E tests with Cypress
         uses: cypress-io/github-action@v2
         with:
