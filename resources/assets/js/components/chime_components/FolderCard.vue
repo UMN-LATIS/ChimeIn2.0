@@ -66,11 +66,11 @@ export default {
   font-weight: normal;
   padding: 0.25rem 0.5rem;
   background: var(--gold-light);
-  color: #333;
+  color: var(--black);
   border: 1px solid var(--gold-dark);
 }
 a {
-  color: #333;
+  color: var(--black)
 }
 
 a:hover {
@@ -105,10 +105,20 @@ a:hover {
   padding: 0.5rem;
   padding-left: 1rem;
 }
+/** 
+* drag handle appears with more than one card.
+* reduce the left-padding on the wrapper
+*/
+.folder-card__drag-handle + .folder-card__name-wrapper {
+  padding-left: 0.5rem;
+}
+
 .folder-card__name-wrapper {
-  padding: 1.5rem 0.5rem;
+  padding: 1.5rem 1rem 1.5rem 1.5rem;
   flex-grow: 1;
 }
+
+
 .folder-card__name {
   margin: 0;
   font-size: 1.5rem;
