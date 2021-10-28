@@ -308,7 +308,7 @@ describe("question", () => {
   });
 
   describe("image response", () => {
-    it.only("creates an image response question", () => {
+    it("creates an image response question", () => {
       let testChime;
       let testFolder;
 
