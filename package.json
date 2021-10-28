@@ -27,7 +27,7 @@
     "caniuse-lite": "^1.0.30001269",
     "cross-env": "^7.0.3",
     "css-loader": "^6.4.0",
-    "cypress": "8.6.0",
+    "cypress": "8.7",
     "cypress-file-upload": "^5.0.8",
     "eslint": "^8.0.1",
     "eslint-plugin-cypress": "^2.12.1",
