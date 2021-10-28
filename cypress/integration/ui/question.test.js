@@ -291,20 +291,94 @@ describe("question", () => {
           cy.get("[data-cy=show-results-button").click();
 
           // the "h" in "feel the heat" should be highlighted redish
-          cy.get(':nth-child(140)').should(
+          cy.get(":nth-child(140)").should(
             "have.css",
             "background-color",
             "rgb(255, 153, 153)"
           );
 
           // the "a" in "around" should not be highlighted
-          cy.get(':nth-child(145)').should('have.css', 'background-color', 'rgb(255, 255, 255)');
+          cy.get(":nth-child(145)").should(
+            "have.css",
+            "background-color",
+            "rgb(255, 255, 255)"
+          );
         });
     });
   });
 
   describe("image response", () => {
-    it("creates an image response question");
+    it.only("creates an image response question", () => {
+      let testChime;
+      let testFolder;
+
+      // set up an intecept to watch image uploads
+      // so that we can wait for upload to complete
+      cy.intercept({
+        method: "POST",
+        url: "/api/chime/**/image",
+      }).as("upload");
+
+      api
+        .createChime({
+          name: "Test Chime",
+        })
+        .then((chime) => {
+          testChime = chime;
+          return api.createFolder({
+            name: "Test Folder",
+            chimeId: chime.id,
+          });
+        })
+        .then((folder) => {
+          testFolder = folder;
+        })
+        .then(() => {
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+          // create the question
+          cy.get("[data-cy=new-question-button]").click();
+          cy.get("[data-cy=question-type]").type("Image Response{enter}");
+          cy.get("[data-cy=question-editor]").type("Image response question?");
+          cy.contains("Save").click();
+
+          // check that the question was created
+          cy.get("[data-cy=question-list]").should(
+            "contain",
+            "Image response question?"
+          );
+
+          // open question
+          cy.get("[data-cy=toggle-open-question]").click();
+
+          // logout faculty, become guest user
+          cy.logout();
+
+          // as a guest, attach an image
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.get("[data-cy=image-dropzone]").attachFile("goldy-650x435.jpg");
+
+          // wait for upload to finish
+          cy.wait("@upload", { requestTimeout: 10000 });
+
+          // expect the image thumbnail to be displayed
+          cy.get("[data-cy=image-thumbnail]").should("exist");
+
+          // login as faculty
+          cy.login("faculty");
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+          cy.get("[data-cy=present-question-button]").click();
+          cy.get("[data-cy=show-results-button").click();
+
+          // expect goldy image to be displayed
+          // just checking extension for now, as name could have changed
+          // to the image's hash
+          cy.get("[data-cy=image-responses]")
+            .find("img")
+            .should("have.attr", "src")
+            .should("include", ".jpg");
+        });
+    });
   });
 
   describe("slider", () => {

@@ -28,10 +28,12 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.4.0",
     "cypress": "8.6.0",
+    "cypress-file-upload": "^5.0.8",
     "eslint": "^8.0.1",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jest": "^25.2.2",
     "eslint-plugin-vue": "^7.20.0",
+    "husky": "^7.0.0",
     "jest": "^27.3.0",
     "jquery": "^3.5.1",
     "laravel-mix": "^6.0.34",
@@ -47,8 +49,7 @@
     "vue-loader": "^15.9.7",
     "vuepress-plugin-medium-zoom": "^1.1.9",
     "webpack": "^5.58.2",
-    "webpack-bundle-analyzer": "^4.5.0",
-    "husky": "^7.0.0"
+    "webpack-bundle-analyzer": "^4.5.0"
   },
   "dependencies": {
     "bootstrap": "^4.6.0",

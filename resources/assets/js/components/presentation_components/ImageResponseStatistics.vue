@@ -3,8 +3,11 @@
     <div v-if="responses.length > 0" class="row">
         <div class="col">
             <button class="btn btn-warning" data-toggle="button" v-bind:class="{ active: filterImages}" @click="filterImages=!filterImages">Manage Images</button>
-            <lightbox v-if="!filterImages" v-bind:id="'lightbox' + question.id " :images="images" image_class="img-responsive img-rounded" :options="options">
-            </lightbox>
+            <div data-cy="image-responses">
+                <lightbox v-if="!filterImages" v-bind:id="'lightbox' + question.id " :images="images" image_class="img-responsive img-rounded" :options="options">
+                </lightbox>
+            </div>
+
 
             
             <table class="table" v-if="filterImages">
