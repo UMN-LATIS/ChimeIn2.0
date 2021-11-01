@@ -68,9 +68,9 @@ Cypress.Commands.add("delayResponse", (url, delayInMs) => {
  * ```
  */
 addMatchImageSnapshotCommand({
-  failureThreshold: 0.0,
+  failureThreshold: 0,
   failureThresholdType: "percent",
-  customDiffConfig: { threshold: 0.0 },
+  customDiffConfig: { threshold: 0.05 },
   capture: "viewport",
 });
 
