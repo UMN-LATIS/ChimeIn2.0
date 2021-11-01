@@ -464,7 +464,7 @@ describe("question", () => {
   });
 
   describe("image heatmap", () => {
-    it.only("creates an image heatmap question", () => {
+    it("creates an image heatmap question", () => {
       let testChime;
       let testFolder;
 
