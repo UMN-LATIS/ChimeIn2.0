@@ -3,7 +3,7 @@
         <div class="row value-slider">
                  <div class="col">
                 <div class="range-wrap ">
-                <input type="range" :disabled="disabled" class="form-control-range custom-range range" :value="sliderValue" @change="valueChanged($event.target.value)" id="formControlRange" >
+                <input type="range" :disabled="disabled" class="form-control-range custom-range range" :value="sliderValue" @change="valueChanged($event.target.value)" id="formControlRange" data-cy="slider-response-input">
                 <output class="bubble" :style="customStyle" v-if="question.question_info.question_responses.range_type == 'Numeric (Linear)'">{{ bubbleValue }}</output>
                 </div>
                 </div>
