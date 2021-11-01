@@ -382,9 +382,84 @@ describe("question", () => {
   });
 
   describe("slider", () => {
-    it("creates a slider question");
-    it("sets the left label");
-    it("sets the right label");
+    it("creates a qualitative slider question and lets participant respond", () => {
+      let testChime;
+      let testFolder;
+
+      api
+        .createChime({ name: "Test Chime" })
+        .then((chime) => {
+          testChime = chime;
+          return api.createFolder({ name: "Test Folder", chimeId: chime.id });
+        })
+        .then((folder) => {
+          testFolder = folder;
+        })
+        .then(() => {
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+          // create the question
+          cy.get("[data-cy=new-question-button]").click();
+          cy.get("[data-cy=question-type]").type("Slider{enter}");
+          cy.get("[data-cy=question-editor]").type("Slider question?");
+          cy.get("#left_choice_text").type("Bad");
+          cy.get("#right_choice_text").type("Good");
+          cy.contains("Save").click();
+
+          // check that the question was created
+          cy.get("[data-cy=question-list]").should(
+            "contain",
+            "Slider question?"
+          );
+
+          // open question
+          cy.get("[data-cy=toggle-open-question]").click();
+
+          // logout faculty, become guest user
+          cy.logout();
+
+          // as a guest, record a response
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.get("[data-cy=slider-response-input")
+            .invoke("val", 25)
+            .trigger("change");
+
+          // login as faculty
+          cy.login("faculty");
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+          cy.get("[data-cy=present-question-button]").click();
+          cy.get("[data-cy=show-results-button").click();
+
+          // expect the labels to be displayed
+          cy.get("[data-cy=chart-container")
+            .contains("svg", "Bad")
+            .contains("svg", "Good");
+
+          // this is hacky
+          // select all svg bars in the bargraph (all the same stroke)
+          // and check that the correct one is tall
+          cy.get('[stroke="#36a2eb"]').then(($bars) => {
+            // cy.get returns a jQuery set, so convert to a vanilla array and
+            // then get height attribute as float
+            const barHeights = $bars
+              .toArray()
+              .map((b) => b.getAttribute("height"))
+              .map(Number.parseFloat);
+
+            expect(barHeights.length).to.equal(16);
+
+            // expect the tall bar to be tall
+            const tallBarIndex = 4;
+            expect(barHeights[tallBarIndex]).to.be.greaterThan(10);
+
+            // all the rest should be short (0.5)
+            expect(
+              barHeights.filter((_, i) => i !== tallBarIndex)
+            ).to.deep.equal(Array(15).fill(0.5));
+          });
+        });
+    });
+
     it("lets range be quantitative");
   });
 

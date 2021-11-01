@@ -1,5 +1,5 @@
 <template>
-<div class="chartContainer">
+<div class="chartContainer" data-cy="chart-container">
     <GChart
     type="ColumnChart"
     :resizeDebounce="100"
