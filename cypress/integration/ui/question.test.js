@@ -400,11 +400,10 @@ describe("question", () => {
         url: "/api/chime/**/image",
       }).as("upload");
 
-      // and another intercept to wait for image download
       cy.intercept({
-        method: "GET",
-        url: "/storage/**/*",
-      }).as("imageDownload");
+        method: "PUT",
+        url: "/api/**/response",
+      }).as("heatmapResponse");
 
       api
         .createChime({
@@ -452,7 +451,7 @@ describe("question", () => {
             "Image heatmap question?"
           );
 
-          //   // open question
+          // open question
           cy.get("[data-cy=toggle-open-question]").click();
 
           // logout faculty, become guest user
@@ -460,41 +459,49 @@ describe("question", () => {
 
           //  as a guest, record a response
           cy.visit(`/join/${testChime.access_code}`);
-          
-          // make sure image is loaded before taking snapshot
-          // cy.contains("Image heatmap question?");
-          cy.get('[data-cy=image-heatmap-target]').should('be.visible').and(($img) => {
-            expect($img[0].naturalWidth).to.be.greaterThan(0);
+
+          // make sure image is loaded
+          cy.get("[data-cy=image-heatmap-target]")
+            .should("be.visible")
+            .and(($img) => {
+              expect($img[0].naturalWidth).to.be.greaterThan(0);
+            });
+
+          // click on it
+          // note: clicking on different coordinates should cause 
+          // match image snapshot fail
+          cy.get("[data-cy=image-heatmap-target]").click(50, 100);
+        })
+        .then(() => {
+          cy.wait("@heatmapResponse");
+          // check that the circle appears on user interface
+          ["iphone-8", [1920, 1080]].forEach((size) => {
+            cy.setResolution(size);
+            cy.get("#app").matchImageSnapshot(
+              `image-heatmap-response-view_${size}`
+            );
+          });
+        })
+        .then(() => {
+          // login as faculty
+          cy.login("faculty");
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+          cy.get("[data-cy=present-question-button]").click();
+          cy.get("[data-cy=show-results-button").click();
+
+          // to make it easier for tests to see, make img behind heatmap
+          // transparent
+          cy.get("[data-cy=image-heatmap-original]").then(($img) => {
+            $img.css('opacity', 0.1);
+            $img.css('filter', 'grayscale(1)');
           });
 
-          // cy.wait("@imageDownload", { requestTimeout: 10000 });
-
-          cy.setResolution([1920, 1080]);
-          cy.matchImageSnapshot("image-heatmap-target_1920x1080");
-          //    cy.get(
-          //      "[data-cy=text-heatmap-highlighted-text-container]"
-          //    ).setSelection("feel the heat");
-          //    cy.contains("Submit Selection").click();
-
-          //    //   // login as faculty
-          //    cy.login("faculty");
-          //    cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
-          //    cy.get("[data-cy=present-question-button]").click();
-          //    cy.get("[data-cy=show-results-button").click();
-
-          //    // the "h" in "feel the heat" should be highlighted redish
-          //    cy.get(":nth-child(140)").should(
-          //      "have.css",
-          //      "background-color",
-          //      "rgb(255, 153, 153)"
-          //    );
-
-          //    // the "a" in "around" should not be highlighted
-          //    cy.get(":nth-child(145)").should(
-          //      "have.css",
-          //      "background-color",
-          //      "rgb(255, 255, 255)"
-          //    );
+          ["macbook-13", [1920, 1080]].forEach((size) => {
+            cy.setResolution(size);
+            cy.get("#app").matchImageSnapshot(
+              `image-heatmap-present-view_${size}`
+            );
+          });
         });
     });
 
