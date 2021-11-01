@@ -29,6 +29,7 @@
     "css-loader": "^6.4.0",
     "cypress": "8.7",
     "cypress-file-upload": "^5.0.8",
+    "cypress-image-snapshot": "^4.0.1",
     "eslint": "^8.0.1",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-jest": "^25.2.2",

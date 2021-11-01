@@ -16,9 +16,15 @@
  * @type {Cypress.PluginConfig}
  */
 
-// module.exports = (on, config) => {
-//     // `on` is used to hook into various events Cypress emits
-//     // `config` is the resolved Cypress config
+// `.cjs` extension not currently supported by cypress when
+// projects have a default "type: module".
+// workaround is pretending it's typescript with a `.ts` extension
+// See issue: https://github.com/cypress-io/cypress/issues/16467
 
-//     on('task', require('./swap-env'));
-// };
+const {
+  addMatchImageSnapshotPlugin,
+} = require("cypress-image-snapshot/plugin");
+
+module.exports = (on, config) => {
+  addMatchImageSnapshotPlugin(on, config);
+};

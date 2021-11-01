@@ -389,8 +389,116 @@ describe("question", () => {
   });
 
   describe("image heatmap", () => {
-    it("creates an image heatmap question");
-    it("lets user change image");
+    it.only("creates an image heatmap question", () => {
+      let testChime;
+      let testFolder;
+
+      // set up an intecept to watch image uploads
+      // so that we can wait for upload to complete
+      cy.intercept({
+        method: "POST",
+        url: "/api/chime/**/image",
+      }).as("upload");
+
+      // and another intercept to wait for image download
+      cy.intercept({
+        method: "GET",
+        url: "/storage/**/*",
+      }).as("imageDownload");
+
+      api
+        .createChime({
+          name: "Test Chime",
+        })
+        .then((chime) => {
+          testChime = chime;
+          return api.createFolder({
+            name: "Test Folder",
+            chimeId: chime.id,
+          });
+        })
+        .then((folder) => {
+          testFolder = folder;
+        })
+        .then(() => {
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+          // create the question
+          cy.get("[data-cy=new-question-button]").click();
+
+          // can't just use "Heatmap" as "Text Heatmap" will be selected first
+          // press down arrow to get the second "Heatmap" option.
+          // This is brittle. Maybe rename "Heatmap" as "Image Heatmap" once
+          // tests are working.
+          cy.get("[data-cy=question-type]")
+            .type("Heatmap")
+            .type("{downarrow}")
+            .type("{enter}");
+          cy.get("[data-cy=question-editor]").type("Image heatmap question?");
+
+          cy.get("[data-cy=image-dropzone]").attachFile("goldy-650x435.jpg");
+
+          // wait for upload to finish
+          cy.wait("@upload", { requestTimeout: 10000 });
+
+          // expect the image thumbnail to be displayed
+          cy.get("[data-cy=image-thumbnail]").should("exist");
+
+          cy.contains("Save").click();
+
+          // check that the question was created
+          cy.get("[data-cy=question-list]").should(
+            "contain",
+            "Image heatmap question?"
+          );
+
+          //   // open question
+          cy.get("[data-cy=toggle-open-question]").click();
+
+          // logout faculty, become guest user
+          cy.logout();
+
+          //  as a guest, record a response
+          cy.visit(`/join/${testChime.access_code}`);
+          
+          // make sure image is loaded before taking snapshot
+          // cy.contains("Image heatmap question?");
+          cy.get('[data-cy=image-heatmap-target]').should('be.visible').and(($img) => {
+            expect($img[0].naturalWidth).to.be.greaterThan(0);
+          });
+
+          // cy.wait("@imageDownload", { requestTimeout: 10000 });
+
+          cy.setResolution([1920, 1080]);
+          cy.matchImageSnapshot("image-heatmap-target_1920x1080");
+          //    cy.get(
+          //      "[data-cy=text-heatmap-highlighted-text-container]"
+          //    ).setSelection("feel the heat");
+          //    cy.contains("Submit Selection").click();
+
+          //    //   // login as faculty
+          //    cy.login("faculty");
+          //    cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+          //    cy.get("[data-cy=present-question-button]").click();
+          //    cy.get("[data-cy=show-results-button").click();
+
+          //    // the "h" in "feel the heat" should be highlighted redish
+          //    cy.get(":nth-child(140)").should(
+          //      "have.css",
+          //      "background-color",
+          //      "rgb(255, 153, 153)"
+          //    );
+
+          //    // the "a" in "around" should not be highlighted
+          //    cy.get(":nth-child(145)").should(
+          //      "have.css",
+          //      "background-color",
+          //      "rgb(255, 255, 255)"
+          //    );
+        });
+    });
+
+    it("participants can respond to heatmap");
   });
 
   describe("no response", () => {
