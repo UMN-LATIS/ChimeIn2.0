@@ -27,4 +27,20 @@ const {
 
 module.exports = (on, config) => {
   addMatchImageSnapshotPlugin(on, config);
+
+  on(
+    "before:browser:launch",
+    (browser = { name: null, isHeadless: false }, launchOptions) => {
+      if (browser.name === "electron" && browser.isHeadless) {
+        launchOptions.preferences["width"] = 1920;
+        launchOptions.preferences["height"] = 1080;
+        launchOptions.preferences["resizable"] = false;
+        return launchOptions;
+      }
+      if (browser.name === "chrome" && browser.isHeadless) {
+        launchOptions.args.push("--window-size=1920,1080");
+        return launchOptions;
+      }
+    }
+  );
 };

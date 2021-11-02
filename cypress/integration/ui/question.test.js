@@ -464,7 +464,7 @@ describe("question", () => {
   });
 
   describe("image heatmap", () => {
-    it("creates an image heatmap question", () => {
+    it.only("creates an image heatmap question", () => {
       let testChime;
       let testFolder;
 
@@ -536,26 +536,24 @@ describe("question", () => {
           cy.visit(`/join/${testChime.access_code}`);
 
           // make sure image is loaded
-          cy.get("[data-cy=image-heatmap-target]")
+          cy.get("#currentQuestions [data-cy=image-heatmap-target]")
+            .as("image-heatmap-target")
             .should("be.visible")
             .and(($img) => {
               expect($img[0].naturalWidth).to.be.greaterThan(0);
             });
 
           // click on it
-          // note: clicking on different coordinates should cause 
+          // note: clicking on different coordinates should cause
           // match image snapshot fail
-          cy.get("[data-cy=image-heatmap-target]").click(50, 100);
+          cy.get("@image-heatmap-target").click(50, 100);
         })
         .then(() => {
           cy.wait("@heatmapResponse");
           // check that the circle appears on user interface
-          ["iphone-8", [1920, 1080]].forEach((size) => {
-            cy.setResolution(size);
-            cy.get("#app").matchImageSnapshot(
-              `image-heatmap-response-view_${size}`
-            );
-          });
+          cy.get("@image-heatmap-target").matchImageSnapshot(
+            `image-heatmap-response-view_1920x1080`
+          );
         })
         .then(() => {
           // login as faculty
@@ -567,16 +565,13 @@ describe("question", () => {
           // to make it easier for tests to see, make img behind heatmap
           // transparent
           cy.get("[data-cy=image-heatmap-original]").then(($img) => {
-            $img.css('opacity', 0.1);
-            $img.css('filter', 'grayscale(1)');
+            $img.css("opacity", 0.1);
+            $img.css("filter", "grayscale(1)");
           });
 
-          ["macbook-13", [1920, 1080]].forEach((size) => {
-            cy.setResolution(size);
-            cy.get("#app").matchImageSnapshot(
-              `image-heatmap-present-view_${size}`
-            );
-          });
+          cy.get(".overlayContainer").matchImageSnapshot(
+            `image-heatmap-present-view_1920x1080`
+          );
         });
     });
 
