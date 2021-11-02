@@ -45,6 +45,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           wait-on: "http://localhost"
+          browser: chrome
           config: baseUrl=http://localhost
 
       - name: Upload test screenshots if any
