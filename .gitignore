@@ -18,3 +18,4 @@ yarn-error.log
 *.DS_Store
 .phpintel
 docs/.vuepress/dist
+cypress/**/__diff_output__
