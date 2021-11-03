@@ -386,10 +386,6 @@ describe("question", () => {
       let testChime;
       let testFolder;
 
-      cy.intercept({
-        method: "POST",
-      });
-
       api
         .createChime({ name: "Test Chime" })
         .then((chime) => {
@@ -421,13 +417,15 @@ describe("question", () => {
 
           // logout faculty, become guest user
           cy.logout();
-
+        })
+        .then(() => {
           // as a guest, record a response
           cy.visit(`/join/${testChime.access_code}`);
           cy.get("[data-cy=slider-response-input]")
             .invoke("val", 25)
             .trigger("change");
-
+        })
+        .then(() => {
           // login as faculty
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
