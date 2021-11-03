@@ -386,6 +386,13 @@ describe("question", () => {
       let testChime;
       let testFolder;
 
+      // listen for participant responses
+      // so that we can wait for them to complete
+      cy.intercept({
+        method: "PUT",
+        url: "/api/**/response",
+      }).as("participantResponse");
+
       api
         .createChime({ name: "Test Chime" })
         .then((chime) => {
@@ -424,6 +431,7 @@ describe("question", () => {
           cy.get("[data-cy=slider-response-input]")
             .invoke("val", 25)
             .trigger("change");
+          cy.wait("@participantResponse", { requestTimeout: 3000 });
         })
         .then(() => {
           // login as faculty
@@ -551,7 +559,7 @@ describe("question", () => {
           cy.get("@image-heatmap-target").click(50, 100);
         })
         .then(() => {
-          cy.wait("@heatmapResponse");
+          cy.wait("@heatmapResponse", { requestTimeout: 10000 });
           // check that the circle appears on user interface
           cy.get("@image-heatmap-target").matchImageSnapshot(
             `image-heatmap-response-view_1920x1080`
