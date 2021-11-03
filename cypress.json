@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost",
   "testFiles": "**/*.{test,spec}.js",
-  "video": true,
+  "video": false,
   "viewportWidth": 1920,
   "viewportHeight": 1080,
   "matchImageSnapshot": {
