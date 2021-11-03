@@ -227,7 +227,7 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // "Guest" and "response" should be in the SVG word cloud
           cy.get("[data-cy=word-cloud]")
@@ -288,7 +288,7 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // the "h" in "feel the heat" should be highlighted redish
           cy.get(":nth-child(140)").should(
@@ -368,7 +368,7 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // expect goldy image to be displayed
           // just checking extension for now, as name could have changed
@@ -385,6 +385,10 @@ describe("question", () => {
     it("creates a qualitative slider question and lets participant respond", () => {
       let testChime;
       let testFolder;
+
+      cy.intercept({
+        method: "POST",
+      });
 
       api
         .createChime({ name: "Test Chime" })
@@ -420,7 +424,7 @@ describe("question", () => {
 
           // as a guest, record a response
           cy.visit(`/join/${testChime.access_code}`);
-          cy.get("[data-cy=slider-response-input")
+          cy.get("[data-cy=slider-response-input]")
             .invoke("val", 25)
             .trigger("change");
 
@@ -428,10 +432,10 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // expect the labels to be displayed
-          cy.get("[data-cy=chart-container")
+          cy.get("[data-cy=chart-container]")
             .contains("svg", "Bad")
             .contains("svg", "Good");
 
@@ -560,7 +564,7 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // to make it easier for tests to see, make img behind heatmap
           // transparent
