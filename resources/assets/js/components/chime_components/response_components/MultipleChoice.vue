@@ -1,16 +1,7 @@
 <template>
   <div class="multiple-choice-question-options">
-    <label class="true-false-question-toggle">
-      <input
-        type="checkbox"
-        v-model="isTrueFalseQuestion"
-        @change="toggleTrueFalse"
-      />
-      True/False Question
-    </label>
-
     <section class="form-section">
-      <header v-if="responses.length">
+      <header v-if="question_responses.length">
         <h3 class="form-section__heading">
           Response Choices
         </h3>
@@ -18,9 +9,9 @@
       </header>
 
       <ol class="response-choice-list" data-cy="response-choice-list">
-        <draggable :list="responses">
+        <draggable :list="question_responses">
           <li
-            v-for="(response, i) in responses"
+            v-for="(response, i) in question_responses"
             :key="i"
             class="is-draggable response-choice-item"
             :class="{ 'response-choice-item--is-correct': response.correct }"
@@ -146,46 +137,48 @@ export default {
   components: {
     draggable,
   },
-  data: function() {
-    return {
-      responses: this.question_responses || [],
-      isTrueFalseQuestion: false,
-    };
-  },
   methods: {
     remove(responseIndex) {
-      this.responses = this.responses.filter((_, i) => i !== responseIndex);
-      this.$emit("update:question_responses", this.responses);
+      const updatedResponses = this.question_responses.filter(
+        (_, i) => i !== responseIndex
+      );
+      this.$emit("update:question_responses", updatedResponses);
     },
+
     addChoice() {
-      // remove any choices that are blank
-      this.responses = this.responses.filter((r) => r.text !== "");
+      // filter out any blanks and add a new responses
+      const updatedResponses = this.question_responses
+        .filter((r) => r.text !== "")
+        .concat([
+          {
+            text: "",
+            correct: false,
+          },
+        ]);
 
-      // add a new response
-      this.responses.push({
-        text: "",
-        correct: false,
-      });
-
-      this.$emit("update:question_responses", this.responses);
+      this.$emit("update:question_responses", updatedResponses);
 
       // focus new choice on next tick
       this.$nextTick(() => {
-        const lastResponseIndex = this.responses.length - 1;
-        console.log({ refs: this.$refs });
-        const ref = this.$refs.responseInput[lastResponseIndex];
-        console.log({ ref });
-        ref.focus();
+        const lastResponseIndex = this.question_responses.length - 1;
+        this.$refs.responseInput[lastResponseIndex].focus();
       });
     },
-    toggleTrueFalse: function() {
-      if (!this.isTrueFalseQuestion) return;
-
-      this.responses = [
+    createTrueFalseQuestion: function() {
+      const updatedResponses = [
         { text: "True", correct: false },
         { text: "False", correct: false },
       ];
+
+      this.$emit("update:question_responses", updatedResponses);
     },
+  },
+  mounted() {
+    // if question responses is empty, initialize with blank array
+    // perhaps this should be the parents job?
+    if (!this.question_responses) {
+      this.$emit("update:question_responses", []);
+    }
   },
 };
 </script>
