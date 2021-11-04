@@ -1,6 +1,8 @@
 <template>
   <section class="multiple-choice-question-options form-section">
-    <header v-if="question_responses.length">
+    <header
+      v-if="Array.isArray(question_responses) && question_responses.length"
+    >
       <h3 class="form-section__heading">
         Choices
       </h3>
@@ -45,6 +47,7 @@
     <!-- <EditResponseChoiceForm @submit="addChoice" /> -->
     <button
       class="btn btn-outline-primary add-choice-button"
+      data-cy="add-choice-button"
       @click="addChoice"
     >
       Add Choice
