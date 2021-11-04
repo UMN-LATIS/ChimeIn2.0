@@ -41,9 +41,13 @@ describe("question", () => {
         );
 
         // add multiple choice options
-        cy.get("[data-cy=response-text-input]").type("Red{enter}");
-        cy.get("[data-cy=response-text-input]").type("Green{enter}");
-        cy.get("[data-cy=response-text-input]").type("Blue{enter}");
+        // new input should be focussed automatically after click and upon each {enter}
+        cy.get("[data-cy=add-choice-button]")
+          .click()
+          .type("Red{enter}")
+          .type("Green{enter}")
+          .type("Blue");
+
         cy.contains("Save").click();
 
         // check that the question was created
@@ -104,17 +108,16 @@ describe("question", () => {
           .type("Updated question prompt");
 
         // change a response option
-        cy.contains("Red").as("test-response");
+        cy.get(".response-choice-item__text")
+          .first()
+          .as("test-response")
+          .invoke("val")
+          .should("contain", "Red");
+
         cy.get("@test-response")
-          .parent()
-          .find("[data-cy=edit-response]")
-          .click();
-        cy.get("[data-cy=response-text-input]")
+          .click()
           .clear()
           .type("Updated response");
-        cy.get("[data-cy=save-response-button]").click();
-        cy.get("@test-response").should("contain.text", "Updated response");
-
         cy.contains("Save").click();
 
         // expect that the UI is updated on question list page
