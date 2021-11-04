@@ -155,6 +155,7 @@ export default {
   methods: {
     remove(responseIndex) {
       this.responses = this.responses.filter((_, i) => i !== responseIndex);
+      this.$emit("update:question_responses", this.responses);
     },
     addChoice() {
       // remove any choices that are blank
@@ -165,6 +166,8 @@ export default {
         text: "",
         correct: false,
       });
+
+      this.$emit("update:question_responses", this.responses);
 
       // focus new choice on next tick
       this.$nextTick(() => {
