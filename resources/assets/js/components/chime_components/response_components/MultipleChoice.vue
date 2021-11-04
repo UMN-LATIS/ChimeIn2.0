@@ -1,60 +1,69 @@
 <template>
-  <div class="multiple-choice-question-options">
-    <section class="form-section">
-      <header v-if="question_responses.length">
-        <h3 class="form-section__heading">
-          Response Choices
-        </h3>
-        <p class="text-muted">Check to mark response correct.</p>
-      </header>
+  <section class="multiple-choice-question-options form-section">
+    <header v-if="question_responses.length">
+      <h3 class="form-section__heading">
+        Choices
+      </h3>
+      <p class="text-muted">Check to mark choice correct.</p>
+    </header>
 
-      <ol class="response-choice-list" data-cy="response-choice-list">
-        <draggable :list="question_responses">
-          <li
-            v-for="(response, i) in question_responses"
-            :key="i"
-            class="is-draggable response-choice-item"
-            :class="{ 'response-choice-item--is-correct': response.correct }"
+    <ol class="response-choice-list" data-cy="response-choice-list">
+      <draggable :list="question_responses">
+        <li
+          v-for="(response, i) in question_responses"
+          :key="i"
+          class="is-draggable response-choice-item"
+          :class="{ 'response-choice-item--is-correct': response.correct }"
+        >
+          <div
+            class="response-choice-item__correct-toggle"
+            title="Mark Response Correct"
           >
-            <div
-              class="response-choice-item__correct-toggle"
-              title="Mark Response Correct"
+            <input type="checkbox" v-model="response.correct" />
+            <label class="visually-hidden">Correct?</label>
+          </div>
+          <div class="response-choice-item__contents">
+            <label :for="`response-text-${i}`" class="visually-hidden"
+              >Response Text</label
             >
-              <input type="checkbox" v-model="response.correct" />
-              <label class="visually-hidden">Correct?</label>
-            </div>
-            <div class="response-choice-item__contents">
-              <label :for="`response-text-${i}`" class="visually-hidden"
-                >Response Text</label
-              >
-              <input
-                class="response-choice-item__text"
-                :id="`response-text-${i}`"
-                :name="`response-text-${i}`"
-                v-model="response.text"
-                ref="responseInput"
-                @keyup.enter="addChoice"
-              />
+            <input
+              class="response-choice-item__text"
+              :id="`response-text-${i}`"
+              :name="`response-text-${i}`"
+              v-model="response.text"
+              ref="responseInput"
+              @keyup.enter="addChoice"
+            />
 
-              <button @click="remove(i)" class="response-choice-item__remove">
-                <i class="material-icons inline-icon">clear</i>
-              </button>
-            </div>
-          </li>
-        </draggable>
-      </ol>
-      <!-- <EditResponseChoiceForm @submit="addChoice" /> -->
-      <button class="btn btn-outline-primary" @click="addChoice">
-        Add Choice
-      </button>
-    </section>
-  </div>
+            <button @click="remove(i)" class="response-choice-item__remove">
+              <i class="material-icons inline-icon">clear</i>
+            </button>
+          </div>
+        </li>
+      </draggable>
+    </ol>
+    <!-- <EditResponseChoiceForm @submit="addChoice" /> -->
+    <button
+      class="btn btn-outline-primary add-choice-button"
+      @click="addChoice"
+    >
+      Add Choice
+    </button>
+  </section>
 </template>
 
 <style scoped>
 label {
   margin: 0;
 }
+.multiple-choice-question-options {
+  margin-bottom: 1rem;
+}
+
+.add-choice-button {
+  margin: 0.25rem 0;
+}
+
 .response-choice-list {
   list-style: none;
   margin: 0;
@@ -114,9 +123,11 @@ label {
   margin-top: 1rem;
 }
 .form-section__heading {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.text-muted {
   font-size: 0.9rem;
-  text-transform: uppercase;
-  font-weight: bold;
 }
 .is-draggable {
   cursor: move;
