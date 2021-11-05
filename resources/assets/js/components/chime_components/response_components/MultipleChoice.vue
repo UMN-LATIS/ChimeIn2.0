@@ -109,7 +109,6 @@ label {
 .response-choice-item__text {
   border: 0;
   flex-grow: 1;
-  padding: 0.5rem;
   background: transparent;
 }
 
@@ -121,6 +120,7 @@ label {
   display: flex;
   background: 0;
   border: 0;
+  padding: 0.25rem 0.75rem;
 }
 
 .form-section {
@@ -139,6 +139,39 @@ label {
 
 .true-false-question-toggle {
   margin-top: 1rem;
+}
+</style>
+<style>
+/**
+* override default quill editor styles
+* extra classes are to increase specificity
+**/
+.response-choice-item .response-choice-item__text {
+  display: flex;
+  align-items: baseline;
+  flex-direction: row-reverse;
+}
+.response-choice-item .response-choice-item__text .ql-container {
+  border: 0;
+  flex-grow: 1;
+}
+.response-choice-item .response-choice-item__text .ql-toolbar {
+  border: 0;
+}
+.response-choice-item .ql-editor {
+  min-height: auto;
+}
+
+.response-choice-item .quillWrapper .ql-snow.ql-toolbar .ql-formats {
+  margin: 0;
+}
+.response-choice-item .ql-snow .ql-toolbar button,
+.response-choice-item .ql-snow.ql-toolbar button {
+  padding: 0;
+}
+.response-choice-item--is-correct .ql-snow .ql-fill,
+.response-choice-item--is-correct .ql-snow .ql-stroke.ql-fill {
+  fill: #fff;
 }
 </style>
 
@@ -191,13 +224,15 @@ export default {
       this.$refs.responseInput[responseIndex].quill.focus();
     },
     addChoice() {
-      // add a new responses
-      const updatedResponses = this.question_responses.concat([
-        {
-          text: "",
-          correct: false,
-        },
-      ]);
+      // remove any empty responses and then add a new responses
+      const updatedResponses = this.question_responses
+        .filter((r) => r.text !== "")
+        .concat([
+          {
+            text: "",
+            correct: false,
+          },
+        ]);
 
       this.$emit("update:question_responses", updatedResponses);
 
