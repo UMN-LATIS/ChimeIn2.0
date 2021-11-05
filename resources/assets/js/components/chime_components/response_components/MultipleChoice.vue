@@ -155,15 +155,25 @@ export default {
     VueEditor,
   },
   computed: {
-    choiceEditorOptions: () => ({
-      bounds: ".modal-body",
-      modules: {
-        formula: true,
-        keyboard: {
-          // bindings: {},
+    // note: don't use arrow functions so that `this` is bound properly
+    choiceEditorOptions(thisComponent) {
+      return {
+        bounds: ".modal-body",
+        modules: {
+          formula: true,
+          keyboard: {
+            bindings: {
+              13: {
+                key: 13,
+                handler() {
+                  thisComponent.addChoice();
+                },
+              },
+            },
+          },
         },
-      },
-    }),
+      };
+    },
     choiceEditorToolbar: () => ["formula"],
   },
   methods: {
