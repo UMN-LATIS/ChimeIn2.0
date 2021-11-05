@@ -28,13 +28,14 @@
             <label :for="`response-text-${i}`" class="visually-hidden"
               >Response Text</label
             >
-            <input
+            <VueEditor
               class="response-choice-item__text"
               :id="`response-text-${i}`"
               :name="`response-text-${i}`"
+              :editorToolbar="choiceEditorToolbar"
+              :editorOptions="choiceEditorOptions"
               v-model="response.text"
               ref="responseInput"
-              @keyup.enter="addChoice"
             />
 
             <button @click="remove(i)" class="response-choice-item__remove">
@@ -142,6 +143,7 @@ label {
 </style>
 
 <script>
+import { VueEditor } from "vue2-editor";
 import draggable from "vuedraggable";
 
 export default {
@@ -150,6 +152,19 @@ export default {
   },
   components: {
     draggable,
+    VueEditor,
+  },
+  computed: {
+    choiceEditorOptions: () => ({
+      bounds: ".modal-body",
+      modules: {
+        formula: true,
+        keyboard: {
+          // bindings: {},
+        },
+      },
+    }),
+    choiceEditorToolbar: () => ["formula"],
   },
   methods: {
     remove(responseIndex) {
@@ -158,24 +173,27 @@ export default {
       );
       this.$emit("update:question_responses", updatedResponses);
     },
-
+    focusEditor(responseIndex) {
+      // use last index by default
+      if (typeof responseIndex === "undefined") {
+        responseIndex = this.question_responses.length - 1;
+      }
+      this.$refs.responseInput[responseIndex].quill.focus();
+    },
     addChoice() {
-      // filter out any blanks and add a new responses
-      const updatedResponses = this.question_responses
-        .filter((r) => r.text !== "")
-        .concat([
-          {
-            text: "",
-            correct: false,
-          },
-        ]);
+      // add a new responses
+      const updatedResponses = this.question_responses.concat([
+        {
+          text: "",
+          correct: false,
+        },
+      ]);
 
       this.$emit("update:question_responses", updatedResponses);
 
       // focus new choice on next tick
-      this.$nextTick(() => {
-        const lastResponseIndex = this.question_responses.length - 1;
-        this.$refs.responseInput[lastResponseIndex].focus();
+      this.$nextTick(function() {
+        this.focusEditor();
       });
     },
     createTrueFalseQuestion: function() {
