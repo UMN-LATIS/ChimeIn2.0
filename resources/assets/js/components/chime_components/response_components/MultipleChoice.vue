@@ -191,7 +191,7 @@ export default {
     // note: don't use arrow functions so that `this` is bound properly
     choiceEditorOptions(thisComponent) {
       return {
-        bounds: ".modal-body",
+        bounds: ".response-choice-item__contents",
         modules: {
           formula: true,
           keyboard: {
