@@ -55,10 +55,10 @@ describe("happy path", () => {
       .type("Green{enter}")
       .type("Blue");
 
-    cy.get(".response-choice-item__text").then(($inputs) => {
-      const values = $inputs.toArray().map((input) => input.value);
-      expect(values).to.deep.equal(["Red", "Green", "Blue"]);
-    });
+    cy.get(".multiple-choice-question-options")
+      .should("contain", "Red")
+      .should("contain", "Green")
+      .should("contain", "Blue");
 
     cy.contains("Save").click();
 
