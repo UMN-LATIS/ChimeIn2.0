@@ -21,8 +21,6 @@
 </template>
 
 <script>
-import isObject from "lodash/isObject";
-
 export default {
   props: ["question", "response", "disabled"],
   data() {
@@ -32,8 +30,8 @@ export default {
   },
   computed: {
     selectOptions: function() {
-      return this.question.question_info.question_responses.map((response) =>
-        isObject(response) ? response.text : `<p>${response}</p>`
+      return this.question.question_info.question_responses.map(
+        (response) => response.text
       );
     },
   },
