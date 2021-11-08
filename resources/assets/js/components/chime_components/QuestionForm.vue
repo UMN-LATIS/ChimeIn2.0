@@ -282,6 +282,13 @@ export default {
       var question = {};
       question.text = this.question_text;
 
+      // remove any blanks from mult choice reponses
+      if (this.question_type === "multiple_choice") {
+        this.question_responses = this.question_responses.filter(
+          (r) => r.text !== ""
+        );
+      }
+
       question.question_info = {
         question_type: this.question_type,
         question_responses: this.question_responses,
