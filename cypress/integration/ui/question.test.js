@@ -227,7 +227,7 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // "Guest" and "response" should be in the SVG word cloud
           cy.get("[data-cy=word-cloud]")
@@ -288,7 +288,7 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // the "h" in "feel the heat" should be highlighted redish
           cy.get(":nth-child(140)").should(
@@ -368,7 +368,7 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // expect goldy image to be displayed
           // just checking extension for now, as name could have changed
@@ -385,6 +385,13 @@ describe("question", () => {
     it("creates a qualitative slider question and lets participant respond", () => {
       let testChime;
       let testFolder;
+
+      // listen for participant responses
+      // so that we can wait for them to complete
+      cy.intercept({
+        method: "PUT",
+        url: "/api/**/response",
+      }).as("participantResponse");
 
       api
         .createChime({ name: "Test Chime" })
@@ -417,21 +424,30 @@ describe("question", () => {
 
           // logout faculty, become guest user
           cy.logout();
-
+        })
+        .then(() => {
           // as a guest, record a response
           cy.visit(`/join/${testChime.access_code}`);
-          cy.get("[data-cy=slider-response-input")
+          cy.get("[data-cy=slider-response-input]")
             .invoke("val", 25)
-            .trigger("change");
+            .then(($input) => { 
+              // using native event triggering rather
+              // than `.trigger`.
+              // see: https://github.com/cypress-io/cypress/issues/1570
 
+              $input[0].dispatchEvent(new Event('change'));
+            });
+          cy.wait("@participantResponse", { requestTimeout: 3000 });
+        })
+        .then(() => {
           // login as faculty
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // expect the labels to be displayed
-          cy.get("[data-cy=chart-container")
+          cy.get("[data-cy=chart-container]")
             .contains("svg", "Bad")
             .contains("svg", "Good");
 
@@ -549,7 +565,7 @@ describe("question", () => {
           cy.get("@image-heatmap-target").click(50, 100);
         })
         .then(() => {
-          cy.wait("@heatmapResponse");
+          cy.wait("@heatmapResponse", { requestTimeout: 10000 });
           // check that the circle appears on user interface
           cy.get("@image-heatmap-target").matchImageSnapshot(
             `image-heatmap-response-view_1920x1080`
@@ -560,7 +576,7 @@ describe("question", () => {
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button").click();
+          cy.get("[data-cy=show-results-button]").click();
 
           // to make it easier for tests to see, make img behind heatmap
           // transparent
