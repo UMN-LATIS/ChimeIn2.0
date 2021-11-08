@@ -638,7 +638,13 @@ describe("question", () => {
           cy.visit(`/join/${testChime.access_code}`);
           cy.get("[data-cy=slider-response-input]")
             .invoke("val", 25)
-            .trigger("change");
+            .then(($input) => { 
+              // using native event triggering rather
+              // than `.trigger`.
+              // see: https://github.com/cypress-io/cypress/issues/1570
+
+              $input[0].dispatchEvent(new Event('change'));
+            });
           cy.wait("@participantResponse", { requestTimeout: 3000 });
         })
         .then(() => {
