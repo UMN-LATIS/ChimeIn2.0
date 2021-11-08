@@ -91,12 +91,7 @@ label {
 
 .response-choice-item--is-correct .response-choice-item__contents,
 .response-choice-item--is-correct .response-choice-item__contents:focus-within {
-  background: #28a745;
-  color: white;
-}
-.response-choice-item--is-correct input,
-.response-choice-item--is-correct button {
-  color: white;
+  border-left: 0.5rem solid #28a745;
 }
 
 .response-choice-item__contents:focus-within {
@@ -163,6 +158,9 @@ label {
 .response-choice-item .ql-editor {
   min-height: auto;
 }
+.response-choice-item.response-choice-item--is-correct .ql-editor {
+  padding-left: 0.5rem;
+}
 
 .response-choice-item .quillWrapper .ql-snow.ql-toolbar .ql-formats {
   margin: 0;
@@ -170,10 +168,6 @@ label {
 .response-choice-item .ql-snow .ql-toolbar button,
 .response-choice-item .ql-snow.ql-toolbar button {
   padding: 0;
-}
-.response-choice-item--is-correct .ql-snow .ql-fill,
-.response-choice-item--is-correct .ql-snow .ql-stroke.ql-fill {
-  fill: #fff;
 }
 </style>
 
