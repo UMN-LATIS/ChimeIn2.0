@@ -56,7 +56,6 @@ export default {
             // we'll use the chart bars to help with positioning
             // getting bars by stroke color... a bit hacky, but it works
             const bars = [...chart.querySelectorAll('[stroke="#36a2eb"]')];
-            console.log(bars.map((b) => b.attributes));
 
             // get our choices. textContent of labels likely won't contain
             // the full response content
@@ -68,6 +67,12 @@ export default {
             // containing the HTML
             labels.forEach((label, index) => {
               const bar = bars[index];
+
+              // if no bar, don't bother with the label
+              if (!bar) {
+                label.textContent = "";
+                return;
+              }
 
               // use bar attributes for placing label
               const x = bar.getAttribute("x");
