@@ -41,11 +41,6 @@ export default {
             response_search: '',
             options: {
                 height: "100%",
-                animation:{
-                    duration: 1000,
-                    easing: 'out',
-                    "startup":  false
-                },
                 legend: {
                     position: "none"
                 },
