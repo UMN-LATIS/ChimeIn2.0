@@ -97,9 +97,8 @@ label {
 }
 
 .response-choice-item__contents:focus-within {
-  background: #eee;
   border-color: #333;
-  outline: 0.25rem auto var(--blue);
+  box-shadow: 0 0 0 3px hsl(211deg 100% 50% / 42%);
 }
 
 .response-choice-item__correct-toggle {
