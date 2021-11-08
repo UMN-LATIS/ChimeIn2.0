@@ -36,7 +36,10 @@ describe("happy path", () => {
 
     // create a question
     cy.get("[data-cy=new-question-button]").click();
-    cy.get("[data-cy=add-question-form] h3").should("contain", "Add a Question");
+    cy.get("[data-cy=add-question-form] h3").should(
+      "contain",
+      "Add a Question"
+    );
 
     // select multiple choice (not a true select)
     cy.get("[data-cy=question-type]").type("Multiple Choice{enter}");
@@ -45,12 +48,14 @@ describe("happy path", () => {
     cy.get("[data-cy=question-editor]").type("What is your favorite color?");
 
     // add multiple choice options
-    cy.get("[data-cy=response-text-input]").type("Red{enter}");
-    cy.get("[data-cy=response-text-input]").type("Green{enter}");
-    cy.get("[data-cy=response-text-input]").type("Blue{enter}");
+    // new input should be focussed automatically after click and upon each {enter}
+    cy.get("[data-cy=add-choice-button]")
+      .click()
+      .type("Red{enter}")
+      .type("Green{enter}")
+      .type("Blue");
 
-    cy.get("[data-cy=response-choice-list] li")
-      .should("have.length", 3)
+    cy.get(".multiple-choice-question-options")
       .should("contain", "Red")
       .should("contain", "Green")
       .should("contain", "Blue");

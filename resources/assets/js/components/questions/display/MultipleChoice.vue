@@ -1,18 +1,23 @@
 <template>
-    <ol type="A">
-        <li class="questionDisplay" v-for="response in question.question_info.question_responses" :key="response.text">
-            {{  isObject(response) ? response.text : response }}
-        </li>
-    </ol>
+  <ol type="A" data-cy="multiple-choice-options-list">
+    <li
+      class="questionDisplay"
+      v-for="response in responses"
+      :key="response"
+      v-html="response"
+    />
+  </ol>
 </template>
 
 <script>
-import isObject from 'lodash/isObject';
-
 export default {
-    props: ['question'],
-    methods: {
-        isObject
-    }
+  props: ["question"],
+  computed: {
+    responses() {
+      return this.question.question_info.question_responses.map(
+        (response) => response.text
+      );
+    },
+  },
 };
 </script>
