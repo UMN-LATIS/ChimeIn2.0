@@ -49,7 +49,6 @@
         </li>
       </draggable>
     </ol>
-    <!-- <EditResponseChoiceForm @submit="addChoice" /> -->
     <button
       class="btn btn-outline-primary add-choice-button"
       data-cy="add-choice-button"
