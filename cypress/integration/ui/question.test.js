@@ -300,7 +300,7 @@ describe("question", () => {
         });
     });
 
-    it.only("creates response choices with equations", () => {
+    it("creates response choices with equations", () => {
       let testChime;
       let testFolder;
       api
