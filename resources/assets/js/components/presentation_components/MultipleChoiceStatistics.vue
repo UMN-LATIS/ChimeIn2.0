@@ -20,6 +20,11 @@
 .googleChart {
   height: 100%;
 }
+
+/* for HTML chart labels */
+.chartContainer foreignObject p {
+  text-align: center;
+}
 </style>
 
 <script>
@@ -41,11 +46,17 @@ export default {
          * with HTML.
          */
         ready: () => {
+          const chart = this.$refs.googleChart.$el;
           this.$nextTick(() => {
             // get labels that contain html paragraphs
-            const labels = [
-              ...this.$refs.googleChart.$el.querySelectorAll("text"),
-            ].filter((el) => /<p>/.test(el.textContent));
+            const labels = [...chart.querySelectorAll("text")].filter((el) =>
+              /<p>/.test(el.textContent)
+            );
+
+            // we'll use the chart bars to help with positioning
+            // getting bars by stroke color... a bit hacky, but it works
+            const bars = [...chart.querySelectorAll('[stroke="#36a2eb"]')];
+            console.log(bars.map((b) => b.attributes));
 
             // get our choices. textContent of labels likely won't contain
             // the full response content
@@ -56,10 +67,18 @@ export default {
             // replace each text node with a `<foreignObject>` element
             // containing the HTML
             labels.forEach((label, index) => {
-              const x = label.getAttribute("x");
-              const y = label.getAttribute("y");
+              const bar = bars[index];
+
+              // use bar attributes for placing label
+              const x = bar.getAttribute("x");
+              const width = bar.getAttribute("width");
+              const y =
+                Number.parseFloat(bar.getAttribute("y")) +
+                Number.parseFloat(bar.getAttribute("height")) +
+                16;
+
               label.parentNode.innerHTML = `
-                <foreignObject width="100" height="24" x=${x} y=${y}>
+                <foreignObject width="${width}" height="50" x=${x} y=${y}>
                   ${choices[index]}
                 </foreignObject>
               `;
@@ -69,11 +88,6 @@ export default {
       },
       options: {
         height: "100%",
-        // animation: {
-        //   duration: 1000,
-        //   easing: "out",
-        //   startup: true,
-        // },
         legend: {
           position: "none",
         },
