@@ -38,7 +38,11 @@
               ref="responseInput"
             />
 
-            <button @click="remove(i)" class="response-choice-item__remove">
+            <button
+              @click="remove(i)"
+              class="response-choice-item__remove"
+              data-cy="remove-response-button"
+            >
               <i class="material-icons inline-icon">clear</i>
             </button>
           </div>

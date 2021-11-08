@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-cy="multiple-choice-participant-choices">
     <fieldset class="form-group" role="radiogroup">
       <div class="form-check" :key="key" v-for="(option, key) in selectOptions">
         <input
