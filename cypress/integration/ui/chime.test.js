@@ -137,11 +137,8 @@ describe("chime UI", () => {
         cy.get(".title").should("contain.text", "Login to Continue");
       });
 
-      it("displays join instructions when presenting", () => {
-        cy.get("#joinInstructions").check();
+      it("displays join instructions when presenting (by default)", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}/present`);
-
-        // FIXME: This text is in the navbar and will be hidden on small screens
         cy.get("[data-cy=show-join-code]").should(
           "contain.text",
           toHyphenatedCode(testChime.access_code)

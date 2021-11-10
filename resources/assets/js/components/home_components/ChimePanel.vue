@@ -57,7 +57,7 @@ export default {
         return {
             requireLogin: false,
             studentsCanView: false,
-            joinInstructions: false,
+            joinInstructions: true,
             chimes: [],
             showAdd: false,
             chime_name: "",
