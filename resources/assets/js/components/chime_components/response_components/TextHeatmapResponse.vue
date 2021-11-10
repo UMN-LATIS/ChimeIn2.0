@@ -3,9 +3,14 @@
     <div class="col">
       <hr>
       <p>Heatmap Text:</p>
-      <vue-editor v-model="heatmap_text" placeholder="Heatmap Text" v-bind:editorToolbar="toolbar"
-        v-bind:editorOptions="editorOptions" @input="emitChanges">
-      </vue-editor>
+      <vue-editor 
+        data-cy="heatmap-text-editor"
+        v-model="heatmap_text" 
+        placeholder="Heatmap Text" 
+        v-bind:editorToolbar="toolbar"
+        v-bind:editorOptions="editorOptions" 
+        @input="emitChanges" 
+      />
     </div>
   </div>
 </template>

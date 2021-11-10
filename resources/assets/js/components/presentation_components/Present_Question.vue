@@ -19,7 +19,7 @@
                     <i class="material-icons left">stop</i>
                     Close Question
                 </button>
-                <button class="btn btn-outline-primary align-items-center d-flex" v-on:click="show_results = !show_results">
+                <button data-cy="show-results-button" class="btn btn-outline-primary align-items-center d-flex" v-on:click="show_results = !show_results">
                     <i class="material-icons left">zoom_in</i>
                     <span v-if="show_results">
                         Hide Results
@@ -70,7 +70,6 @@ export default {
             if(this.question.current_session_id) {
 
                 var session = this.question.sessions.find(s => s.id == this.question.current_session_id);
-                console.log(this.question.sessions);
                 return session;
 
             }

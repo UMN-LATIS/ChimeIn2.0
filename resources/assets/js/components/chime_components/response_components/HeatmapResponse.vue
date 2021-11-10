@@ -2,10 +2,10 @@
 <template>
     <div>
         <div v-if="question_responses && question_responses.image">
-            <img class="responsive-img imageContainer" v-bind:src="'/storage/' + question_responses.image">
+            <img class="responsive-img imageContainer" v-bind:src="'/storage/' + question_responses.image" data-cy="image-thumbnail">
         </div>
         <div class="dropbox">
-          <input type="file" accept="image/jpeg, image/heic, image/png" @change="attachFile($event.target.name, $event.target.files)" class="form-control-file input-file">
+          <input type="file" accept="image/jpeg, image/heic, image/png" @change="attachFile($event.target.name, $event.target.files)" class="form-control-file input-file" data-cy="image-dropzone">
             <p v-if="isInitial">
               Drag your image here to upload<br> or click to browse
             </p>

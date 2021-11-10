@@ -21,11 +21,7 @@
                         <button class="btn btn-sm  btn-outline-info align-items-center d-flex"
                             @click="show_edit_folder = !show_edit_folder">Folder Settings <i
                                 class="material-icons pointer">edit</i></button>
-                        <router-link :to="{ name: 'present', params: {chimeId: chimeId, folderId: folderId} }"
-                            tag="button" class="btn btn-sm btn-outline-info align-items-center d-flex">
-                            Present
-                            <i class="material-icons">play_arrow</i>
-                        </router-link>
+                        
                         <button dusk="new-question-button" data-cy="new-question-button" class="btn btn-sm btn-outline-info align-items-center d-flex"
                             @click="showModal = true">New Question <i class="material-icons pointer">add</i></button>
                         <button dusk="open-all-button" class="btn btn-sm btn-outline-info align-items-center d-flex"
@@ -34,8 +30,13 @@
                             @click="closeAll">Close All <i class="material-icons pointer">visibility_off</i></button>
                         <router-link :to="{ name: 'chimeStudent', params: {chimeId: chimeId} }" tag="button"
                             class="btn btn-sm btn-outline-info align-items-center d-flex">
-                            Preview
+                            Participant View
                             <i class="material-icons">search</i>
+                        </router-link>
+                        <router-link :to="{ name: 'present', params: {chimeId: chimeId, folderId: folderId} }"
+                            tag="button" class="btn btn-sm btn-outline-info align-items-center d-flex">
+                            Present
+                            <i class="material-icons">play_arrow</i>
                         </router-link>
 
                     </div>
