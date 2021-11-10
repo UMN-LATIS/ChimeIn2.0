@@ -5,7 +5,7 @@ Need a quick reminder about how to use ChimeIn when it comes time to actually as
 ## Tips and Reminders for Everyone
 
 * **Students can only see questions that are "open"**. You can open questions either from the folder view (open questions have a "green" switch icon) or from "present" view. 
-* Clicking the preview button will show you exactly what your students are seeing.
+* Clicking the "Participant View" button will show you exactly what your students are seeing.
 * If you're doing a "free response" question and a word appears in the cloud that you'd like to filter out, just click on it
 * If you'd like to have entire phrases appear in the word cloud, ask students to put phrases in quotes ("this is my answer" will be treated as one term in the cloud, whereas without the quotes each word would appear individually)
 

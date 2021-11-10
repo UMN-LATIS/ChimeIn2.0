@@ -7,8 +7,19 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <word-cloud v-if="!question.question_info.question_responses.hideWordcloud && word_groups" :data="word_groups" :nameKey="'name'" :valueKey="'value'" :rotate="rotation" :margin="margin" :wordPadding="1" style="width: 100%; height:600px" :fontSize="fontSize" :wordClick="wordClicked">
-        </word-cloud>
+        <word-cloud
+            v-if="!question.question_info.question_responses.hideWordcloud && word_groups" 
+            :data="word_groups"
+            :nameKey="'name'"
+            :valueKey="'value'"
+            :rotate="rotation" 
+            :margin="margin" 
+            :wordPadding="1" 
+            style="width: 100%; height:600px" 
+            :fontSize="fontSize" 
+            :wordClick="wordClicked "
+            data-cy="word-cloud"
+        />
         <div class="form-check form-check-inline" v-if="!question.question_info.question_responses.hideWordcloud">
             <label class="form-check-label align-items-center d-flex">
                 <input class="form-check-input" type="checkbox" v-model="textProcessing"> Natural Language Processing  <span class="ml-1 material-icons md-18" v-tooltip:top="'Attempt to detect names, places and organizations. This may slow down word cloud processing.'">help</span>

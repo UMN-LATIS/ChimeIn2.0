@@ -2,11 +2,15 @@
     <div>
         <div class="col-sm-12">
          <div class="form-group">
-            <textarea class="form-control" v-model="response_text"
-                     placeholder="Type your response"
-                     :rows="3"
-                     :disabled="disabled"
-                     :max-rows="6"></textarea>
+            <textarea 
+                data-cy="free-response-textarea"
+                class="form-control"
+                v-model="response_text"
+                placeholder="Type your response"
+                :rows="3"
+                :disabled="disabled"
+                :max-rows="6">
+            </textarea>
             </div>
         </div>
         <div class="col-sm-12">

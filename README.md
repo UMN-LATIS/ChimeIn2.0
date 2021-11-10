@@ -16,11 +16,17 @@ cp .env.example .env
 # The default `.env.example` will probably be sufficient,
 # but if you're a Safari user, change SESSION_SAME_SITE="none"
 
+# Instal php deps
+composer install
+
+# Build docker image
+sail build --no-cache
+
 # Start Sail
 sail up
 
-# generate an app key
-sail artisan key:generate
+# create app key, link storage, etc
+sail exec app ./bin/ci.sh
 
 # migrate the database
 sail artisan migrate:fresh
@@ -29,8 +35,7 @@ sail artisan migrate:fresh
 yarn install
 
 # Start Laravel Mix to compile Vue
-# and start hot module replacement
-yarn run dev && yarn run hot
+yarn run watch
 
 ```
 
@@ -40,8 +45,10 @@ The application will be running on <http://localhost>.
 
 ```sh
 sail up
-yarn run dev && yarn run watch
-# or yarn run hot
+yarn run watch
+
+# For Hot Module Replacement (HMR), do:
+# yarn run dev && yarn run hot
 ```
 
 Load <http://localhost> in your browser.

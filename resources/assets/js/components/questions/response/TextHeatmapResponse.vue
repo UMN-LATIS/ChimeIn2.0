@@ -1,8 +1,11 @@
 <template>
     <div>
         <div class="col-sm-12" >
-             <div class="form-group" v-html="highlightedText">
-            </div>
+            <div
+                data-cy="text-heatmap-highlighted-text-container"
+                class="form-group"
+                v-html="highlightedText"
+            />
             <div class="col-sm-12">
                 <button v-if="(!disabled && !response.id) || create_new_response" class="btn btn-primary" variant="primary" @click="record_response" :disabled="disableSubmission">Submit Selection</button>
                 <button v-if="!disabled && response.id && !create_new_response && response.response_info.startOffset < 0" class="btn btn-primary" variant="primary" @click="record_response" :disabled="disableSubmission">Update</button>

@@ -1,154 +1,263 @@
-<template>  
-    <div>
-        <div class="row">
-            <div class="col">
-                <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="truefalse" id="truefalse" v-model="truefalse" @change="toggleTrueFalse">
-                <label class="form-check-label" for="truefalse">True/False Question</label>
-            </div>
-            </div>
-        </div>
-        <div class="row choiceRow">
-            <div class="col">
-                <p>Responses:</p>
-                <ol type="A" data-cy="response-choice-list">
-                    <draggable :list="question_responses">
-                    <li v-for="(r, i) in question_responses"
-                    :key="i"
-                    >
-                    <div class="row">
-                        <div class="col-9 dragItem">
-                            {{ isObject(r) ? r.text : r }}
-                        </div>
-                        <div class="col-1">
-                            <i
-                        class="material-icons inline-icon" v-if="isObject(r) ? r.correct : false">check</i>
-                        </div>
-                        <div class="col-2">
-                        <i
-                        class="material-icons pointer inline-icon"
-                        v-on:click="edit(i)">edit</i>
-                        
-                            <i
-                        class="material-icons pointer inline-icon"
-                        v-on:click="remove(i)">delete</i>
-                        </div>
-                    </div>
-                    </li>
-                    </draggable>
-            </ol>
-        </div>
-    </div>
-    <div class="row" v-if="!truefalse || editing_index !== null">
-        <div class="col">
-            <label for="choice_text" class="form-control-label">Add a response <small id="emailHelp" class="form-text text-muted">Optionally use the checkbox to mark correct responses.</small></label>
-            
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text">
-                        <input type="checkbox" v-model="choice_correct" data-cy="response-is-correct-checkbox" aria-label="Correct Answer">
-                    </div>
-                </div>
-                <input
-                id="choice_text"
-                v-model="choice_text"
-                data-cy="response-text-input"
-                type="text"
-                @keyup.enter="add_choice"
-                class="validate form-control"
-                v-bind:disabled="truefalse">
-                <div class="input-group-append ">
-                    <button @click="add_choice" class="btn btn-outline-primary  align-items-center d-flex"><span class="material-icons ">{{ editing_index !==null ? "save":"add" }}</span></button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<template>
+  <section class="multiple-choice-question-options form-section">
+    <header
+      v-if="Array.isArray(question_responses) && question_responses.length"
+    >
+      <h3 class="form-section__heading">
+        Choices
+      </h3>
+      <p class="text-muted">Check to mark choice correct.</p>
+    </header>
+
+    <ol class="response-choice-list" data-cy="response-choice-list">
+      <draggable :list="question_responses">
+        <li
+          v-for="(response, i) in question_responses"
+          :key="i"
+          class="is-draggable response-choice-item"
+          :class="{ 'response-choice-item--is-correct': response.correct }"
+        >
+          <div
+            class="response-choice-item__correct-toggle"
+            title="Mark Response Correct"
+          >
+            <input type="checkbox" v-model="response.correct" />
+            <label class="visually-hidden">Correct?</label>
+          </div>
+          <div class="response-choice-item__contents">
+            <label :for="`response-text-${i}`" class="visually-hidden"
+              >Response Text</label
+            >
+            <VueEditor
+              class="response-choice-item__text"
+              :id="`response-text-${i}`"
+              :name="`response-text-${i}`"
+              :editorToolbar="choiceEditorToolbar"
+              :editorOptions="choiceEditorOptions"
+              v-model="response.text"
+              ref="responseInput"
+            />
+
+            <button
+              @click="remove(i)"
+              class="response-choice-item__remove"
+              data-cy="remove-response-button"
+            >
+              <i class="material-icons inline-icon">clear</i>
+            </button>
+          </div>
+        </li>
+      </draggable>
+    </ol>
+    <button
+      class="btn btn-outline-primary add-choice-button"
+      data-cy="add-choice-button"
+      @click="addChoice"
+    >
+      Add Choice
+    </button>
+  </section>
 </template>
 
 <style scoped>
-.input-group-text {
-    background-color: white;
+label {
+  margin: 0;
 }
-.inline-icon {
-    vertical-align: middle !important;
-}
-.choiceRow {
-    margin-top: 5px;
-    margin-bottom: 5px;
+.multiple-choice-question-options {
+  margin-bottom: 1rem;
 }
 
-.dragItem {
-    cursor: move;
+.add-choice-button {
+  margin: 0.25rem 0;
+}
+
+.response-choice-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.response-choice-item {
+  display: flex;
+  margin: 0.5rem 0;
+  align-items: center;
+}
+.response-choice-item__contents {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  flex-grow: 1;
+}
+
+.response-choice-item--is-correct .response-choice-item__contents,
+.response-choice-item--is-correct .response-choice-item__contents:focus-within {
+  background: #28a745;
+  color: white;
+}
+.response-choice-item--is-correct input,
+.response-choice-item--is-correct button {
+  color: white;
+}
+
+.response-choice-item__contents:focus-within {
+  border-color: #333;
+  box-shadow: 0 0 0 3px hsl(211deg 100% 50% / 42%);
+}
+
+.response-choice-item__correct-toggle {
+  padding: 0.5rem;
+}
+
+.response-choice-item__text {
+  border: 0;
+  flex-grow: 1;
+  background: transparent;
+}
+
+.response-choice-item__text:focus {
+  outline: none;
+}
+
+.response-choice-item__remove {
+  display: flex;
+  background: 0;
+  border: 0;
+  padding: 0.25rem 0.75rem;
+}
+
+.form-section {
+  margin-top: 1rem;
+}
+.form-section__heading {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.text-muted {
+  font-size: 0.9rem;
+}
+.is-draggable {
+  cursor: move;
+}
+
+.true-false-question-toggle {
+  margin-top: 1rem;
+}
+</style>
+<style>
+/**
+* override default quill editor styles
+* extra classes are to increase specificity
+**/
+.response-choice-item .response-choice-item__text {
+  display: flex;
+  align-items: baseline;
+  flex-direction: row-reverse;
+}
+.response-choice-item .response-choice-item__text .ql-container {
+  border: 0;
+  flex-grow: 1;
+}
+.response-choice-item .response-choice-item__text .ql-toolbar {
+  border: 0;
+}
+.response-choice-item .ql-editor {
+  min-height: auto;
+}
+
+.response-choice-item .quillWrapper .ql-snow.ql-toolbar .ql-formats {
+  margin: 0;
+}
+.response-choice-item .ql-snow .ql-toolbar button,
+.response-choice-item .ql-snow.ql-toolbar button {
+  padding: 0;
+}
+.response-choice-item--is-correct .ql-snow .ql-fill,
+.response-choice-item--is-correct .ql-snow .ql-stroke.ql-fill {
+  fill: #fff;
 }
 </style>
 
 <script>
-// TODO this is mutating a prop from the parent, it shouldn't do that.
+import { VueEditor } from "vue2-editor";
+import draggable from "vuedraggable";
 
-import isObject from 'lodash/isObject';
-
-import draggable from 'vuedraggable'
-    export default {
-        props: ['question_responses'],
-        components: {
-            draggable: draggable
+export default {
+  props: {
+    question_responses: Array,
+  },
+  components: {
+    draggable,
+    VueEditor,
+  },
+  computed: {
+    // note: don't use arrow functions so that `this` is bound properly
+    choiceEditorOptions(thisComponent) {
+      return {
+        bounds: ".response-choice-item__contents",
+        modules: {
+          formula: true,
+          keyboard: {
+            bindings: {
+              13: {
+                key: 13,
+                handler() {
+                  thisComponent.addChoice();
+                },
+              },
+            },
+          },
         },
-        data: function() {
-            return {
-             choice_text: "",
-             choice_correct: false,
-             editing_index: null,
-             truefalse: false
-         }
-     },
-     methods: {
-        isObject,
-        edit: function(response_index) {
-            var response = this.question_responses[response_index];
-
-            this.choice_text = isObject(response) ? response.text : response;
-            this.choice_correct = isObject(response) ? response.correct : false;
-            this.editing_index = response_index;
-        },
-        remove: function(response_index) {
-            this.$delete(this.question_responses, response_index);
-        },
-        add_choice: function() {
-            if(this.editing_index !== null) {
-                this.$set(this.question_responses, this.editing_index, {"text": this.choice_text, "correct": this.choice_correct});
-            }
-            else {
-                this.question_responses.push({"text": this.choice_text, "correct": this.choice_correct});
-            }
-            
-            this.choice_text = '';
-            this.choice_correct = false;
-            this.editing_index = null;
-        }, 
-        toggleTrueFalse: function()   {
-            if(this.truefalse && !this.isTrueFalse()) {
-                while(this.question_responses.length > 0) {
-                    this.$delete(this.question_responses, 0);
-                }
-                
-                this.question_responses.push({"text":"True","correct":false});
-                this.question_responses.push({"text":"False","correct":false});
-            }
-        },
-        isTrueFalse: function() {
-            if(this.question_responses && JSON.stringify(this.question_responses.map(e=>e.text)) == JSON.stringify(["True", "False"])) {
-                return true;
-            }
-            return false;
-        }
+      };
     },
-    mounted() {
-        if(!this.question_responses) {
-            this.$emit('update:question_responses', []);
-        }
+    choiceEditorToolbar: () => ["formula"],
+  },
+  methods: {
+    remove(responseIndex) {
+      const updatedResponses = this.question_responses.filter(
+        (_, i) => i !== responseIndex
+      );
+      this.$emit("update:question_responses", updatedResponses);
+    },
+    focusEditor(responseIndex) {
+      // use last index by default
+      if (typeof responseIndex === "undefined") {
+        responseIndex = this.question_responses.length - 1;
+      }
+      this.$refs.responseInput[responseIndex].quill.focus();
+    },
+    addChoice() {
+      // remove any empty responses and then add a new responses
+      const updatedResponses = this.question_responses
+        .filter((r) => r.text !== "")
+        .concat([
+          {
+            text: "",
+            correct: false,
+          },
+        ]);
 
-        this.truefalse = this.isTrueFalse();
+      this.$emit("update:question_responses", updatedResponses);
+
+      // focus new choice on next tick
+      this.$nextTick(function() {
+        this.focusEditor();
+      });
+    },
+    createTrueFalseQuestion: function() {
+      const updatedResponses = [
+        { text: "True", correct: false },
+        { text: "False", correct: false },
+      ];
+
+      this.$emit("update:question_responses", updatedResponses);
+    },
+  },
+  mounted() {
+    // if question responses is empty, initialize with blank array
+    // perhaps this should be the parents job?
+    if (!this.question_responses) {
+      this.$emit("update:question_responses", []);
     }
-}
+  },
+};
 </script>

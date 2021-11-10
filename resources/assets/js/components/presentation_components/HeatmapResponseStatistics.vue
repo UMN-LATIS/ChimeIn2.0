@@ -2,7 +2,7 @@
 <div class="col-sm-12">
     <div class="overlayContainer">
         <canvas ref="targetCanvas" id="simpleheat"  ></canvas>
-        <img ref="targetImage" class="img-fluid max-height-image" v-bind:src="'/storage/' + question.question_info.question_responses.image" @load="drawImage">
+        <img ref="targetImage" data-cy="image-heatmap-original" class="img-fluid max-height-image" v-bind:src="'/storage/' + question.question_info.question_responses.image" @load="drawImage">
     </div>
 </div>
 </template>
