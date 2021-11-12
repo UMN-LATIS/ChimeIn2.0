@@ -27,10 +27,6 @@
   text-align: center;
 }
 
-.jumbo-radio__description {
-  text-align: left;
-}
-
 @media (max-width: 60rem) {
   .jumbo-radio {
     padding: 1.5rem 1.5rem;
