@@ -112,10 +112,3 @@ h5 {
 .container-fluid {
   max-width: 75rem;
 }
-// match padding of UMN Header
-@media (min-width: 775px) {
-  .container-fluid {
-    padding-left: 54px;
-    padding-right: 54px;
-  }
-}

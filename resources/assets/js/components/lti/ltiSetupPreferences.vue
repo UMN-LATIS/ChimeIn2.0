@@ -101,7 +101,6 @@
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
   font-weight: bold;
-  /* text-transform: uppercase; */
 }
 
 .jumbo-radio-group {
@@ -226,7 +225,7 @@ export default {
     cancelForm() {
       this.gradePassbackChoice = null;
       this.gradeCalcChoice = null;
-      window.history.go(-1);
+      // window.history.go(-1);
     },
   },
 };
