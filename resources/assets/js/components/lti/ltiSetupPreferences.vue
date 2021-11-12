@@ -16,7 +16,7 @@
           How should ChimeIn assignments be recorded in Canvas?
         </h2>
 
-        <div class="jumbo-button-group" @update="handleUpdate">
+        <div class="jumbo-button-group">
           <JumboButton
             v-for="choice in gradeTypeChoices"
             :key="choice.id"
@@ -24,6 +24,29 @@
             :title="choice.title"
             :description="choice.description"
             :value="choice.id"
+            :isActive="isActive(choice.id)"
+            name="lti_grade_mode"
+            @click.native="setGradePassbackChoice(choice.id)"
+          />
+        </div>
+      </li>
+
+      <li class="setup-item">
+        <h2 class="setup-item__heading">
+          What participation earns points?
+        </h2>
+
+        <div class="jumbo-button-group">
+          <JumboButton
+            v-for="choice in gradeCalcChoices"
+            :key="choice.id"
+            :img="choice.img"
+            :title="choice.title"
+            :description="choice.description"
+            :value="choice.id"
+            :isActive="isActive(choice.id)"
+            name="only_correct_answers_lti"
+            @click.native="setGradePassbackChoice(choice.id)"
           />
         </div>
       </li>
@@ -39,6 +62,7 @@
 }
 
 .setup-list li {
+  margin: 2rem 0 3rem;
   counter-increment: setup-list;
   padding-left: 3rem;
   position: relative;
@@ -55,13 +79,14 @@
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 0.25rem;
+  top: 0;
   left: 0;
   background: var(--gold-light);
 }
 
 .setup-item__heading {
-    margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .jumbo-button-group {
@@ -71,14 +96,25 @@
 }
 
 @media (max-width: 40rem) {
-    .jumbo-button-group {
-        grid-template-columns: minmax(0, 1fr);
-    }
+  .jumbo-button-group {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 </style>
 
 <script>
 import JumboButton from "../JumboButton.vue";
+const PASSBACK = {
+  NONE: "no_grades",
+  ONE: "one_grade",
+  MULTIPLE: "multiple_grades",
+};
+
+const PARTICIPATION_CREDIT = {
+  FULL: "0",
+  NONE: "1",
+  PARTIAL: "2",
+};
 
 export default {
   components: {
@@ -86,19 +122,23 @@ export default {
   },
   data() {
     return {
-      gradeTypeChoice: null,
+      gradePassbackChoice: null,
       gradeCalcChoice: null,
     };
   },
   methods: {
-    handleUpdate(x) {
-      console.log(x);
+    setGradePassbackChoice(choiceId) {
+      console.log(choiceId);
+      this.gradePassbackChoice = choiceId;
+    },
+    isActive(choiceId) {
+      return this.gradePassbackChoice === choiceId;
     },
   },
   computed: {
     gradeTypeChoices: () => [
       {
-        id: "no_grades",
+        id: PASSBACK.NONE,
         title: "No Grades",
         description: "No participation grade will be recorded in Canvas.",
         img: {
@@ -108,7 +148,7 @@ export default {
         },
       },
       {
-        id: "one_grade",
+        id: PASSBACK.ONE,
         title: "One Grade",
         description:
           "One grade column for all Chimeln assignments in Canvas, totalling all participation.",
@@ -119,7 +159,7 @@ export default {
         },
       },
       {
-        id: "multiple_grades",
+        id: PASSBACK.MULTIPLE,
         title: "Multiple Grades",
         description:
           "Separate grade column for each Chimeln assignment in Canvas",
@@ -132,21 +172,37 @@ export default {
     ],
     gradeCalcChoices: () => [
       {
-        id: "0",
-        label: "Any participation",
-        description: "Any response counts towards the grade in the gradebook.",
+        id: PARTICIPATION_CREDIT.FULL,
+        label: "Any Participation",
+        description:
+          "Full credit for participation. No credit for no response.",
+        img: {
+          src: "/img/participation-credit-full.svg",
+          alt:
+            "Full credit for participation. Illustration shows a checkmark worth 100%, an X worth 100%, and a blank worth 0%.",
+        },
       },
       {
-        id: "1",
-        label: '"Correct" answers',
+        id: PARTICIPATION_CREDIT.PARTIAL,
+        label: "Partial Credit",
         description:
-          'Multiple Choice questions in ChimeIn can have a "correct" answer marked. When this option is selected, students responding to multiple choice questions will only recieve credit for correct answers. Any participation in other types of questions (free response, heatmap, etc) counts towards the grade.',
+          "Full credit for correct answers. Half credit for participation. No credit for no response.",
+        img: {
+          src: "/img/participation-credit-partial.svg",
+          alt:
+            "Partial credit for participation. Illustration shows a checkmark worth 100%, an X worth 50%, and a blank worth 0%.",
+        },
       },
       {
-        id: "2",
-        label: "Partial credit",
+        id: PARTICIPATION_CREDIT.NONE,
+        label: "Correct Answers Only",
         description:
-          'Half credit for participation, full credit for "correct" answers',
+          "Full credit for correct answer. Incorrect or non-responses are earn no credit.",
+        img: {
+          src: "/img/participation-credit-none.svg",
+          alt:
+            "No credit for participation, only correct answer. Illustration shows a checkmark worth 100%, an X worth 0%, and a blank worth 0%.",
+        },
       },
     ],
   },
