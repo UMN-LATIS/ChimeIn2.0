@@ -15,14 +15,6 @@
   margin-top: 4rem;
   font-weight: bold;
 }
-.lti-launch-page__heading:before {
-  display: block;
-  content: "";
-  width: 4rem;
-  height: 0.5rem;
-  background: #333;
-  margin-bottom: 0.666rem;
-}
 </style>
 
 <script>
