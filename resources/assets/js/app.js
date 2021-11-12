@@ -12,7 +12,7 @@ import "./bootstrap.js";
 import routes from "./routes.js";
 
 // COMPONENTS
-import ErrorDialog from "./components/error_dialog.vue";
+// import ErrorDialog from "./components/error_dialog.vue";
 import NavBar from "./components/Navbar.vue";
 import process from "process";
 import ChimePanel from "./components/home_components/ChimePanel.vue";
@@ -62,7 +62,7 @@ Vue.directive("tooltip", function(el, binding) {
   });
 });
 
-Vue.component("error-dialog", ErrorDialog);
+// Vue.component("error-dialog", ErrorDialog);
 Vue.component("navbar", NavBar);
 Vue.component("chime-panel", ChimePanel);
 Vue.component("chime-card", ChimeCard);

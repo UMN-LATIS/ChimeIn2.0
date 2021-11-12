@@ -8,7 +8,7 @@
         :link="{name:'folder', params:{chimeId: chimeId, folderId: folderId}}"
         v-if="!folder.student_view">
     </navbar>
-    <error-dialog />
+    <ErrorDialog />
 
     <div class="container-fluid presentContainer">
         <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
@@ -38,11 +38,13 @@
     import { component as fullscreen } from 'vue-fullscreen';
     import { questionsListener } from '../components/mixins/questionsListener'
     import toHyphenatedCode from '../helpers/toHyphenatedCode.mjs';
+    import ErrorDialog from '../components/ErrorDialog.vue';
 
     export default {
         mixins: [questionsListener],
         components: {
             fullscreen,
+            ErrorDialog
         },
         data() {
             return {

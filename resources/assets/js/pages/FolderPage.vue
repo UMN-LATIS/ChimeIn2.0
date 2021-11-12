@@ -2,7 +2,7 @@
     <div>
         <navbar title="Back to Chime" :user="user" :link="{name:'chime', params:{chimeId: chimeId}}">
         </navbar>
-        <error-dialog />
+        <ErrorDialog />
         <div class="alert alert-warning" role="alert" v-if="!hideOpenAlert && otherFolderSessions.length > 0">
             You have {{ otherFolderSessions.length }} {{ 'question' | pluralize(otherFolderSessions.length) }} open
             outside this folder. Would you like to <a class="pointer" href="" @click.prevent="closeOthers">close
@@ -125,14 +125,13 @@
 </template>
 
 <script>
+    import JsonCSV from 'vue-json-csv'
+    import orderBy from 'lodash/orderBy';
     import draggable from 'vuedraggable'
     import {
         questionsListener
-    } from '../components/mixins/questionsListener'
-    import JsonCSV from 'vue-json-csv'
-    import orderBy from 'lodash/orderBy';
-
-
+    } from '../components/mixins/questionsListener';
+    import ErrorDialog from '../components/ErrorDialog.vue';
 
     const QuestionForm = () => import(
         /* webpackChunkName: "QuestionForm" */
@@ -145,7 +144,8 @@
         components: {
             draggable,
             'question-form': QuestionForm,
-            'downloadCsv': JsonCSV
+            'downloadCsv': JsonCSV,
+            ErrorDialog,
         },
         data() {
             return {

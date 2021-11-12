@@ -2,7 +2,7 @@
     <div>
         <navbar title="Home" :user="user" :link="'/'">
         </navbar>
-        <error-dialog />
+        <ErrorDialog />
         <div class="alert alert-warning" role="alert" v-if="error">
             {{ error }}
         </div>
@@ -57,8 +57,12 @@
     }
 </style>
 <script>
+import ErrorDialog from "../components/ErrorDialog.vue";
 
     export default {
+        components: {
+            ErrorDialog
+        },
         data() {
             return {
                 chime: {},

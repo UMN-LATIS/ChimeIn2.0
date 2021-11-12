@@ -1,7 +1,7 @@
 <template>
   <div class="chime">
     <NavBar title="Back to Home" :user="user" :link="'/'" />
-    <error-dialog />
+    <ErrorDialog />
     <div class="container">
       <header class="chime__header">
         <div class="chime__header-container">
@@ -142,6 +142,7 @@ import FolderCard from '../components/chime_components/FolderCard.vue';
 import NavBar from '../components/Navbar.vue';
 import NewFolder from '../components/chime_components/NewFolder.vue';
 import Spinner from "../components/Spinner.vue";
+import ErrorDialog from "../components/ErrorDialog.vue";
 
 export default {
   components: {
@@ -150,6 +151,7 @@ export default {
     FolderCard,
     NewFolder,
     Spinner,
+    ErrorDialog,
   },
   data() {
     return {
