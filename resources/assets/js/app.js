@@ -7,14 +7,11 @@ import VueRouter from "vue-router";
 import fullscreen from "vue-fullscreen";
 import PrettyCheckbox from "pretty-checkbox-vue";
 import VueAnnouncer from "vue-announcer";
-import jQuery from 'jquery';
+import jQuery from "jquery";
 import "./bootstrap.js";
+import routes from "./routes.js";
 
 // COMPONENTS
-import Home from "./components/Home.vue";
-import Chime from "./components/Chime.vue";
-import ChimeStudent from "./components/Chime_student.vue";
-import Present from "./components/Present.vue";
 import Modal from "./components/modal.vue";
 import ErrorDialog from "./components/error_dialog.vue";
 import NavBar from "./components/Navbar.vue";
@@ -67,17 +64,6 @@ Vue.directive("tooltip", function(el, binding) {
 });
 
 Vue.component("modal", Modal);
-Vue.component("home", Home);
-Vue.component("chime", Chime);
-Vue.component("ChimeStudent", ChimeStudent);
-Vue.component("Present", Present);
-
-const Folder = () =>
-  import(
-    /* webpackChunkName: "folder" */
-    "./components/Folder.vue"
-  );
-Vue.component("Folder", Folder);
 Vue.component("error-dialog", ErrorDialog);
 Vue.component("navbar", NavBar);
 Vue.component("chime-panel", ChimePanel);
@@ -127,28 +113,7 @@ const store = new Vuex.Store({
 
 const router = new VueRouter({
   mode: "history",
-  routes: [
-    { path: "/", component: Home },
-    { path: "/chime/:chimeId", name: "chime", component: Chime, props: true },
-    {
-      path: "/chime/:chimeId/folder/:folderId",
-      name: "folder",
-      component: Folder,
-      props: true,
-    },
-    {
-      path: "/chimeParticipant/:chimeId/:folderId?",
-      name: "chimeStudent",
-      component: ChimeStudent,
-      props: true,
-    },
-    {
-      path: "/chime/:chimeId/folder/:folderId/present/:questionId?",
-      name: "present",
-      component: Present,
-      props: true,
-    },
-  ],
+  routes,
 });
 
 new Vue({
