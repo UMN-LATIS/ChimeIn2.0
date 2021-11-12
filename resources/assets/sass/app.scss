@@ -96,7 +96,7 @@ h5 {
 
 .btn-outline-secondary {
   border-color: var(--gray-dark);
-  color:  var(--gray-dark);
+  color: var(--gray-dark);
 }
 
 .btn-outline-secondary:hover {
@@ -109,8 +109,13 @@ h5 {
   font-size: 14px;
 }
 
-// match padding of UMN Header
 .container-fluid {
-  padding-left: 54px;
-  padding-right: 54px;
+  max-width: 75rem;
+}
+// match padding of UMN Header
+@media (min-width: 775px) {
+  .container-fluid {
+    padding-left: 54px;
+    padding-right: 54px;
+  }
 }

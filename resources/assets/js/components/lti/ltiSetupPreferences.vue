@@ -53,6 +53,9 @@
     </ol>
 
     <div class="form-actions">
+      <button @click.prevent="cancelForm" class="btn btn-outline-secondary">
+        Cancel
+      </button>
       <button
         type="submit"
         :disabled="isSubmitDisabled"
@@ -111,6 +114,10 @@
   .jumbo-radio-group {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.form-actions {
+  text-align: right;
 }
 </style>
 
@@ -214,6 +221,13 @@ export default {
         },
       },
     ],
+  },
+  methods: {
+    cancelForm() {
+      this.gradePassbackChoice = null;
+      this.gradeCalcChoice = null;
+      window.history.go(-1);
+    },
   },
 };
 </script>
