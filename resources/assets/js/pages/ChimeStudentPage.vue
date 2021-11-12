@@ -1,7 +1,6 @@
 <template>
     <div>
-        <navbar title="Home" :user="user" :link="'/'">
-        </navbar>
+        <NavBar title="Home" :user="user" :link="'/'" />
         <ErrorDialog />
         <div class="alert alert-warning" role="alert" v-if="error">
             {{ error }}
@@ -58,10 +57,12 @@
 </style>
 <script>
 import ErrorDialog from "../components/ErrorDialog.vue";
+import NavBar from "../components/NavBar.vue";
 
     export default {
         components: {
-            ErrorDialog
+            ErrorDialog,
+            NavBar,
         },
         data() {
             return {

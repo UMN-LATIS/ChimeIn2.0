@@ -33,8 +33,7 @@
             </transition>
             <div v-if="chimes.length > 0">
                 <transition-group name="fade">
-                    <chime-card v-for="chime in orderedChimes" :key="chime.id" :chime="chime" :user="user" v-on:updatedChime="get_chimes">
-                    </chime-card>
+                    <ChimeCard v-for="chime in orderedChimes" :key="chime.id" :chime="chime" :user="user" v-on:updatedChime="get_chimes" />
                 </transition-group>
             </div>
             <div class="my-3" v-else>
@@ -50,9 +49,13 @@
 <script>
 import orderBy from 'lodash/orderBy'
 import { EventBus } from '../../event-bus.js';
+import ChimeCard from './ChimeCard.vue';
 
 export default {
     props: ['user'],
+    components: {
+        ChimeCard,
+    },
     data() {
         return {
             requireLogin: false,

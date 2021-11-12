@@ -1,10 +1,9 @@
 <template>
     <div>
-        <navbar
+        <NavBar
         title=""
         :user="user"
-        :link="'/'">
-    </navbar>
+        :link="'/'" />
     <div class="container">
 
        <div class="col-sm-12">
@@ -20,8 +19,7 @@
                         We've got documentation available on our <a href="https://umn-latis.github.io/ChimeIn2.0/" class="alert-link">help site</a>.  You can also <a href="mailto:clatel@umn.edu" class="alert-link">drop us a line</a> and we can arrange a personal introduction.
                     </div>
 
-                <chime-panel :user="user">
-                </chime-panel>
+                <ChimePanel :user="user" />
             </div>
             
         <div class="col-12 col-md-3">
@@ -57,8 +55,14 @@
 
 <script>
 import { EventBus } from '../event-bus.js';
+import NavBar from '../components/NavBar.vue';
+import ChimePanel from '../components/home_components/ChimePanel.vue';
 
 export default {
+    components: {
+        NavBar,
+        ChimePanel,
+    },
     data() {
         return {
             access_code: "",

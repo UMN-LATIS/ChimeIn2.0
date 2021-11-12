@@ -1,7 +1,6 @@
 <template>
     <div>
-        <navbar title="Back to Chime" :user="user" :link="{name:'chime', params:{chimeId: chimeId}}">
-        </navbar>
+        <NavBar title="Back to Chime" :user="user" :link="{ name: 'chime', params: { chimeId } }" />
         <ErrorDialog />
         <div class="alert alert-warning" role="alert" v-if="!hideOpenAlert && otherFolderSessions.length > 0">
             You have {{ otherFolderSessions.length }} {{ 'question' | pluralize(otherFolderSessions.length) }} open
@@ -125,13 +124,14 @@
 </template>
 
 <script>
-    import JsonCSV from 'vue-json-csv'
+    // import JsonCSV from 'vue-json-csv'
     import orderBy from 'lodash/orderBy';
     import draggable from 'vuedraggable'
     import {
         questionsListener
     } from '../components/mixins/questionsListener';
     import ErrorDialog from '../components/ErrorDialog.vue';
+    import NavBar from '../components/NavBar.vue';
 
     const QuestionForm = () => import(
         /* webpackChunkName: "QuestionForm" */
@@ -144,8 +144,9 @@
         components: {
             draggable,
             'question-form': QuestionForm,
-            'downloadCsv': JsonCSV,
+            // 'downloadCsv': JsonCSV,
             ErrorDialog,
+            NavBar,
         },
         data() {
             return {

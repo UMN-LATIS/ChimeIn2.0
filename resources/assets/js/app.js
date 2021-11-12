@@ -1,3 +1,4 @@
+import process from "process";
 import Vue from "vue";
 import stopword from "stopword";
 import queryString from "query-string";
@@ -12,12 +13,6 @@ import "./bootstrap.js";
 import routes from "./routes.js";
 
 // COMPONENTS
-// import ErrorDialog from "./components/error_dialog.vue";
-import NavBar from "./components/Navbar.vue";
-import process from "process";
-import ChimePanel from "./components/home_components/ChimePanel.vue";
-import ChimeCard from "./components/home_components/ChimeCard.vue";
-import NewFolder from "./components/chime_components/NewFolder.vue";
 import FolderCard from "./components/chime_components/FolderCard.vue";
 import ChimeManagement from "./components/chime_components/ChimeManagement.vue";
 import ChimeManagementOptions from "./components/chime_components/ChimeManagementOptions.vue";
@@ -62,11 +57,6 @@ Vue.directive("tooltip", function(el, binding) {
   });
 });
 
-// Vue.component("error-dialog", ErrorDialog);
-Vue.component("navbar", NavBar);
-Vue.component("chime-panel", ChimePanel);
-Vue.component("chime-card", ChimeCard);
-Vue.component("new-folder", NewFolder);
 Vue.component("folder-card", FolderCard);
 Vue.component("ChimeManagement", ChimeManagement);
 Vue.component("ChimeManagementOptions", ChimeManagementOptions);

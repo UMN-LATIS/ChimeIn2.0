@@ -1,13 +1,13 @@
 <template>
     <div>
-        <navbar
+    <NavBar
         title="Back to Folder"
         :user="user"
         :access_code="hyphenatedCode"
         :host="host"
-        :link="{name:'folder', params:{chimeId: chimeId, folderId: folderId}}"
-        v-if="!folder.student_view">
-    </navbar>
+        :link="{ name:'folder', params: { chimeId, folderId } }"
+        v-if="!folder.student_view" />
+
     <ErrorDialog />
 
     <div class="container-fluid presentContainer">
@@ -39,12 +39,14 @@
     import { questionsListener } from '../components/mixins/questionsListener'
     import toHyphenatedCode from '../helpers/toHyphenatedCode.mjs';
     import ErrorDialog from '../components/ErrorDialog.vue';
+    import NavBar from '../components/NavBar.vue';
 
     export default {
         mixins: [questionsListener],
         components: {
             fullscreen,
-            ErrorDialog
+            ErrorDialog,
+            NavBar,
         },
         data() {
             return {
