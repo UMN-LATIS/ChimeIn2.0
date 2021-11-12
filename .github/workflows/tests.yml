@@ -54,3 +54,10 @@ jobs:
         with:
           name: cypress-screenshots
           path: cypress/screenshots
+
+      - name: Upload snapshots
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-snapshots
+          path: cypress/snapshots
