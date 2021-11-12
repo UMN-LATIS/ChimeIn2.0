@@ -13,7 +13,7 @@ import "./bootstrap.js";
 import routes from "./routes.js";
 
 // COMPONENTS
-import FolderCard from "./components/chime_components/FolderCard.vue";
+// import FolderCard from "./components/chime_components/FolderCard.vue";
 import ChimeManagement from "./components/chime_components/ChimeManagement.vue";
 import ChimeManagementOptions from "./components/chime_components/ChimeManagementOptions.vue";
 import ChimeExport from "./components/chime_components/ChimeExport.vue";
@@ -57,7 +57,7 @@ Vue.directive("tooltip", function(el, binding) {
   });
 });
 
-Vue.component("folder-card", FolderCard);
+// Vue.component("folder-card", FolderCard);
 Vue.component("ChimeManagement", ChimeManagement);
 Vue.component("ChimeManagementOptions", ChimeManagementOptions);
 Vue.component("ChimeExport", ChimeExport);
