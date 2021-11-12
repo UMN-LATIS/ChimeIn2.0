@@ -18,18 +18,25 @@
     </div>
 </template>
 
-
-<style>
-.responseContainer {
-    /*border: 1px solid black;
-    border-radius: 5px;
-    margin: 5px;*/
-}
-
-</style>
-
 <script>
+import MultipleChoice from "../questions/response/MultipleChoice.vue";
+import ImageResponse from "../questions/response/ImageResponse.vue";
+import FreeResponse from "../questions/response/FreeResponse.vue";
+import TextHeatmapResponse from "../questions/response/TextHeatmapResponse.vue";
+import NoResponse from "../questions/response/NoResponse.vue";
+import SliderResponse from "../questions/response/Slider.vue";
+import HeatmapResponse from "../questions/response/HeatmapResponse.vue";
+
 export default {
+    components: {
+        'multiple_choice': MultipleChoice,
+        'image_response': ImageResponse,
+        'text_heatmap_response': TextHeatmapResponse,
+        'no_response': NoResponse,
+        'free_response': FreeResponse,
+        'slider_response': SliderResponse,
+        'heatmap_response': HeatmapResponse,
+    },
     props: ['response', 'chime']
 };
 </script>

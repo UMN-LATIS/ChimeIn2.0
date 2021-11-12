@@ -25,19 +25,16 @@
                                 <h1>No Open Questions</h1>
                             </div>
                             <transition-group name="fade" v-if="filteredSession.length > 0">
-                                <student-prompt v-for="s in filteredSession" v-on:updateResponse="updateResponse"
-                                    :session="s" :chime="chime" :responses="responses" :key="s.id">
-                                </student-prompt>
+                                <StudentPrompt v-for="s in filteredSession" v-on:updateResponse="updateResponse"
+                                    :session="s" :chime="chime" :responses="responses" :key="s.id" />
                             </transition-group>
                         </div>
                         <div class="tab-pane container" id="pastQuestions">
                             <div v-if="responses.length < 1" class="text-center">
                                 <h1>No Closed Questions</h1>
                             </div>
-                            <response v-else v-for="response, i in sortedResponses" v-bind:key="i" :chime="chime"
-                                :response="response">
-                            </response>
-
+                            <Response v-else v-for="response, i in sortedResponses" v-bind:key="i" :chime="chime"
+                                :response="response" />
                         </div>
 
                     </div>
@@ -58,11 +55,15 @@
 <script>
 import ErrorDialog from "../components/ErrorDialog.vue";
 import NavBar from "../components/NavBar.vue";
+import StudentPrompt from "../components/chime_student_components/StudentPrompt.vue";
+import Response from "../components/chime_student_components/Response.vue";
 
     export default {
         components: {
             ErrorDialog,
             NavBar,
+            StudentPrompt,
+            Response,
         },
         data() {
             return {

@@ -103,9 +103,8 @@
                 <div class="col-sm-12">
                     <ul>
                         <draggable v-model="questions" data-cy="question-list" @end="swap_question" handle=".draghandle">
-                            <question v-for="q in questions" :key="q.id" :folder="folder" :question="q"
-                                v-on:editquestion="load_questions" v-on:deletequestion="delete_question">
-                            </question>
+                            <Question v-for="q in questions" :key="q.id" :folder="folder" :question="q"
+                                v-on:editquestion="load_questions" v-on:deletequestion="delete_question" />
                         </draggable>
                     </ul>
                 </div>
@@ -124,7 +123,6 @@
 </template>
 
 <script>
-    // import JsonCSV from 'vue-json-csv'
     import orderBy from 'lodash/orderBy';
     import draggable from 'vuedraggable'
     import {
@@ -132,6 +130,7 @@
     } from '../components/mixins/questionsListener';
     import ErrorDialog from '../components/ErrorDialog.vue';
     import NavBar from '../components/NavBar.vue';
+    import Question from '../components/chime_components/Question.vue';
 
     const QuestionForm = () => import(
         /* webpackChunkName: "QuestionForm" */
@@ -144,9 +143,9 @@
         components: {
             draggable,
             'question-form': QuestionForm,
-            // 'downloadCsv': JsonCSV,
             ErrorDialog,
             NavBar,
+            Question,
         },
         data() {
             return {
