@@ -128,7 +128,7 @@
     import draggable from 'vuedraggable'
     import {
         questionsListener
-    } from './mixins/questionsListener'
+    } from '../components/mixins/questionsListener'
     import JsonCSV from 'vue-json-csv'
     import orderBy from 'lodash/orderBy';
 
@@ -136,7 +136,7 @@
 
     const QuestionForm = () => import(
         /* webpackChunkName: "QuestionForm" */
-        './chime_components/QuestionForm.vue'
+        '../components/chime_components/QuestionForm.vue'
     );
 
     export default {

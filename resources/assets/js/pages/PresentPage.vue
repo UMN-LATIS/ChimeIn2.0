@@ -36,7 +36,7 @@
 
 <script>
     import { component as fullscreen } from 'vue-fullscreen';
-    import { questionsListener } from './mixins/questionsListener'
+    import { questionsListener } from '../components/mixins/questionsListener'
     import toHyphenatedCode from '../helpers/toHyphenatedCode.mjs';
 
     export default {

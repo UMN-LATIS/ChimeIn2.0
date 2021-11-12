@@ -1,6 +1,6 @@
 <template>
   <div class="chime">
-    <navbar title="Back to Home" :user="user" :link="'/'" />
+    <NavBar title="Back to Home" :user="user" :link="'/'" />
     <error-dialog />
     <div class="container">
       <header class="chime__header">
@@ -55,14 +55,14 @@
           <p v-if="!ordered_folders.length">
             You don't have any folders yet. Why not create one now?
           </p>
-          <draggable
+          <Draggable
             v-else
             class="chime__ordered-folders"
             v-model="ordered_folders"
             handle=".draghandle"
             :forceFallback="true"
           >
-            <folder-card
+            <FolderCard
               v-for="folder in ordered_folders"
               :key="folder.id"
               :folder="folder"
@@ -70,9 +70,9 @@
               :draggable="ordered_folders.length > 1"
               :ltiLink="getLtiLink(folder)"
             />
-          </draggable>
+          </Draggable>
         </div>
-        <new-folder
+        <NewFolder
           class="chime__create-folder"
           :chime="chime"
           v-on:newfolder="create_folder"
@@ -136,13 +136,19 @@
 </style>
 
 <script>
-import draggable from "vuedraggable";
-import Spinner from "./Spinner.vue";
+import Draggable from "vuedraggable";
 import orderBy from 'lodash/orderBy';
+import FolderCard from '../components/chime_components/FolderCard.vue';
+import NavBar from '../components/Navbar.vue';
+import NewFolder from '../components/chime_components/NewFolder.vue';
+import Spinner from "../components/Spinner.vue";
 
 export default {
   components: {
-    draggable,
+    Draggable,
+    NavBar,
+    FolderCard,
+    NewFolder,
     Spinner,
   },
   data() {

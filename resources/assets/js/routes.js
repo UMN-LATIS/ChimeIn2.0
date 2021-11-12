@@ -1,33 +1,33 @@
-import Home from "./components/Home.vue";
-import Chime from "./components/Chime.vue";
-import ChimeStudent from "./components/Chime_student.vue";
-import Present from "./components/Present.vue";
+import HomePage from "./pages/HomePage.vue";
+import ChimePage from "./pages/ChimePage.vue";
+import ChimeStudentPage from "./pages/ChimeStudentPage.vue";
+import PresentPage from "./pages/PresentPage.vue";
 
-const Folder = () =>
+const FolderPage = () =>
   import(
     /* webpackChunkName: "folder" */
-    "./components/Folder.vue"
+    "./pages/FolderPage.vue"
   );
 
 export default [
-  { path: "/", component: Home },
-  { path: "/chime/:chimeId", name: "chime", component: Chime, props: true },
+  { path: "/", component: HomePage },
+  { path: "/chime/:chimeId", name: "chime", component: ChimePage, props: true },
   {
     path: "/chime/:chimeId/folder/:folderId",
     name: "folder",
-    component: Folder,
+    component: FolderPage,
     props: true,
   },
   {
     path: "/chimeParticipant/:chimeId/:folderId?",
     name: "chimeStudent",
-    component: ChimeStudent,
+    component: ChimeStudentPage,
     props: true,
   },
   {
     path: "/chime/:chimeId/folder/:folderId/present/:questionId?",
     name: "present",
-    component: Present,
+    component: PresentPage,
     props: true,
   },
 ];
