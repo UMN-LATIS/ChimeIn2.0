@@ -12,7 +12,6 @@ import "./bootstrap.js";
 import routes from "./routes.js";
 
 // COMPONENTS
-import Modal from "./components/modal.vue";
 import ErrorDialog from "./components/error_dialog.vue";
 import NavBar from "./components/Navbar.vue";
 import process from "process";
@@ -63,7 +62,6 @@ Vue.directive("tooltip", function(el, binding) {
   });
 });
 
-Vue.component("modal", Modal);
 Vue.component("error-dialog", ErrorDialog);
 Vue.component("navbar", NavBar);
 Vue.component("chime-panel", ChimePanel);

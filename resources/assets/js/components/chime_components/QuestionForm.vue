@@ -1,5 +1,5 @@
 <template>
-  <modal :show="show" @close="close">
+  <Modal :show="show" @close="close">
     <div class="modal-header" data-cy="add-question-form">
       <h3>Add a Question</h3>
     </div>
@@ -97,7 +97,7 @@
         </button>
       </div>
     </div>
-  </modal>
+  </Modal>
 </template>
 
 <style scoped>
@@ -123,6 +123,7 @@ import FreeResponse from "./response_components/FreeResponse.vue";
 import TextHeatmapResponse from "./response_components/TextHeatmapResponse.vue";
 import HeatmapResponse from "./response_components/HeatmapResponse.vue";
 import NoResponse from "./response_components/FreeResponse.vue";
+import Modal from '../Modal.vue';
 
 import VueSelect from "vue-select";
 
@@ -160,6 +161,7 @@ export default {
     heatmap_response_response: HeatmapResponse,
     no_response_response: NoResponse,
     "v-select": VueSelect,
+    Modal,
   },
   data: function() {
     return {
