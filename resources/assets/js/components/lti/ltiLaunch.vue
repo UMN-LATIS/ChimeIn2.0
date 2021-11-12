@@ -11,6 +11,10 @@
 </template>
 
 <style scoped>
+.lti-launch-page {
+  max-width: 75rem;
+  margin: auto;
+}
 .lti-launch-page__heading {
   margin-top: 4rem;
   font-weight: bold;
