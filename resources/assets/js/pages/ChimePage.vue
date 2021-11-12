@@ -143,6 +143,8 @@ import NavBar from '../components/NavBar.vue';
 import NewFolder from '../components/chime_components/NewFolder.vue';
 import Spinner from "../components/Spinner.vue";
 import ErrorDialog from "../components/ErrorDialog.vue";
+import ChimeManagement from "../components/chime_components/ChimeManagement.vue";
+import ChimeExport from "../components/chime_components/ChimeExport.vue";
 
 export default {
   components: {
@@ -152,6 +154,8 @@ export default {
     NewFolder,
     Spinner,
     ErrorDialog,
+    ChimeManagement,
+    ChimeExport,
   },
   data() {
     return {

@@ -46,9 +46,7 @@
           :show_folder_title_to_participants.sync="
             show_folder_title_to_participants
           "
-        >
-        </ChimeManagementOptions>
-
+        />
         <button
           class="btn btn-outline-success btn-sm align-items-center d-flex"
           @click="sync"
@@ -140,8 +138,13 @@ ul {
 </style>
 
 <script>
+import ChimeManagementOptions from "./ChimeManagementOptions.vue";
+
 export default {
   props: ["chime"],
+  components: {
+    ChimeManagementOptions,
+  },
   data: function() {
     return {
       users: [],

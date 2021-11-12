@@ -14,9 +14,9 @@ import routes from "./routes.js";
 
 // COMPONENTS
 // import FolderCard from "./components/chime_components/FolderCard.vue";
-import ChimeManagement from "./components/chime_components/ChimeManagement.vue";
-import ChimeManagementOptions from "./components/chime_components/ChimeManagementOptions.vue";
-import ChimeExport from "./components/chime_components/ChimeExport.vue";
+// import ChimeManagement from "./components/chime_components/ChimeManagement.vue";
+// import ChimeManagementOptions from "./components/chime_components/ChimeManagementOptions.vue";
+// import ChimeExport from "./components/chime_components/ChimeExport.vue";
 import Question from "./components/chime_components/Question.vue";
 import StudentPrompt from "./components/chime_student_components/Student_Prompt.vue";
 import Response from "./components/chime_student_components/Response.vue";
@@ -58,9 +58,9 @@ Vue.directive("tooltip", function(el, binding) {
 });
 
 // Vue.component("folder-card", FolderCard);
-Vue.component("ChimeManagement", ChimeManagement);
-Vue.component("ChimeManagementOptions", ChimeManagementOptions);
-Vue.component("ChimeExport", ChimeExport);
+// Vue.component("ChimeManagement", ChimeManagement);
+// Vue.component("ChimeManagementOptions", ChimeManagementOptions);
+// Vue.component("ChimeExport", ChimeExport);
 Vue.component("question", Question);
 Vue.component("student-prompt", StudentPrompt);
 Vue.component("response", Response);

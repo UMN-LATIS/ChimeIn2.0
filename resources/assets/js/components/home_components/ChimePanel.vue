@@ -17,7 +17,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                 <ChimeManagementOptions :require_login.sync="requireLogin" :students_can_view.sync="studentsCanView" :join_instructions.sync="joinInstructions" :new_chime="true"></ChimeManagementOptions>
+                                 <ChimeManagementOptions :require_login.sync="requireLogin" :students_can_view.sync="studentsCanView" :join_instructions.sync="joinInstructions" :new_chime="true" />
                             </div>
                             <div class="row">
                                 <div class="col">
@@ -50,11 +50,13 @@
 import orderBy from 'lodash/orderBy'
 import { EventBus } from '../../event-bus.js';
 import ChimeCard from './ChimeCard.vue';
+import ChimeManagementOptions from '../chime_components/ChimeManagementOptions.vue';
 
 export default {
     props: ['user'],
     components: {
         ChimeCard,
+        ChimeManagementOptions,
     },
     data() {
         return {
