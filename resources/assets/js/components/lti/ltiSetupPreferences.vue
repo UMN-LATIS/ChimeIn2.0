@@ -16,17 +16,17 @@
           How should ChimeIn assignments be recorded in Canvas?
         </h2>
 
-        <div class="jumbo-button-group">
-          <JumboButton
-            v-for="choice in gradeTypeChoices"
+        <div class="jumbo-radio-group">
+          <JumboRadio
+            v-for="choice in gradePassbackChoices"
+            name="lti_grade_mode"
             :key="choice.id"
             :img="choice.img"
             :title="choice.title"
             :description="choice.description"
             :value="choice.id"
-            :isActive="isActive(choice.id)"
-            name="lti_grade_mode"
-            @click.native="setGradePassbackChoice(choice.id)"
+            :isActive="gradePassbackChoice === choice.id"
+            @change="(value) => (gradePassbackChoice = value)"
           />
         </div>
       </li>
@@ -36,33 +36,43 @@
           What participation earns points?
         </h2>
 
-        <div class="jumbo-button-group">
-          <JumboButton
+        <div class="jumbo-radio-group">
+          <JumboRadio
             v-for="choice in gradeCalcChoices"
             :key="choice.id"
             :img="choice.img"
             :title="choice.title"
             :description="choice.description"
             :value="choice.id"
-            :isActive="isActive(choice.id)"
+            :isActive="gradeCalcChoice === choice.id"
             name="only_correct_answers_lti"
-            @click.native="setGradePassbackChoice(choice.id)"
+            @change="(value) => (gradeCalcChoice = value)"
           />
         </div>
       </li>
     </ol>
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        :disabled="isSubmitDisabled"
+        class="btn btn-primary"
+      >
+        Save
+      </button>
+    </div>
   </div>
 </template>
 <style scoped>
 .setup-list {
-  margin: 2rem 0;
+  margin: 4rem 0;
   padding: 0;
   list-style: none;
   counter-reset: setup-list;
 }
 
 .setup-list li {
-  margin: 2rem 0 3rem;
+  margin: 4rem 0;
   counter-increment: setup-list;
   padding-left: 3rem;
   position: relative;
@@ -87,23 +97,26 @@
 .setup-item__heading {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
+  font-weight: bold;
+  /* text-transform: uppercase; */
 }
 
-.jumbo-button-group {
+.jumbo-radio-group {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
 @media (max-width: 40rem) {
-  .jumbo-button-group {
+  .jumbo-radio-group {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 </style>
 
 <script>
-import JumboButton from "../JumboButton.vue";
+import JumboRadio from "../JumboRadio.vue";
+
 const PASSBACK = {
   NONE: "no_grades",
   ONE: "one_grade",
@@ -118,7 +131,7 @@ const PARTICIPATION_CREDIT = {
 
 export default {
   components: {
-    JumboButton,
+    JumboRadio,
   },
   data() {
     return {
@@ -126,17 +139,13 @@ export default {
       gradeCalcChoice: null,
     };
   },
-  methods: {
-    setGradePassbackChoice(choiceId) {
-      console.log(choiceId);
-      this.gradePassbackChoice = choiceId;
-    },
-    isActive(choiceId) {
-      return this.gradePassbackChoice === choiceId;
-    },
-  },
   computed: {
-    gradeTypeChoices: () => [
+    isSubmitDisabled() {
+      return [this.gradePassbackChoice, this.gradeCalcChoice].some(
+        (val) => val === null
+      );
+    },
+    gradePassbackChoices: () => [
       {
         id: PASSBACK.NONE,
         title: "No Grades",
@@ -173,7 +182,7 @@ export default {
     gradeCalcChoices: () => [
       {
         id: PARTICIPATION_CREDIT.FULL,
-        label: "Any Participation",
+        title: "Any Participation",
         description:
           "Full credit for participation. No credit for no response.",
         img: {
@@ -184,7 +193,7 @@ export default {
       },
       {
         id: PARTICIPATION_CREDIT.PARTIAL,
-        label: "Partial Credit",
+        title: "Partial Credit",
         description:
           "Full credit for correct answers. Half credit for participation. No credit for no response.",
         img: {
@@ -195,7 +204,7 @@ export default {
       },
       {
         id: PARTICIPATION_CREDIT.NONE,
-        label: "Correct Answers Only",
+        title: "Correct Answers Only",
         description:
           "Full credit for correct answer. Incorrect or non-responses are earn no credit.",
         img: {

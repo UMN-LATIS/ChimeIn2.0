@@ -12,7 +12,7 @@
 
 <style scoped>
 .lti-launch-page__heading {
-  margin-top: 2rem;
+  margin-top: 4rem;
   font-weight: bold;
 }
 .lti-launch-page__heading:before {
