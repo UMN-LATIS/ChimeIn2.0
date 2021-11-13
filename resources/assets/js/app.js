@@ -2,55 +2,25 @@ import process from "process";
 import Vue from "vue";
 import stopword from "stopword";
 import queryString from "query-string";
-import simpleheat from "simpleheat";
-import Vuex from "vuex";
 import fullscreen from "vue-fullscreen";
 import PrettyCheckbox from "pretty-checkbox-vue";
 import VueAnnouncer from "vue-announcer";
-import jQuery from "jquery";
+import tooltipDirective from "./common/tooltip.directive.js";
+import pluralizeFilter from "./common/pluralize.filter.js";
 import router from './router.js';
-
+import store from './store.js';
 import "./bootstrap.js";
 
 
 window.sw = stopword;
 window.queryString = queryString;
-window.simpleheat = simpleheat;
-
-Vue.use(Vuex);
 
 Vue.use(fullscreen);
 Vue.use(PrettyCheckbox);
 Vue.use(VueAnnouncer);
 
-Vue.filter("pluralize", (word, amount) => (amount === 1 ? word : `${word}s`));
-
-Vue.directive("tooltip", function(el, binding) {
-  jQuery(el).tooltip({
-    title: binding.value,
-    placement: binding.arg,
-    trigger: "hover",
-  });
-});
-
-const store = new Vuex.Store({
-  state: {
-    message: null,
-  },
-  mutations: {
-    message(state, message) {
-      state.message = message;
-    },
-    clearMessage(state) {
-      state.message = null;
-    },
-  },
-  getters: {
-    message: (state) => state.message,
-  },
-});
-
-
+Vue.filter("pluralize", pluralizeFilter);
+Vue.directive("tooltip", tooltipDirective);
 
 new Vue({
   router,
