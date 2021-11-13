@@ -14,8 +14,8 @@
         </div>
         <div class="col-sm-3">
             <div class="float-right">
-                <p-check name="check" data-cy="toggle-open-question" class="p-switch p-outline" color="success" v-model="check"> &nbsp;
-                </p-check>
+                <PrettyCheck name="check" data-cy="toggle-open-question" class="p-switch p-outline" color="success" v-model="check"> &nbsp;
+                </PrettyCheck>
                 <router-link data-cy="present-question-button" :to="{ name: 'present', params: {chimeId: folder.chime_id, folderId: folder.id, questionId:question.order - 1} }" class="text-dark">
                 <i class="material-icons">play_arrow</i>
                 </router-link>
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+    import PrettyCheck from 'pretty-checkbox-vue/check';
     const QuestionForm = () => import(
         /* webpackChunkName: "QuestionForm" */
         './QuestionForm.vue'
@@ -41,7 +42,9 @@
     export default {
         props: ['folder', 'question'],
         components: {
-            'question-form': QuestionForm
+            'question-form': QuestionForm,
+            PrettyCheck,
+
         },
         data: function() {
             return {

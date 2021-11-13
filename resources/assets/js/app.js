@@ -1,5 +1,4 @@
 import Vue from "vue";
-import PrettyCheckbox from "pretty-checkbox-vue";
 import VueAnnouncer from "vue-announcer";
 import registerAxios from "./common/axios.js";
 import registerEcho from "./common/echo.js";
@@ -17,7 +16,6 @@ registerAxios();
 registerEcho();
 registerDevTools();
 
-Vue.use(PrettyCheckbox);
 Vue.use(VueAnnouncer);
 
 Vue.filter("pluralize", pluralizeFilter);
