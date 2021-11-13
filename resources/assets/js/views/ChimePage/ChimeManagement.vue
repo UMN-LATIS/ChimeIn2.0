@@ -138,7 +138,7 @@ ul {
 </style>
 
 <script>
-import ChimeManagementOptions from "./ChimeManagementOptions.vue";
+import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 
 export default {
   props: ["chime"],

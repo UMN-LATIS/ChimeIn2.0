@@ -1,13 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import HomePage from "./pages/HomePage.vue";
-import ChimePage from "./pages/ChimePage.vue";
-import ChimeStudentPage from "./pages/ChimeStudentPage.vue";
-import PresentPage from "./pages/PresentPage.vue";
+import HomePage from "./views/HomePage/HomePage.vue";
+import ChimePage from "./views/ChimePage/ChimePage.vue";
+import ParticipantPage from "./views/ParticipantPage/ParticipantPage.vue";
+import PresentPage from "./views/PresentPage/PresentPage.vue";
 const FolderPage = () =>
   import(
     /* webpackChunkName: "folder" */
-    "./pages/FolderPage.vue"
+    "./views/FolderPage/FolderPage.vue"
   );
 
 Vue.use(VueRouter);
@@ -16,7 +16,12 @@ export default new VueRouter({
   mode: "history",
   routes: [
     { path: "/", component: HomePage },
-    { path: "/chime/:chimeId", name: "chime", component: ChimePage, props: true },
+    {
+      path: "/chime/:chimeId",
+      name: "chime",
+      component: ChimePage,
+      props: true,
+    },
     {
       path: "/chime/:chimeId/folder/:folderId",
       name: "folder",
@@ -26,7 +31,7 @@ export default new VueRouter({
     {
       path: "/chimeParticipant/:chimeId/:folderId?",
       name: "chimeStudent",
-      component: ChimeStudentPage,
+      component: ParticipantPage,
       props: true,
     },
     {

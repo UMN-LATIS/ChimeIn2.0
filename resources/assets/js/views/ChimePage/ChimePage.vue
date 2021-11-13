@@ -138,13 +138,13 @@
 <script>
 import Draggable from "vuedraggable";
 import orderBy from 'lodash/orderBy';
-import FolderCard from '../components/chime_components/FolderCard.vue';
-import NavBar from '../components/NavBar.vue';
-import NewFolder from '../components/chime_components/NewFolder.vue';
-import Spinner from "../components/Spinner.vue";
-import ErrorDialog from "../components/ErrorDialog.vue";
-import ChimeManagement from "../components/chime_components/ChimeManagement.vue";
-import ChimeExport from "../components/chime_components/ChimeExport.vue";
+import FolderCard from './FolderCard.vue'
+import NavBar from '../../components/NavBar.vue';
+import NewFolder from './NewFolder.vue'
+import Spinner from "../../components/Spinner.vue";
+import ErrorDialog from "../../components/ErrorDialog.vue";
+import ChimeManagement from "./ChimeManagement.vue";
+import ChimeExport from "./ChimeExport.vue"
 
 export default {
   components: {

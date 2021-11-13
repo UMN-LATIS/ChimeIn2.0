@@ -116,14 +116,14 @@ import katex from "katex";
 window.katex = katex;
 
 import { VueEditor, Quill } from "vue2-editor";
-import MultipleChoiceResponse from "./response_components/MultipleChoice.vue";
-import ImageResponse from "./response_components/ImageResponse.vue";
-import SliderResponse from "./response_components/SliderResponse.vue";
-import FreeResponse from "./response_components/FreeResponse.vue";
-import TextHeatmapResponse from "./response_components/TextHeatmapResponse.vue";
-import HeatmapResponse from "./response_components/HeatmapResponse.vue";
-import NoResponse from "./response_components/FreeResponse.vue";
-import Modal from '../Modal.vue';
+import MultipleChoiceQuestionOptions from "./MultipleChoiceQuestionOptions.vue";
+import ImageResponseQuestionOptions from "./ImageResponseQuestionOptions.vue";
+import SliderResponseQuestionOptions from "./SliderResponseQuestionOptions.vue";
+import FreeResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
+import TextHeatmapResponseQuestionOptions from "./TextHeatmapResponseQuestionOptions.vue";
+import HeatmapResponseQuestionOptions from "./HeatmapResponseQuestionOptions.vue";
+import NoResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
+import Modal from "../../components/Modal.vue";
 
 import VueSelect from "vue-select";
 
@@ -153,13 +153,13 @@ export default {
   props: ["question", "show", "folder", "controlType"],
   components: {
     VueEditor,
-    multiple_choice_response: MultipleChoiceResponse,
-    image_response_response: ImageResponse,
-    slider_response_response: SliderResponse,
-    free_response_response: FreeResponse,
-    text_heatmap_response_response: TextHeatmapResponse,
-    heatmap_response_response: HeatmapResponse,
-    no_response_response: NoResponse,
+    multiple_choice_response: MultipleChoiceQuestionOptions,
+    image_response_response: ImageResponseQuestionOptions,
+    slider_response_response: SliderResponseQuestionOptions,
+    free_response_response: FreeResponseQuestionOptions,
+    text_heatmap_response_response: TextHeatmapResponseQuestionOptions,
+    heatmap_response_response: HeatmapResponseQuestionOptions,
+    no_response_response: NoResponseQuestionOptions,
     "v-select": VueSelect,
     Modal,
   },

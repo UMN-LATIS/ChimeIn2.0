@@ -52,10 +52,10 @@ const HeatmapResponseStatistics = () => import(
 export default {
     props: ['sessions', 'session', 'question', "chimeId"],
     data: function () {
-        return {
+        return { 
             selected: null
         }
-    },
+    }, 
     components: {
         'slider_response_statistics': sliderstatistics,
         'multiple_choice_statistics': multiplechoicestatistics,

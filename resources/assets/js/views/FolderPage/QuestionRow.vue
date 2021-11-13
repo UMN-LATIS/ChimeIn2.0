@@ -2,11 +2,11 @@
     <li class="questionRow">
         <div class="row">
             <div class="col-sm-9">
-                <question-form v-if="show_edit" :show="show_edit" @edited="edit_question" @close="show_edit = false;"
+                <QuestionForm 
+                v-if="show_edit" :show="show_edit" @edited="edit_question" @close="show_edit = false;"
                 :question="question"
                 :folder="folder"
-                controlType="edit">
-            </question-form>
+                controlType="edit" />
             <div class="draghandle">
                 <p class="response_label">{{ total_responses }}</p>
                 <p class="flow-text question_list_text" v-html="question.text"></p>
@@ -36,13 +36,13 @@
     import PrettyCheck from 'pretty-checkbox-vue/check';
     const QuestionForm = () => import(
         /* webpackChunkName: "QuestionForm" */
-        './QuestionForm.vue'
+        '../QuestionForm/QuestionForm.vue'
     );
 
     export default {
         props: ['folder', 'question'],
         components: {
-            'question-form': QuestionForm,
+            QuestionForm,
             PrettyCheck,
 
         },
