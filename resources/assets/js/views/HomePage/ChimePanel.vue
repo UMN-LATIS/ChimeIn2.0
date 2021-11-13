@@ -79,7 +79,7 @@
 
 <script>
 import orderBy from "lodash/orderBy";
-import { EventBus } from "../../event-bus.js";
+import { EventBus } from "../../EventBus.js";
 import ChimeCard from "./ChimeCard.vue";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 

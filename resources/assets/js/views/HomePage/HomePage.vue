@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { EventBus } from "../../event-bus.js";
+import { EventBus } from "../../EventBus.js";
 import NavBar from "../../components/NavBar.vue";
 import ChimePanel from "./ChimePanel.vue";
 
