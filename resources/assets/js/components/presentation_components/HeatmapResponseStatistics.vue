@@ -23,6 +23,7 @@ img {
 
 
 <script>
+import simpleheat from "simpleheat";
 
 export default {
     props: ['responses', 'question'],
