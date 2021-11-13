@@ -125,12 +125,6 @@
   </ul>
 </template>
 
-<style scoped>
-ul li {
-  list-style: none;
-}
-</style>
-
 <script>
 export default {
   props: [
@@ -153,3 +147,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+ul li {
+  list-style: none;
+}
+</style>
