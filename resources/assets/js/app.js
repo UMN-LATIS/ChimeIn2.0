@@ -31,12 +31,12 @@ import routes from "./routes.js";
 // import PresentQuestion from "./components/presentation_components/Present_Question.vue";
 // import PresentPrompt from "./components/presentation_components/Presentation_Prompt.vue";
 // import PresentResults from "./components/presentation_components/ResultsDisplay.vue";
-import DisplayMultipleChoice from "./components/questions/display/MultipleChoice.vue";
-import DisplaySlider from "./components/questions/display/Slider.vue";
-import DisplayTextHeatmapResponse from "./components/questions/display/TextHeatmapResponse.vue";
-import DisplayFreeResponse from "./components/questions/display/FreeResponse.vue";
-import DisplayImageResponse from "./components/questions/display/ImageResponse.vue";
-import DisplayHeatmapResponse from "./components/questions/display/HeatmapResponse.vue";
+// import DisplayMultipleChoice from "./components/questions/display/MultipleChoice.vue";
+// import DisplaySlider from "./components/questions/display/Slider.vue";
+// import DisplayTextHeatmapResponse from "./components/questions/display/TextHeatmapResponse.vue";
+// import DisplayFreeResponse from "./components/questions/display/FreeResponse.vue";
+// import DisplayImageResponse from "./components/questions/display/ImageResponse.vue";
+// import DisplayHeatmapResponse from "./components/questions/display/HeatmapResponse.vue";
 
 window.sw = stopword;
 window.queryString = queryString;
@@ -76,13 +76,13 @@ Vue.directive("tooltip", function(el, binding) {
 // Vue.component("present-question", PresentQuestion);
 // Vue.component("presentation-prompt", PresentPrompt);
 // Vue.component("results-display", PresentResults);
-Vue.component("multiple_choice_display", DisplayMultipleChoice);
-Vue.component("slider_response_display", DisplaySlider);
-Vue.component("text_heatmap_response_display", DisplayTextHeatmapResponse);
-Vue.component("free_response_display", DisplayFreeResponse);
-Vue.component("no_response_display", DisplayFreeResponse);
-Vue.component("image_response_display", DisplayImageResponse);
-Vue.component("heatmap_response_display", DisplayHeatmapResponse);
+// Vue.component("multiple_choice_display", DisplayMultipleChoice);
+// Vue.component("slider_response_display", DisplaySlider);
+// Vue.component("text_heatmap_response_display", DisplayTextHeatmapResponse);
+// Vue.component("free_response_display", DisplayFreeResponse);
+// Vue.component("no_response_display", DisplayFreeResponse);
+// Vue.component("image_response_display", DisplayImageResponse);
+// Vue.component("heatmap_response_display", DisplayHeatmapResponse);
 
 const store = new Vuex.Store({
   state: {
