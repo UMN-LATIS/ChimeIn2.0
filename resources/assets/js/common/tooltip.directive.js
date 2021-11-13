@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $ from "jquery";
 
 export default function(el, binding) {
   $(el).tooltip({

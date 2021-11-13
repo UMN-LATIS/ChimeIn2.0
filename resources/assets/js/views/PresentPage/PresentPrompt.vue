@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import DisplayMultipleChoice from "../../components/MultipleChoiceDisplay.vue";
-import DisplaySlider from "../../components/SliderResponseDisplay.vue";
-import DisplayTextHeatmapResponse from "../../components/TextHeatmapResponseDisplay.vue";
-import DisplayFreeResponse from "../../components/FreeResponseDisplay.vue";
-import DisplayImageResponse from "../../components/ImageResponseDisplay.vue";
-import DisplayHeatmapResponse from "../../components/HeatmapResponseDisplay.vue";
+import DisplayMultipleChoice from "../../components/MultipleChoice/MultipleChoiceDisplay.vue";
+import DisplaySlider from "../../components/SliderResponse/SliderResponseDisplay.vue";
+import DisplayTextHeatmapResponse from "../../components/TextHeatmap/TextHeatmapResponseDisplay.vue";
+import DisplayFreeResponse from "../../components/FreeResponse/FreeResponseDisplay.vue";
+import DisplayImageResponse from "../../components/ImageResponse/ImageResponseDisplay.vue";
+import DisplayHeatmapResponse from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
 
 export default {
   props: ["question", "session"],

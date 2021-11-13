@@ -42,13 +42,13 @@
 </style>
 
 <script>
-import MultipleChoice from "../../components/MultipleChoiceInputs.vue";
-import ImageResponse from "../../components/ImageResponseInputs.vue";
-import FreeResponse from "../../components/FreeResponseInputs.vue";
-import TextHeatmapResponse from "../../components/TextHeatmapResponseInputs.vue";
-import NoResponse from "../../components/NoResponseInputs.vue";
-import SliderResponse from "../../components/SliderResponseInputs.vue";
-import HeatmapResponse from "../../components/HeatmapResponseInputs.vue";
+import MultipleChoice from "../../components/MultipleChoice/MultipleChoiceInputs.vue";
+import ImageResponse from "../../components/ImageResponse/ImageResponseInputs.vue";
+import FreeResponse from "../../components/FreeResponse/FreeResponseInputs.vue";
+import TextHeatmapResponse from "../../components/TextHeatmap/TextHeatmapResponseInputs.vue";
+import NoResponse from "../../components/NoResponse/NoResponseInputs.vue";
+import SliderResponse from "../../components/SliderResponse/SliderResponseInputs.vue";
+import ImageHeatmapResponse from "../../components/ImageHeatmapResponse/ImageHeatmapResponseInputs.vue";
 
 export default {
   components: {
@@ -58,7 +58,7 @@ export default {
     no_response: NoResponse,
     free_response: FreeResponse,
     slider_response: SliderResponse,
-    heatmap_response: HeatmapResponse,
+    heatmap_response: ImageHeatmapResponse,
   },
   props: ["session", "chime", "responses"],
   data: function() {
