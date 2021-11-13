@@ -27,9 +27,10 @@ import routes from "./routes.js";
 // import NoResponse from "./components/questions/response/NoResponse.vue";
 // import SliderResponse from "./components/questions/response/Slider.vue";
 // import HeatmapResponse from "./components/questions/response/HeatmapResponse.vue";
-import PresentQuestion from "./components/presentation_components/Present_Question.vue";
-import PresentPrompt from "./components/presentation_components/Presentation_Prompt.vue";
-import PresentResults from "./components/presentation_components/ResultsDisplay.vue";
+
+// import PresentQuestion from "./components/presentation_components/Present_Question.vue";
+// import PresentPrompt from "./components/presentation_components/Presentation_Prompt.vue";
+// import PresentResults from "./components/presentation_components/ResultsDisplay.vue";
 import DisplayMultipleChoice from "./components/questions/display/MultipleChoice.vue";
 import DisplaySlider from "./components/questions/display/Slider.vue";
 import DisplayTextHeatmapResponse from "./components/questions/display/TextHeatmapResponse.vue";
@@ -71,9 +72,10 @@ Vue.directive("tooltip", function(el, binding) {
 // Vue.component("no_response", NoResponse);
 // Vue.component("slider_response", SliderResponse);
 // Vue.component("heatmap_response", HeatmapResponse);
-Vue.component("present-question", PresentQuestion);
-Vue.component("presentation-prompt", PresentPrompt);
-Vue.component("results-display", PresentResults);
+
+// Vue.component("present-question", PresentQuestion);
+// Vue.component("presentation-prompt", PresentPrompt);
+// Vue.component("results-display", PresentResults);
 Vue.component("multiple_choice_display", DisplayMultipleChoice);
 Vue.component("slider_response_display", DisplaySlider);
 Vue.component("text_heatmap_response_display", DisplayTextHeatmapResponse);

@@ -12,8 +12,7 @@
 
     <div class="container-fluid presentContainer">
         <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
-            <present-question v-if="current_question_item" :usersCount="usersCount" :question="current_question_item" :chimeId="chimeId" :folder="folder" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle" @reload="reload">
-            </present-question>
+            <PresentQuestion v-if="current_question_item" :usersCount="usersCount" :question="current_question_item" :chimeId="chimeId" :folder="folder" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle" @reload="reload" />
             <div v-if="fullscreen && host" class="alert alert-info text-center fixed-bottom joinbox" role="alert">
                 <span class="text-center">Go to <strong>{{ host }}</strong> and enter code <strong>{{ hyphenatedCode }}</strong></span>
             </div>
@@ -40,6 +39,7 @@
     import toHyphenatedCode from '../helpers/toHyphenatedCode.mjs';
     import ErrorDialog from '../components/ErrorDialog.vue';
     import NavBar from '../components/NavBar.vue';
+    import PresentQuestion from '../components/presentation_components/PresentQuestion.vue';
 
     export default {
         mixins: [questionsListener],
@@ -47,6 +47,7 @@
             fullscreen,
             ErrorDialog,
             NavBar,
+            PresentQuestion,
         },
         data() {
             return {

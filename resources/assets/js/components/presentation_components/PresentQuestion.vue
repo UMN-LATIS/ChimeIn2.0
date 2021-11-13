@@ -3,8 +3,8 @@
     <div class="row" v-bind:class="{ in_progress: current_session, not_in_progress: !current_session }">
         <div class="col-sm-12 col-md-8 col-lg-9">
 
-            <results-display v-if="show_results" :question="question" :chimeId="chimeId" @reload="$emit('reload')"></results-display>
-            <presentation-prompt v-if="!show_results" :session="current_session" :question="question"></presentation-prompt>
+            <PresentResults v-if="show_results" :question="question" :chimeId="chimeId" @reload="$emit('reload')" />
+            <PresentPrompt v-if="!show_results" :session="current_session" :question="question" />
         </div>
         <div class="col-sm-12 col-md-4 col-lg-3 presentationControls" v-if="!folder.student_view">
            <div class="card float-right">
@@ -52,8 +52,14 @@
 </template>
 
 <script>
+import PresentPrompt from "./PresentPrompt.vue";
+import PresentResults from "./PresentResults.vue";
 
 export default {
+    components: {
+        PresentPrompt,
+        PresentResults,
+    },
     props: ['question', 'chimeId', 'folder', 'usersCount'],
     data() {
         return {
