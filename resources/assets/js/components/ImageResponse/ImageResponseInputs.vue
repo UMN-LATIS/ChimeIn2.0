@@ -2,19 +2,19 @@
   <div>
     <div v-if="response.response_info">
       <img
+        v-if="!create_new_response"
         data-cy="image-thumbnail"
         class="responsive-img imageContainer"
-        v-bind:src="'/storage/' + response.response_info.image"
-        v-if="!create_new_response"
+        :src="'/storage/' + response.response_info.image"
       />
     </div>
-    <div class="dropbox" v-if="!disabled">
+    <div v-if="!disabled" class="dropbox">
       <input
         data-cy="image-dropzone"
         type="file"
         accept="image/jpeg, image/heic, image/png"
-        @change="attachFile($event.target.name, $event.target.files)"
         class="form-control-file input-file"
+        @change="attachFile($event.target.name, $event.target.files)"
       />
       <p v-if="isInitial">
         Drag your image here to upload<br />
@@ -30,13 +30,13 @@
       <strong>{{ error }}</strong>
     </p>
     <div
-      class="form-group"
       v-if="
         question.allow_multiple &&
         !disabled &&
-        this.response &&
-        this.response.response_info
+        response &&
+        response.response_info
       "
+      class="form-group"
     >
       <button class="btn btn-primary" @click="clear">
         Clear and Start a New Response

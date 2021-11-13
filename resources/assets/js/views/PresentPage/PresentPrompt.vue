@@ -24,7 +24,6 @@ import DisplayImageResponse from "../../components/ImageResponse/ImageResponseDi
 import DisplayHeatmapResponse from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
 
 export default {
-  props: ["question", "session"],
   components: {
     multiple_choice_display: DisplayMultipleChoice,
     slider_response_display: DisplaySlider,
@@ -34,5 +33,6 @@ export default {
     image_response_display: DisplayImageResponse,
     heatmap_response_display: DisplayHeatmapResponse,
   },
+  props: ["question", "session"],
 };
 </script>

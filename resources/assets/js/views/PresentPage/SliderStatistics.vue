@@ -2,7 +2,7 @@
   <div class="chartContainer" data-cy="chart-container">
     <GChart
       type="ColumnChart"
-      :resizeDebounce="100"
+      :resize-debounce="100"
       :data="chartData"
       :options="options"
       class="googleChart"
@@ -24,10 +24,10 @@
 import { GChart } from "vue-google-charts";
 
 export default {
-  props: ["responses", "question"],
   components: {
     GChart,
   },
+  props: ["responses", "question"],
   data: function () {
     return {
       visible_responses: [],

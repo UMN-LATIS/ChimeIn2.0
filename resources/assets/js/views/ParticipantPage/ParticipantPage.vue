@@ -2,7 +2,7 @@
   <div>
     <NavBar title="Home" :user="user" :link="'/'" />
     <ErrorDialog />
-    <div class="alert alert-warning" role="alert" v-if="error">
+    <div v-if="error" class="alert alert-warning" role="alert">
       {{ error }}
     </div>
     <vue-announcer />
@@ -28,8 +28,8 @@
         <div class="card-body">
           <div class="tab-content">
             <div
-              class="tab-pane container active"
               id="currentQuestions"
+              class="tab-pane container active"
               aria-live="polite"
             >
               <div
@@ -39,28 +39,27 @@
               >
                 <h1>No Open Questions</h1>
               </div>
-              <transition-group name="fade" v-if="filteredSession.length > 0">
+              <transition-group v-if="filteredSession.length > 0" name="fade">
                 <ParticipantPrompt
                   v-for="s in filteredSession"
-                  v-on:updateResponse="updateResponse"
+                  :key="s.id"
                   :session="s"
                   :chime="chime"
                   :responses="responses"
-                  :key="s.id"
+                  @updateResponse="updateResponse"
                 />
               </transition-group>
             </div>
-            <div class="tab-pane container" id="pastQuestions">
+            <div id="pastQuestions" class="tab-pane container">
               <div v-if="responses.length < 1" class="text-center">
                 <h1>No Closed Questions</h1>
               </div>
               <Response v-else./ParticipantPrompt.vue v-for="(response, i) in
-              sortedResponses" v-bind:key="i" :chime="chime"
-              :response="response" />
+              sortedResponses" :key="i" :chime="chime" :response="response" />
             </div>
           </div>
           <p class="text-center m-0">
-            <small class="text-muted" v-if="chime.lti_course_title"
+            <small v-if="chime.lti_course_title" class="text-muted"
               >Not seeing the prompts you're looking for? Make sure you've
               followed the correct assignment link from Canvas</small
             >
@@ -89,6 +88,7 @@ export default {
     ParticipantPrompt,
     Response,
   },
+  props: ["user", "chimeId", "folderId"],
   data() {
     return {
       chime: {},
@@ -97,51 +97,6 @@ export default {
       error: null,
       timeout: null,
     };
-  },
-  props: ["user", "chimeId", "folderId"],
-  methods: {
-    updateResponse: function (newResponse) {
-      var updateInPlace = false;
-      this.responses.forEach((response, index) => {
-        if (response.id == newResponse.id) {
-          updateInPlace = true;
-          this.$set(this.responses, index, newResponse);
-        }
-      });
-      if (!updateInPlace) {
-        this.responses.push(newResponse);
-      }
-    },
-    loadChime: function () {
-      axios
-        .get("/api/chime/" + this.chimeId + "/openQuestions")
-        .then((res) => {
-          console.log("debug", "chime:", res);
-          this.chime = res.data.chime;
-          document.title = this.chime.name;
-          this.sessions = res.data.sessions.reverse();
-        })
-        .catch((err) => {
-          if (err.response.data.status == "AttemptAuth") {
-            window.location =
-              "/loginAndRedirect?target=" + window.location.pathname;
-          } else {
-            if (err.response.data.message) {
-              this.error = err.response.data.message;
-            }
-            this.$store.commit(
-              "message",
-              "Could not load Chime. You may not have permission to view this page. "
-            );
-            console.log("error getting chime:", err.response);
-          }
-        });
-
-      axios.get("/api/chime/" + this.chimeId + "/responses").then((res) => {
-        console.log("debug", "Response:", res);
-        this.responses = res.data;
-      });
-    },
   },
   computed: {
     filteredSession: function () {
@@ -199,6 +154,50 @@ export default {
   beforeDestroy: function () {
     Echo.leave("session-status." + this.chimeId);
     window.Echo.connector.socket.off("reconnect");
+  },
+  methods: {
+    updateResponse: function (newResponse) {
+      var updateInPlace = false;
+      this.responses.forEach((response, index) => {
+        if (response.id == newResponse.id) {
+          updateInPlace = true;
+          this.$set(this.responses, index, newResponse);
+        }
+      });
+      if (!updateInPlace) {
+        this.responses.push(newResponse);
+      }
+    },
+    loadChime: function () {
+      axios
+        .get("/api/chime/" + this.chimeId + "/openQuestions")
+        .then((res) => {
+          console.log("debug", "chime:", res);
+          this.chime = res.data.chime;
+          document.title = this.chime.name;
+          this.sessions = res.data.sessions.reverse();
+        })
+        .catch((err) => {
+          if (err.response.data.status == "AttemptAuth") {
+            window.location =
+              "/loginAndRedirect?target=" + window.location.pathname;
+          } else {
+            if (err.response.data.message) {
+              this.error = err.response.data.message;
+            }
+            this.$store.commit(
+              "message",
+              "Could not load Chime. You may not have permission to view this page. "
+            );
+            console.log("error getting chime:", err.response);
+          }
+        });
+
+      axios.get("/api/chime/" + this.chimeId + "/responses").then((res) => {
+        console.log("debug", "Response:", res);
+        this.responses = res.data;
+      });
+    },
   },
 };
 </script>

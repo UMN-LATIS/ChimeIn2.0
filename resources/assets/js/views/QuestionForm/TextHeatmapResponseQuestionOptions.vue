@@ -4,11 +4,11 @@
       <hr />
       <p>Heatmap Text:</p>
       <vue-editor
-        data-cy="heatmap-text-editor"
         v-model="heatmap_text"
+        data-cy="heatmap-text-editor"
         placeholder="Heatmap Text"
-        v-bind:editorToolbar="toolbar"
-        v-bind:editorOptions="editorOptions"
+        :editor-toolbar="toolbar"
+        :editor-options="editorOptions"
         @input="emitChanges"
       />
     </div>
@@ -20,10 +20,10 @@ import { VueEditor } from "vue2-editor";
 
 export default {
   name: "TextHeatmapResponse",
-  props: ["question_responses"],
   components: {
     "vue-editor": VueEditor,
   },
+  props: ["question_responses"],
   data: function () {
     return {
       heatmap_text: this.question_responses.heatmap_text,

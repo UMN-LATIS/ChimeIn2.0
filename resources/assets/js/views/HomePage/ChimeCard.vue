@@ -1,14 +1,14 @@
 <template>
   <div class="card hoverable">
-    <div class="card-body" v-on:click="open_chime">
+    <div class="card-body" @click="open_chime">
       <div class="float-left">
         <h2 class="card-title h5">{{ chime.name }}</h2>
-        <p v-on:click.stop="" class="h6 card-subtitle mb-2 text-muted">
+        <p class="h6 card-subtitle mb-2 text-muted" @click.stop="">
           Access code: {{ hyphenatedCode }}
         </p>
       </div>
       <div class="float-right">
-        <a href="#" v-on:click.stop="delete_chime()">
+        <a href="#" @click.stop="delete_chime()">
           <i class="material-icons right">delete</i>
         </a>
       </div>
@@ -21,6 +21,11 @@ export default {
   props: ["chime", "user"],
   data: function () {
     return {};
+  },
+  computed: {
+    hyphenatedCode: function () {
+      return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
+    },
   },
   methods: {
     open_chime() {
@@ -55,11 +60,6 @@ export default {
             console.error("error", "Error in delete chime:", err.response);
           });
       }
-    },
-  },
-  computed: {
-    hyphenatedCode: function () {
-      return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
     },
   },
 };

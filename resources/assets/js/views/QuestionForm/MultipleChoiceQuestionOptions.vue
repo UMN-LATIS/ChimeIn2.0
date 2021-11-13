@@ -19,7 +19,7 @@
             class="response-choice-item__correct-toggle"
             title="Mark Response Correct"
           >
-            <input type="checkbox" v-model="response.correct" />
+            <input v-model="response.correct" type="checkbox" />
             <label class="visually-hidden">Correct?</label>
           </div>
           <div class="response-choice-item__contents">
@@ -27,19 +27,19 @@
               >Response Text</label
             >
             <VueEditor
-              class="response-choice-item__text"
               :id="`response-text-${i}`"
-              :name="`response-text-${i}`"
-              :editorToolbar="choiceEditorToolbar"
-              :editorOptions="choiceEditorOptions"
-              v-model="response.text"
               ref="responseInput"
+              v-model="response.text"
+              class="response-choice-item__text"
+              :name="`response-text-${i}`"
+              :editor-toolbar="choiceEditorToolbar"
+              :editor-options="choiceEditorOptions"
             />
 
             <button
-              @click="remove(i)"
               class="response-choice-item__remove"
               data-cy="remove-response-button"
+              @click="remove(i)"
             >
               <i class="material-icons inline-icon">clear</i>
             </button>
@@ -180,12 +180,12 @@ import { VueEditor } from "vue2-editor";
 import draggable from "vuedraggable";
 
 export default {
-  props: {
-    question_responses: Array,
-  },
   components: {
     draggable,
     VueEditor,
+  },
+  props: {
+    question_responses: Array,
   },
   computed: {
     // note: don't use arrow functions so that `this` is bound properly
@@ -208,6 +208,13 @@ export default {
       };
     },
     choiceEditorToolbar: () => ["formula"],
+  },
+  mounted() {
+    // if question responses is empty, initialize with blank array
+    // perhaps this should be the parents job?
+    if (!this.question_responses) {
+      this.$emit("update:question_responses", []);
+    }
   },
   methods: {
     remove(responseIndex) {
@@ -249,13 +256,6 @@ export default {
 
       this.$emit("update:question_responses", updatedResponses);
     },
-  },
-  mounted() {
-    // if question responses is empty, initialize with blank array
-    // perhaps this should be the parents job?
-    if (!this.question_responses) {
-      this.$emit("update:question_responses", []);
-    }
   },
 };
 </script>

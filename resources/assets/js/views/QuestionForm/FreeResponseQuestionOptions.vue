@@ -2,10 +2,10 @@
   <div>
     <div class="form-check">
       <input
-        class="form-check-input"
-        type="checkbox"
         id="hideWordcloud"
         v-model="hideWordcloud"
+        class="form-check-input"
+        type="checkbox"
         @change="emitChanges"
       />
       <label class="form-check-label" for="hideWordcloud">Hide wordcloud</label>

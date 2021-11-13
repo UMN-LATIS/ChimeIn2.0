@@ -5,7 +5,7 @@
         <button
           class="btn btn-warning"
           data-toggle="button"
-          v-bind:class="{ active: filterImages }"
+          :class="{ active: filterImages }"
           @click="filterImages = !filterImages"
         >
           Manage Images
@@ -13,7 +13,7 @@
         <div data-cy="image-responses">
           <lightbox
             v-if="!filterImages"
-            v-bind:id="'lightbox' + question.id"
+            :id="'lightbox' + question.id"
             :images="images"
             image_class="img-responsive img-rounded"
             :options="options"
@@ -21,7 +21,7 @@
           </lightbox>
         </div>
 
-        <table class="table" v-if="filterImages">
+        <table v-if="filterImages" class="table">
           <thead>
             <tr>
               <th scope="col">Image</th>
@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="response in responses" v-bind:key="response.id">
+            <tr v-for="response in responses" :key="response.id">
               <td style="width: 15%">
                 <img
                   :src="'/storage/' + response.response_info.image"
@@ -77,11 +77,6 @@ export default {
       filterImages: false,
     };
   },
-  methods: {
-    removeImage: function (response) {
-      this.$emit("removeResponse", response);
-    },
-  },
   computed: {
     images: function () {
       return this.responses.map((elem) => {
@@ -90,6 +85,11 @@ export default {
           title: "",
         };
       });
+    },
+  },
+  methods: {
+    removeImage: function (response) {
+      this.$emit("removeResponse", response);
     },
   },
 };

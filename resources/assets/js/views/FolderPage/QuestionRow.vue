@@ -5,11 +5,11 @@
         <QuestionForm
           v-if="show_edit"
           :show="show_edit"
-          @edited="edit_question"
-          @close="show_edit = false"
           :question="question"
           :folder="folder"
-          controlType="edit"
+          control-type="edit"
+          @edited="edit_question"
+          @close="show_edit = false"
         />
         <div class="draghandle">
           <p class="response_label">{{ total_responses }}</p>
@@ -19,11 +19,11 @@
       <div class="col-sm-3">
         <div class="float-right">
           <PrettyCheck
+            v-model="check"
             name="check"
             data-cy="toggle-open-question"
             class="p-switch p-outline"
             color="success"
-            v-model="check"
           >
             &nbsp;
           </PrettyCheck>
@@ -43,15 +43,15 @@
           </router-link>
           <a
             class="pointer text-dark"
-            @click="show_edit = !show_edit"
             data-cy="edit-question-button"
+            @click="show_edit = !show_edit"
           >
             <i class="material-icons">edit</i>
           </a>
           <a
             class="pointer text-dark"
-            @click="delete_question"
             data-cy="delete-question-button"
+            @click="delete_question"
           >
             <i class="material-icons">delete</i>
           </a>
@@ -70,24 +70,15 @@ const QuestionForm = () =>
   );
 
 export default {
-  props: ["folder", "question"],
   components: {
     QuestionForm,
     PrettyCheck,
   },
+  props: ["folder", "question"],
   data: function () {
     return {
       show_edit: false,
     };
-  },
-  methods: {
-    edit_question: function () {
-      this.$emit("editquestion");
-      this.show_edit = false;
-    },
-    delete_question: function () {
-      this.$emit("deletequestion", this.question.id);
-    },
   },
   computed: {
     total_responses: function () {
@@ -143,6 +134,15 @@ export default {
             });
         }
       },
+    },
+  },
+  methods: {
+    edit_question: function () {
+      this.$emit("editquestion");
+      this.show_edit = false;
+    },
+    delete_question: function () {
+      this.$emit("deletequestion", this.question.id);
     },
   },
 };

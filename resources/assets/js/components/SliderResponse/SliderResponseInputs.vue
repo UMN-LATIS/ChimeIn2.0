@@ -4,21 +4,21 @@
       <div class="col">
         <div class="range-wrap">
           <input
+            id="formControlRange"
             type="range"
             :disabled="disabled"
             class="form-control-range custom-range range"
             :value="sliderValue"
-            @change="valueChanged($event.target.value)"
-            id="formControlRange"
             data-cy="slider-response-input"
+            @change="valueChanged($event.target.value)"
           />
           <output
-            class="bubble"
-            :style="customStyle"
             v-if="
               question.question_info.question_responses.range_type ==
               'Numeric (Linear)'
             "
+            class="bubble"
+            :style="customStyle"
             >{{ bubbleValue }}</output
           >
         </div>
@@ -32,7 +32,7 @@
         <b>{{ right_choice_text }}</b>
       </div>
     </div>
-    <div class="form-group" v-if="question.allow_multiple && !disabled">
+    <div v-if="question.allow_multiple && !disabled" class="form-group">
       <button class="btn btn-primary" @click="clear">
         Clear and Start a New Response
       </button>
@@ -96,35 +96,6 @@ export default {
       bubbleOffset: 0,
     };
   },
-  methods: {
-    valueChanged: function (targetValue) {
-      const response = {
-        question_type: "slider",
-        choice: targetValue,
-      };
-      this.$emit("recordresponse", response, this.create_new_response);
-      this.create_new_response = false;
-    },
-    clear: function () {
-      this.create_new_response = true;
-    },
-    updateRange: function (newValue) {
-      let range =
-        parseInt(this.right_choice_text) - parseInt(this.left_choice_text);
-      this.bubbleValue =
-        parseInt(this.left_choice_text) + (range * newValue) / 100;
-      var computed = newValue;
-      var otherValue = 7 - computed * 0.15;
-      this.customStyle = {
-        left: `calc(${computed}% + (${otherValue}px))`,
-      };
-    },
-  },
-  watch: {
-    sliderValue: function (newValue) {
-      this.updateRange(newValue);
-    },
-  },
   computed: {
     sliderValue: function () {
       if (this.create_new_response) {
@@ -152,8 +123,37 @@ export default {
       }
     },
   },
+  watch: {
+    sliderValue: function (newValue) {
+      this.updateRange(newValue);
+    },
+  },
   mounted() {
     this.updateRange(this.sliderValue);
+  },
+  methods: {
+    valueChanged: function (targetValue) {
+      const response = {
+        question_type: "slider",
+        choice: targetValue,
+      };
+      this.$emit("recordresponse", response, this.create_new_response);
+      this.create_new_response = false;
+    },
+    clear: function () {
+      this.create_new_response = true;
+    },
+    updateRange: function (newValue) {
+      let range =
+        parseInt(this.right_choice_text) - parseInt(this.left_choice_text);
+      this.bubbleValue =
+        parseInt(this.left_choice_text) + (range * newValue) / 100;
+      var computed = newValue;
+      var otherValue = 7 - computed * 0.15;
+      this.customStyle = {
+        left: `calc(${computed}% + (${otherValue}px))`,
+      };
+    },
   },
 };
 </script>

@@ -7,9 +7,9 @@
     />
     <ErrorDialog />
     <div
+      v-if="!hideOpenAlert && otherFolderSessions.length > 0"
       class="alert alert-warning"
       role="alert"
-      v-if="!hideOpenAlert && otherFolderSessions.length > 0"
     >
       You have {{ otherFolderSessions.length }}
       {{ "question" | pluralize(otherFolderSessions.length) }} open outside this
@@ -85,7 +85,7 @@
         <div class="row">
           <div class="col-12">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" v-model="folder.name" />
+              <input v-model="folder.name" type="text" class="form-control" />
 
               <div class="input-group-append">
                 <button
@@ -99,12 +99,12 @@
           </div>
           <div class="ml-auto col-12 btn-toolbar justify-content-end">
             <button
+              v-if="folder.resource_link_pk > 0"
               class="mr-2 btn btn-success btn-sm align-items-center d-flex"
               @click="sync"
-              v-if="folder.resource_link_pk > 0"
             >
               Force Sync with Canvas
-              <span class="material-icons md-18" v-if="synced"
+              <span v-if="synced" class="material-icons md-18"
                 >check_circle</span
               >
             </button>
@@ -132,8 +132,8 @@
                 <label for="chime_select">Select a Chime:</label>
                 <select
                   id="chime_select"
-                  class="form-control"
                   v-model="selected_chime"
+                  class="form-control"
                   @change="update_folders"
                 >
                   <option disabled>Select a Chime</option>
@@ -151,8 +151,8 @@
                 <label for="folder_select">Select a Folder:</label>
                 <select
                   id="folder_select"
-                  class="form-control"
                   v-model="selected_folder"
+                  class="form-control"
                 >
                   <option disabled>Select a Folder</option>
                   <option
@@ -176,16 +176,16 @@
             <draggable
               v-model="questions"
               data-cy="question-list"
-              @end="swap_question"
               handle=".draghandle"
+              @end="swap_question"
             >
               <QuestionRow
                 v-for="q in questions"
                 :key="q.id"
                 :folder="folder"
                 :question="q"
-                v-on:editquestion="load_questions"
-                v-on:deletequestion="delete_question"
+                @editquestion="load_questions"
+                @deletequestion="delete_question"
               />
             </draggable>
           </ul>
@@ -195,10 +195,6 @@
     <QuestionForm
       v-if="showModal"
       :show="showModal"
-      @close="
-        showModal = false;
-        load_questions();
-      "
       :question="{
         text: '',
         question_info: {
@@ -207,8 +203,12 @@
         },
       }"
       :folder="folder"
-      :chimeId="chimeId"
-      controlType="create"
+      :chime-id="chimeId"
+      control-type="create"
+      @close="
+        showModal = false;
+        load_questions();
+      "
     />
   </div>
 </template>
@@ -228,8 +228,6 @@ const QuestionForm = () =>
   );
 
 export default {
-  props: ["folderId", "chimeId", "user"],
-  mixins: [questionsListener],
   components: {
     draggable,
     QuestionForm,
@@ -237,6 +235,8 @@ export default {
     NavBar,
     QuestionRow,
   },
+  mixins: [questionsListener],
+  props: ["folderId", "chimeId", "user"],
   data() {
     return {
       folder: {
@@ -273,6 +273,10 @@ export default {
         this.loadExistingChimes();
       }
     },
+  },
+  created: function () {
+    this.load_folder();
+    this.load_questions();
   },
   methods: {
     reset: function () {
@@ -500,10 +504,6 @@ export default {
           console.log(err);
         });
     },
-  },
-  created: function () {
-    this.load_folder();
-    this.load_questions();
   },
 };
 </script>

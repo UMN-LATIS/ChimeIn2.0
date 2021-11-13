@@ -3,9 +3,9 @@
     <div class="col-sm-12">
       <div class="form-group">
         <textarea
+          v-model="response_text"
           data-cy="free-response-textarea"
           class="form-control"
-          v-model="response_text"
           placeholder="Type your response"
           :rows="3"
           :disabled="disabled"
@@ -64,6 +64,15 @@ export default {
       }
     },
   },
+  mounted() {
+    if (
+      this.response &&
+      this.response.hasOwnProperty("response_info") &&
+      this.response.response_info.hasOwnProperty("text")
+    ) {
+      this.response_text = this.response.response_info.text;
+    }
+  },
   methods: {
     record_response: function () {
       const response = {
@@ -78,15 +87,6 @@ export default {
       this.create_new_response = true;
       this.response_text = "";
     },
-  },
-  mounted() {
-    if (
-      this.response &&
-      this.response.hasOwnProperty("response_info") &&
-      this.response.response_info.hasOwnProperty("text")
-    ) {
-      this.response_text = this.response.response_info.text;
-    }
   },
 };
 </script>

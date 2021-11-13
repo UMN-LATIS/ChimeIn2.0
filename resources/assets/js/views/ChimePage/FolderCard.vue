@@ -1,6 +1,6 @@
 <template>
   <div class="folder-card" data-cy="folder-card">
-    <div class="folder-card__drag-handle" v-if="draggable">
+    <div v-if="draggable" class="folder-card__drag-handle">
       <i class="material-icons handle draghandle">drag_handle</i>
     </div>
     <router-link

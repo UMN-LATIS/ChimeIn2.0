@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="responses.length > 0">
-      <p v-html="highlightedText" class="highlightTextBlock"></p>
+      <p class="highlightTextBlock" v-html="highlightedText"></p>
     </div>
     <div v-else>No Responses Yet!</div>
   </div>
@@ -14,6 +14,15 @@ export default {
     return {
       highlightedText: "",
     };
+  },
+  watch: {
+    responses: function () {
+      setTimeout(() => this.buildTextMap(), 100);
+    },
+  },
+  mounted: function () {
+    // run this in a time to not block initial render
+    setTimeout(() => this.buildTextMap(), 100);
   },
   methods: {
     buildTextMap: function () {
@@ -87,15 +96,6 @@ export default {
       }
       this.highlightedText = outputString;
     },
-  },
-  watch: {
-    responses: function () {
-      setTimeout(() => this.buildTextMap(), 100);
-    },
-  },
-  mounted: function () {
-    // run this in a time to not block initial render
-    setTimeout(() => this.buildTextMap(), 100);
   },
 };
 </script>

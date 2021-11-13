@@ -11,8 +11,8 @@
           v-if="(!disabled && !response.id) || create_new_response"
           class="btn btn-primary"
           variant="primary"
-          @click="record_response"
           :disabled="disableSubmission"
+          @click="record_response"
         >
           Submit Selection
         </button>
@@ -25,8 +25,8 @@
           "
           class="btn btn-primary"
           variant="primary"
-          @click="record_response"
           :disabled="disableSubmission"
+          @click="record_response"
         >
           Update
         </button>
@@ -69,13 +69,6 @@ export default {
       create_new_response: false,
       disableSubmission: true,
     };
-  },
-  watch: {
-    response: function (value) {
-      if (this.response && this.response.response_info) {
-        // this.response_text = this.response.response_info.text;
-      }
-    },
   },
   computed: {
     highlightedText: function () {
@@ -140,6 +133,28 @@ export default {
       return -1;
     },
   },
+  watch: {
+    response: function (value) {
+      if (this.response && this.response.response_info) {
+        // this.response_text = this.response.response_info.text;
+      }
+    },
+  },
+  mounted() {
+    if (
+      this.response &&
+      this.response.hasOwnProperty("response_info") &&
+      this.response.response_info.hasOwnProperty("startOffset")
+    ) {
+      // this.response_text = this.response.response_info.text;
+    }
+  },
+  created: function () {
+    window.addEventListener("mouseup", this.testForHighlight);
+  },
+  destroyed: function () {
+    window.removeEventListener("mouseup", this.testForHighlight);
+  },
   methods: {
     record_response: function () {
       const mySelection = window.getSelection();
@@ -201,21 +216,6 @@ export default {
         this.disableSubmission = false;
       }
     },
-  },
-  mounted() {
-    if (
-      this.response &&
-      this.response.hasOwnProperty("response_info") &&
-      this.response.response_info.hasOwnProperty("startOffset")
-    ) {
-      // this.response_text = this.response.response_info.text;
-    }
-  },
-  created: function () {
-    window.addEventListener("mouseup", this.testForHighlight);
-  },
-  destroyed: function () {
-    window.removeEventListener("mouseup", this.testForHighlight);
   },
 };
 </script>

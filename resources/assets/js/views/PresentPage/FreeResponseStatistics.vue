@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="responses.length > 0">
-      <div class="d-flex justify-content-center" v-if="!word_groups">
+      <div v-if="!word_groups" class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
           <span class="sr-only">Loading...</span>
         </div>
@@ -12,32 +12,32 @@
           word_groups
         "
         :data="word_groups"
-        :nameKey="'name'"
-        :valueKey="'value'"
+        :name-key="'name'"
+        :value-key="'value'"
         :rotate="rotation"
         :margin="margin"
-        :wordPadding="1"
+        :word-padding="1"
         style="width: 100%; height: 600px"
-        :fontSize="fontSize"
-        :wordClick="wordClicked"
+        :font-size="fontSize"
+        :word-click="wordClicked"
         data-cy="word-cloud"
       />
       <div
-        class="form-check form-check-inline"
         v-if="!question.question_info.question_responses.hideWordcloud"
+        class="form-check form-check-inline"
       >
         <label class="form-check-label align-items-center d-flex">
           <input
+            v-model="textProcessing"
             class="form-check-input"
             type="checkbox"
-            v-model="textProcessing"
           />
           Natural Language Processing
           <span
-            class="ml-1 material-icons md-18"
             v-tooltip:top="
               'Attempt to detect names, places and organizations. This may slow down word cloud processing.'
             "
+            class="ml-1 material-icons md-18"
             >help</span
           >
         </label>
@@ -48,8 +48,8 @@
           <li
             v-for="(word, index) in filterWords"
             :key="index"
-            @click="filterWords.splice(index, 1)"
             class="align-items-center d-flex filterListItem"
+            @click="filterWords.splice(index, 1)"
           >
             {{ word }} <i class="material-icons md-18 md-dark">close</i>
           </li>
@@ -59,9 +59,9 @@
       <ul>
         <transition-group name="fade">
           <li
-            class="userResponse"
             v-for="r in responses.slice().reverse()"
             :key="r.id"
+            class="userResponse"
           >
             <p>
               <strong>{{

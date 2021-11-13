@@ -3,7 +3,7 @@
     <div class="col">
       <h1 v-html="question.text"></h1>
 
-      <template v-if="this.question.sessions.length > 0">
+      <template v-if="question.sessions.length > 0">
         <select v-model="selected" class="mb-3 form-control col-6">
           <template
             v-for="question in question.sessions
@@ -15,11 +15,11 @@
         </select>
 
         <component
+          :is="question.question_info.question_type + '_statistics'"
           v-if="selected_session"
           :responses="selected_session.responses"
           :question="question"
-          :chimeId="chimeId"
-          :is="question.question_info.question_type + '_statistics'"
+          :chime-id="chimeId"
           @removeResponse="removeResponse($event)"
         >
         </component>
@@ -65,12 +65,6 @@ const HeatmapResponseStatistics = () =>
   );
 
 export default {
-  props: ["sessions", "session", "question", "chimeId"],
-  data: function () {
-    return {
-      selected: null,
-    };
-  },
   components: {
     slider_response_statistics: sliderstatistics,
     multiple_choice_statistics: multiplechoicestatistics,
@@ -79,6 +73,32 @@ export default {
     text_heatmap_response_statistics: TextHeatmapResponseStatistics,
     no_response_statistics: FreeResponseStatistics,
     heatmap_response_statistics: HeatmapResponseStatistics,
+  },
+  props: ["sessions", "session", "question", "chimeId"],
+  data: function () {
+    return {
+      selected: null,
+    };
+  },
+  computed: {
+    selected_session: function () {
+      if (this.selected === 0) {
+        var newSession = {};
+        var responses = this.question.sessions.map((s) => s.responses);
+        newSession.responses = Array.prototype.concat(...responses);
+        return newSession;
+      } else {
+        return this.question.sessions.find((s) => s.id == this.selected);
+      }
+    },
+  },
+  watch: {
+    question: function () {
+      this.updateSelected();
+    },
+  },
+  mounted() {
+    this.updateSelected();
   },
   methods: {
     updateSelected() {
@@ -106,26 +126,6 @@ export default {
         .catch((err) => {
           console.log(err.response);
         });
-    },
-  },
-  computed: {
-    selected_session: function () {
-      if (this.selected === 0) {
-        var newSession = {};
-        var responses = this.question.sessions.map((s) => s.responses);
-        newSession.responses = Array.prototype.concat(...responses);
-        return newSession;
-      } else {
-        return this.question.sessions.find((s) => s.id == this.selected);
-      }
-    },
-  },
-  mounted() {
-    this.updateSelected();
-  },
-  watch: {
-    question: function () {
-      this.updateSelected();
     },
   },
 };

@@ -5,7 +5,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: ["eslint:recommended", "plugin:vue/essential"],
+  extends: ["eslint:recommended", "plugin:vue/recommended", "prettier"],
   parserOptions: {
     ecmaVersion: 13,
     sourceType: "module",

@@ -8,9 +8,9 @@
         <input
           id="left_choice_text"
           v-model="left_choice_text"
-          @input="emitChanges"
           type="text"
           class="validate form-control"
+          @input="emitChanges"
         />
       </div>
     </div>
@@ -22,9 +22,9 @@
         <input
           id="right_choice_text"
           v-model="right_choice_text"
-          @input="emitChanges"
           type="text"
           class="validate form-control"
+          @input="emitChanges"
         />
       </div>
     </div>
@@ -36,9 +36,9 @@
         <select
           id="range_type"
           v-model="range_type"
-          @change="emitChanges"
           class="form-control"
           :disabled="range_disabled"
+          @change="emitChanges"
         >
           <option>Qualitative</option>
           <option>Numeric (Linear)</option>
@@ -68,6 +68,9 @@ export default {
       this.checkValues();
     },
   },
+  mounted: function () {
+    this.checkValues();
+  },
   methods: {
     checkValues: function () {
       if (isNaN(this.left_choice_text) || isNaN(this.right_choice_text)) {
@@ -84,9 +87,6 @@ export default {
         range_type: this.range_type,
       });
     },
-  },
-  mounted: function () {
-    this.checkValues();
   },
 };
 </script>

@@ -7,17 +7,17 @@
       >
       <div class="input-group">
         <input
-          type="text"
-          class="form-control"
           id="chimeName"
           v-model="chime_name"
+          type="text"
+          class="form-control"
           data-cy="chime-name-input"
         />
         <div class="input-group-append">
           <button
             class="btn btn-outline-primary align-items-center d-flex btn-sm"
-            @click="saveChime"
             data-cy="save-chime-name-button"
+            @click="saveChime"
           >
             <span class="material-icons pointer md-18">save</span> Update Chime
             Name
@@ -35,7 +35,7 @@
           </li>
           <li>
             <strong>Participants can join by visiting:</strong>
-            <a v-bind:href="join_url">{{ join_url }}</a>
+            <a :href="join_url">{{ join_url }}</a>
           </li>
         </ul>
         <ChimeManagementOptions
@@ -48,12 +48,12 @@
           "
         />
         <button
+          v-if="chime.resource_link_pk"
           class="btn btn-outline-success btn-sm align-items-center d-flex"
           @click="sync"
-          v-if="chime.resource_link_pk"
         >
           Force Sync with Canvas
-          <span class="material-icons md-18" v-if="synced">check_circle</span>
+          <span v-if="synced" class="material-icons md-18">check_circle</span>
         </button>
       </div>
     </div>
@@ -78,8 +78,8 @@
               <td data-cy="select-user-permissions-in-chime">
                 <template v-if="u.editPermission">
                   <select
-                    class="form-control form-control-sm"
                     v-model="u.permission_number"
+                    class="form-control form-control-sm"
                     @change="saveUsers"
                   >
                     <option value="100">Participant</option>
@@ -87,9 +87,9 @@
                   </select>
                 </template>
                 <span
-                  v-on:click="u.editPermission = !u.editPermission"
                   v-else
                   class="clickToChange"
+                  @click="u.editPermission = !u.editPermission"
                 >
                   <template v-if="u.permission_number == 300"
                     >Presenter</template
@@ -141,10 +141,10 @@ ul {
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 
 export default {
-  props: ["chime"],
   components: {
     ChimeManagementOptions,
   },
+  props: ["chime"],
   data: function () {
     return {
       users: [],
@@ -157,23 +157,6 @@ export default {
         this.chime.show_folder_title_to_participants,
       synced: false,
     };
-  },
-  watch: {
-    join_instructions: function (val) {
-      this.saveChime();
-    },
-    students_can_view: function (val) {
-      this.saveChime();
-    },
-    require_login: function (val) {
-      this.saveChime();
-    },
-    only_correct_answers_lti: function (val) {
-      this.saveChime();
-    },
-    show_folder_title_to_participants: function (val) {
-      this.saveChime();
-    },
   },
   computed: {
     join_url: function () {
@@ -203,6 +186,26 @@ export default {
     hyphenatedCode: function () {
       return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
     },
+  },
+  watch: {
+    join_instructions: function (val) {
+      this.saveChime();
+    },
+    students_can_view: function (val) {
+      this.saveChime();
+    },
+    require_login: function (val) {
+      this.saveChime();
+    },
+    only_correct_answers_lti: function (val) {
+      this.saveChime();
+    },
+    show_folder_title_to_participants: function (val) {
+      this.saveChime();
+    },
+  },
+  mounted() {
+    this.loadUsers();
   },
   methods: {
     saveChime: function () {
@@ -273,9 +276,6 @@ export default {
           console.log(err);
         });
     },
-  },
-  mounted() {
-    this.loadUsers();
   },
 };
 </script>

@@ -1,9 +1,9 @@
 <template>
   <ol type="A" data-cy="multiple-choice-options-list">
     <li
-      class="questionDisplay"
       v-for="response in responses"
       :key="response"
+      class="questionDisplay"
       v-html="response"
     />
   </ol>

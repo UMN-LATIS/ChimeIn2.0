@@ -9,7 +9,7 @@
 
         <div class="row">
           <div class="col-12 col-md-9">
-            <div class="alert alert-info" role="alert" v-if="user.guest_user">
+            <div v-if="user.guest_user" class="alert alert-info" role="alert">
               <strong>New to ChimeIn 2?</strong>
               We've got documentation available on our
               <a
@@ -35,34 +35,34 @@
                     Do you have an access code to join a Chime? Enter it below.
                   </p>
                   <input
+                    id="access_code"
+                    v-model="access_code"
                     type="text"
                     class="form-control"
                     name="access_code"
-                    id="access_code"
                     placeholder="Access Code"
-                    v-on:keyup.enter="join_chime"
-                    v-model="access_code"
+                    @keyup.enter="join_chime"
                   />
                   <div class="input-group-append">
                     <button
                       class="btn btn-secondary"
                       type="button"
-                      v-on:click="join_chime"
+                      @click="join_chime"
                     >
                       Join
                     </button>
                   </div>
                   <div
+                    v-if="requires_login"
                     class="alert alert-danger"
                     role="alert"
-                    v-if="requires_login"
                   >
                     You must <a href="/login">log in</a> to join this Chime
                   </div>
                   <div
+                    v-if="chime_not_found"
                     class="alert alert-danger"
                     role="alert"
-                    v-if="chime_not_found"
                   >
                     We couldn't find a Chime associated with that code
                   </div>
@@ -86,6 +86,7 @@ export default {
     NavBar,
     ChimePanel,
   },
+  props: ["user"],
   data() {
     return {
       access_code: "",
@@ -102,7 +103,6 @@ export default {
       ],
     };
   },
-  props: ["user"],
   computed: {
     welcome: function () {
       return this.welcomePhrases[

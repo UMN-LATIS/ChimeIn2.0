@@ -3,7 +3,7 @@
     <div v-if="question_responses && question_responses.image">
       <img
         class="responsive-img imageContainer"
-        v-bind:src="'/storage/' + question_responses.image"
+        :src="'/storage/' + question_responses.image"
         data-cy="image-thumbnail"
       />
     </div>
@@ -11,9 +11,9 @@
       <input
         type="file"
         accept="image/jpeg, image/heic, image/png"
-        @change="attachFile($event.target.name, $event.target.files)"
         class="form-control-file input-file"
         data-cy="image-dropzone"
+        @change="attachFile($event.target.name, $event.target.files)"
       />
       <p v-if="isInitial">
         Drag your image here to upload<br />

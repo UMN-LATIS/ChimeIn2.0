@@ -2,8 +2,8 @@
   <div>
     <div class="col-sm-12">
       <div
-        class="clickPointer"
         v-if="image_coordinates"
+        class="clickPointer"
         :style="{
           top: image_coordinates.coordinate_y + 'px',
           left: image_coordinates.coordinate_x + 'px',
@@ -13,9 +13,7 @@
         ref="targetImage"
         data-cy="image-heatmap-target"
         class="img-fluid max-height-image"
-        v-bind:src="
-          '/storage/' + question.question_info.question_responses.image
-        "
+        :src="'/storage/' + question.question_info.question_responses.image"
         @click="triggerResponse"
         @load="updateScaledCoordinates"
       />
@@ -67,6 +65,21 @@ export default {
     response: function (value) {
       this.updateScaledCoordinates();
     },
+  },
+  created() {
+    window.addEventListener("resize", this.updateScaledCoordinates);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.updateScaledCoordinates);
+  },
+  mounted() {
+    if (
+      this.response &&
+      this.response.hasOwnProperty("response_info") &&
+      this.response.response_info.hasOwnProperty("image_coordinates")
+    ) {
+      this.updateScaledCoordinates();
+    }
   },
   methods: {
     updateScaledCoordinates: function () {
@@ -136,21 +149,6 @@ export default {
     //     this.$emit('recordresponse', response, false);
 
     // }
-  },
-  created() {
-    window.addEventListener("resize", this.updateScaledCoordinates);
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.updateScaledCoordinates);
-  },
-  mounted() {
-    if (
-      this.response &&
-      this.response.hasOwnProperty("response_info") &&
-      this.response.response_info.hasOwnProperty("image_coordinates")
-    ) {
-      this.updateScaledCoordinates();
-    }
   },
 };
 </script>

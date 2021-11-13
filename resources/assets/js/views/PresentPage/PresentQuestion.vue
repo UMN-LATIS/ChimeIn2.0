@@ -1,7 +1,7 @@
 <template>
   <div
     class="row"
-    v-bind:class="{
+    :class="{
       in_progress: current_session,
       not_in_progress: !current_session,
     }"
@@ -10,7 +10,7 @@
       <PresentResults
         v-if="show_results"
         :question="question"
-        :chimeId="chimeId"
+        :chime-id="chimeId"
         @reload="$emit('reload')"
       />
       <PresentPrompt
@@ -20,24 +20,24 @@
       />
     </div>
     <div
-      class="col-sm-12 col-md-4 col-lg-3 presentationControls"
       v-if="!folder.student_view"
+      class="col-sm-12 col-md-4 col-lg-3 presentationControls"
     >
       <div class="card float-right">
         <div class="card-body">
           <button
-            class="btn btn-outline-primary align-items-center d-flex"
-            v-on:click="start_session"
             v-if="!current_session"
+            class="btn btn-outline-primary align-items-center d-flex"
+            @click="start_session"
           >
             <i class="material-icons left">play_arrow</i>
             Open Question
           </button>
           <button
-            v-bind:class="{ openSession: current_session }"
-            class="btn btn-outline-primary align-items-center d-flex"
-            v-on:click="stop_session"
             v-else
+            :class="{ openSession: current_session }"
+            class="btn btn-outline-primary align-items-center d-flex"
+            @click="stop_session"
           >
             <i class="material-icons left">stop</i>
             Close Question
@@ -45,7 +45,7 @@
           <button
             data-cy="show-results-button"
             class="btn btn-outline-primary align-items-center d-flex"
-            v-on:click="show_results = !show_results"
+            @click="show_results = !show_results"
           >
             <i class="material-icons left">zoom_in</i>
             <span v-if="show_results"> Hide Results </span>
@@ -101,11 +101,6 @@ export default {
       show_results: false,
     };
   },
-  mounted() {
-    if (this.folder.student_view) {
-      this.show_results = true;
-    }
-  },
   computed: {
     current_session: function () {
       if (this.question.current_session_id) {
@@ -125,6 +120,11 @@ export default {
         return accumulator + parseInt(session.responses.length);
       }, 0);
     },
+  },
+  mounted() {
+    if (this.folder.student_view) {
+      this.show_results = true;
+    }
   },
   methods: {
     toggle() {

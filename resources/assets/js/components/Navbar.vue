@@ -15,8 +15,8 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <div class="ml-auto navbar-text" data-cy="show-join-code" v-if="host">
+    <div id="navbarSupportedContent" class="collapse navbar-collapse">
+      <div v-if="host" class="ml-auto navbar-text" data-cy="show-join-code">
         Go to <strong>{{ host }}</strong> and enter code
         <strong>{{ access_code }}</strong>
       </div>
@@ -30,20 +30,20 @@
         </li>
         <li class="nav-item">
           <a
+            v-if="user.impersonating"
             class="nav-link align-items-center d-flex"
             href="/impersonate/leave"
-            v-if="user.impersonating"
             >End Impersonation<i class="material-icons">logout</i></a
           >
         </li>
         <li class="nav-item">
           <a
+            v-if="user.id && !user.guest_user"
             href="/shibboleth-logout"
             class="nav-link align-items-center d-flex"
-            v-if="user.id && !user.guest_user"
             >Log out <i class="material-icons">logout</i>
           </a>
-          <a href="/login" class="nav-link align-items-center d-flex" v-else
+          <a v-else href="/login" class="nav-link align-items-center d-flex"
             >Log in <i class="material-icons">account_box</i>
           </a>
         </li>

@@ -1,7 +1,7 @@
 <template>
   <img
     class="img-fluid max-height-image"
-    v-bind:src="'/storage/' + question.question_info.question_responses.image"
+    :src="'/storage/' + question.question_info.question_responses.image"
   />
 </template>
 

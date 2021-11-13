@@ -6,13 +6,13 @@
     <div class="row">
       <div class="col-8 col-6-md">
         <input
+          id="createFolder"
+          v-model="folder_name"
           type="text"
           class="form-control new-folder__input"
-          v-model="folder_name"
-          @keyup.enter="new_folder"
           name="createFolder"
-          id="createFolder"
           placeholder="Folder Name"
+          @keyup.enter="new_folder"
         />
       </div>
       <div class="col-1 col-2-md">
@@ -20,16 +20,16 @@
           data-cy="create-folder-button"
           type="button"
           class="btn btn-primary new-folder__button"
-          v-on:click="new_folder"
+          @click="new_folder"
         >
           Create
         </button>
       </div>
     </div>
     <div
+      v-if="chime.lti_grade_mode == 'multiple_grades'"
       class="alert alert-warning mt-2"
       role="alert"
-      v-if="chime.lti_grade_mode == 'multiple_grades'"
     >
       <strong>Warning:</strong> Creating a new folder will not add a new
       gradebook entry in Canvas. If you'd like to track participation by

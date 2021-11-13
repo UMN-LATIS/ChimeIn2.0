@@ -1,14 +1,12 @@
 <template>
   <div class="col-sm-12">
     <div class="overlayContainer">
-      <canvas ref="targetCanvas" id="simpleheat"></canvas>
+      <canvas id="simpleheat" ref="targetCanvas"></canvas>
       <img
         ref="targetImage"
         data-cy="image-heatmap-original"
         class="img-fluid max-height-image"
-        v-bind:src="
-          '/storage/' + question.question_info.question_responses.image
-        "
+        :src="'/storage/' + question.question_info.question_responses.image"
         @load="drawImage"
       />
     </div>
@@ -36,6 +34,18 @@ export default {
   data: function () {
     return {};
   },
+  watch: {
+    responses: function () {
+      this.drawImage();
+    },
+  },
+  created() {
+    window.addEventListener("resize", this.drawImage);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.drawImage);
+  },
+  mounted() {},
   methods: {
     drawImage: function () {
       var targetImage = this.$refs["targetImage"];
@@ -57,17 +67,5 @@ export default {
       simpleheat("simpleheat").data(data).radius(50, 20).draw();
     },
   },
-  watch: {
-    responses: function () {
-      this.drawImage();
-    },
-  },
-  created() {
-    window.addEventListener("resize", this.drawImage);
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.drawImage);
-  },
-  mounted() {},
 };
 </script>

@@ -9,7 +9,7 @@
           <label for="folder" class="col-form-label">Folder</label>
         </div>
         <div class="col-sm-9">
-          <div class="form-group" v-if="folders">
+          <div v-if="folders" class="form-group">
             <v-select
               v-model="folder_id"
               :options="folders"
@@ -25,8 +25,8 @@
         <div class="col-sm-9">
           <div class="form-group">
             <v-select
-              data-cy="question-type"
               v-model="question_type"
+              data-cy="question-type"
               :options="question_types"
               :reduce="(question_type) => question_type.id"
               :clearable="false"
@@ -39,9 +39,9 @@
           <div class="form-check">
             <label class="form-check-label">
               <input
+                v-model="anonymous"
                 type="checkbox"
                 class="form-check-input"
-                v-model="anonymous"
               />
               Anonymous Question
             </label>
@@ -51,9 +51,9 @@
           <div class="form-check">
             <label class="form-check-label">
               <input
+                v-model="allow_multiple"
                 type="checkbox"
                 class="form-check-input"
-                v-model="allow_multiple"
               />
               Allow Multiple Responses
             </label>
@@ -64,13 +64,13 @@
       <div class="row">
         <div class="col">
           <vue-editor
-            data-cy="question-editor"
             v-model="question_text"
+            data-cy="question-editor"
             placeholder="Question Text"
-            v-bind:editorToolbar="toolbar"
-            v-bind:editorOptions="editorOptions"
-            v-bind:useCustomImageHandler="true"
-            v-on:image-added="handle_image_added"
+            :editor-toolbar="toolbar"
+            :editor-options="editorOptions"
+            :use-custom-image-handler="true"
+            @image-added="handle_image_added"
           >
           </vue-editor>
         </div>
@@ -79,7 +79,7 @@
       <component
         :is="question_type + '_response'"
         :question_responses.sync="question_responses"
-        :chime_id="this.folder.chime_id"
+        :chime_id="folder.chime_id"
       ></component>
     </div>
     <div class="modal-footer">
@@ -144,7 +144,6 @@ ImageBlot.tagName = "img";
 Quill.register(ImageBlot);
 
 export default {
-  props: ["question", "show", "folder", "controlType"],
   components: {
     VueEditor,
     multiple_choice_response: MultipleChoiceQuestionOptions,
@@ -157,6 +156,7 @@ export default {
     "v-select": VueSelect,
     Modal,
   },
+  props: ["question", "show", "folder", "controlType"],
   data: function () {
     return {
       folders: null,

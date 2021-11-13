@@ -1,12 +1,12 @@
 <template>
   <div>
     <NavBar
+      v-if="!folder.student_view"
       title="Back to Folder"
       :user="user"
       :access_code="hyphenatedCode"
       :host="host"
       :link="{ name: 'folder', params: { chimeId, folderId } }"
-      v-if="!folder.student_view"
     />
 
     <ErrorDialog />
@@ -15,9 +15,9 @@
       <fullscreen ref="fullscreen" @change="fullscreenChange">
         <PresentQuestion
           v-if="current_question_item"
-          :usersCount="usersCount"
+          :users-count="usersCount"
           :question="current_question_item"
-          :chimeId="chimeId"
+          :chime-id="chimeId"
           :folder="folder"
           @nextQuestion="next_question"
           @previousQuestion="previous_question"
@@ -61,13 +61,14 @@ import NavBar from "../../components/NavBar.vue";
 import PresentQuestion from "./PresentQuestion.vue";
 
 export default {
-  mixins: [questionsListener],
   components: {
     fullscreen,
     ErrorDialog,
     NavBar,
     PresentQuestion,
   },
+  mixins: [questionsListener],
+  props: ["user", "chimeId", "folderId", "questionId"],
   data() {
     return {
       folder: { name: "" },
@@ -78,7 +79,42 @@ export default {
       chime: null,
     };
   },
-  props: ["user", "chimeId", "folderId", "questionId"],
+  computed: {
+    current_question_item: function () {
+      if (!this.questions || this.questions.length == 0) {
+        return false;
+      }
+      return this.questions[this.current_question];
+    },
+    host: function () {
+      if (this.chime && this.chime.join_instructions) {
+        return window.location.host;
+      }
+      return null;
+    },
+    hyphenatedCode: function () {
+      if (!this.chime || !this.chime.join_instructions) {
+        return "";
+      }
+      return toHyphenatedCode(this.chime.access_code);
+    },
+  },
+  watch: {
+    $route(to, from) {
+      this.current_question = parseInt(to.params.questionId);
+    },
+  },
+  mounted: function () {
+    this.current_question = parseInt(this.$route.params.questionId) || 0;
+    this.load_questions();
+    axios.get("/api/chime/" + this.chimeId).then((res) => {
+      console.log(res);
+      this.chime = res.data;
+    });
+  },
+  beforeDestroy: function () {
+    Echo.leave("session-status." + this.chimeId);
+  },
   methods: {
     toggle() {
       this.$refs["fullscreen"].toggle();
@@ -117,42 +153,6 @@ export default {
         },
       });
     },
-  },
-  computed: {
-    current_question_item: function () {
-      if (!this.questions || this.questions.length == 0) {
-        return false;
-      }
-      return this.questions[this.current_question];
-    },
-    host: function () {
-      if (this.chime && this.chime.join_instructions) {
-        return window.location.host;
-      }
-      return null;
-    },
-    hyphenatedCode: function () {
-      if (!this.chime || !this.chime.join_instructions) {
-        return "";
-      }
-      return toHyphenatedCode(this.chime.access_code);
-    },
-  },
-  watch: {
-    $route(to, from) {
-      this.current_question = parseInt(to.params.questionId);
-    },
-  },
-  mounted: function () {
-    this.current_question = parseInt(this.$route.params.questionId) || 0;
-    this.load_questions();
-    axios.get("/api/chime/" + this.chimeId).then((res) => {
-      console.log(res);
-      this.chime = res.data;
-    });
-  },
-  beforeDestroy: function () {
-    Echo.leave("session-status." + this.chimeId);
   },
 };
 </script>

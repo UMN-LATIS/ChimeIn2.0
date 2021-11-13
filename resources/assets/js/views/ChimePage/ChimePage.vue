@@ -18,19 +18,19 @@
             }"
           >
             <button
-              @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
               class="btn btn-outline-secondary align-items-center d-flex"
               :class="{ 'btn--is-active': showSettings }"
               data-cy="toggle-chime-settings-panel"
+              @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
             >
               Chime Settings <span class="material-icons">settings</span>
             </button>
 
             <button
-              @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
               class="btn btn-outline-secondary align-items-center d-flex"
               :class="{ 'btn--is-active': exportPanel }"
               data-cy="toggle-chime-export-panel"
+              @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
             >
               Export <span class="material-icons">save_alt</span>
             </button>
@@ -50,17 +50,17 @@
 
       <Spinner v-if="!isReady" />
 
-      <div class="chime__folder-wrapper" v-if="isReady">
+      <div v-if="isReady" class="chime__folder-wrapper">
         <div class="chime__folder-list">
           <p v-if="!ordered_folders.length">
             You don't have any folders yet. Why not create one now?
           </p>
           <Draggable
             v-else
-            class="chime__ordered-folders"
             v-model="ordered_folders"
+            class="chime__ordered-folders"
             handle=".draghandle"
-            :forceFallback="true"
+            :force-fallback="true"
           >
             <FolderCard
               v-for="folder in ordered_folders"
@@ -68,14 +68,14 @@
               :folder="folder"
               :chime="chime"
               :draggable="ordered_folders.length > 1"
-              :ltiLink="getLtiLink(folder)"
+              :lti-link="getLtiLink(folder)"
             />
           </Draggable>
         </div>
         <NewFolder
           class="chime__create-folder"
           :chime="chime"
-          v-on:newfolder="create_folder"
+          @newfolder="create_folder"
         />
       </div>
     </div>
@@ -157,6 +157,7 @@ export default {
     ChimeManagement,
     ChimeExport,
   },
+  props: ["user", "chimeId"],
   data() {
     return {
       isReady: false,
@@ -165,7 +166,34 @@ export default {
       exportPanel: false,
     };
   },
-  props: ["user", "chimeId"],
+  computed: {
+    ordered_folders: {
+      get() {
+        if (!this.chime || !this.chime.folders) {
+          return [];
+        }
+        return orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
+      },
+      set(value) {
+        console.log(value);
+        value.map((f, index) => (f.order = index + 1));
+        const url = "/api/chime/" + this.chime.id;
+        axios
+          .put(url, {
+            folders: this.chime.folders,
+          })
+          .then(() => {
+            this.chime.folders = value;
+          })
+          .catch((err) => {
+            console.log(err.response);
+          });
+      },
+    },
+  },
+  created: function () {
+    this.reloadChime();
+  },
   methods: {
     toggle(value, { setToFalse = [], setToTrue = [] } = {}) {
       this[value] = !this[value];
@@ -225,34 +253,6 @@ export default {
         this.chime.lti_return_url.replace(/external_content.*/, "")
       );
     },
-  },
-  computed: {
-    ordered_folders: {
-      get() {
-        if (!this.chime || !this.chime.folders) {
-          return [];
-        }
-        return orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
-      },
-      set(value) {
-        console.log(value);
-        value.map((f, index) => (f.order = index + 1));
-        const url = "/api/chime/" + this.chime.id;
-        axios
-          .put(url, {
-            folders: this.chime.folders,
-          })
-          .then(() => {
-            this.chime.folders = value;
-          })
-          .catch((err) => {
-            console.log(err.response);
-          });
-      },
-    },
-  },
-  created: function () {
-    this.reloadChime();
   },
 };
 </script>

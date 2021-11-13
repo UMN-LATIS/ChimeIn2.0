@@ -1,18 +1,18 @@
 <template>
   <div class="row responseContainer">
-    <div class="col-12" v-if="response.session && response.session.question">
+    <div v-if="response.session && response.session.question" class="col-12">
       <p class="questionText" v-html="response.session.question.text"></p>
       <component
+        :is="response.session.question.question_info.question_type"
         :question="response.session.question"
         :disabled="true"
         :response="response"
-        :is="response.session.question.question_info.question_type"
       >
       </component>
       <a
-        class="pointer"
         v-if="chime.students_can_view"
-        v-bind:href="
+        class="pointer"
+        :href="
           '/chime/' +
           chime.id +
           '/folder/' +
@@ -23,7 +23,7 @@
         >View Responses</a
       >
 
-      <small class="text-muted" v-if="chime.show_folder_title_to_participants"
+      <small v-if="chime.show_folder_title_to_participants" class="text-muted"
         ><strong>Folder</strong>: {{ response.session.question.folder.name }}
       </small>
       <hr />
