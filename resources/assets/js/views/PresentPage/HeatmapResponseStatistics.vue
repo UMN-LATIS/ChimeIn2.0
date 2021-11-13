@@ -33,11 +33,11 @@ import simpleheat from "simpleheat";
 
 export default {
   props: ["responses", "question"],
-  data: function() {
+  data: function () {
     return {};
   },
   methods: {
-    drawImage: function() {
+    drawImage: function () {
       var targetImage = this.$refs["targetImage"];
       var targetCanvas = this.$refs["targetCanvas"];
       targetCanvas.width = targetImage.clientWidth;
@@ -54,14 +54,11 @@ export default {
           0.1,
         ];
       });
-      simpleheat("simpleheat")
-        .data(data)
-        .radius(50, 20)
-        .draw();
+      simpleheat("simpleheat").data(data).radius(50, 20).draw();
     },
   },
   watch: {
-    responses: function() {
+    responses: function () {
       this.drawImage();
     },
   },

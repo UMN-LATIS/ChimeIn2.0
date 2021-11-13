@@ -9,7 +9,7 @@
       <word-cloud
         v-if="
           !question.question_info.question_responses.hideWordcloud &&
-            word_groups
+          word_groups
         "
         :data="word_groups"
         :nameKey="'name'"
@@ -17,7 +17,7 @@
         :rotate="rotation"
         :margin="margin"
         :wordPadding="1"
-        style="width: 100%; height:600px"
+        style="width: 100%; height: 600px"
         :fontSize="fontSize"
         :wordClick="wordClicked"
         data-cy="word-cloud"
@@ -91,7 +91,7 @@ export default {
     "word-cloud": wordcloud,
   },
   props: ["responses", "question"],
-  data: function() {
+  data: function () {
     return {
       fontSize: [20, 120],
       visible_responses: [],
@@ -115,13 +115,13 @@ export default {
     };
   },
   methods: {
-    similarity: function(x, y) {
+    similarity: function (x, y) {
       return new difflib.SequenceMatcher(null, x, y).ratio();
     },
-    wordClicked: function(word) {
+    wordClicked: function (word) {
       this.filterWords.push(word);
     },
-    buildWords: throttle(function() {
+    buildWords: throttle(function () {
       var start = performance.now();
       const words = this.responses.map((r) => r.response_info.text).join("\n ");
 
@@ -190,17 +190,17 @@ export default {
     }, 1000),
   },
   watch: {
-    responses: function() {
+    responses: function () {
       setTimeout(() => this.buildWords(), 100);
     },
-    filterWords: function() {
+    filterWords: function () {
       setTimeout(() => this.buildWords(), 100);
     },
-    textProcessing: function() {
+    textProcessing: function () {
       setTimeout(() => this.buildWords(), 100);
     },
   },
-  mounted: function() {
+  mounted: function () {
     // run this in a time to not block initial render
     setTimeout(() => this.buildWords(), 100);
   },

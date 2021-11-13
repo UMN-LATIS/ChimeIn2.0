@@ -61,7 +61,7 @@ export default {
     heatmap_response: ImageHeatmapResponse,
   },
   props: ["session", "chime", "responses"],
-  data: function() {
+  data: function () {
     return {
       responseUpdated: false,
       error: null,
@@ -71,7 +71,7 @@ export default {
     };
   },
   computed: {
-    response: function() {
+    response: function () {
       if (this.responses.length > 0 && this.session) {
         var foundResponse = null;
         var sessionResponses = this.responses.filter(
@@ -92,7 +92,7 @@ export default {
     },
   },
   methods: {
-    record_response: function(response, newResponse = false) {
+    record_response: function (response, newResponse = false) {
       const self = this;
 
       var url =
@@ -128,7 +128,7 @@ export default {
       // document.activeElement.blur();
     },
   },
-  created: function() {
+  created: function () {
     this.question = this.session.question;
   },
 };

@@ -52,7 +52,7 @@
 <script>
 export default {
   props: ["question_responses"],
-  data: function() {
+  data: function () {
     return {
       left_choice_text: this.question_responses.left_choice_text,
       right_choice_text: this.question_responses.right_choice_text,
@@ -61,15 +61,15 @@ export default {
     };
   },
   watch: {
-    left_choice_text: function(newValue) {
+    left_choice_text: function (newValue) {
       this.checkValues();
     },
-    right_choice_text: function(newValue) {
+    right_choice_text: function (newValue) {
       this.checkValues();
     },
   },
   methods: {
-    checkValues: function() {
+    checkValues: function () {
       if (isNaN(this.left_choice_text) || isNaN(this.right_choice_text)) {
         this.range_type = "Qualitative";
         this.range_disabled = true;
@@ -77,7 +77,7 @@ export default {
         this.range_disabled = false;
       }
     },
-    emitChanges: function() {
+    emitChanges: function () {
       this.$emit("update:question_responses", {
         left_choice_text: this.left_choice_text,
         right_choice_text: this.right_choice_text,
@@ -85,7 +85,7 @@ export default {
       });
     },
   },
-  mounted: function() {
+  mounted: function () {
     this.checkValues();
   },
 };

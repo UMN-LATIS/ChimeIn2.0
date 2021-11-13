@@ -19,7 +19,7 @@
 <script>
 export default {
   props: ["chime", "user"],
-  data: function() {
+  data: function () {
     return {};
   },
   methods: {
@@ -58,7 +58,7 @@ export default {
     },
   },
   computed: {
-    hyphenatedCode: function() {
+    hyphenatedCode: function () {
       return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
     },
   },

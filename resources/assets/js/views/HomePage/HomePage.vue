@@ -28,9 +28,7 @@
 
           <div class="col-12 col-md-3">
             <div class="card">
-              <div class="card-header">
-                Access Code
-              </div>
+              <div class="card-header">Access Code</div>
               <div class="card-body">
                 <div class="input-group mb-3">
                   <p>
@@ -106,7 +104,7 @@ export default {
   },
   props: ["user"],
   computed: {
-    welcome: function() {
+    welcome: function () {
       return this.welcomePhrases[
         Math.floor(Math.random() * this.welcomePhrases.length)
       ];

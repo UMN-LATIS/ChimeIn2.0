@@ -24,7 +24,7 @@ export default {
   components: {
     "vue-editor": VueEditor,
   },
-  data: function() {
+  data: function () {
     return {
       heatmap_text: this.question_responses.heatmap_text,
       toolbar: [
@@ -65,7 +65,7 @@ export default {
   },
 
   methods: {
-    emitChanges: function() {
+    emitChanges: function () {
       console.log("fda");
       this.$emit("update:question_responses", {
         heatmap_text: this.heatmap_text,

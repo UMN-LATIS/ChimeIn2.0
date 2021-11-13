@@ -26,12 +26,12 @@
         <div class="col-md-8 col-sm-12">
           <div
             class="btn-group float-right"
-            style="flex-wrap: wrap;"
+            style="flex-wrap: wrap"
             role="group"
             aria-label="Folder Controls"
           >
             <button
-              class="btn btn-sm  btn-outline-info align-items-center d-flex"
+              class="btn btn-sm btn-outline-info align-items-center d-flex"
               @click="show_edit_folder = !show_edit_folder"
             >
               Folder Settings <i class="material-icons pointer">edit</i>
@@ -82,7 +82,7 @@
         </div>
       </div>
       <div v-if="show_edit_folder" class="ml-4 mt-2">
-        <div class="row ">
+        <div class="row">
           <div class="col-12">
             <div class="input-group mb-3">
               <input type="text" class="form-control" v-model="folder.name" />
@@ -142,8 +142,8 @@
                     :key="chime.id"
                     :value="chime.id"
                   >
-                    {{ chime.name }}</option
-                  >
+                    {{ chime.name }}
+                  </option>
                 </select>
               </div>
 
@@ -160,8 +160,8 @@
                     :key="folder.id"
                     :value="folder.id"
                   >
-                    {{ folder.name }}</option
-                  >
+                    {{ folder.name }}
+                  </option>
                 </select>
               </div>
               <button class="btn btn-primary" @click="do_import">Import</button>
@@ -258,7 +258,7 @@ export default {
     };
   },
   computed: {
-    otherFolderSessions: function() {
+    otherFolderSessions: function () {
       if (this.allSessions && this.folder.id) {
         return this.allSessions.filter(
           (e) => e.question.folder_id != this.folder.id
@@ -268,14 +268,14 @@ export default {
     },
   },
   watch: {
-    show_edit_folder: function(newValue) {
+    show_edit_folder: function (newValue) {
       if (newValue) {
         this.loadExistingChimes();
       }
     },
   },
   methods: {
-    reset: function() {
+    reset: function () {
       if (
         confirm(
           "Are you sure you want to wipe all the responses to questions in this folder?"
@@ -346,7 +346,7 @@ export default {
               (e) => e.id === questionId
             );
             self.questions.splice(question_index, 1);
-            this.$nextTick(function() {
+            this.$nextTick(function () {
               this.$refs.slideup.layout();
             });
           })
@@ -355,7 +355,7 @@ export default {
           });
       }
     },
-    edit_folder: function() {
+    edit_folder: function () {
       const self = this;
       axios
         .put("/api/chime/" + this.chimeId + "/folder/" + this.folderId, {
@@ -368,7 +368,7 @@ export default {
           console.error(err);
         });
     },
-    delete_folder: function() {
+    delete_folder: function () {
       const confirm = window.confirm("Delete Folder " + this.folder.name + "?");
 
       if (confirm) {
@@ -389,13 +389,13 @@ export default {
           });
       }
     },
-    load_folder: function() {
+    load_folder: function () {
       axios.get("/api/chime/" + this.chimeId + "/openQuestions").then((res) => {
         this.allSessions = res.data.sessions;
       });
     },
 
-    openAll: function() {
+    openAll: function () {
       const url =
         "/api/chime/" +
         this.folder.chime_id +
@@ -408,7 +408,7 @@ export default {
         .then((res) => {})
         .catch((err) => {});
     },
-    closeAll: function() {
+    closeAll: function () {
       const url =
         "/api/chime/" +
         this.folder.chime_id +
@@ -421,7 +421,7 @@ export default {
         .then((res) => {})
         .catch((err) => {});
     },
-    closeOthers: function() {
+    closeOthers: function () {
       for (var openSession of this.otherFolderSessions) {
         const url =
           "/api/chime/" +
@@ -439,7 +439,7 @@ export default {
       }
       this.hideOpenAlert = true;
     },
-    loadExistingChimes: function() {
+    loadExistingChimes: function () {
       axios
         .get("/api/chime")
         .then((res) => {
@@ -449,7 +449,7 @@ export default {
           console.error("error", "Error in get chimes:", err.response);
         });
     },
-    update_folders: function() {
+    update_folders: function () {
       axios
         .get("/api/chime/" + this.selected_chime)
         .then((res) => {
@@ -463,7 +463,7 @@ export default {
           console.error("error", "Error in get chimes:", err.response);
         });
     },
-    do_import: function() {
+    do_import: function () {
       if (!this.selected_chime || !this.selected_folder) {
         return;
       }
@@ -482,7 +482,7 @@ export default {
           console.error("error", "Error with import:", err.response);
         });
     },
-    sync: function() {
+    sync: function () {
       axios
         .post(
           "/api/chime/" + this.chimeId + "/folder/" + this.folderId + "/sync"
@@ -501,7 +501,7 @@ export default {
         });
     },
   },
-  created: function() {
+  created: function () {
     this.load_folder();
     this.load_questions();
   },

@@ -159,7 +159,7 @@
 <script>
 export default {
   props: ["chime"],
-  data: function() {
+  data: function () {
     return {
       exportGroup: "all",
       csrf: document

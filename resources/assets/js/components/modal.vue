@@ -13,11 +13,11 @@ export default {
   template: "#modal-template",
   props: ["show"],
   methods: {
-    close: function() {
+    close: function () {
       this.$emit("close");
     },
   },
-  mounted: function() {
+  mounted: function () {
     document.addEventListener("keydown", (e) => {
       if (this.show && e.keyCode == 27) {
         this.close();

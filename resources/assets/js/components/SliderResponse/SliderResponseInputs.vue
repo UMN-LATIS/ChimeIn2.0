@@ -2,7 +2,7 @@
   <div>
     <div class="row value-slider">
       <div class="col">
-        <div class="range-wrap ">
+        <div class="range-wrap">
           <input
             type="range"
             :disabled="disabled"
@@ -17,7 +17,7 @@
             :style="customStyle"
             v-if="
               question.question_info.question_responses.range_type ==
-                'Numeric (Linear)'
+              'Numeric (Linear)'
             "
             >{{ bubbleValue }}</output
           >
@@ -97,7 +97,7 @@ export default {
     };
   },
   methods: {
-    valueChanged: function(targetValue) {
+    valueChanged: function (targetValue) {
       const response = {
         question_type: "slider",
         choice: targetValue,
@@ -105,10 +105,10 @@ export default {
       this.$emit("recordresponse", response, this.create_new_response);
       this.create_new_response = false;
     },
-    clear: function() {
+    clear: function () {
       this.create_new_response = true;
     },
-    updateRange: function(newValue) {
+    updateRange: function (newValue) {
       let range =
         parseInt(this.right_choice_text) - parseInt(this.left_choice_text);
       this.bubbleValue =
@@ -121,12 +121,12 @@ export default {
     },
   },
   watch: {
-    sliderValue: function(newValue) {
+    sliderValue: function (newValue) {
       this.updateRange(newValue);
     },
   },
   computed: {
-    sliderValue: function() {
+    sliderValue: function () {
       if (this.create_new_response) {
         return 50;
       } else if (this.response && this.response.response_info) {
@@ -135,7 +135,7 @@ export default {
         return 50;
       }
     },
-    left_choice_text: function() {
+    left_choice_text: function () {
       if (
         this.question &&
         "left_choice_text" in this.question.question_info.question_responses
@@ -143,7 +143,7 @@ export default {
         return this.question.question_info.question_responses.left_choice_text;
       }
     },
-    right_choice_text: function() {
+    right_choice_text: function () {
       if (
         this.question &&
         "right_choice_text" in this.question.question_info.question_responses

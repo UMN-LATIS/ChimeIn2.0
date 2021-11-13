@@ -139,8 +139,8 @@ export default {
       students_can_view_local: this.students_can_view,
       join_instructions_local: this.join_instructions,
       only_correct_answers_lti_local: this.only_correct_answers_lti,
-      show_folder_title_to_participants_local: this
-        .show_folder_title_to_participants,
+      show_folder_title_to_participants_local:
+        this.show_folder_title_to_participants,
     };
   },
   props: [

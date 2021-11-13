@@ -89,7 +89,7 @@ export default {
     fullscreenChange(fullscreen) {
       this.fullscreen = fullscreen;
     },
-    next_question: function() {
+    next_question: function () {
       var target = 0;
       if (this.questions.length > this.current_question + 1) {
         target = this.current_question + 1;
@@ -103,7 +103,7 @@ export default {
         },
       });
     },
-    previous_question: function() {
+    previous_question: function () {
       var target = this.current_question - 1;
       if (this.current_question - 1 < 0) {
         target = this.questions.length - 1;
@@ -119,19 +119,19 @@ export default {
     },
   },
   computed: {
-    current_question_item: function() {
+    current_question_item: function () {
       if (!this.questions || this.questions.length == 0) {
         return false;
       }
       return this.questions[this.current_question];
     },
-    host: function() {
+    host: function () {
       if (this.chime && this.chime.join_instructions) {
         return window.location.host;
       }
       return null;
     },
-    hyphenatedCode: function() {
+    hyphenatedCode: function () {
       if (!this.chime || !this.chime.join_instructions) {
         return "";
       }
@@ -143,7 +143,7 @@ export default {
       this.current_question = parseInt(to.params.questionId);
     },
   },
-  mounted: function() {
+  mounted: function () {
     this.current_question = parseInt(this.$route.params.questionId) || 0;
     this.load_questions();
     axios.get("/api/chime/" + this.chimeId).then((res) => {
@@ -151,7 +151,7 @@ export default {
       this.chime = res.data;
     });
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     Echo.leave("session-status." + this.chimeId);
   },
 };

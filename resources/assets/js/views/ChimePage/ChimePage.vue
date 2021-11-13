@@ -176,7 +176,7 @@ export default {
         this[key] = true;
       });
     },
-    create_folder: function(folder_name) {
+    create_folder: function (folder_name) {
       if (folder_name.length == 0) {
         alert("You must enter a name for this folder.");
         return;
@@ -195,7 +195,7 @@ export default {
           });
       }
     },
-    reloadChime: function() {
+    reloadChime: function () {
       this.isReady = false;
       axios
         .get("/api/chime/" + this.chimeId)
@@ -251,7 +251,7 @@ export default {
       },
     },
   },
-  created: function() {
+  created: function () {
     this.reloadChime();
   },
 };

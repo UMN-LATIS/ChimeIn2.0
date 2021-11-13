@@ -23,9 +23,7 @@
         Drag your image here to upload<br />
         or click to browse to replace your image
       </p>
-      <p v-if="isSaving">
-        Uploading file...
-      </p>
+      <p v-if="isSaving">Uploading file...</p>
     </div>
   </div>
 </template>
@@ -76,7 +74,7 @@ export default {
     };
   },
   methods: {
-    attachFile: function(event, fileList) {
+    attachFile: function (event, fileList) {
       this.isSaving = true;
       this.isInitial = false;
       let formData = new FormData();

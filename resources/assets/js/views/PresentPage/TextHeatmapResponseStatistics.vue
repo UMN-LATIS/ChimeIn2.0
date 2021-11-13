@@ -10,13 +10,13 @@
 <script>
 export default {
   props: ["responses", "question"],
-  data: function() {
+  data: function () {
     return {
       highlightedText: "",
     };
   },
   methods: {
-    buildTextMap: function() {
+    buildTextMap: function () {
       let positionArray = [];
       for (
         let i = 0;
@@ -46,8 +46,8 @@ export default {
         i < this.question.question_info.question_responses.heatmap_text.length;
         i++
       ) {
-        let currentCharacter = this.question.question_info.question_responses
-          .heatmap_text[i];
+        let currentCharacter =
+          this.question.question_info.question_responses.heatmap_text[i];
         // we need to not inject new html inside tags, but we need to track our position
         if (currentCharacter == "<") {
           insideAnElement = true;
@@ -89,11 +89,11 @@ export default {
     },
   },
   watch: {
-    responses: function() {
+    responses: function () {
       setTimeout(() => this.buildTextMap(), 100);
     },
   },
-  mounted: function() {
+  mounted: function () {
     // run this in a time to not block initial render
     setTimeout(() => this.buildTextMap(), 100);
   },

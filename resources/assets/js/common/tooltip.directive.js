@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-export default function(el, binding) {
+export default function (el, binding) {
   $(el).tooltip({
     title: binding.value,
     placement: binding.arg,

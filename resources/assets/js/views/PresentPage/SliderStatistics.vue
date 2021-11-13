@@ -28,7 +28,7 @@ export default {
   components: {
     GChart,
   },
-  data: function() {
+  data: function () {
     return {
       visible_responses: [],
       response_search: "",
@@ -120,7 +120,7 @@ export default {
     values() {
       return Object.values(this.binnedValues);
     },
-    chartData: function() {
+    chartData: function () {
       var questionArray = this.values.map((e, i) => [
         this.labels[i],
         e,
@@ -186,25 +186,27 @@ const filterPropByMinMax = (arr, { key = "", min = "0", max = "100" }) =>
  * Construct histogram object.
  * consHistObj :: (Array, [[Number]]) → String → Object
  **/
-const consHistObj = (arr = [], bins = []) => (key = "") =>
-  // For each of the nested arrays within out `bins` list...
-  bins.reduce(
-    (accum, currVal) => ({
-      // Build upon our accumulator, which we initialize as an empty object...
-      ...accum,
-      // And where each entry is an object, whereof the the key shall represent
-      // the minimum and maximum values encompassed by each bin (e.g., `15,19`),
-      // and whereof the value shall delineate all vehicles encompassed by such
-      // bin. We retrieve such values by of `filterPropByMinMax`...
-      [currVal]: filterPropByMinMax(arr, {
-        key,
-        min: currVal[0],
-        max: currVal[1],
-        // And we calculate a total by way of `Array.prototype.length`.
-      }).length,
-    }),
-    {}
-  );
+const consHistObj =
+  (arr = [], bins = []) =>
+  (key = "") =>
+    // For each of the nested arrays within out `bins` list...
+    bins.reduce(
+      (accum, currVal) => ({
+        // Build upon our accumulator, which we initialize as an empty object...
+        ...accum,
+        // And where each entry is an object, whereof the the key shall represent
+        // the minimum and maximum values encompassed by each bin (e.g., `15,19`),
+        // and whereof the value shall delineate all vehicles encompassed by such
+        // bin. We retrieve such values by of `filterPropByMinMax`...
+        [currVal]: filterPropByMinMax(arr, {
+          key,
+          min: currVal[0],
+          max: currVal[1],
+          // And we calculate a total by way of `Array.prototype.length`.
+        }).length,
+      }),
+      {}
+    );
 
 /*
  * Construct histogram object provided bins.
@@ -215,17 +217,17 @@ const consHistObj = (arr = [], bins = []) => (key = "") =>
  * {Number} min - The maximum value by which to filter our attribute.
  * {Number} width - The range encompassed by each interval.
  **/
-const consHistObjWithBins = (arr = [], { min = 0, max = 100, width = 1 }) => (
-  key = ""
-) => {
-  var bins = consBins({
-    min,
-    max,
-    width,
-  });
-  // we fudge the final bin to be ever so slightly larger than our max to ensure we bin values that equal the max.
-  // otherwise our < max checks will filter that value.
-  bins[bins.length - 1][1] = bins[bins.length - 1][1] + 0.0001;
-  return consHistObj(arr, bins)(key);
-};
+const consHistObjWithBins =
+  (arr = [], { min = 0, max = 100, width = 1 }) =>
+  (key = "") => {
+    var bins = consBins({
+      min,
+      max,
+      width,
+    });
+    // we fudge the final bin to be ever so slightly larger than our max to ensure we bin values that equal the max.
+    // otherwise our < max checks will filter that value.
+    bins[bins.length - 1][1] = bins[bins.length - 1][1] + 0.0001;
+    return consHistObj(arr, bins)(key);
+  };
 </script>

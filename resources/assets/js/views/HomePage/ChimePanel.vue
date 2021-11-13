@@ -141,14 +141,14 @@ export default {
     },
   },
   computed: {
-    orderedChimes: function() {
+    orderedChimes: function () {
       return orderBy(this.chimes, "created_at", ["desc"]);
     },
   },
-  created: function() {
+  created: function () {
     this.get_chimes();
     var self = this;
-    EventBus.$on("chimesChanged", function() {
+    EventBus.$on("chimesChanged", function () {
       self.get_chimes();
     });
   },

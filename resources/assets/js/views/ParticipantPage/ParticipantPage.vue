@@ -7,7 +7,7 @@
     </div>
     <vue-announcer />
     <div class="container">
-      <div class="card ">
+      <div class="card">
         <div class="card-header text-center">
           <ul class="nav nav-tabs card-header-tabs">
             <li class="nav-item">
@@ -100,7 +100,7 @@ export default {
   },
   props: ["user", "chimeId", "folderId"],
   methods: {
-    updateResponse: function(newResponse) {
+    updateResponse: function (newResponse) {
       var updateInPlace = false;
       this.responses.forEach((response, index) => {
         if (response.id == newResponse.id) {
@@ -112,7 +112,7 @@ export default {
         this.responses.push(newResponse);
       }
     },
-    loadChime: function() {
+    loadChime: function () {
       axios
         .get("/api/chime/" + this.chimeId + "/openQuestions")
         .then((res) => {
@@ -144,7 +144,7 @@ export default {
     },
   },
   computed: {
-    filteredSession: function() {
+    filteredSession: function () {
       if (this.folderId) {
         return this.sessions.filter(
           (e) => e.question.folder_id == this.folderId
@@ -153,7 +153,7 @@ export default {
         return this.sessions;
       }
     },
-    sortedResponses: function() {
+    sortedResponses: function () {
       function compare(a, b) {
         if (a.updated_at > b.updated_at) return -1;
         if (a.updated_at < b.updated_at) return 1;
@@ -163,7 +163,7 @@ export default {
       return this.responses.sort(compare);
     },
   },
-  mounted: function() {
+  mounted: function () {
     this.loadChime();
 
     Echo.join("session-status." + this.chimeId)
@@ -196,7 +196,7 @@ export default {
       }, 500);
     });
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     Echo.leave("session-status." + this.chimeId);
     window.Echo.connector.socket.off("reconnect");
   },

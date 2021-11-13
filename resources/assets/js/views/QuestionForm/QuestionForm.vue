@@ -82,19 +82,13 @@
         :chime_id="this.folder.chime_id"
       ></component>
     </div>
-    <div class="modal-footer ">
+    <div class="modal-footer">
       <div class="mr-auto">
-        <button class="btn btn-danger" @click="reset">
-          Reset Question
-        </button>
+        <button class="btn btn-danger" @click="reset">Reset Question</button>
       </div>
       <div class="">
-        <button class="btn btn-secondary" @click="close">
-          Cancel
-        </button>
-        <button class="btn btn-primary" @click="savePost">
-          Save
-        </button>
+        <button class="btn btn-secondary" @click="close">Cancel</button>
+        <button class="btn btn-primary" @click="savePost">Save</button>
       </div>
     </div>
   </Modal>
@@ -163,7 +157,7 @@ export default {
     "v-select": VueSelect,
     Modal,
   },
-  data: function() {
+  data: function () {
     return {
       folders: null,
       choice_text: "",
@@ -254,10 +248,10 @@ export default {
       });
   },
   methods: {
-    close: function() {
+    close: function () {
       this.$emit("close");
     },
-    reset: function() {
+    reset: function () {
       if (
         confirm(
           "Are you sure you want to reset this question, clearing all sessions and responses?"
@@ -277,7 +271,7 @@ export default {
         });
       }
     },
-    savePost: function() {
+    savePost: function () {
       var url =
         "/api/chime/" + this.folder.chime_id + "/folder/" + this.folder.id;
 
@@ -334,7 +328,7 @@ export default {
           });
       }
     },
-    handle_image_added: function(file, editor, cursor, reset) {
+    handle_image_added: function (file, editor, cursor, reset) {
       console.log("file:", file);
       let form_data = new FormData();
       form_data.append("image", file);

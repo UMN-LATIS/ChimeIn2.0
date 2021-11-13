@@ -34,9 +34,9 @@
       <button
         v-if="
           !disabled &&
-            response.id &&
-            !create_new_response &&
-            question.allow_multiple
+          response.id &&
+          !create_new_response &&
+          question.allow_multiple
         "
         class="btn btn-primary"
         variant="primary"
@@ -58,14 +58,14 @@ export default {
     };
   },
   watch: {
-    response: function(value) {
+    response: function (value) {
       if (this.response && this.response.response_info) {
         this.response_text = this.response.response_info.text;
       }
     },
   },
   methods: {
-    record_response: function() {
+    record_response: function () {
       const response = {
         question_type: "free_response",
         text: this.response_text,
@@ -74,7 +74,7 @@ export default {
       this.$emit("recordresponse", response, this.create_new_response);
       this.create_new_response = false;
     },
-    new_response: function() {
+    new_response: function () {
       this.create_new_response = true;
       this.response_text = "";
     },

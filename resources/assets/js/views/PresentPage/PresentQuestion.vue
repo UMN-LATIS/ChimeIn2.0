@@ -48,12 +48,8 @@
             v-on:click="show_results = !show_results"
           >
             <i class="material-icons left">zoom_in</i>
-            <span v-if="show_results">
-              Hide Results
-            </span>
-            <span v-else>
-              View Results
-            </span>
+            <span v-if="show_results"> Hide Results </span>
+            <span v-else> View Results </span>
           </button>
           <button
             class="btn btn-outline-primary align-items-center d-flex"
@@ -111,7 +107,7 @@ export default {
     }
   },
   computed: {
-    current_session: function() {
+    current_session: function () {
       if (this.question.current_session_id) {
         var session = this.question.sessions.find(
           (s) => s.id == this.question.current_session_id
@@ -121,11 +117,11 @@ export default {
         return false;
       }
     },
-    total_responses: function() {
+    total_responses: function () {
       if (this.question.sessions.length == 0) {
         return 0;
       }
-      return this.question.sessions.reduce(function(accumulator, session) {
+      return this.question.sessions.reduce(function (accumulator, session) {
         return accumulator + parseInt(session.responses.length);
       }, 0);
     },
@@ -134,7 +130,7 @@ export default {
     toggle() {
       this.$emit("toggle");
     },
-    start_session: function() {
+    start_session: function () {
       const url =
         "/api/chime/" +
         this.chimeId +
@@ -150,7 +146,7 @@ export default {
           console.log(err.response);
         });
     },
-    stop_session: function() {
+    stop_session: function () {
       const url =
         "/api/chime/" +
         this.chimeId +

@@ -7,7 +7,7 @@ export const questionsListener = {
     };
   },
   methods: {
-    get_chime: function() {
+    get_chime: function () {
       var chimeId;
       if (this.chimeId) {
         chimeId = this.chimeId;
@@ -16,7 +16,7 @@ export const questionsListener = {
       }
       return chimeId;
     },
-    load_questions: function() {
+    load_questions: function () {
       var folderId;
       if (this.folderId) {
         folderId = this.folderId;
@@ -110,7 +110,7 @@ export const questionsListener = {
       }
     );
   },
-  beforeDestroy: function() {
+  beforeDestroy: function () {
     Echo.leave("session-response." + this.get_chime());
     Echo.leave("session-status." + this.get_chime());
   },

@@ -19,9 +19,9 @@
         <button
           v-if="
             !disabled &&
-              response.id &&
-              !create_new_response &&
-              response.response_info.startOffset < 0
+            response.id &&
+            !create_new_response &&
+            response.response_info.startOffset < 0
           "
           class="btn btn-primary"
           variant="primary"
@@ -33,9 +33,9 @@
         <button
           v-if="
             !disabled &&
-              response.id &&
-              !create_new_response &&
-              response.response_info.startOffset >= 0
+            response.id &&
+            !create_new_response &&
+            response.response_info.startOffset >= 0
           "
           class="btn btn-primary"
           variant="primary"
@@ -46,9 +46,9 @@
         <button
           v-if="
             !disabled &&
-              response.id &&
-              !create_new_response &&
-              question.allow_multiple
+            response.id &&
+            !create_new_response &&
+            question.allow_multiple
           "
           class="btn btn-primary"
           variant="primary"
@@ -71,14 +71,14 @@ export default {
     };
   },
   watch: {
-    response: function(value) {
+    response: function (value) {
       if (this.response && this.response.response_info) {
         // this.response_text = this.response.response_info.text;
       }
     },
   },
   computed: {
-    highlightedText: function() {
+    highlightedText: function () {
       var insideAnElement = false;
       var outputString = "";
       if (this.startOffset < 0 || this.create_new_response) {
@@ -89,8 +89,8 @@ export default {
         i < this.question.question_info.question_responses.heatmap_text.length;
         i++
       ) {
-        let currentCharacter = this.question.question_info.question_responses
-          .heatmap_text[i];
+        let currentCharacter =
+          this.question.question_info.question_responses.heatmap_text[i];
         // we need to not inject new html inside tags, but we need to track our position
         if (currentCharacter == "<") {
           insideAnElement = true;
@@ -127,13 +127,13 @@ export default {
       }
       return outputString;
     },
-    startOffset: function() {
+    startOffset: function () {
       if (this.response && this.response.response_info) {
         return this.response.response_info.startOffset;
       }
       return -1;
     },
-    endOffset: function() {
+    endOffset: function () {
       if (this.response && this.response.response_info) {
         return this.response.response_info.endOffset;
       }
@@ -141,7 +141,7 @@ export default {
     },
   },
   methods: {
-    record_response: function() {
+    record_response: function () {
       const mySelection = window.getSelection();
       // console.log(mySelection);
       var startOffset = 0;
@@ -161,7 +161,8 @@ export default {
         // your document fragment to a string (w/ html)! (yay!)
         var html = div.innerHTML;
         var div2 = document.createElement("div");
-        div2.innerHTML = this.question.question_info.question_responses.heatmap_text;
+        div2.innerHTML =
+          this.question.question_info.question_responses.heatmap_text;
         startOffset = div2.innerHTML.indexOf(html);
         endOffset = startOffset + html.length;
         const response = {
@@ -188,11 +189,11 @@ export default {
       this.$emit("recordresponse", response, this.create_new_response);
       return;
     },
-    new_response: function() {
+    new_response: function () {
       window.getSelection().removeAllRanges();
       this.create_new_response = true;
     },
-    testForHighlight: function() {
+    testForHighlight: function () {
       const mySelection = window.getSelection();
       if (mySelection.isCollapsed) {
         this.disableSubmission = true;
@@ -210,10 +211,10 @@ export default {
       // this.response_text = this.response.response_info.text;
     }
   },
-  created: function() {
+  created: function () {
     window.addEventListener("mouseup", this.testForHighlight);
   },
-  destroyed: function() {
+  destroyed: function () {
     window.removeEventListener("mouseup", this.testForHighlight);
   },
 };

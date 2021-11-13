@@ -66,7 +66,7 @@ const HeatmapResponseStatistics = () =>
 
 export default {
   props: ["sessions", "session", "question", "chimeId"],
-  data: function() {
+  data: function () {
     return {
       selected: null,
     };
@@ -109,7 +109,7 @@ export default {
     },
   },
   computed: {
-    selected_session: function() {
+    selected_session: function () {
       if (this.selected === 0) {
         var newSession = {};
         var responses = this.question.sessions.map((s) => s.responses);
@@ -124,7 +124,7 @@ export default {
     this.updateSelected();
   },
   watch: {
-    question: function() {
+    question: function () {
       this.updateSelected();
     },
   },

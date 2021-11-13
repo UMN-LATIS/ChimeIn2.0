@@ -9,8 +9,8 @@ export default {
     // If you want to pass options please create a local options object
     this.addPlugin({
       id: "label-fix",
-      beforeInit: function(chart) {
-        chart.data.labels.forEach(function(value, index, array) {
+      beforeInit: function (chart) {
+        chart.data.labels.forEach(function (value, index, array) {
           var a = [];
           a.push(value.slice(0, 5));
           var i = 1;

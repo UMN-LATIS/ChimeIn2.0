@@ -53,7 +53,7 @@
             @click="delete_question"
             data-cy="delete-question-button"
           >
-            <i class="material-icons ">delete</i>
+            <i class="material-icons">delete</i>
           </a>
         </div>
       </div>
@@ -75,31 +75,31 @@ export default {
     QuestionForm,
     PrettyCheck,
   },
-  data: function() {
+  data: function () {
     return {
       show_edit: false,
     };
   },
   methods: {
-    edit_question: function() {
+    edit_question: function () {
       this.$emit("editquestion");
       this.show_edit = false;
     },
-    delete_question: function() {
+    delete_question: function () {
       this.$emit("deletequestion", this.question.id);
     },
   },
   computed: {
-    total_responses: function() {
+    total_responses: function () {
       if (this.question.sessions.length == 0) {
         return 0;
       }
-      return this.question.sessions.reduce(function(accumulator, session) {
+      return this.question.sessions.reduce(function (accumulator, session) {
         return accumulator + parseInt(session.responses.length);
       }, 0);
     },
     check: {
-      get: function() {
+      get: function () {
         if (this.question.current_session_id) {
           var session = this.question.sessions.find(
             (s) => s.id == this.question.current_session_id
@@ -109,7 +109,7 @@ export default {
           return false;
         }
       },
-      set: function(newValue) {
+      set: function (newValue) {
         if (newValue == true) {
           const url =
             "/api/chime/" +

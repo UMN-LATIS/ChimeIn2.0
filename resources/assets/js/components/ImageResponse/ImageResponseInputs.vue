@@ -24,9 +24,7 @@
         Drag your image here to upload<br />
         or click to browse to replace your image
       </p>
-      <p v-if="isSaving">
-        Uploading file...
-      </p>
+      <p v-if="isSaving">Uploading file...</p>
     </div>
     <p v-if="error">
       <strong>{{ error }}</strong>
@@ -35,9 +33,9 @@
       class="form-group"
       v-if="
         question.allow_multiple &&
-          !disabled &&
-          this.response &&
-          this.response.response_info
+        !disabled &&
+        this.response &&
+        this.response.response_info
       "
     >
       <button class="btn btn-primary" @click="clear">
@@ -95,10 +93,10 @@ export default {
     };
   },
   methods: {
-    clear: function() {
+    clear: function () {
       this.create_new_response = true;
     },
-    attachFile: function(event, fileList) {
+    attachFile: function (event, fileList) {
       this.isSaving = true;
       this.isInitial = false;
       let formData = new FormData();

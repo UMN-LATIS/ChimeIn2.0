@@ -24,9 +24,9 @@
       <button
         v-if="
           !disabled &&
-            response.id &&
-            !create_new_response &&
-            question.allow_multiple
+          response.id &&
+          !create_new_response &&
+          question.allow_multiple
         "
         class="btn btn-primary"
         variant="primary"
@@ -64,12 +64,12 @@ export default {
     };
   },
   watch: {
-    response: function(value) {
+    response: function (value) {
       this.updateScaledCoordinates();
     },
   },
   methods: {
-    updateScaledCoordinates: function() {
+    updateScaledCoordinates: function () {
       if (
         !this.response ||
         !this.response.response_info ||
@@ -98,11 +98,11 @@ export default {
         coordinate_y: py,
       };
     },
-    new_response: function() {
+    new_response: function () {
       this.create_new_response = true;
       this.image_coordinates = null;
     },
-    triggerResponse: function(event) {
+    triggerResponse: function (event) {
       var bounds = event.target.getBoundingClientRect();
       var left = bounds.left;
       var top = bounds.top;

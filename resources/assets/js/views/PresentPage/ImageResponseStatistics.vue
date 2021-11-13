@@ -67,7 +67,7 @@ export default {
     Lightbox,
   },
   props: ["responses", "question", "chimeId"],
-  data: function() {
+  data: function () {
     return {
       visible_responses: [],
       response_search: "",
@@ -78,12 +78,12 @@ export default {
     };
   },
   methods: {
-    removeImage: function(response) {
+    removeImage: function (response) {
       this.$emit("removeResponse", response);
     },
   },
   computed: {
-    images: function() {
+    images: function () {
       return this.responses.map((elem) => {
         return {
           src: "/storage/" + elem.response_info.image,

@@ -16,14 +16,14 @@
 <script>
 export default {
   props: ["question_responses"],
-  data: function() {
+  data: function () {
     return {
       hideWordcloud: this.question_responses.hideWordcloud,
     };
   },
 
   methods: {
-    emitChanges: function() {
+    emitChanges: function () {
       this.$emit("update:question_responses", {
         hideWordcloud: this.hideWordcloud,
       });

@@ -145,7 +145,7 @@ export default {
   components: {
     ChimeManagementOptions,
   },
-  data: function() {
+  data: function () {
     return {
       users: [],
       chime_name: this.chime.name,
@@ -153,30 +153,30 @@ export default {
       students_can_view: this.chime.students_can_view,
       require_login: this.chime.require_login,
       only_correct_answers_lti: this.chime.only_correct_answers_lti,
-      show_folder_title_to_participants: this.chime
-        .show_folder_title_to_participants,
+      show_folder_title_to_participants:
+        this.chime.show_folder_title_to_participants,
       synced: false,
     };
   },
   watch: {
-    join_instructions: function(val) {
+    join_instructions: function (val) {
       this.saveChime();
     },
-    students_can_view: function(val) {
+    students_can_view: function (val) {
       this.saveChime();
     },
-    require_login: function(val) {
+    require_login: function (val) {
       this.saveChime();
     },
-    only_correct_answers_lti: function(val) {
+    only_correct_answers_lti: function (val) {
       this.saveChime();
     },
-    show_folder_title_to_participants: function(val) {
+    show_folder_title_to_participants: function (val) {
       this.saveChime();
     },
   },
   computed: {
-    join_url: function() {
+    join_url: function () {
       return (
         window.location.protocol +
         "//" +
@@ -185,7 +185,7 @@ export default {
         this.chime.access_code
       );
     },
-    sorted_users: function() {
+    sorted_users: function () {
       return this.users.sort((a, b) => {
         var n = b.permission_number - a.permission_number;
         if (n !== 0) {
@@ -200,12 +200,12 @@ export default {
         return 0;
       });
     },
-    hyphenatedCode: function() {
+    hyphenatedCode: function () {
       return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
     },
   },
   methods: {
-    saveChime: function() {
+    saveChime: function () {
       var localChime = {
         ...this.chime,
       };
@@ -213,7 +213,8 @@ export default {
       localChime.students_can_view = this.students_can_view;
       localChime.require_login = this.require_login;
       localChime.only_correct_answers_lti = this.only_correct_answers_lti;
-      localChime.show_folder_title_to_participants = this.show_folder_title_to_participants;
+      localChime.show_folder_title_to_participants =
+        this.show_folder_title_to_participants;
       localChime.name = this.chime_name;
       axios
         .patch("/api/chime/" + this.chime.id, localChime)
@@ -224,13 +225,13 @@ export default {
           console.log(err.response);
         });
     },
-    deleteUser: function(key) {
+    deleteUser: function (key) {
       if (confirm("Are you sure you want to remove this user?")) {
         this.$delete(this.users, key);
         this.saveUsers();
       }
     },
-    saveUsers: function() {
+    saveUsers: function () {
       const url = "/api/chime/" + this.chime.id + "/users";
 
       axios
@@ -245,7 +246,7 @@ export default {
           console.error(err.response);
         });
     },
-    loadUsers: function() {
+    loadUsers: function () {
       const url = "/api/chime/" + this.chime.id + "/users";
       axios
         .get(url)
@@ -256,7 +257,7 @@ export default {
           console.log(err);
         });
     },
-    sync: function() {
+    sync: function () {
       axios
         .post("/api/chime/" + this.chime.id + "/sync")
         .then((res) => {
