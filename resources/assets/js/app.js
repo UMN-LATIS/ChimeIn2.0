@@ -9,8 +9,6 @@ import pluralizeFilter from "./common/pluralize.filter.js";
 import router from "./router.js";
 import store from "./store.js";
 
-import "bootstrap";
-
 registerSocketIOClient();
 registerAxios();
 registerEcho();
