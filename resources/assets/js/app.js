@@ -1,6 +1,5 @@
 import process from "process";
 import Vue from "vue";
-import stopword from "stopword";
 import queryString from "query-string";
 import fullscreen from "vue-fullscreen";
 import PrettyCheckbox from "pretty-checkbox-vue";
@@ -11,8 +10,6 @@ import router from './router.js';
 import store from './store.js';
 import "./bootstrap.js";
 
-
-window.sw = stopword;
 window.queryString = queryString;
 
 Vue.use(fullscreen);
