@@ -11,7 +11,7 @@
     <ErrorDialog />
 
     <div class="container-fluid presentContainer">
-        <fullscreen ref="fullscreen" @change="fullscreenChange" background="white">
+        <fullscreen ref="fullscreen" @change="fullscreenChange">
             <PresentQuestion v-if="current_question_item" :usersCount="usersCount" :question="current_question_item" :chimeId="chimeId" :folder="folder" @nextQuestion="next_question" @previousQuestion="previous_question" @sessionUpdated="load_questions" @toggle="toggle" @reload="reload" />
             <div v-if="fullscreen && host" class="alert alert-info text-center fixed-bottom joinbox" role="alert">
                 <span class="text-center">Go to <strong>{{ host }}</strong> and enter code <strong>{{ hyphenatedCode }}</strong></span>
@@ -29,6 +29,9 @@
 }
 .joinbox {
     margin: 10px;
+}
+.fullscreen {
+    background: #fff;
 }
 
 </style>
