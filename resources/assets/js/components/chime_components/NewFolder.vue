@@ -50,17 +50,17 @@
 <script>
 export default {
   props: ["chime"],
-  data: function() {
+  data: function () {
     return {
       folder_name: "",
     };
   },
   methods: {
-    filter_folder: function() {
+    filter_folder: function () {
       // NOTE Filter folder mechanic muted
       // this.$emit('filterfolder', this.folder_name);
     },
-    new_folder: function() {
+    new_folder: function () {
       this.$emit("newfolder", this.folder_name);
       this.folder_name = "";
       document.activeElement.blur();

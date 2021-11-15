@@ -1,19 +1,18 @@
 <template>
-     <img class="img-fluid max-height-image" v-bind:src="'/storage/' + question.question_info.question_responses.image">
+  <img
+    class="img-fluid max-height-image"
+    v-bind:src="'/storage/' + question.question_info.question_responses.image"
+  />
 </template>
 
 <script>
 export default {
-    props: ['question']
+  props: ["question"],
 };
 </script>
 
-
 <style>
-
 .max-height-image {
-    max-height: 70vh
+  max-height: 70vh;
 }
-
-
 </style>

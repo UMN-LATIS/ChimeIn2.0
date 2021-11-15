@@ -1,11 +1,9 @@
 <template>
-    <div>
-        
-    </div>
+  <div></div>
 </template>
 
 <script>
 export default {
-    props: ['question', 'response', 'disabled'],
+  props: ["question", "response", "disabled"],
 };
 </script>
