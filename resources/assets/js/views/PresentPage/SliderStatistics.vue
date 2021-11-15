@@ -65,6 +65,7 @@ export default {
         }
       )("choice");
     },
+    //FIXME: Rewrite this to simplify.
     labels() {
       if (
         !this.question.question_info.question_responses.range_type ||
@@ -116,6 +117,7 @@ export default {
 
         return outputArray;
       }
+      return [];
     },
     values() {
       return Object.values(this.binnedValues);

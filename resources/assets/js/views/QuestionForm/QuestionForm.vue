@@ -77,6 +77,7 @@
       </div>
 
       <component
+        v-if="question_type !== 'image_response'"
         :is="question_type + '_response'"
         :question_responses.sync="question_responses"
         :chime_id="folder.chime_id"
@@ -111,7 +112,6 @@ window.katex = katex;
 
 import { VueEditor, Quill } from "vue2-editor";
 import MultipleChoiceQuestionOptions from "./MultipleChoiceQuestionOptions.vue";
-import ImageResponseQuestionOptions from "./ImageResponseQuestionOptions.vue";
 import SliderResponseQuestionOptions from "./SliderResponseQuestionOptions.vue";
 import FreeResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
 import TextHeatmapResponseQuestionOptions from "./TextHeatmapResponseQuestionOptions.vue";
@@ -147,7 +147,6 @@ export default {
   components: {
     VueEditor,
     multiple_choice_response: MultipleChoiceQuestionOptions,
-    image_response_response: ImageResponseQuestionOptions,
     slider_response_response: SliderResponseQuestionOptions,
     free_response_response: FreeResponseQuestionOptions,
     text_heatmap_response_response: TextHeatmapResponseQuestionOptions,
@@ -265,8 +264,7 @@ export default {
           "/question/" +
           this.question.id +
           "/responses";
-        const self = this;
-        axios.delete(url).then((res) => {
+        axios.delete(url).then(() => {
           this.$emit("edited");
         });
       }

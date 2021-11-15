@@ -58,19 +58,22 @@ export default {
     };
   },
   watch: {
-    response: function (value) {
+    response() {
       if (this.response && this.response.response_info) {
         this.response_text = this.response.response_info.text;
       }
     },
   },
   mounted() {
+    const hasOwn = Object.prototype.hasOwnProperty.call;
+    const response = this.response;
+
     if (
-      this.response &&
-      this.response.hasOwnProperty("response_info") &&
-      this.response.response_info.hasOwnProperty("text")
+      response &&
+      hasOwn(response, "response_info") &&
+      hasOwn(response.response_info, "text")
     ) {
-      this.response_text = this.response.response_info.text;
+      this.response_text = response.response_info.text;
     }
   },
   methods: {

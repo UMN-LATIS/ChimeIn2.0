@@ -133,22 +133,6 @@ export default {
       return -1;
     },
   },
-  watch: {
-    response: function (value) {
-      if (this.response && this.response.response_info) {
-        // this.response_text = this.response.response_info.text;
-      }
-    },
-  },
-  mounted() {
-    if (
-      this.response &&
-      this.response.hasOwnProperty("response_info") &&
-      this.response.response_info.hasOwnProperty("startOffset")
-    ) {
-      // this.response_text = this.response.response_info.text;
-    }
-  },
   created: function () {
     window.addEventListener("mouseup", this.testForHighlight);
   },
@@ -165,8 +149,6 @@ export default {
       if (!mySelection.isCollapsed) {
         var range = window.getSelection().getRangeAt(0);
 
-        // plain text of selected range (if you want it w/o html)
-        var text = window.getSelection();
         // document fragment with html for selection
         var fragment = range.cloneContents();
         // make new element, insert document fragment, then get innerHTML!

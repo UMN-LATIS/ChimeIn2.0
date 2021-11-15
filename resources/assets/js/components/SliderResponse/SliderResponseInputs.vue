@@ -83,6 +83,7 @@
 </style>
 
 <script>
+import get from "lodash/get";
 export default {
   props: ["question", "response", "disabled"],
   data() {
@@ -106,21 +107,17 @@ export default {
         return 50;
       }
     },
-    left_choice_text: function () {
-      if (
-        this.question &&
-        "left_choice_text" in this.question.question_info.question_responses
-      ) {
-        return this.question.question_info.question_responses.left_choice_text;
-      }
+    left_choice_text() {
+      return get(
+        this.question.question_info.question_responses.left_choice_text,
+        null
+      );
     },
-    right_choice_text: function () {
-      if (
-        this.question &&
-        "right_choice_text" in this.question.question_info.question_responses
-      ) {
-        return this.question.question_info.question_responses.right_choice_text;
-      }
+    right_choice_text() {
+      return get(
+        this.question.question_info.question_responses.right_choice_text,
+        null
+      );
     },
   },
   watch: {

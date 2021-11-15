@@ -42,7 +42,6 @@
         >
           <option>Qualitative</option>
           <option>Numeric (Linear)</option>
-          <!-- <option>Logarithmic</option> -->
         </select>
       </div>
     </div>
@@ -61,10 +60,10 @@ export default {
     };
   },
   watch: {
-    left_choice_text: function (newValue) {
+    left_choice_text() {
       this.checkValues();
     },
-    right_choice_text: function (newValue) {
+    right_choice_text() {
       this.checkValues();
     },
   },

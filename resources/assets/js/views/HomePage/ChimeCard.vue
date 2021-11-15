@@ -53,7 +53,7 @@ export default {
       if (confirmation) {
         axios
           .delete("/api/chime/" + this.chime.id)
-          .then((res) => {
+          .then(() => {
             this.$emit("updatedChime");
           })
           .catch((err) => {

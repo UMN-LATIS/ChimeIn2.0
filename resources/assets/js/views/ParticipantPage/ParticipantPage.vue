@@ -54,8 +54,13 @@
               <div v-if="responses.length < 1" class="text-center">
                 <h1>No Closed Questions</h1>
               </div>
-              <Response v-else./ParticipantPrompt.vue v-for="(response, i) in
-              sortedResponses" :key="i" :chime="chime" :response="response" />
+              <Response
+                v-else
+                v-for="(response, i) in sortedResponses"
+                :key="i"
+                :chime="chime"
+                :response="response"
+              />
             </div>
           </div>
           <p class="text-center m-0">
@@ -115,7 +120,7 @@ export default {
         return 0;
       }
 
-      return this.responses.sort(compare);
+      return [...this.responses].sort(compare);
     },
   },
   mounted: function () {

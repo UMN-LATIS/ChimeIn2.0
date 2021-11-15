@@ -5,13 +5,15 @@
 
       <template v-if="question.sessions.length > 0">
         <select v-model="selected" class="mb-3 form-control col-6">
-          <template
+          <option
+            :value="question.value"
             v-for="question in question.sessions
               .map((el) => ({ value: el.id, text: el.created_at }))
               .concat({ value: 0, text: 'All' })"
+            :key="question.id"
           >
-            <option :value="question.value">{{ question.text }}</option>
-          </template>
+            {{ question.text }}
+          </option>
         </select>
 
         <component
@@ -102,12 +104,7 @@ export default {
   },
   methods: {
     updateSelected() {
-      // if(this.question.current_session_id) {
-      // this.selected = this.question.current_session_id;
-      // }
-      // else if(this.question.sessions.length > 0) {
       this.selected = 0;
-      // }
     },
     removeResponse(response) {
       const url =
@@ -120,7 +117,7 @@ export default {
 
       axios
         .delete(url)
-        .then((res) => {
+        .then(() => {
           this.$emit("reload");
         })
         .catch((err) => {

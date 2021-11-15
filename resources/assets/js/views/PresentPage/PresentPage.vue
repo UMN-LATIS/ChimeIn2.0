@@ -100,7 +100,7 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
+    $route(to) {
       this.current_question = parseInt(to.params.questionId);
     },
   },

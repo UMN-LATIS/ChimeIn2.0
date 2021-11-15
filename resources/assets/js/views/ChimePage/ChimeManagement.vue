@@ -169,7 +169,7 @@ export default {
       );
     },
     sorted_users: function () {
-      return this.users.sort((a, b) => {
+      return [...this.users].sort((a, b) => {
         var n = b.permission_number - a.permission_number;
         if (n !== 0) {
           return n;
@@ -188,19 +188,19 @@ export default {
     },
   },
   watch: {
-    join_instructions: function (val) {
+    join_instructions() {
       this.saveChime();
     },
-    students_can_view: function (val) {
+    students_can_view() {
       this.saveChime();
     },
-    require_login: function (val) {
+    require_login() {
       this.saveChime();
     },
-    only_correct_answers_lti: function (val) {
+    only_correct_answers_lti() {
       this.saveChime();
     },
-    show_folder_title_to_participants: function (val) {
+    show_folder_title_to_participants() {
       this.saveChime();
     },
   },
@@ -221,7 +221,7 @@ export default {
       localChime.name = this.chime_name;
       axios
         .patch("/api/chime/" + this.chime.id, localChime)
-        .then((res) => {
+        .then(() => {
           this.$emit("update:chime", localChime);
         })
         .catch((err) => {

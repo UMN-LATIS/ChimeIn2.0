@@ -25,21 +25,8 @@
       </small>
       <hr />
     </div>
-    <!-- <div class="card-content" v-else>
-            <span class="card-title">
-                <h4>'No Question Yet!'</h4>
-            </span>
-        </div> -->
   </div>
 </template>
-
-<style>
-.questionContainer {
-  /*border: 1px solid black;*/
-  /*border-radius: 5px;*/
-  /*margin: 5px;*/
-}
-</style>
 
 <script>
 import MultipleChoice from "../../components/MultipleChoice/MultipleChoiceInputs.vue";
@@ -96,8 +83,6 @@ export default {
   },
   methods: {
     record_response: function (response, newResponse = false) {
-      const self = this;
-
       var url =
         "/api/chime/" +
         this.chime.id +
@@ -128,7 +113,6 @@ export default {
             this.error = err.response;
           }
         });
-      // document.activeElement.blur();
     },
   },
 };

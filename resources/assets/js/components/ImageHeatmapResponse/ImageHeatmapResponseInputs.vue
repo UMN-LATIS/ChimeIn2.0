@@ -62,7 +62,7 @@ export default {
     };
   },
   watch: {
-    response: function (value) {
+    response() {
       this.updateScaledCoordinates();
     },
   },
@@ -73,10 +73,12 @@ export default {
     window.removeEventListener("resize", this.updateScaledCoordinates);
   },
   mounted() {
+    const hasOwn = Object.prototype.hasOwnProperty.call;
+    const response = this.response;
     if (
-      this.response &&
-      this.response.hasOwnProperty("response_info") &&
-      this.response.response_info.hasOwnProperty("image_coordinates")
+      response &&
+      hasOwn(response, "response_info") &&
+      hasOwn(response.response_info, "image_coordinates")
     ) {
       this.updateScaledCoordinates();
     }
@@ -92,12 +94,7 @@ export default {
       }
 
       var targetImage = this.$refs["targetImage"];
-      var boundingRect = targetImage.getBoundingClientRect();
 
-      var left = boundingRect.left;
-      var top = boundingRect.top;
-      // var x = targetImage.clientX - left;
-      // var y = targetImage.clientY - top;
       var cw = targetImage.clientWidth;
       var ch = targetImage.clientHeight;
       var iw = targetImage.naturalWidth;

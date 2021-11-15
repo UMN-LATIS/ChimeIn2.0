@@ -110,12 +110,9 @@ export default {
             "/question/" +
             this.question.id;
 
-          axios
-            .post(url, {})
-            .then((res) => {})
-            .catch((err) => {
-              console.log(err.response);
-            });
+          axios.post(url, {}).catch((err) => {
+            console.error(err.response);
+          });
         } else {
           const url =
             "/api/chime/" +
@@ -126,12 +123,9 @@ export default {
             this.question.id +
             "/stopSession/";
 
-          axios
-            .put(url, {})
-            .then((res) => {})
-            .catch((err) => {
-              console.log(err.response);
-            });
+          axios.put(url, {}).catch((err) => {
+            console.error(err.response);
+          });
         }
       },
     },

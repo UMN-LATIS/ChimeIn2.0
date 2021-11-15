@@ -124,16 +124,17 @@ export default {
     buildWords: throttle(function () {
       var start = performance.now();
       const words = this.responses.map((r) => r.response_info.text).join("\n ");
+      let filteredWords = words;
+      let topics = [];
 
       if (this.textProcessing) {
-        var doc = nlp(words);
+        const doc = nlp(words);
 
-        var topics = doc.topics().out("array");
+        topics = doc.topics().out("array");
 
-        // var quotes = doc.quotations().out('array');
-        var filteredWords = words;
+        filteredWords = words;
 
-        for (var i = 0; i < topics.length; i++) {
+        for (let i = 0; i < topics.length; i++) {
           // remove topics words from our filtered words
           filteredWords = filteredWords.replace(
             new RegExp(
@@ -143,9 +144,6 @@ export default {
             ""
           );
         }
-      } else {
-        var filteredWords = words;
-        var topics = [];
       }
 
       if (filteredWords.length == 0) {
@@ -164,14 +162,14 @@ export default {
         if (w.length < 2 || !isNaN(w)) {
           return acc;
         }
-        var stem = stemmer(w.toLowerCase().replace(/\"/g, ""));
+        var stem = stemmer(w.toLowerCase().replace(/"/g, ""));
         const i = acc.findIndex((e) => e.stem === stem);
 
         if (i > -1) {
           acc[i].value += 1;
         } else {
           acc.push({
-            name: w.replace(/\"/g, ""),
+            name: w.replace(/"/g, ""),
             value: 1,
             stem: stem,
           });

@@ -302,7 +302,7 @@ export default {
         });
       }
     },
-    swap_question(event, originalEvent) {
+    swap_question() {
       const newOrder = Array.from(this.questions.entries()).map((e) => {
         return {
           order: e[0] + 1,
@@ -360,12 +360,11 @@ export default {
       }
     },
     edit_folder: function () {
-      const self = this;
       axios
         .put("/api/chime/" + this.chimeId + "/folder/" + this.folderId, {
           folder_name: this.folder.name,
         })
-        .then((res) => {
+        .then(() => {
           this.show_edit_folder = false;
         })
         .catch((err) => {
@@ -380,7 +379,7 @@ export default {
 
         axios
           .delete(url)
-          .then((res) => {
+          .then(() => {
             this.$router.push({
               name: "chime",
               params: {
@@ -407,10 +406,7 @@ export default {
         this.folder.id +
         "/question/startAll";
 
-      axios
-        .post(url, {})
-        .then((res) => {})
-        .catch((err) => {});
+      axios.post(url, {}).catch(console.error);
     },
     closeAll: function () {
       const url =
@@ -420,10 +416,7 @@ export default {
         this.folder.id +
         "/question/stopAll";
 
-      axios
-        .put(url, {})
-        .then((res) => {})
-        .catch((err) => {});
+      axios.put(url, {}).catch(console.error);
     },
     closeOthers: function () {
       for (var openSession of this.otherFolderSessions) {
@@ -436,10 +429,7 @@ export default {
           openSession.question.id +
           "/stopSession/";
 
-        axios
-          .put(url, {})
-          .then((res) => {})
-          .catch((err) => {});
+        axios.put(url, {}).catch(console.error);
       }
       this.hideOpenAlert = true;
     },
@@ -478,7 +468,7 @@ export default {
             folder_id: this.selected_folder,
           }
         )
-        .then((res) => {
+        .then(() => {
           this.load_folder();
           this.load_questions();
         })

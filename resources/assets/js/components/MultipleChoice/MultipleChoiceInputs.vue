@@ -53,17 +53,19 @@ export default {
         this.$emit("recordresponse", response, false);
       }
     },
-    response: function (value) {
+    response: function () {
       if (this.response && this.response.response_info) {
         this.selected = this.response.response_info.choice;
       }
     },
   },
   mounted() {
+    const hasOwn = Object.prototype.hasOwnProperty.call;
+    const response = this.response;
     if (
-      this.response &&
-      this.response.hasOwnProperty("response_info") &&
-      this.response.response_info.hasOwnProperty("choice")
+      response &&
+      hasOwn(response, "response_info") &&
+      hasOwn(response.response_info, "choice")
     ) {
       this.selected = this.response.response_info.choice;
     }
