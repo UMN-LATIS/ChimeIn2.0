@@ -29,14 +29,14 @@ export default {
     };
   },
   computed: {
-    selectOptions: function() {
+    selectOptions: function () {
       return this.question.question_info.question_responses.map(
         (response) => response.text
       );
     },
   },
   watch: {
-    selected: function(newValue, value) {
+    selected: function (newValue, value) {
       if (
         newValue !== null &&
         newValue !== value &&
@@ -53,7 +53,7 @@ export default {
         this.$emit("recordresponse", response, false);
       }
     },
-    response: function(value) {
+    response: function (value) {
       if (this.response && this.response.response_info) {
         this.selected = this.response.response_info.choice;
       }

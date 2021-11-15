@@ -36,7 +36,7 @@ export default {
   components: {
     GChart,
   },
-  data: function() {
+  data: function () {
     return {
       visible_responses: [],
       response_search: "",
@@ -117,7 +117,7 @@ export default {
         position: "relative",
       };
     },
-    chartData: function() {
+    chartData: function () {
       var questionArray = this.question.question_info.question_responses.map(
         (q) => {
           var questionText = isObject(q) ? q.text : q;

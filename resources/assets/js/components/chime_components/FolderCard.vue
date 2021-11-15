@@ -33,7 +33,7 @@
         </router-link>
       </li>
       <li class="folder-card__action">
-        <router-link 
+        <router-link
           :to="{
             name: 'present',
             params: { chimeId: chime.id, folderId: folder.id },
@@ -70,7 +70,7 @@ export default {
   border: 1px solid var(--gold-dark);
 }
 a {
-  color: var(--black)
+  color: var(--black);
 }
 
 a:hover {
@@ -117,7 +117,6 @@ a:hover {
   padding: 1.5rem 1rem 1.5rem 1.5rem;
   flex-grow: 1;
 }
-
 
 .folder-card__name {
   margin: 0;

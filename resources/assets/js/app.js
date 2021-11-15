@@ -7,7 +7,7 @@ import VueRouter from "vue-router";
 import fullscreen from "vue-fullscreen";
 import PrettyCheckbox from "pretty-checkbox-vue";
 import VueAnnouncer from "vue-announcer";
-import jQuery from 'jquery';
+import jQuery from "jquery";
 import "./bootstrap.js";
 
 // COMPONENTS
@@ -58,7 +58,7 @@ Vue.use(VueAnnouncer);
 
 Vue.filter("pluralize", (word, amount) => (amount === 1 ? word : `${word}s`));
 
-Vue.directive("tooltip", function(el, binding) {
+Vue.directive("tooltip", function (el, binding) {
   jQuery(el).tooltip({
     title: binding.value,
     placement: binding.arg,

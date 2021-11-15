@@ -1,18 +1,11 @@
 <template>
-    <div>
-        
-    </div>
+  <div></div>
 </template>
 
 <script>
 export default {
-    props: ['question']
+  props: ["question"],
 };
 </script>
 
-
-<style>
-
-
-
-</style>
+<style></style>

@@ -3,9 +3,7 @@
     <header
       v-if="Array.isArray(question_responses) && question_responses.length"
     >
-      <h3 class="form-section__heading">
-        Choices
-      </h3>
+      <h3 class="form-section__heading">Choices</h3>
       <p class="text-muted">Check to mark choice correct.</p>
     </header>
 
@@ -239,11 +237,11 @@ export default {
       this.$emit("update:question_responses", updatedResponses);
 
       // focus new choice on next tick
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         this.focusEditor();
       });
     },
-    createTrueFalseQuestion: function() {
+    createTrueFalseQuestion: function () {
       const updatedResponses = [
         { text: "True", correct: false },
         { text: "False", correct: false },
