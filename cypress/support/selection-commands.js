@@ -11,10 +11,7 @@
  * low level command used by `setSelection`
  */
 Cypress.Commands.add("selection", { prevSubject: true }, (subject, fn) => {
-  cy.wrap(subject)
-    .trigger("mousedown")
-    .then(fn)
-    .trigger("mouseup");
+  cy.wrap(subject).trigger("mousedown").then(fn).trigger("mouseup");
 
   cy.document().trigger("selectionchange");
   return cy.wrap(subject);

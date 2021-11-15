@@ -12,9 +12,7 @@ describe("happy path", () => {
 
   it("creates a new chime, folder, and multiple choice question", () => {
     // create a chime
-    cy.get("main")
-      .contains("Add a Chime")
-      .click();
+    cy.get("main").contains("Add a Chime").click();
     cy.get("#chime_name_input").type("Test Chime");
     cy.get("#joinInstructions").check();
     cy.get("[data-cy=create-chime-button]").click();
@@ -23,14 +21,10 @@ describe("happy path", () => {
 
     // create a folder
     cy.get("#createFolder").type("Test Folder 1");
-    cy.get("[data-cy=create-folder-button]")
-      .contains("Create")
-      .click();
+    cy.get("[data-cy=create-folder-button]").contains("Create").click();
 
     // go into the folder
-    cy.get("[data-cy=folder-card]")
-      .contains("Test Folder 1")
-      .click();
+    cy.get("[data-cy=folder-card]").contains("Test Folder 1").click();
     cy.url().should("match", /chime\/[0-9]+\/folder\/[0-9]+$/);
     cy.get("h1").should("contain", "Test Folder 1");
 
