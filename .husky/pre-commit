@@ -16,4 +16,4 @@ do
 done
 
 # Test the app
-# npm testnpm test
+# npm test
