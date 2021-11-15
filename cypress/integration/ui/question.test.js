@@ -230,10 +230,7 @@ describe("question", () => {
             .as("test-response")
             .should("contain", "Red");
 
-          cy.get("@test-response")
-            .click()
-            .clear()
-            .type("Updated response");
+          cy.get("@test-response").click().clear().type("Updated response");
           cy.contains("Save").click();
 
           // expect that question is updated in presentation view
@@ -270,9 +267,7 @@ describe("question", () => {
           cy.get("[data-cy=edit-question-button]").click();
 
           // remove the first response
-          cy.get("[data-cy=remove-response-button]")
-            .first()
-            .click();
+          cy.get("[data-cy=remove-response-button]").first().click();
 
           cy.contains("Save").click();
 
@@ -638,12 +633,12 @@ describe("question", () => {
           cy.visit(`/join/${testChime.access_code}`);
           cy.get("[data-cy=slider-response-input]")
             .invoke("val", 25)
-            .then(($input) => { 
+            .then(($input) => {
               // using native event triggering rather
               // than `.trigger`.
               // see: https://github.com/cypress-io/cypress/issues/1570
 
-              $input[0].dispatchEvent(new Event('change'));
+              $input[0].dispatchEvent(new Event("change"));
             });
           cy.wait("@participantResponse", { requestTimeout: 3000 });
         })
