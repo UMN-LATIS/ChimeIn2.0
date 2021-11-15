@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask" @mousedown="close" v-show="show">
+    <div v-show="show" class="modal-mask" @mousedown="close">
       <div class="modal-container" @mousedown.stop>
         <slot></slot>
       </div>
@@ -10,13 +10,7 @@
 
 <script>
 export default {
-  template: "#modal-template",
   props: ["show"],
-  methods: {
-    close: function () {
-      this.$emit("close");
-    },
-  },
   mounted: function () {
     document.addEventListener("keydown", (e) => {
       if (this.show && e.keyCode == 27) {
@@ -24,6 +18,12 @@ export default {
       }
     });
   },
+  methods: {
+    close: function () {
+      this.$emit("close");
+    },
+  },
+  template: "#modal-template",
 };
 </script>
 
