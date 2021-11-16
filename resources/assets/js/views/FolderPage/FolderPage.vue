@@ -31,7 +31,7 @@
             aria-label="Folder Controls"
           >
             <button
-              class="btn btn-sm btn-outline-info align-items-center d-flex"
+              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="show_edit_folder = !show_edit_folder"
             >
               Folder Settings <i class="material-icons pointer">edit</i>
@@ -40,29 +40,35 @@
             <button
               dusk="new-question-button"
               data-cy="new-question-button"
-              class="btn btn-sm btn-outline-info align-items-center d-flex"
+              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="showModal = true"
             >
               New Question <i class="material-icons pointer">add</i>
             </button>
             <button
               dusk="open-all-button"
-              class="btn btn-sm btn-outline-info align-items-center d-flex"
+              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="openAll"
             >
               Open All <i class="material-icons pointer">visibility</i>
             </button>
             <button
               dusk="close-all-button"
-              class="btn btn-sm btn-outline-info align-items-center d-flex"
+              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="closeAll"
             >
               Close All <i class="material-icons pointer">visibility_off</i>
             </button>
             <router-link
-              :to="{ name: 'chimeStudent', params: { chimeId: chimeId } }"
+              :to="{
+                name: 'chimeStudent',
+                params: { chimeId: chimeId },
+                query: {
+                  viewMode: 'participant',
+                },
+              }"
               tag="button"
-              class="btn btn-sm btn-outline-info align-items-center d-flex"
+              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
               Participant View
               <i class="material-icons">search</i>
@@ -73,7 +79,7 @@
                 params: { chimeId: chimeId, folderId: folderId },
               }"
               tag="button"
-              class="btn btn-sm btn-outline-info align-items-center d-flex"
+              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
               Present
               <i class="material-icons">play_arrow</i>

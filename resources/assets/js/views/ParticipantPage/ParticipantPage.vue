@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div
+    class="participant-page"
+    :class="{ 'participant-page--in-participant-viewmode': inParticipantView }"
+  >
+    <ViewModeNotice v-if="inParticipantView" />
     <NavBar title="Home" :user="user" :link="'/'" />
     <ErrorDialog />
     <div v-if="error" class="alert alert-warning" role="alert">
@@ -79,12 +83,18 @@
 .nav-item {
   width: 50%;
 }
+
+/* .participant-page--in-participant-viewmode {
+  border: 0.5rem solid #333;
+} */
 </style>
 <script>
+import get from "lodash/get";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import ParticipantPrompt from "./ParticipantPrompt.vue";
 import Response from "./ParticipantResponse.vue";
+import ViewModeNotice from "./ParticipantPageViewModeNotice.vue";
 
 export default {
   components: {
@@ -92,6 +102,7 @@ export default {
     NavBar,
     ParticipantPrompt,
     Response,
+    ViewModeNotice,
   },
   props: ["user", "chimeId", "folderId"],
   data() {
@@ -104,6 +115,12 @@ export default {
     };
   },
   computed: {
+    inParticipantView() {
+      const viewMode = get(this, "$route.query.viewMode", null);
+      if (!viewMode) return false;
+
+      return viewMode.toLowerCase() === "participant";
+    },
     filteredSession: function () {
       if (this.folderId) {
         return this.sessions.filter(

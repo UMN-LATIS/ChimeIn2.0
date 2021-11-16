@@ -219,6 +219,13 @@
   "ltisettings.update": {
     "name": "ltisettings.update",
     "domain": null,
+    "action": "App\\Http\\Controllers\\LTIHandler@saveLTISettings",
+    "uri": "lti/saveLTISettings/{chime}",
+    "method": ["PUT"]
+  },
+  "ltisettings13.update": {
+    "name": "ltisettings13.update",
+    "domain": null,
     "action": "App\\Http\\Controllers\\LTI13Handler@saveLTISettings",
     "uri": "lti13/saveLTISettings/{chime}",
     "method": ["PUT"]

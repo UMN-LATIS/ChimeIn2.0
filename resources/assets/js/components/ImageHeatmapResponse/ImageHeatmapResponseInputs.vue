@@ -73,15 +73,7 @@ export default {
     window.removeEventListener("resize", this.updateScaledCoordinates);
   },
   mounted() {
-    const hasOwn = Object.prototype.hasOwnProperty.call;
-    const response = this.response;
-    if (
-      response &&
-      hasOwn(response, "response_info") &&
-      hasOwn(response.response_info, "image_coordinates")
-    ) {
-      this.updateScaledCoordinates();
-    }
+    this.updateScaledCoordinates();
   },
   methods: {
     updateScaledCoordinates: function () {
@@ -137,15 +129,6 @@ export default {
       this.$emit("recordresponse", response, this.create_new_response);
       this.create_new_response = false;
     },
-    // record_response: function() {
-    //     const response = {
-    //         question_type: 'heatmap_response',
-    //         image_coordinates: this.image_coordinates
-    //     }
-
-    //     this.$emit('recordresponse', response, false);
-
-    // }
   },
 };
 </script>
