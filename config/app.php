@@ -180,7 +180,8 @@ return [
 
         StudentAffairsUwm\Shibboleth\ShibbolethServiceProvider::class,
         StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
-        Lab404\Impersonate\ImpersonateServiceProvider::class
+        Lab404\Impersonate\ImpersonateServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
     ],
 
     /*
