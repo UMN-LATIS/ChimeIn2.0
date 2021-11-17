@@ -2,7 +2,7 @@
   <div>
     <div class="col-sm-12">
       <div
-        v-if="image_coordinates"
+        v-if="image_coordinates && targetImageLoaded"
         class="clickPointer"
         :style="{
           top: image_coordinates.coordinate_y + 'px',
@@ -15,7 +15,7 @@
         class="img-fluid max-height-image"
         :src="'/storage/' + question.question_info.question_responses.image"
         @click="triggerResponse"
-        @load="updateScaledCoordinates"
+        @load="handleTargetImageLoaded"
       />
     </div>
     <div class="col-sm-12">
@@ -53,10 +53,13 @@
 </style>
 
 <script>
+import get from "lodash/get";
+
 export default {
   props: ["question", "response", "disabled"],
   data() {
     return {
+      targetImageLoaded: false,
       image_coordinates: null,
       create_new_response: false,
     };
@@ -72,28 +75,22 @@ export default {
   destroyed() {
     window.removeEventListener("resize", this.updateScaledCoordinates);
   },
-  mounted() {
-    const hasOwn = Object.prototype.hasOwnProperty.call;
-    const response = this.response;
-    if (
-      response &&
-      hasOwn(response, "response_info") &&
-      hasOwn(response.response_info, "image_coordinates")
-    ) {
-      this.updateScaledCoordinates();
-    }
-  },
+
   methods: {
-    updateScaledCoordinates: function () {
-      if (
-        !this.response ||
-        !this.response.response_info ||
-        !this.response.response_info.image_coordinates
-      ) {
+    handleTargetImageLoaded() {
+      this.targetImageLoaded = true;
+      this.updateScaledCoordinates();
+    },
+    updateScaledCoordinates() {
+      const targetImage = this.$refs["targetImage"];
+      const imageCoordinates = get(
+        this,
+        "response.response_info.image_coordinates"
+      );
+
+      if (!imageCoordinates || !targetImage) {
         return;
       }
-
-      var targetImage = this.$refs["targetImage"];
 
       var cw = targetImage.clientWidth;
       var ch = targetImage.clientHeight;

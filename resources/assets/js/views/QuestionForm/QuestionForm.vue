@@ -299,8 +299,7 @@ export default {
         url = url + "/question/" + this.question.id;
         axios
           .put(url, responseBlock)
-          .then((res) => {
-            console.log(res);
+          .then(() => {
             this.$emit("edited");
           })
           .catch((err) => {
