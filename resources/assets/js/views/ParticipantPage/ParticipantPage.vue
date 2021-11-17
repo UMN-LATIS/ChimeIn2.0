@@ -92,6 +92,10 @@ import NavBar from "../../components/NavBar.vue";
 import ParticipantPrompt from "./ParticipantPrompt.vue";
 import Response from "./ParticipantResponse.vue";
 import ViewModeNotice from "./ViewModeNotice.vue";
+import {
+  selectCanvasCourseUrl,
+  selectJoinUrl,
+} from "../../helpers/chimeSelectors.js";
 
 export default {
   components: {
@@ -113,13 +117,10 @@ export default {
   },
   computed: {
     canvasCourseUrl() {
-      const url = this.chime.lti_return_url;
-      if (!url) return null;
-      const found = url.match(/^(?<courseUrl>http.*\/courses\/\d+).*/);
-      return found.groups.courseUrl || null;
+      return selectCanvasCourseUrl(this.chime);
     },
     joinUrl() {
-      return `${window.location.origin}/join/${this.chime.access_code}`;
+      return selectJoinUrl(this.chime);
     },
     inParticipantView() {
       const viewMode = get(this, "$route.query.viewMode", null);
