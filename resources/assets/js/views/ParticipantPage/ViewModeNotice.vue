@@ -10,10 +10,11 @@
         <a :href="canvasUrl || joinUrl">{{ canvasUrl || joinUrl }}</a>
       </p>
     </div>
-
-    <button @click="leaveParticipantView" class="btn btn-outline-secondary">
-      Leave Participant View
-    </button>
+    <div>
+      <router-link :to="callbackUrl" class="btn btn-outline-secondary">
+        Leave Participant View
+      </router-link>
+    </div>
   </div>
 </template>
 <script>
@@ -28,10 +29,10 @@ export default {
       default: "",
     },
   },
-  data() {
-    return {
-      historyLengthOnMount: 0,
-    };
+  computed: {
+    callbackUrl() {
+      return this.$route.query.callbackUrl || "/";
+    },
   },
   methods: {
     leaveParticipantView() {
@@ -113,15 +114,19 @@ export default {
 .view-mode p {
   margin: 0.5em 0;
 }
-.view-mode button {
-  font-size: 0.8rem;
+
+.view-mode > div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.view-mode .btn {
+  font-size: 1rem;
   border-color: var(--color-viewmode-link);
   color: var(--color-viewmode-link);
-  align-self: center;
-  justify-self: flex-end;
 }
-.view-mode button:hover,
-.view-mode button:focus {
+.view-mode .btn:hover,
+.view-mode .btn:focus {
   background: var(--color-viewmode-link);
   color: var(--color-viewmode-bg);
 }

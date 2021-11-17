@@ -91,7 +91,7 @@ import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import ParticipantPrompt from "./ParticipantPrompt.vue";
 import Response from "./ParticipantResponse.vue";
-import ViewModeNotice from "./ParticipantPageViewModeNotice.vue";
+import ViewModeNotice from "./ViewModeNotice.vue";
 
 export default {
   components: {

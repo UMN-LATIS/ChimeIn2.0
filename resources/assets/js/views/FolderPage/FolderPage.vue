@@ -65,6 +65,7 @@
                 params: { chimeId: chimeId },
                 query: {
                   viewMode: 'participant',
+                  callbackUrl: $route.path,
                 },
               }"
               tag="button"
