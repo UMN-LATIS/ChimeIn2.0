@@ -34,11 +34,6 @@ export default {
       return this.$route.query.callbackUrl || "/";
     },
   },
-  methods: {
-    leaveParticipantView() {
-      window.history.length > 1 ? this.$router.go(-1) : this.$router.push("/");
-    },
-  },
   mounted() {
     document.body.classList.add("page--viewmode-participant");
   },
