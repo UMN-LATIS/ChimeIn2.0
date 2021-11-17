@@ -61,7 +61,7 @@ export default {
     },
   },
   mounted() {
-    this.selected = get(this, "response.response_info.choice", []);
+    this.selected = get(this, "response.response_info.choice", null);
   },
 };
 </script>
