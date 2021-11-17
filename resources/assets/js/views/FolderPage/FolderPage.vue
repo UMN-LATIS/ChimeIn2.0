@@ -71,7 +71,7 @@
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
               Participant View
-              <i class="material-icons">search</i>
+              <i class="material-icons">preview</i>
             </router-link>
             <router-link
               :to="{

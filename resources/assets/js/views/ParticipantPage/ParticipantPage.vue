@@ -1,9 +1,10 @@
 <template>
-  <div
-    class="participant-page"
-    :class="{ 'participant-page--in-participant-viewmode': inParticipantView }"
-  >
-    <ViewModeNotice v-if="inParticipantView" />
+  <div class="participant-page">
+    <ViewModeNotice
+      v-if="inParticipantView"
+      :canvasUrl="canvasCourseUrl"
+      :joinUrl="joinUrl"
+    />
     <NavBar title="Home" :user="user" :link="'/'" />
     <ErrorDialog />
     <div v-if="error" class="alert alert-warning" role="alert">
@@ -83,10 +84,6 @@
 .nav-item {
   width: 50%;
 }
-
-/* .participant-page--in-participant-viewmode {
-  border: 0.5rem solid #333;
-} */
 </style>
 <script>
 import get from "lodash/get";
@@ -115,6 +112,15 @@ export default {
     };
   },
   computed: {
+    canvasCourseUrl() {
+      const url = this.chime.lti_return_url;
+      if (!url) return null;
+      const found = url.match(/^(?<courseUrl>http.*\/courses\/\d+).*/);
+      return found.groups.courseUrl || null;
+    },
+    joinUrl() {
+      return `${window.location.origin}/join/${this.chime.access_code}`;
+    },
     inParticipantView() {
       const viewMode = get(this, "$route.query.viewMode", null);
       if (!viewMode) return false;
