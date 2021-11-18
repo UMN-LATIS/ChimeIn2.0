@@ -1,20 +1,42 @@
 <template>
   <div class="join-panel">
     <header class="join-panel__header">
-      <h2 class="join-panel__title">Join Chime</h2>
-      <div class="join-panel__chime-name">
-        <span v-if="isCanvasChime" class="badge badge-pill badge-dark">
+      <h2 class="join-panel__title">
+        <i class="material-icons">how_to_reg</i>
+        Join Chime
+        <span v-if="isCanvasChime" class="badge badge-pill badge-gold">
           Canvas
         </span>
-        {{ chime.name }}
-      </div>
+      </h2>
     </header>
 
-    <div class="join-panel__instructions">
-      <p v-if="isCanvasChime">
-        Visit your Canvas course at: <a :href="canvasUrl">{{ canvasUrl }}</a>
-      </p>
-      <p v-else>
+    <div v-if="isCanvasChime" class="join-panel__instructions">
+      <ul>
+        <li>
+          Go to your Canvas course:
+          <a :href="canvasUrl" class="external-link" target="_blank">{{
+            canvasUrl
+          }}</a>
+        </li>
+        <li v-if="folderName">
+          Choose your ChimeIn assignment:
+          <a :href="canvasUrl" class="external-link" target="_blank">{{
+            folderName
+          }}</a>
+        </li>
+      </ul>
+      <details>
+        <summary>Join Instructions for Ungraded Guests</summary>
+        <p>
+          Go to <a :href="location.origin">{{ location.host }}</a> and enter
+          code
+          <b>{{ toHyphenatedCode(chime.access_code) }}</b>
+        </p>
+      </details>
+    </div>
+
+    <div v-else class="join-panel__instructions">
+      <p>
         Go to <a :href="location.origin">{{ location.host }}</a> and enter code
         <b>{{ toHyphenatedCode(chime.access_code) }}</b>
       </p>
@@ -34,6 +56,9 @@ export default {
     chime: {
       type: Object,
       required: true,
+    },
+    folderName: {
+      type: String,
     },
   },
   methods: {
@@ -57,11 +82,12 @@ export default {
 </script>
 <style scoped>
 .join-panel {
-  background: hsla(0, 0%, 100%, 0.85);
+  border: 1px solid #ddd;
+  background: hsla(0, 0%, 95%, 0.9);
   backdrop-filter: blur(0.25rem);
   padding: 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 0.5rem 0.5rem hsla(0, 0%, 0%, 0.1);
+  box-shadow: 0 0.25rem 0.5rem hsla(0, 0%, 0%, 0.1);
   font-size: 0.9rem;
   max-width: calc(100vw - 1rem);
   z-index: 100;
@@ -85,15 +111,59 @@ export default {
   font-weight: bold;
   text-transform: uppercase;
   margin: 0;
+  display: flex;
+  align-items: center;
 }
+
+.join-panel__title i {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.external-link:after {
+  font-family: "Material Icons";
+  content: "launch";
+  -webkit-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+  font-size: 1em;
+  vertical-align: middle;
+  color: #777;
+}
+.external-link:hover {
+  text-decoration: none;
+}
+
+.badge {
+  margin: 0 0.25rem;
+}
+
 .join-panel__chime-name {
   white-space: nowrap;
   overflow: hidden;
-  max-width: 50%;
   text-overflow: ellipsis;
 }
-
 p {
-  margin: 0;
+  margin: 0.5rem 0 0 0;
+}
+
+ul {
+  padding-left: 1.5rem;
+}
+
+details {
+  margin-left: 0.4rem;
+  --details-padding: 0.75rem;
+  font-size: 0.75rem;
+  color: #777;
+  margin-top: 0.5rem;
+  padding-left: var(--details-padding);
+}
+
+summary {
+  margin-left: calc(-1 * var(--details-padding));
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
 }
 </style>

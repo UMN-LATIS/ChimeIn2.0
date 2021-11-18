@@ -1,12 +1,12 @@
 <template>
   <div
-    class="row"
+    class="present-question row"
     :class="{
       in_progress: current_session,
       not_in_progress: !current_session,
     }"
   >
-    <div class="col-sm-12 col-md-8 col-lg-9">
+    <div class="col-sm-12 col-md-8 col-lg-9 present-question__inner">
       <PresentResults
         v-if="show_results"
         :question="question"
@@ -186,7 +186,7 @@ export default {
 }
 
 .presentationControls {
-  margin-top: 5px;
+  margin-top: 2rem;
 }
 
 .presentationControls .card {
@@ -210,5 +210,9 @@ export default {
 .sessionStatus {
   padding: 0;
   list-style-type: none;
+}
+
+.present-question__inner {
+  margin-top: 2rem;
 }
 </style>
