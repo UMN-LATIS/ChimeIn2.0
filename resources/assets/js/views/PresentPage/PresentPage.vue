@@ -12,17 +12,11 @@
     <Spinner v-if="!chime" />
     <div v-if="chime" class="container-fluid present-container">
       <fullscreen ref="fullscreen" @change="fullscreenChange">
-        <JoinPanel
-          v-if="showJoinInstructions"
-          :chime="chime"
-          :folderName="folder.name"
-          class="present-page__join-panel"
-        />
         <PresentQuestion
           v-if="current_question_item"
           :users-count="usersCount"
           :question="current_question_item"
-          :chime-id="chimeId"
+          :chime="chime"
           :folder="folder"
           @nextQuestion="next_question"
           @previousQuestion="previous_question"
@@ -51,7 +45,6 @@ export default {
     ErrorDialog,
     NavBar,
     PresentQuestion,
-    JoinPanel,
     Spinner,
   },
   mixins: [questionsListener],
@@ -78,9 +71,6 @@ export default {
         return window.location.host;
       }
       return null;
-    },
-    showJoinInstructions() {
-      return !!this.chime.join_instructions;
     },
     hyphenatedCode: function () {
       if (!this.chime || !this.chime.join_instructions) {
@@ -152,16 +142,5 @@ export default {
   overflow-y: auto;
   padding-bottom: 6rem;
   overflow-x: hidden;
-}
-.present-page__join-panel {
-  position: fixed;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.fullscreen .present-page__join-panel {
-  top: initial;
-  bottom: 0.5rem;
 }
 </style>

@@ -16,45 +16,12 @@
 
     <div v-if="isCanvasChime" class="join-panel__instructions">
       <p>
-        Visit your course in Canvas to access ChimeIn:
-        <a
-          :href="canvasUrl.origin"
-          data-cy="canvas-host"
-          class="external-link"
-          target="_blank"
-          >{{ canvasUrl.host }}</a
-        >
+        Visit your course in Canvas:
+        <a :href="canvasUrl.origin" data-cy="canvas-host" target="_blank">{{
+          canvasUrl.host
+        }}</a>
       </p>
 
-      <!-- Step by step instructions
-        <ul>
-        <li>
-          Go to Canvas:
-          <a
-            :href="canvasUrl.origin"
-            data-cy="canvas-host"
-            class="external-link"
-            target="_blank"
-            >{{ canvasUrl.host }}</a
-          >
-        </li>
-        <li>
-          Choose your course:
-          <a :href="canvasUrl.href">
-            {{ chime.name }}
-          </a>
-        </li>
-        <li v-if="folderName">
-          Find your ChimeIn assignment:
-          <a
-            :href="canvasUrl.href"
-            data-cy="folder-name"
-            class="external-link"
-            target="_blank"
-            >{{ folderName }}</a
-          >
-        </li>
-      </ul> -->
       <details>
         <summary>Join Instructions for Ungraded Guests</summary>
         <p>
@@ -63,7 +30,9 @@
             location.host
           }}</a>
           and enter code
-          <b data-cy="access-code">{{ toHyphenatedCode(chime.access_code) }}</b>
+          <b class="join-panel__access-code" data-cy="access-code">{{
+            toHyphenatedCode(chime.access_code)
+          }}</b>
         </p>
       </details>
     </div>
@@ -73,7 +42,9 @@
         Go to
         <a data-cy="chime-host" :href="location.origin">{{ location.host }}</a>
         and enter code
-        <b data-cy="access-code">{{ toHyphenatedCode(chime.access_code) }}</b>
+        <b class="join-panel__access-code" data-cy="access-code">{{
+          toHyphenatedCode(chime.access_code)
+        }}</b>
       </p>
     </div>
   </div>
@@ -119,23 +90,12 @@ export default {
 <style scoped>
 .join-panel {
   border: 1px solid #ddd;
-  background: hsla(0, 0%, 95%, 0.9);
-  backdrop-filter: blur(0.25rem);
+  background: #f0f0f0;
   padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.25rem 0.5rem hsla(0, 0%, 0%, 0.1);
+  border-radius: 0.25rem;
   font-size: 0.9rem;
-  max-width: calc(100vw - 1rem);
-  z-index: 100;
-  width: 50vw;
-  min-width: 20rem;
 }
 
-@media (max-width: 38rem) {
-  .join-panel {
-    width: 90vw;
-  }
-}
 .join-panel__header {
   display: flex;
   justify-content: space-between;
@@ -169,6 +129,10 @@ export default {
   text-decoration: none;
 }
 
+.join-panel__access-code {
+  display: inline-block;
+}
+
 .badge {
   margin: 0 0.25rem;
 }
@@ -178,12 +142,9 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 p {
   margin: 0.5rem 0 0 0;
-}
-
-ul {
-  padding-left: 1.5rem;
 }
 
 details {
