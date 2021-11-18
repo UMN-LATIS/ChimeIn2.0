@@ -4,7 +4,6 @@
       v-if="!folder.student_view"
       title="Back to Folder"
       :user="user"
-      :access_code="hyphenatedCode"
       :host="host"
       :link="{ name: 'folder', params: { chimeId, folderId } }"
     />

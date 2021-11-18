@@ -4,41 +4,76 @@
       <h2 class="join-panel__title">
         <i class="material-icons">how_to_reg</i>
         Join Chime
-        <span v-if="isCanvasChime" class="badge badge-pill badge-gold">
+        <span
+          v-if="isCanvasChime"
+          data-cy="canvas-badge"
+          class="badge badge-pill badge-gold"
+        >
           Canvas
         </span>
       </h2>
     </header>
 
     <div v-if="isCanvasChime" class="join-panel__instructions">
-      <ul>
+      <p>
+        Visit your course in Canvas to access ChimeIn:
+        <a
+          :href="canvasUrl.origin"
+          data-cy="canvas-host"
+          class="external-link"
+          target="_blank"
+          >{{ canvasUrl.host }}</a
+        >
+      </p>
+
+      <!-- Step by step instructions
+        <ul>
         <li>
-          Go to your Canvas course:
-          <a :href="canvasUrl" class="external-link" target="_blank">{{
-            canvasUrl
-          }}</a>
+          Go to Canvas:
+          <a
+            :href="canvasUrl.origin"
+            data-cy="canvas-host"
+            class="external-link"
+            target="_blank"
+            >{{ canvasUrl.host }}</a
+          >
+        </li>
+        <li>
+          Choose your course:
+          <a :href="canvasUrl.href">
+            {{ chime.name }}
+          </a>
         </li>
         <li v-if="folderName">
-          Choose your ChimeIn assignment:
-          <a :href="canvasUrl" class="external-link" target="_blank">{{
-            folderName
-          }}</a>
+          Find your ChimeIn assignment:
+          <a
+            :href="canvasUrl.href"
+            data-cy="folder-name"
+            class="external-link"
+            target="_blank"
+            >{{ folderName }}</a
+          >
         </li>
-      </ul>
+      </ul> -->
       <details>
         <summary>Join Instructions for Ungraded Guests</summary>
         <p>
-          Go to <a :href="location.origin">{{ location.host }}</a> and enter
-          code
-          <b>{{ toHyphenatedCode(chime.access_code) }}</b>
+          Go to
+          <a data-cy="chime-host" :href="location.origin">{{
+            location.host
+          }}</a>
+          and enter code
+          <b data-cy="access-code">{{ toHyphenatedCode(chime.access_code) }}</b>
         </p>
       </details>
     </div>
 
     <div v-else class="join-panel__instructions">
       <p>
-        Go to <a :href="location.origin">{{ location.host }}</a> and enter code
-        <b>{{ toHyphenatedCode(chime.access_code) }}</b>
+        Go to
+        <a data-cy="chime-host" :href="location.origin">{{ location.host }}</a>
+        and enter code
+        <b data-cy="access-code">{{ toHyphenatedCode(chime.access_code) }}</b>
       </p>
     </div>
   </div>
@@ -69,7 +104,8 @@ export default {
       return selectIsCanvasChime(this.chime);
     },
     canvasUrl() {
-      return selectCanvasCourseUrl(this.chime);
+      const fullCanvasUrlString = selectCanvasCourseUrl(this.chime);
+      return new URL(fullCanvasUrlString);
     },
     joinUrl() {
       return selectJoinUrl(this.chime);

@@ -90,27 +90,6 @@
     "uri": "__cypress__/routes",
     "method": ["POST"]
   },
-  "dusk.login": {
-    "name": "dusk.login",
-    "domain": null,
-    "action": "Laravel\\Dusk\\Http\\Controllers\\UserController@login",
-    "uri": "_dusk/login/{userId}/{guard?}",
-    "method": ["GET", "HEAD"]
-  },
-  "dusk.logout": {
-    "name": "dusk.logout",
-    "domain": null,
-    "action": "Laravel\\Dusk\\Http\\Controllers\\UserController@logout",
-    "uri": "_dusk/logout/{guard?}",
-    "method": ["GET", "HEAD"]
-  },
-  "dusk.user": {
-    "name": "dusk.user",
-    "domain": null,
-    "action": "Laravel\\Dusk\\Http\\Controllers\\UserController@user",
-    "uri": "_dusk/user/{guard?}",
-    "method": ["GET", "HEAD"]
-  },
   "shibboleth-login": {
     "name": "shibboleth-login",
     "domain": null,
@@ -218,13 +197,6 @@
   },
   "ltisettings.update": {
     "name": "ltisettings.update",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\LTIHandler@saveLTISettings",
-    "uri": "lti/saveLTISettings/{chime}",
-    "method": ["PUT"]
-  },
-  "ltisettings13.update": {
-    "name": "ltisettings13.update",
     "domain": null,
     "action": "App\\Http\\Controllers\\LTI13Handler@saveLTISettings",
     "uri": "lti13/saveLTISettings/{chime}",
