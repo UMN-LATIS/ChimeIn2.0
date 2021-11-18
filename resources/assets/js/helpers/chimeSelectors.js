@@ -1,7 +1,9 @@
 import get from "lodash/get.js";
 
-export const selectIsCanvasChime = (chime) =>
-  !!get(chime, "lti_return_url", null);
+export const selectIsCanvasChime = (chime) => {
+  const canvasChimeUrl = get(chime, "lti_return_url", null);
+  return Boolean(canvasChimeUrl);
+};
 
 export function selectCanvasCourseUrl(chime) {
   const url = get(chime, "lti_return_url", null);
