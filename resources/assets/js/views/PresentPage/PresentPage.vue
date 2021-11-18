@@ -36,7 +36,6 @@ import toHyphenatedCode from "../../helpers/toHyphenatedCode.js";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import PresentQuestion from "./PresentQuestion.vue";
-import JoinPanel from "./JoinPanel.vue";
 import Spinner from "../../components/Spinner.vue";
 
 export default {
