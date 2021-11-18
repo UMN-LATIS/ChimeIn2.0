@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 
 import api from "../api/index.js";
-import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode.mjs";
+import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode.js";
 
 const questionText = "<p>What?</p>";
 const questionResponses = [
@@ -133,7 +133,7 @@ describe("chime UI", () => {
 
       it("displays join instructions when presenting (by default)", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}/present`);
-        cy.get("[data-cy=show-join-code]").should(
+        cy.get("[data-cy=access-code]").should(
           "contain.text",
           toHyphenatedCode(testChime.access_code)
         );
