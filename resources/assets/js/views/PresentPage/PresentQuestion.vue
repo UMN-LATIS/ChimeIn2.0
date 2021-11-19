@@ -1,16 +1,16 @@
 <template>
   <div
-    class="row"
+    class="present-question row"
     :class="{
       in_progress: current_session,
       not_in_progress: !current_session,
     }"
   >
-    <div class="col-sm-12 col-md-8 col-lg-9">
+    <div class="col-sm-12 col-md-8 col-lg-9 present-question__inner">
       <PresentResults
         v-if="show_results"
         :question="question"
-        :chime-id="chimeId"
+        :chime-id="chime.id"
         @reload="$emit('reload')"
       />
       <PresentPrompt
@@ -23,7 +23,14 @@
       v-if="!folder.student_view"
       class="col-sm-12 col-md-4 col-lg-3 presentationControls"
     >
-      <div class="card float-right">
+      <JoinPanel
+        v-if="showJoinInstructions"
+        :chime="chime"
+        :folderName="folder.name"
+        class="present-page__join-panel mb-2"
+      />
+
+      <div class="card">
         <div class="card-body">
           <button
             v-if="!current_session"
@@ -82,20 +89,24 @@
           </ul>
         </div>
       </div>
+      <!-- card -->
     </div>
+    <!-- presentationControls (sidebar) -->
   </div>
 </template>
 
 <script>
 import PresentPrompt from "./PresentPrompt.vue";
 import PresentResults from "./PresentResults.vue";
+import JoinPanel from "./JoinPanel.vue";
 
 export default {
   components: {
     PresentPrompt,
     PresentResults,
+    JoinPanel,
   },
-  props: ["question", "chimeId", "folder", "usersCount"],
+  props: ["question", "chime", "folder", "usersCount"],
   data() {
     return {
       show_results: false,
@@ -133,7 +144,7 @@ export default {
     start_session: function () {
       const url =
         "/api/chime/" +
-        this.chimeId +
+        this.chime.id +
         "/folder/" +
         this.folder.id +
         "/question/" +
@@ -146,7 +157,7 @@ export default {
     stop_session: function () {
       const url =
         "/api/chime/" +
-        this.chimeId +
+        this.chime.id +
         "/folder/" +
         this.folder.id +
         "/question/" +
@@ -156,6 +167,9 @@ export default {
       axios.put(url, {}).catch((err) => {
         console.error(err.response);
       });
+    },
+    showJoinInstructions() {
+      return Boolean(this.chime.join_instructions);
     },
   },
 };
@@ -186,11 +200,16 @@ export default {
 }
 
 .presentationControls {
-  margin-top: 5px;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.presentationControls .card {
-  max-width: 300px;
+.presentationControls .card,
+.present-page__join-panel {
+  width: 100%;
+  max-width: 18rem;
 }
 
 .presentationControls .card-title {
@@ -210,5 +229,9 @@ export default {
 .sessionStatus {
   padding: 0;
   list-style-type: none;
+}
+
+.present-question__inner {
+  margin-top: 2rem;
 }
 </style>
