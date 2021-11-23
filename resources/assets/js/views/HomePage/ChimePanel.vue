@@ -59,7 +59,7 @@
             class="chime-card-group__item"
             :key="chime.id"
             :chime="chime"
-            :showIcon="orderedChimes.length > 1"
+            :showMoveIcon="orderedChimes.length > 1"
             :to="getUserLinkToChime({ user, chime })"
             @change="get_chimes"
           />

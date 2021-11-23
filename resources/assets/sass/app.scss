@@ -119,3 +119,9 @@ h5 {
 .handle {
   cursor: move;
 }
+
+// draggable: style while dragging
+.ghost {
+  opacity: 0.5;
+  background: #ccc;
+}

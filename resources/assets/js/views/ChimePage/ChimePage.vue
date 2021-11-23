@@ -64,36 +64,13 @@
             :disabled="false"
             ghostClass="ghost"
           >
-            <Card
+            <FolderCard
               v-for="folder in ordered_folders"
               :key="folder.id"
-              iconClass="handle"
-            >
-              <router-link :to="`/chime/${chime.id}/folder/${folder.id}`">
-                <h2>
-                  {{ folder.name }}
-                </h2>
-              </router-link>
-              <template #actions>
-                <IconButton
-                  icon="edit"
-                  @click="
-                    handleEditClick({ chimeId: chime.id, folderId: folder.id })
-                  "
-                  >Edit</IconButton
-                >
-                <IconButton
-                  icon="play_circle_outline"
-                  @click="
-                    handlePresentClick({
-                      chimeId: chime.id,
-                      folderId: folder.id,
-                    })
-                  "
-                  >Present</IconButton
-                >
-              </template>
-            </Card>
+              :chime="chime"
+              :folder="folder"
+              :showMoveIcon="ordered_folders.length > 1"
+            />
           </Draggable>
         </div>
         <NewFolder
@@ -106,66 +83,6 @@
   </div>
 </template>
 
-<style scoped>
-.chime__header-label {
-  text-transform: uppercase;
-  color: var(--gray-medium);
-  margin: 0 0 0.25rem 0;
-}
-.chime__header {
-  margin: 2rem 0 2rem;
-}
-
-.chime__header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.chime__name {
-  font-size: 2rem;
-}
-
-.chime__control-buttons .material-icons {
-  font-size: 1.25rem;
-  margin-left: 0.25rem;
-}
-
-.chime__control-buttons .btn--is-active {
-  background: var(--gray-dark);
-  color: #fff;
-}
-
-.chime__settings-panel {
-  display: none;
-  margin-top: 1rem;
-  padding: 2rem;
-  background-color: #fafafa;
-  line-height: 1.5;
-  border-radius: 0.25rem;
-  overflow: auto;
-  border: 1px solid var(--gray-light);
-}
-.chime__settings-panel--isOpen {
-  display: block;
-}
-
-@media (max-width: 768px) {
-  .chime__name {
-    font-size: 1.5rem;
-  }
-  .chime__header-container {
-    display: block;
-  }
-}
-</style>
-
-<style>
-.ghost {
-  opacity: 0.5;
-  background: #ccc;
-}
-</style>
-
 <script>
 import Draggable from "vuedraggable";
 import orderBy from "lodash/orderBy";
@@ -175,8 +92,7 @@ import Spinner from "../../components/Spinner.vue";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import ChimeManagement from "./ChimeManagement.vue";
 import ChimeExport from "./ChimeExport.vue";
-import Card from "../../components/Card.vue";
-import IconButton from "../../components/IconButton.vue";
+import FolderCard from "./FolderCard.vue";
 
 export default {
   components: {
@@ -187,8 +103,7 @@ export default {
     ErrorDialog,
     ChimeManagement,
     ChimeExport,
-    Card,
-    IconButton,
+    FolderCard,
   },
   props: ["user", "chimeId"],
   data() {
@@ -275,30 +190,59 @@ export default {
           this.isReady = true;
         });
     },
-    getLtiLink(folder) {
-      // check if there's an lti link for this folder
-      // scrub the url in case it has
-      // `/external_content/success/external_tool_redirect`
-      // at the end
-      return (
-        folder.resource_link_pk &&
-        this.chime.lti_return_url &&
-        this.chime.lti_return_url.replace(/external_content.*/, "")
-      );
-    },
-    handleEditClick({ chimeId, folderId }) {
-      console.log("click");
-      this.$router.push({
-        name: "folder",
-        params: { chimeId, folderId },
-      });
-    },
-    handlePresentClick({ chimeId, folderId }) {
-      this.$router.push({
-        name: "present",
-        params: { chimeId, folderId },
-      });
-    },
   },
 };
 </script>
+
+<style scoped>
+.chime__header-label {
+  text-transform: uppercase;
+  color: var(--gray-medium);
+  margin: 0 0 0.25rem 0;
+}
+.chime__header {
+  margin: 2rem 0 2rem;
+}
+
+.chime__header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chime__name {
+  font-size: 2rem;
+}
+
+.chime__control-buttons .material-icons {
+  font-size: 1.25rem;
+  margin-left: 0.25rem;
+}
+
+.chime__control-buttons .btn--is-active {
+  background: var(--gray-dark);
+  color: #fff;
+}
+
+.chime__settings-panel {
+  display: none;
+  margin-top: 1rem;
+  padding: 2rem;
+  background-color: #fafafa;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  overflow: auto;
+  border: 1px solid var(--gray-light);
+}
+.chime__settings-panel--isOpen {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .chime__name {
+    font-size: 1.5rem;
+  }
+  .chime__header-container {
+    display: block;
+  }
+}
+</style>

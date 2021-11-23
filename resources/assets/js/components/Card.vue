@@ -18,7 +18,6 @@ export default {
   props: {
     icon: {
       type: String,
-      default: "arrow_forward",
     },
     iconClass: {
       type: String,
@@ -37,11 +36,11 @@ export default {
   display: flex;
   align-items: flex-start;
   line-height: 1;
-  transition: all 0.3s ease-out;
+  transition: all 0.1s ease-out;
   margin: 0.5rem 0;
 
   a {
-    color: var(--maroon);
+    color: var(--black);
   }
 
   a:hover {
@@ -54,7 +53,6 @@ export default {
 
 .chime-card__icon {
   padding: 1rem;
-  color: var(--maroon);
 }
 
 /* if no icon, add padding */

@@ -1,7 +1,7 @@
 <template>
   <Card
     class="chime-card"
-    :icon="showMoveIcon ? 'drag_handle' : null"
+    :icon="showMoveIcon ? 'drag_handle' : 'arrow_forward'"
     iconClass="handle"
   >
     <router-link :to="to">
@@ -32,14 +32,14 @@
     </router-link>
 
     <template #actions>
-      <IconButton icon="clear" @click="handleChimeDelete(chime)"></IconButton>
+      <CardActionButton icon="clear" @click="handleChimeDelete(chime)" />
     </template>
   </Card>
 </template>
 <script>
 import toHyphenatedCode from "../../helpers/toHyphenatedCode";
 import Card from "../../components/Card.vue";
-import IconButton from "../../components/IconButton.vue";
+import CardActionButton from "../../components/CardActionButton.vue";
 import Chip from "../../components/Chip.vue";
 import {
   selectCanvasCourseUrl,
@@ -50,7 +50,7 @@ import {
 export default {
   components: {
     Card,
-    IconButton,
+    CardActionButton,
     Chip,
   },
   props: {
@@ -64,7 +64,7 @@ export default {
     },
     showMoveIcon: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   methods: {
@@ -127,10 +127,11 @@ export default {
 .chime-card__details-list dt {
   font-weight: normal;
   text-transform: uppercase;
-  color: #777;
+  color: #aaa;
   font-size: 0.7rem;
 }
-.chime-card__details-list dd {
-  color: #333;
+.chime-card__details-list dd,
+.chime-card__details-list a {
+  color: #777;
 }
 </style>
