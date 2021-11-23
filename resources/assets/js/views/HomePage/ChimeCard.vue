@@ -1,66 +1,136 @@
 <template>
-  <div class="card hoverable">
-    <div class="card-body" @click="open_chime">
-      <div class="float-left">
-        <h2 class="card-title h5">{{ chime.name }}</h2>
-        <p class="h6 card-subtitle mb-2 text-muted" @click.stop="">
-          Access code: {{ hyphenatedCode }}
-        </p>
-      </div>
-      <div class="float-right">
-        <a href="#" @click.stop="delete_chime()">
-          <i class="material-icons right">delete</i>
-        </a>
-      </div>
-    </div>
-  </div>
-</template>
+  <Card
+    class="chime-card"
+    :icon="showMoveIcon ? 'drag_handle' : null"
+    iconClass="handle"
+  >
+    <router-link :to="to">
+      <header class="chime-card__header">
+        <h1 class="chime-card__title">
+          {{ chime.name }}
+        </h1>
+        <div class="chime-card__chip-group">
+          <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip>
+        </div>
+      </header>
 
+      <dl v-if="isCanvasChime" class="chime-card__details-list">
+        <dt>Join</dt>
+        <dd>
+          <a :href="canvasUrl.origin" target="_blank">{{ canvasUrl.host }}</a>
+        </dd>
+      </dl>
+
+      <dl v-if="!isCanvasChime" class="chime-card__details-list">
+        <dt>Access&nbsp;Code</dt>
+        <dd>{{ hyphenatedAccessCode }}</dd>
+        <dt>Join</dt>
+        <dd>
+          <a :href="joinUrl" target="_blank">{{ joinUrl }}</a>
+        </dd>
+      </dl>
+    </router-link>
+
+    <template #actions>
+      <IconButton icon="clear" @click="handleChimeDelete(chime)"></IconButton>
+    </template>
+  </Card>
+</template>
 <script>
+import toHyphenatedCode from "../../helpers/toHyphenatedCode";
+import Card from "../../components/Card.vue";
+import IconButton from "../../components/IconButton.vue";
+import Chip from "../../components/Chip.vue";
+import {
+  selectCanvasCourseUrl,
+  selectIsCanvasChime,
+  selectJoinUrl,
+} from "../../helpers/chimeSelectors.js";
+
 export default {
-  props: ["chime", "user"],
-  data: function () {
-    return {};
+  components: {
+    Card,
+    IconButton,
+    Chip,
   },
-  computed: {
-    hyphenatedCode: function () {
-      return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
+  props: {
+    chime: {
+      type: Object,
+      required: true,
+    },
+    to: {
+      type: String,
+      required: true,
+    },
+    showMoveIcon: {
+      type: Boolean,
+      default: true,
     },
   },
   methods: {
-    open_chime() {
-      if (this.chime.pivot.permission_number >= 200) {
-        this.$router.push({
-          name: "chime",
-          params: {
-            chimeId: this.chime.id,
-          },
-        });
-      } else {
-        this.$router.push({
-          name: "chimeStudent",
-          params: {
-            chimeId: this.chime.id,
-          },
-        });
-      }
-    },
-    delete_chime() {
-      const confirmation = window.confirm(
-        "Delete Chime: " + this.chime.name + " ?"
-      );
+    handleChimeDelete() {
+      const confirmation = window.confirm(`Delete chime '${this.chime.name}'?`);
 
-      if (confirmation) {
-        axios
-          .delete("/api/chime/" + this.chime.id)
-          .then(() => {
-            this.$emit("updatedChime");
-          })
-          .catch((err) => {
-            console.error("error", "Error in delete chime:", err.response);
-          });
-      }
+      if (!confirmation) return;
+
+      axios
+        .delete("/api/chime/" + this.chime.id)
+        .then(() => this.$emit("change"))
+        .catch((err) => {
+          console.error("error", "Error in delete chime:", err.response);
+        });
     },
+  },
+  computed: {
+    hyphenatedAccessCode() {
+      return toHyphenatedCode(this.chime.access_code);
+    },
+    isCanvasChime() {
+      return selectIsCanvasChime(this.chime);
+    },
+    canvasUrl() {
+      const fullCanvasUrlString = selectCanvasCourseUrl(this.chime);
+      return new URL(fullCanvasUrlString);
+    },
+    joinUrl() {
+      return selectJoinUrl(this.chime);
+    },
+    location() {
+      return window.location;
+    },
+  },
+  mounted() {
+    // this.chime.lti_return_url = `https://mock-canvas.umn.edu/courses/123456`;
   },
 };
 </script>
+
+<style scoped>
+.chime-card__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.chime-card__chip-group {
+  margin-left: 1rem;
+}
+
+.chime-card__details-list {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  column-gap: 1rem;
+  font-size: 0.9rem;
+  align-items: baseline;
+  margin: 0;
+}
+
+.chime-card__details-list dt {
+  font-weight: normal;
+  text-transform: uppercase;
+  color: #777;
+  font-size: 0.7rem;
+}
+.chime-card__details-list dd {
+  color: #333;
+}
+</style>

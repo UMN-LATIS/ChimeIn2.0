@@ -49,7 +49,7 @@ export default {
   border: 1px solid var(--color);
   font-size: 0.75rem;
   line-height: 1em;
-  padding: 0.5em 1em;
+  padding: 0.5em;
   border-radius: 1rem;
 }
 

@@ -18,6 +18,7 @@ export default {
   props: {
     icon: {
       type: String,
+      default: "arrow_forward",
     },
     iconClass: {
       type: String,
@@ -34,13 +35,13 @@ export default {
   border-radius: 0.25rem;
   background: #fafafa;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   line-height: 1;
   transition: all 0.3s ease-out;
   margin: 0.5rem 0;
 
   a {
-    color: #333;
+    color: var(--maroon);
   }
 
   a:hover {
@@ -52,7 +53,8 @@ export default {
 }
 
 .chime-card__icon {
-  padding: 0.5rem 1rem;
+  padding: 1rem;
+  color: var(--maroon);
 }
 
 /* if no icon, add padding */
@@ -63,7 +65,7 @@ export default {
 .chime-card__default {
   flex: 1;
   font-size: 1rem;
-  margin: 0.75rem 0;
+  margin: 1rem 0;
 
   h1,
   h2,
@@ -77,6 +79,6 @@ export default {
 }
 
 .chime-card__actions {
-  display: flex;
+  padding: 0.25rem 0.5rem;
 }
 </style>

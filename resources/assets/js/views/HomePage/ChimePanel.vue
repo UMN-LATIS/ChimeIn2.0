@@ -54,32 +54,15 @@
           </div>
         </transition>
         <draggable v-if="chimes.length > 0" class="chime-card-group">
-          <Card
+          <ChimeCard
             v-for="chime in orderedChimes"
             class="chime-card-group__item"
             :key="chime.id"
-            :icon="orderedChimes.length > 1 ? 'drag_handle' : null"
-            iconClass="handle"
-          >
-            <router-link :to="getUserLinkToChime({ user, chime })">
-              <header class="chime-card__header">
-                <h1 class="chime-card__title">{{ chime.name }}</h1>
-                <div class="chime-card__access-code text-muted">
-                  {{ toHyphenatedCode(chime.access_code) }}
-                </div>
-              </header>
-            </router-link>
-            <div class="chip-group">
-              <Chip color="yellow" :solid="true">Canvas</Chip>
-              <Chip color="green" :solid="true">Open</Chip>
-            </div>
-
-            <template #actions>
-              <IconButton icon="delete" @click="handleChimeDelete(chime)"
-                >Delete</IconButton
-              >
-            </template>
-          </Card>
+            :chime="chime"
+            :showIcon="orderedChimes.length > 1"
+            :to="getUserLinkToChime({ user, chime })"
+            @change="get_chimes"
+          />
         </draggable>
         <div v-else class="my-3">
           <p v-if="user.guest_user">
@@ -97,18 +80,13 @@
 <script>
 import orderBy from "lodash/orderBy";
 import { EventBus } from "../../EventBus.js";
-import Card from "../../components/Card.vue";
-import Chip from "../../components/Chip.vue";
-import IconButton from "../../components/IconButton.vue";
+import ChimeCard from "./ChimeCard.vue";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 import draggable from "vuedraggable";
-import toHyphenatedCode from "../../helpers/toHyphenatedCode.js";
 
 export default {
   components: {
-    Card,
-    Chip,
-    IconButton,
+    ChimeCard,
     ChimeManagementOptions,
     draggable,
   },
@@ -136,7 +114,6 @@ export default {
     });
   },
   methods: {
-    toHyphenatedCode,
     getUserLinkToChime({ chime }) {
       const isUserEditorOfChime = (chime) =>
         chime.pivot.permission_number >= 200;
@@ -181,20 +158,6 @@ export default {
           console.error("error", "Error in get chimes:", err.response);
         });
     },
-    handleChimeDelete(chime) {
-      const confirmation = window.confirm("Delete Chime: " + chime.name + " ?");
-
-      if (confirmation) {
-        axios
-          .delete("/api/chime/" + chime.id)
-          .then(() => {
-            this.get_chimes();
-          })
-          .catch((err) => {
-            console.error("error", "Error in delete chime:", err.response);
-          });
-      }
-    },
   },
 };
 </script>
@@ -202,8 +165,5 @@ export default {
 <style scoped>
 .chime-card-group {
   margin: 1rem 0;
-}
-.chip-group {
-  margin-top: 0.5rem;
 }
 </style>
