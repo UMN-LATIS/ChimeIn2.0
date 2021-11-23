@@ -59,17 +59,41 @@
             v-else
             v-model="ordered_folders"
             class="chime__ordered-folders"
-            handle=".draghandle"
-            :force-fallback="true"
+            handle=".handle"
+            :animation="200"
+            :disabled="false"
+            ghostClass="ghost"
           >
-            <FolderCard
+            <Card
               v-for="folder in ordered_folders"
               :key="folder.id"
-              :folder="folder"
-              :chime="chime"
-              :draggable="ordered_folders.length > 1"
-              :lti-link="getLtiLink(folder)"
-            />
+              iconClass="handle"
+            >
+              <router-link :to="`/chime/${chime.id}/folder/${folder.id}`">
+                <h2>
+                  {{ folder.name }}
+                </h2>
+              </router-link>
+              <template #actions>
+                <IconButton
+                  icon="edit"
+                  @click="
+                    handleEditClick({ chimeId: chime.id, folderId: folder.id })
+                  "
+                  >Edit</IconButton
+                >
+                <IconButton
+                  icon="play_circle_outline"
+                  @click="
+                    handlePresentClick({
+                      chimeId: chime.id,
+                      folderId: folder.id,
+                    })
+                  "
+                  >Present</IconButton
+                >
+              </template>
+            </Card>
           </Draggable>
         </div>
         <NewFolder
@@ -135,27 +159,36 @@
 }
 </style>
 
+<style>
+.ghost {
+  opacity: 0.5;
+  background: #ccc;
+}
+</style>
+
 <script>
 import Draggable from "vuedraggable";
 import orderBy from "lodash/orderBy";
-import FolderCard from "./FolderCard.vue";
 import NavBar from "../../components/NavBar.vue";
 import NewFolder from "./NewFolder.vue";
 import Spinner from "../../components/Spinner.vue";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import ChimeManagement from "./ChimeManagement.vue";
 import ChimeExport from "./ChimeExport.vue";
+import Card from "../../components/Card.vue";
+import IconButton from "../../components/IconButton.vue";
 
 export default {
   components: {
     Draggable,
     NavBar,
-    FolderCard,
     NewFolder,
     Spinner,
     ErrorDialog,
     ChimeManagement,
     ChimeExport,
+    Card,
+    IconButton,
   },
   props: ["user", "chimeId"],
   data() {
@@ -252,6 +285,19 @@ export default {
         this.chime.lti_return_url &&
         this.chime.lti_return_url.replace(/external_content.*/, "")
       );
+    },
+    handleEditClick({ chimeId, folderId }) {
+      console.log("click");
+      this.$router.push({
+        name: "folder",
+        params: { chimeId, folderId },
+      });
+    },
+    handlePresentClick({ chimeId, folderId }) {
+      this.$router.push({
+        name: "present",
+        params: { chimeId, folderId },
+      });
     },
   },
 };
