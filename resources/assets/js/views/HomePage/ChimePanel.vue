@@ -14,45 +14,46 @@
         >
           <span class="material-icons">add</span>Add a Chime
         </button>
-        <transition name="fade">
-          <div v-if="!user.guest_user && showAdd" class="card mt-1">
-            <div class="card-body">
-              <div class="form-group row">
-                <label for="chime_name_input" class="col-sm-2 col-form-label"
-                  >Chime Name</label
-                >
-                <div class="col-sm-8">
-                  <input
-                    id="chime_name_input"
-                    v-model="chime_name"
-                    class="form-control"
-                    type="text"
-                  />
-                </div>
-              </div>
-              <div class="row">
-                <ChimeManagementOptions
-                  :require_login.sync="requireLogin"
-                  :students_can_view.sync="studentsCanView"
-                  :join_instructions.sync="joinInstructions"
-                  :new_chime="true"
+        <form
+          v-if="!user.guest_user && showAdd"
+          class="card mt-1"
+          @submit.prevent="create_chime"
+        >
+          <div class="card-body">
+            <div class="form-group row">
+              <label for="chime_name_input" class="col-sm-2 col-form-label"
+                >Chime Name</label
+              >
+              <div class="col-sm-8">
+                <input
+                  id="chime_name_input"
+                  v-model="chime_name"
+                  class="form-control"
+                  type="text"
                 />
               </div>
-              <div class="row">
-                <div class="col">
-                  <button
-                    data-cy="create-chime-button"
-                    class="btn btn-primary"
-                    type="button"
-                    @click="create_chime"
-                  >
-                    Create
-                  </button>
-                </div>
+            </div>
+            <div class="row">
+              <ChimeManagementOptions
+                :require_login.sync="requireLogin"
+                :students_can_view.sync="studentsCanView"
+                :join_instructions.sync="joinInstructions"
+                :new_chime="true"
+              />
+            </div>
+            <div class="row">
+              <div class="col">
+                <button
+                  data-cy="create-chime-button"
+                  class="btn btn-primary"
+                  type="submit"
+                >
+                  Create
+                </button>
               </div>
             </div>
           </div>
-        </transition>
+        </form>
         <draggable v-if="chimes.length > 0" class="chime-card-group">
           <ChimeCard
             v-for="chime in orderedChimes"
