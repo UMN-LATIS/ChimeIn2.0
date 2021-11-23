@@ -1,6 +1,7 @@
 <template>
   <Card
     class="folder-card"
+    data-cy="folder-card"
     :icon="showMoveIcon ? 'drag_handle' : 'arrow_forward'"
     iconClass="handle"
   >
