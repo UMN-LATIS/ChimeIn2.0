@@ -247,7 +247,7 @@ class LTIHandler extends Controller
             $folder->save();
             $targetFolder = $folder;
         }
-        return \Redirect::to("/chime/" . $chime->id. "/folder/" . ($targetFolder?$targetFolder->id:null));
+        return \Redirect::to("/chime/" . $chime->id . ($targetFolder?("/folder/" . $targetFolder->id):null));
         
     }
 }
