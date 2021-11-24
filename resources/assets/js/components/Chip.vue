@@ -43,6 +43,7 @@ export default {
 <style scoped>
 .chip {
   --color: #333;
+  --color-inverse: #fff;
   display: inline-flex;
   align-items: center;
   color: var(--color);
