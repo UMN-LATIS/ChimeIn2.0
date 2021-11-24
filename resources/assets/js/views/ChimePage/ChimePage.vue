@@ -32,7 +32,7 @@
               data-cy="toggle-chime-settings-panel"
               @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
             >
-              Chime Settings <span class="material-icons">settings</span>
+              <i class="material-icons">settings</i> Chime Settings
             </button>
 
             <button
@@ -41,7 +41,7 @@
               data-cy="toggle-chime-export-panel"
               @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
             >
-              Export <span class="material-icons">save_alt</span>
+              <i class="material-icons">save_alt</i> Export
             </button>
           </div>
         </div>
@@ -247,7 +247,7 @@ export default {
 
 .chime__control-buttons .material-icons {
   font-size: 1.25rem;
-  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }
 
 .chime__control-buttons .btn--is-active {

@@ -22,6 +22,7 @@
       <div class="row mt-4">
         <div class="col-4 align-items-center d-flex">
           <h1 class="h4">{{ folder.name }}</h1>
+          <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip>
         </div>
         <div class="col-md-8 col-sm-12">
           <div
@@ -34,21 +35,21 @@
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="show_edit_folder = !show_edit_folder"
             >
-              Folder Settings <i class="material-icons pointer">edit</i>
+              <i class="material-icons pointer">edit</i> Folder Settings
             </button>
             <button
               dusk="open-all-button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="openAll"
             >
-              Open All <i class="material-icons pointer">visibility</i>
+              <i class="material-icons pointer">visibility</i> Open All
             </button>
             <button
               dusk="close-all-button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="closeAll"
             >
-              Close All <i class="material-icons pointer">visibility_off</i>
+              <i class="material-icons pointer">visibility_off</i> Close All
             </button>
             <router-link
               :to="{
@@ -62,8 +63,8 @@
               tag="button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
-              Participant View
               <i class="material-icons">preview</i>
+              Participant View
             </router-link>
             <router-link
               :to="{
@@ -73,8 +74,8 @@
               tag="button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
-              Present
               <i class="material-icons">play_arrow</i>
+              Present
             </router-link>
           </div>
         </div>
@@ -226,6 +227,7 @@ import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import QuestionRow from "./QuestionRow.vue";
+import Chip from "../../components/Chip.vue";
 
 const QuestionForm = () =>
   import(
@@ -240,6 +242,7 @@ export default {
     ErrorDialog,
     NavBar,
     QuestionRow,
+    Chip,
   },
   mixins: [questionsListener],
   props: ["folderId", "chimeId", "user"],
@@ -517,8 +520,8 @@ ul li {
 .align-items-center h4 {
   margin-bottom: 0;
 }
-
-.btn-group .btn i.material-icons {
-  margin-left: 2px;
+.material-icons {
+  font-size: 1.25rem;
+  margin-right: 0.25rem;
 }
 </style>
