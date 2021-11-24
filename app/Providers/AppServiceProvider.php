@@ -34,8 +34,5 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(Cookie::class, LTI13Cookie::class);
         $this->app->bind(Database::class, LTI13Database::class);
 
-        if($this->app->environment() === 'local') {
-            $this->app->register(Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-        }
     }
 }
