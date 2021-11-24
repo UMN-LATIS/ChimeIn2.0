@@ -5,10 +5,19 @@
     <div class="container">
       <header class="chime__header">
         <div class="chime__header-container">
-          <div>
-            <h1 class="chime__name">{{ chime.name }}</h1>
+          <div class="flex">
+            <h1 class="chime__name">
+              {{ chime.name }}
+            </h1>
+            <Chip
+              v-if="isCanvasChime"
+              color="yellow"
+              :solid="true"
+              title="This chime is linked with Canvas."
+            >
+              Canvas
+            </Chip>
           </div>
-
           <div
             class="chime__control-buttons btn-group"
             role="group"
@@ -55,8 +64,14 @@
           <p v-if="!ordered_folders.length">
             You don't have any folders yet. Why not create one now?
           </p>
+          <NewFolder
+            class="chime__create-folder"
+            :chime="chime"
+            @newfolder="create_folder"
+          />
+
           <Draggable
-            v-else
+            v-if="ordered_folders.length"
             v-model="ordered_folders"
             class="chime__ordered-folders"
             handle=".handle"
@@ -73,11 +88,6 @@
             />
           </Draggable>
         </div>
-        <NewFolder
-          class="chime__create-folder"
-          :chime="chime"
-          @newfolder="create_folder"
-        />
       </div>
     </div>
   </div>
@@ -93,6 +103,11 @@ import ErrorDialog from "../../components/ErrorDialog.vue";
 import ChimeManagement from "./ChimeManagement.vue";
 import ChimeExport from "./ChimeExport.vue";
 import FolderCard from "./FolderCard.vue";
+import Chip from "../../components/Chip.vue";
+import {
+  selectIsCanvasChime,
+  selectCanvasCourseUrl,
+} from "../../helpers/chimeSelectors";
 
 export default {
   components: {
@@ -104,6 +119,7 @@ export default {
     ChimeManagement,
     ChimeExport,
     FolderCard,
+    Chip,
   },
   props: ["user", "chimeId"],
   data() {
@@ -137,6 +153,14 @@ export default {
             console.log(err.response);
           });
       },
+    },
+    isCanvasChime() {
+      return selectIsCanvasChime(this.chime);
+    },
+    canvasUrl() {
+      const fullCanvasUrlString =
+        selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
+      return new URL(fullCanvasUrlString);
     },
   },
   created: function () {
@@ -195,6 +219,11 @@ export default {
 </script>
 
 <style scoped>
+.flex {
+  display: flex;
+  align-items: center;
+}
+
 .chime__header-label {
   text-transform: uppercase;
   color: var(--gray-medium);
@@ -211,6 +240,9 @@ export default {
 }
 .chime__name {
   font-size: 2rem;
+  line-height: 1;
+  margin: 0;
+  margin-right: 0.5rem;
 }
 
 .chime__control-buttons .material-icons {
@@ -237,12 +269,17 @@ export default {
   display: block;
 }
 
+.chime__create-folder {
+  margin: 1rem 0;
+}
+
 @media (max-width: 768px) {
-  .chime__name {
-    font-size: 1.5rem;
-  }
   .chime__header-container {
     display: block;
+  }
+
+  .chime__control-buttons {
+    margin-top: 1rem;
   }
 }
 </style>

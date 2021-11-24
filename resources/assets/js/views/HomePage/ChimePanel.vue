@@ -12,7 +12,7 @@
           class="btn btn-outline-primary align-items-center d-flex"
           @click="showAdd = !showAdd"
         >
-          <span class="material-icons">add</span>Add a Chime
+          <span class="material-icons">add</span>Add Chime
         </button>
         <form
           v-if="!user.guest_user && showAdd"

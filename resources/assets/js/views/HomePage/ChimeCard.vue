@@ -15,21 +15,23 @@
       </header>
 
       <div v-if="canCurrentUserEdit">
-        <dl v-if="isCanvasChime" class="chime-card__details-list">
-          <dt>Join</dt>
-          <dd>
+        <div v-if="isCanvasChime">
+          <DetailsItem>
+            <template #label>Join</template>
             <a :href="canvasUrl.origin" target="_blank">{{ canvasUrl.host }}</a>
-          </dd>
-        </dl>
+          </DetailsItem>
+        </div>
 
-        <dl v-if="!isCanvasChime" class="chime-card__details-list">
-          <dt>Access&nbsp;Code</dt>
-          <dd>{{ hyphenatedAccessCode }}</dd>
-          <dt>Join</dt>
-          <dd>
+        <div v-if="!isCanvasChime">
+          <DetailsItem>
+            <template #label>Access&nbsp;Code</template>
+            {{ hyphenatedAccessCode }}
+          </DetailsItem>
+          <DetailsItem>
+            <template #label>Join</template>
             <a :href="joinUrl" target="_blank">{{ joinUrl }}</a>
-          </dd>
-        </dl>
+          </DetailsItem>
+        </div>
       </div>
     </router-link>
 
@@ -50,12 +52,14 @@ import {
 } from "../../helpers/chimeSelectors.js";
 import isPermittedOnChime from "../../helpers/isPermittedOnChime";
 import { PERMISSIONS } from "../../helpers/constants";
+import DetailsItem from "../../components/DetailsItem.vue";
 
 export default {
   components: {
     Card,
     CardActionButton,
     Chip,
+    DetailsItem,
   },
   props: {
     chime: {
@@ -121,7 +125,7 @@ export default {
   margin-left: 1rem;
 }
 
-.chime-card__details-list {
+/* .chime-card__details-list {
   display: grid;
   grid-template-columns: min-content 1fr;
   column-gap: 1rem;
@@ -140,5 +144,5 @@ export default {
 .chime-card__details-list dd,
 .chime-card__details-list a {
   color: #777;
-}
+} */
 </style>

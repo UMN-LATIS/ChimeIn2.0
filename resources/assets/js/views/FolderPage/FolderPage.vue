@@ -19,7 +19,7 @@
       >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
     </div>
     <div class="container">
-      <div class="row mt-2">
+      <div class="row mt-4">
         <div class="col-4 align-items-center d-flex">
           <h1 class="h4">{{ folder.name }}</h1>
         </div>
@@ -35,15 +35,6 @@
               @click="show_edit_folder = !show_edit_folder"
             >
               Folder Settings <i class="material-icons pointer">edit</i>
-            </button>
-
-            <button
-              dusk="new-question-button"
-              data-cy="new-question-button"
-              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-              @click="showModal = true"
-            >
-              New Question <i class="material-icons pointer">add</i>
             </button>
             <button
               dusk="open-all-button"
@@ -178,6 +169,14 @@
       </div>
 
       <div class="row border-top mt-3 pt-3">
+        <button
+          dusk="new-question-button"
+          data-cy="new-question-button"
+          class="btn btn-outline-primary align-items-center d-flex"
+          @click="showModal = true"
+        >
+          <i class="material-icons pointer">add</i> Add Question
+        </button>
         <div class="col-sm-12">
           <ul>
             <draggable
