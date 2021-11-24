@@ -10089,7 +10089,7 @@ vue-select@^3.11.2:
 
 "vue-simple-lightbox@https://github.com/cmcfadden/vue-simple-lightbox.git":
   version "0.0.5"
-  resolved "git+ssh://git@github.com/cmcfadden/vue-simple-lightbox.git#376991626b261813773de059355561f9118c9096"
+  resolved "https://github.com/cmcfadden/vue-simple-lightbox.git#376991626b261813773de059355561f9118c9096"
   dependencies:
     jquery "^3.2.1"
     simplelightbox "^1.10.7"
