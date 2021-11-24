@@ -1,12 +1,12 @@
 <template>
   <div class="lti-launch-page">
     <h1 class="lti-launch-page__heading">Canvas/ChimeIn Setup</h1>
-    <lti-import-selector
+    <LTIImportSelector
       :similar_chimes="ltiDetails.similar_chimes"
       v-if="ltiDetails.similar_chimes"
       v-on:new_chime="ltiDetails.similar_chimes = false"
     />
-    <lti-setup-preferences v-else />
+    <LTISetupPreferences v-else />
   </div>
 </template>
 
@@ -22,8 +22,15 @@
 </style>
 
 <script>
+import LTIImportSelector from "./ltiImportSelector.vue";
+import LTISetupPreferences from "./ltiSetupPreferences.vue";
+
 export default {
   props: ["lti_details"],
+  components: {
+    LTIImportSelector,
+    LTISetupPreferences,
+  },
   data() {
     return {
       ltiDetails: this.lti_details,

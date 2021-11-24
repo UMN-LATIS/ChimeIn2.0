@@ -20,6 +20,9 @@ Vue.use(VueAnnouncer);
 Vue.filter("pluralize", pluralizeFilter);
 Vue.directive("tooltip", tooltipDirective);
 
+import ltilaunch from "./components/lti/ltiLaunch.vue";
+Vue.component("lti-launch", ltilaunch);
+
 new Vue({
   router,
   store,
