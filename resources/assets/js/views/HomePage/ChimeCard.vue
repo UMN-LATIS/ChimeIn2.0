@@ -14,24 +14,26 @@
         </div>
       </header>
 
-      <dl v-if="isCanvasChime" class="chime-card__details-list">
-        <dt>Join</dt>
-        <dd>
-          <a :href="canvasUrl.origin" target="_blank">{{ canvasUrl.host }}</a>
-        </dd>
-      </dl>
+      <div v-if="canCurrentUserEdit">
+        <dl v-if="isCanvasChime" class="chime-card__details-list">
+          <dt>Join</dt>
+          <dd>
+            <a :href="canvasUrl.origin" target="_blank">{{ canvasUrl.host }}</a>
+          </dd>
+        </dl>
 
-      <dl v-if="!isCanvasChime" class="chime-card__details-list">
-        <dt>Access&nbsp;Code</dt>
-        <dd>{{ hyphenatedAccessCode }}</dd>
-        <dt>Join</dt>
-        <dd>
-          <a :href="joinUrl" target="_blank">{{ joinUrl }}</a>
-        </dd>
-      </dl>
+        <dl v-if="!isCanvasChime" class="chime-card__details-list">
+          <dt>Access&nbsp;Code</dt>
+          <dd>{{ hyphenatedAccessCode }}</dd>
+          <dt>Join</dt>
+          <dd>
+            <a :href="joinUrl" target="_blank">{{ joinUrl }}</a>
+          </dd>
+        </dl>
+      </div>
     </router-link>
 
-    <template #actions>
+    <template #actions v-if="canCurrentUserEdit">
       <CardActionButton icon="clear" @click="handleChimeDelete(chime)" />
     </template>
   </Card>
@@ -46,6 +48,8 @@ import {
   selectIsCanvasChime,
   selectJoinUrl,
 } from "../../helpers/chimeSelectors.js";
+import isPermittedOnChime from "../../helpers/isPermittedOnChime";
+import { PERMISSIONS } from "../../helpers/constants";
 
 export default {
   components: {
@@ -82,6 +86,9 @@ export default {
     },
   },
   computed: {
+    canCurrentUserEdit() {
+      return isPermittedOnChime(PERMISSIONS.EDIT, this.chime);
+    },
     hyphenatedAccessCode() {
       return toHyphenatedCode(this.chime.access_code);
     },
@@ -109,7 +116,6 @@ export default {
 .chime-card__header {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
 }
 .chime-card__chip-group {
   margin-left: 1rem;
@@ -122,6 +128,7 @@ export default {
   font-size: 0.9rem;
   align-items: baseline;
   margin: 0;
+  margin-top: 0.5rem;
 }
 
 .chime-card__details-list dt {
