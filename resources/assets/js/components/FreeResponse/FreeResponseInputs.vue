@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import get from "lodash/get";
+
 export default {
   props: ["question", "response", "disabled"],
   data() {
@@ -65,16 +67,7 @@ export default {
     },
   },
   mounted() {
-    const hasOwn = Object.prototype.hasOwnProperty.call;
-    const response = this.response;
-
-    if (
-      response &&
-      hasOwn(response, "response_info") &&
-      hasOwn(response.response_info, "text")
-    ) {
-      this.response_text = response.response_info.text;
-    }
+    this.response_text = get(this, "response.response_info.text", "");
   },
   methods: {
     record_response: function () {

@@ -1,23 +1,22 @@
 <template>
-  <div>
+  <div class="present-page">
     <NavBar
       v-if="!folder.student_view"
       title="Back to Folder"
       :user="user"
-      :access_code="hyphenatedCode"
       :host="host"
       :link="{ name: 'folder', params: { chimeId, folderId } }"
     />
-
     <ErrorDialog />
 
-    <div class="container-fluid presentContainer">
+    <Spinner v-if="!chime" />
+    <div v-if="chime" class="container-fluid present-container">
       <fullscreen ref="fullscreen" @change="fullscreenChange">
         <PresentQuestion
           v-if="current_question_item"
           :users-count="usersCount"
           :question="current_question_item"
-          :chime-id="chimeId"
+          :chime="chime"
           :folder="folder"
           @nextQuestion="next_question"
           @previousQuestion="previous_question"
@@ -25,40 +24,19 @@
           @toggle="toggle"
           @reload="reload"
         />
-        <div
-          v-if="fullscreen && host"
-          class="alert alert-info text-center fixed-bottom joinbox"
-          role="alert"
-        >
-          <span class="text-center"
-            >Go to <strong>{{ host }}</strong> and enter code
-            <strong>{{ hyphenatedCode }}</strong></span
-          >
-        </div>
       </fullscreen>
     </div>
   </div>
 </template>
 
-<style>
-.presentContainer {
-  min-height: 90%;
-}
-.joinbox {
-  margin: 10px;
-}
-.fullscreen {
-  background: #fff;
-}
-</style>
-
 <script>
 import { component as fullscreen } from "vue-fullscreen";
 import { questionsListener } from "../../mixins/questionsListener";
-import toHyphenatedCode from "../../helpers/toHyphenatedCode.mjs";
+import toHyphenatedCode from "../../helpers/toHyphenatedCode.js";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import PresentQuestion from "./PresentQuestion.vue";
+import Spinner from "../../components/Spinner.vue";
 
 export default {
   components: {
@@ -66,6 +44,7 @@ export default {
     ErrorDialog,
     NavBar,
     PresentQuestion,
+    Spinner,
   },
   mixins: [questionsListener],
   props: ["user", "chimeId", "folderId", "questionId"],
@@ -108,7 +87,6 @@ export default {
     this.current_question = parseInt(this.$route.params.questionId) || 0;
     this.load_questions();
     axios.get("/api/chime/" + this.chimeId).then((res) => {
-      console.log(res);
       this.chime = res.data;
     });
   },
@@ -156,3 +134,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.fullscreen {
+  background: #fff;
+  overflow-y: auto;
+  padding-bottom: 6rem;
+  overflow-x: hidden;
+}
+</style>
