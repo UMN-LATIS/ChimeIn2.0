@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueAnnouncer from "vue-announcer";
+import "bootstrap";
 import registerAxios from "./common/axios.js";
 import registerEcho from "./common/echo.js";
 import registerSocketIOClient from "./common/socketioClient.js";

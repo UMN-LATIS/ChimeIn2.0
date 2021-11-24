@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="participant-page">
+    <ViewModeNotice
+      v-if="inParticipantView"
+      :canvasUrl="canvasCourseUrl"
+      :joinUrl="joinUrl"
+    />
     <NavBar title="Home" :user="user" :link="'/'" />
     <ErrorDialog />
     <div v-if="error" class="alert alert-warning" role="alert">
@@ -81,10 +86,16 @@
 }
 </style>
 <script>
+import get from "lodash/get";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import ParticipantPrompt from "./ParticipantPrompt.vue";
 import Response from "./ParticipantResponse.vue";
+import ViewModeNotice from "./ViewModeNotice.vue";
+import {
+  selectCanvasCourseUrl,
+  selectJoinUrl,
+} from "../../helpers/chimeSelectors.js";
 
 export default {
   components: {
@@ -92,6 +103,7 @@ export default {
     NavBar,
     ParticipantPrompt,
     Response,
+    ViewModeNotice,
   },
   props: ["user", "chimeId", "folderId"],
   data() {
@@ -104,6 +116,18 @@ export default {
     };
   },
   computed: {
+    canvasCourseUrl() {
+      return selectCanvasCourseUrl(this.chime);
+    },
+    joinUrl() {
+      return selectJoinUrl(this.chime);
+    },
+    inParticipantView() {
+      const viewMode = get(this, "$route.query.viewMode", null);
+      if (!viewMode) return false;
+
+      return viewMode.toLowerCase() === "participant";
+    },
     filteredSession: function () {
       if (this.folderId) {
         return this.sessions.filter(

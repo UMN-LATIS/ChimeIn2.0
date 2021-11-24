@@ -2,6 +2,10 @@
 
 [ChimeIn (chimein2.cla.umn.edu)](https://chimein2.cla.umn.edu) is a fast, flexible response tracking tool. Think of it as a web-based "clicker" tool, but with advanced features that aren't possible with traditional clickers. ChimeIn can be used in classes, but it can also be used for meetings, conferences, or any type of event in which you want to collect feedback. ChimeIn can also be used both synchronously and asynchronously.
 
+::: tip Migrating from the original ChimeIn?  
+Check out our [moving to ChimeIn 2](moving-to-chimein-2) page or [contact us](mailto:latistecharch@umn.edu) for a personal introduction
+:::
+
 We've got an orientation video, which will cover all the basics. You can take a look below.
 
 <iframe width="100%" height="415" src="https://www.youtube.com/embed/A1jmm6ckm3Y" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

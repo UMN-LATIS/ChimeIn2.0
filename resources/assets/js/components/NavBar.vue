@@ -16,10 +16,6 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div id="navbarSupportedContent" class="collapse navbar-collapse">
-      <div v-if="host" class="ml-auto navbar-text" data-cy="show-join-code">
-        Go to <strong>{{ host }}</strong> and enter code
-        <strong>{{ access_code }}</strong>
-      </div>
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <a
