@@ -205,7 +205,7 @@ export default {
         id: PARTICIPATION_CREDIT.NONE,
         title: "Correct Answers Only",
         description:
-          "Full credit for correct answer. Incorrect or non-responses are earn no credit.",
+          "Full credit for correct answers. Incorrect or non-responses are earn no credit.",
         img: {
           src: "/img/participation-credit-none.svg",
           alt: "No credit for participation, only correct answer. Illustration shows a checkmark worth 100%, an X worth 0%, and a blank worth 0%.",
