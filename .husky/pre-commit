@@ -2,7 +2,7 @@
 . "$(dirname "$0")/_/husky.sh"
 
 # Prettier on anything staged
-# npm run pretty-quick:staged
+yarn run pretty-quick:staged
 
 # ESlint staged files
 # src: https://gist.github.com/dahjelle/8ddedf0aebd488208a9a7c829f19b9e8

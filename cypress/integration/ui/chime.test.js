@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 
 import api from "../api/index.js";
-import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode.mjs";
+import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode.js";
 
 const questionText = "<p>What?</p>";
 const questionResponses = [
@@ -51,9 +51,7 @@ describe("chime UI", () => {
             toHyphenatedCode(testChime.access_code),
           ].forEach((joinCode) => {
             cy.visit("/");
-            cy.get("#access_code")
-              .type(joinCode)
-              .type("{enter}");
+            cy.get("#access_code").type(joinCode).type("{enter}");
 
             cy.get("main").should("contain.html", questionText);
             questionResponses.forEach((response) => {
@@ -71,9 +69,7 @@ describe("chime UI", () => {
 
     it("creates a new chime", () => {
       cy.visit("/");
-      cy.get("main")
-        .contains("Add a Chime")
-        .click();
+      cy.get("main").contains("Add a Chime").click();
       cy.get("#chime_name_input").type("Test Chime");
       cy.get("#joinInstructions").check();
       cy.get("[data-cy=create-chime-button]").click();
@@ -121,9 +117,7 @@ describe("chime UI", () => {
       });
 
       it("updates a chime name", () => {
-        cy.get("[data-cy=chime-name-input]")
-          .clear()
-          .type("Updated Name");
+        cy.get("[data-cy=chime-name-input]").clear().type("Updated Name");
         cy.get("[data-cy=save-chime-name-button]").click();
         cy.get(".chime__name").should("contain.text", "Updated Name");
       });
@@ -137,12 +131,9 @@ describe("chime UI", () => {
         cy.get(".title").should("contain.text", "Login to Continue");
       });
 
-      it("displays join instructions when presenting", () => {
-        cy.get("#joinInstructions").check();
+      it("displays join instructions when presenting (by default)", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}/present`);
-
-        // FIXME: This text is in the navbar and will be hidden on small screens
-        cy.get("[data-cy=show-join-code]").should(
+        cy.get("[data-cy=access-code]").should(
           "contain.text",
           toHyphenatedCode(testChime.access_code)
         );
@@ -226,12 +217,8 @@ describe("chime UI", () => {
           .as("student-row");
 
         // activate select (currently not active by default?)
-        cy.get("@student-row")
-          .contains("Participant")
-          .click();
-        cy.get("@student-row")
-          .find("select")
-          .select("Presenter");
+        cy.get("@student-row").contains("Participant").click();
+        cy.get("@student-row").find("select").select("Presenter");
         cy.logout();
 
         // now student user should have view access to chime
@@ -241,9 +228,7 @@ describe("chime UI", () => {
 
         // test that student can edit chime
         cy.get("[data-cy=toggle-chime-settings-panel]").click();
-        cy.get("[data-cy=chime-name-input]")
-          .clear()
-          .type("Updated Name");
+        cy.get("[data-cy=chime-name-input]").clear().type("Updated Name");
         cy.get("[data-cy=save-chime-name-button]").click();
         cy.get(".chime__name").should("contain.text", "Updated Name");
 
@@ -252,12 +237,8 @@ describe("chime UI", () => {
           .contains("faculty@umn.edu")
           .parent()
           .as("faculty-row");
-        cy.get("@faculty-row")
-          .contains("Presenter")
-          .click();
-        cy.get("@faculty-row")
-          .find("select")
-          .select("Participant");
+        cy.get("@faculty-row").contains("Presenter").click();
+        cy.get("@faculty-row").find("select").select("Participant");
         cy.logout();
 
         // now faculty should not be able to access chime settings

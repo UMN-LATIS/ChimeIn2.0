@@ -55,7 +55,7 @@ html {
 }
 
 body {
-  height: 100%;
+  min-height: 100%;
   font-family: "Open Sans", sans-serif;
   color: var(--black);
   line-height: 1.4;
@@ -96,7 +96,7 @@ h5 {
 
 .btn-outline-secondary {
   border-color: var(--gray-dark);
-  color:  var(--gray-dark);
+  color: var(--gray-dark);
 }
 
 .btn-outline-secondary:hover {
@@ -107,4 +107,8 @@ h5 {
 
 .navbar-light .navbar-nav .nav-link {
   font-size: 14px;
+}
+
+.badge-gold {
+  background: var(--gold);
 }
