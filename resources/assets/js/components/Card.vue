@@ -77,6 +77,8 @@ export default {
 }
 
 .chime-card__actions {
+  display: flex;
+  align-items: flex-start;
   padding: 0.25rem 0.5rem;
 }
 </style>

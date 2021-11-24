@@ -170,32 +170,31 @@
       </div>
 
       <div class="row border-top mt-3 pt-3">
-        <button
-          dusk="new-question-button"
-          data-cy="new-question-button"
-          class="btn btn-outline-primary align-items-center d-flex"
-          @click="showModal = true"
-        >
-          <i class="material-icons pointer">add</i> Add Question
-        </button>
         <div class="col-sm-12">
-          <ul>
-            <draggable
-              v-model="questions"
-              data-cy="question-list"
-              handle=".draghandle"
-              @end="swap_question"
-            >
-              <QuestionRow
-                v-for="q in questions"
-                :key="q.id"
-                :folder="folder"
-                :question="q"
-                @editquestion="load_questions"
-                @deletequestion="delete_question"
-              />
-            </draggable>
-          </ul>
+          <button
+            data-cy="new-question-button"
+            class="btn btn-outline-primary align-items-center d-flex"
+            @click="showModal = true"
+          >
+            <i class="material-icons pointer">add</i> Add Question
+          </button>
+
+          <draggable
+            v-model="questions"
+            data-cy="question-list"
+            class="question-list"
+            handle=".draghandle"
+            @end="swap_question"
+          >
+            <QuestionCard
+              v-for="q in questions"
+              :key="q.id"
+              :folder="folder"
+              :question="q"
+              @editquestion="load_questions"
+              @deletequestion="delete_question"
+            />
+          </draggable>
         </div>
       </div>
     </div>
@@ -226,8 +225,12 @@ import draggable from "vuedraggable";
 import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
-import QuestionRow from "./QuestionRow.vue";
+import QuestionCard from "./QuestionCard.vue";
 import Chip from "../../components/Chip.vue";
+import {
+  selectIsCanvasChime,
+  selectCanvasCourseUrl,
+} from "../../helpers/chimeSelectors";
 
 const QuestionForm = () =>
   import(
@@ -241,7 +244,7 @@ export default {
     QuestionForm,
     ErrorDialog,
     NavBar,
-    QuestionRow,
+    QuestionCard,
     Chip,
   },
   mixins: [questionsListener],
@@ -274,6 +277,14 @@ export default {
         );
       }
       return [];
+    },
+    isCanvasChime() {
+      return selectIsCanvasChime(this.chime);
+    },
+    canvasUrl() {
+      const fullCanvasUrlString =
+        selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
+      return new URL(fullCanvasUrlString);
     },
   },
   watch: {
@@ -515,6 +526,10 @@ export default {
 <style scoped>
 ul li {
   list-style: none;
+}
+
+.question-list {
+  margin: 1rem 0;
 }
 
 .align-items-center h4 {
