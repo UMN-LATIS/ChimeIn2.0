@@ -175,7 +175,7 @@ class LTIHandler extends Controller
     private function relinkSimilarFolder($chime, $folderTitle, $resourceLink) {
         $folder = $chime->folders->where("name", $folderTitle)->where("resource_link_pk", null)->first();
         // this is an imported folder, update it
-        if($folder) {
+        if($folder && $chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
             $folder->resource_link_pk = $resourceLink;
             $folder->save();
             return $folder;
