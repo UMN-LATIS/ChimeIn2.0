@@ -2,7 +2,9 @@
   <Card class="question-card">
     <footer class="question-card__footer">
       <span class="question-card__question-type">{{ questionType }}</span>
-      <Chip color="primary">{{ totalResponses }} Responses</Chip>
+      <Chip color="primary"
+        >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
+      >
     </footer>
     <div class="flow-text question_list_text" v-html="question.text" />
 
@@ -146,6 +148,9 @@ export default {
             )
           );
       }
+    },
+    pluralize(str, count) {
+      return count === 1 ? str : str + "s";
     },
   },
 };
