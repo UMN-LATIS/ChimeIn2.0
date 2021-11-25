@@ -1,10 +1,14 @@
 <template>
-  <Card class="question-card">
+  <Card
+    class="question-card"
+    :icon="showMoveIcon ? 'drag_handle' : 'arrow_forward'"
+    iconClass="handle"
+  >
     <footer class="question-card__footer">
       <span class="question-card__question-type">{{
         questionTypeToString
       }}</span>
-      <Chip color="primary"
+      <Chip :color="totalResponses ? 'primary' : 'muted'" solid="true"
         >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
       >
     </footer>
@@ -86,6 +90,10 @@ export default {
     },
     question: {
       type: Object,
+      required: true,
+    },
+    showMoveIcon: {
+      type: Boolean,
       required: true,
     },
   },

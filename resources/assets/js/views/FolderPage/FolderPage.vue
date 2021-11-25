@@ -177,11 +177,21 @@
             <i class="material-icons pointer">add</i> Add Question
           </button>
 
-          <draggable
+          <!-- <Draggable
+            v-if="orderedQuestions.length"
+            v-model="orderedQuestions"
+            class="chime__ordered-folders"
+            handle=".handle"
+            :animation="200"
+            :disabled="false"
+            ghostClass="ghost"
+          > -->
+          <Draggable
             v-model="questions"
             data-cy="question-list"
             class="question-list"
-            handle=".draghandle"
+            handle=".handle"
+            ghostClass="ghost"
             @end="swap_question"
           >
             <QuestionCard
@@ -189,9 +199,10 @@
               :key="q.id"
               :folder="folder"
               :question="q"
+              :showMoveIcon="questions.length > 1"
               @change="load_questions"
             />
-          </draggable>
+          </Draggable>
         </div>
       </div>
     </div>
@@ -218,7 +229,7 @@
 
 <script>
 import orderBy from "lodash/orderBy";
-import draggable from "vuedraggable";
+import Draggable from "vuedraggable";
 import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
@@ -237,7 +248,7 @@ const QuestionForm = () =>
 
 export default {
   components: {
-    draggable,
+    Draggable,
     QuestionForm,
     ErrorDialog,
     NavBar,

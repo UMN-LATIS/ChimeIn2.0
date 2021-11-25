@@ -19,6 +19,7 @@ export default {
       const colorClasses = [
         "primary",
         "secondary",
+        "muted",
         "green",
         "yellow",
         "red",
@@ -52,6 +53,24 @@ export default {
   line-height: 1em;
   padding: 0.5em;
   border-radius: 1rem;
+}
+.chip--primary {
+  --color: var(--primary);
+  --color-inverse: var(--white);
+}
+.chip--secondary {
+  --color: var(--secondary);
+  --color-inverse: var(--white);
+}
+
+.chip--muted {
+  --color: #aaa;
+  --color-inverse: #fff;
+}
+
+.chip--muted.chip--solid {
+  --color: #ccc;
+  --color-inverse: #fff;
 }
 
 .chip--green {
