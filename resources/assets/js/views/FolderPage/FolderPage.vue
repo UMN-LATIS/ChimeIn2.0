@@ -60,7 +60,6 @@
                   callbackUrl: $route.path,
                 },
               }"
-              tag="button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
               <i class="material-icons">preview</i>
@@ -71,7 +70,6 @@
                 name: 'present',
                 params: { chimeId: chimeId, folderId: folderId },
               }"
-              tag="button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
               <i class="material-icons">play_arrow</i>
