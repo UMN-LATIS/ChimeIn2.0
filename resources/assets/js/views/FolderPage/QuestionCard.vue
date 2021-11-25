@@ -20,13 +20,27 @@
         >Edit</CardActionButton
       >
 
-      <CardActionButton icon="play_circle_outline" @click="handlePresentClick"
+      <CardActionButton
+        icon="play_circle_outline"
+        :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${
+          question.order - 1
+        }`"
         >Present</CardActionButton
       >
       <CardActionButton icon="clear" @click="handleDeleteClick"
         >Delete</CardActionButton
       >
     </template>
+
+    <QuestionForm
+      v-if="showEdit"
+      :show="showEdit"
+      :question="question"
+      :folder="folder"
+      control-type="edit"
+      @edited="handleQuestionEdited"
+      @close="showEdit = false"
+    />
   </Card>
 </template>
 
@@ -35,6 +49,7 @@ import Card from "../../components/Card.vue";
 import Chip from "../../components/Chip.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
 import Toggle from "../../components/Toggle.vue";
+import QuestionForm from "../QuestionForm/QuestionForm.vue";
 
 export default {
   components: {
@@ -42,6 +57,7 @@ export default {
     CardActionButton,
     Chip,
     Toggle,
+    QuestionForm,
   },
   props: {
     folder: {
@@ -53,6 +69,7 @@ export default {
       required: true,
     },
   },
+  events: ["change"],
   data: function () {
     return {
       showEdit: false,
@@ -79,12 +96,26 @@ export default {
   },
   methods: {
     handleEditClick() {
-      this.$emit("editquestion");
-      this.show_edit = false;
+      this.showEdit = true;
     },
     handlePresentClick() {},
     handleDeleteClick() {
-      this.$emit("deletequestion", this.question.id);
+      if (confirm("Are you sure you want to remove this question?")) {
+        const chimeId = this.folder.chime_id;
+        const folderId = this.folder.id;
+        const questionId = this.question.id;
+
+        const url = `/api/chime/${chimeId}/folder/${folderId}/question/${questionId}`;
+
+        axios
+          .delete(url)
+          .then(() => this.$emit("change"))
+          .catch((err) => console.log(err.response));
+      }
+    },
+    handleQuestionEdited() {
+      this.$emit("change");
+      this.showEdit = false;
     },
     handleToggleOpenQuestion($event) {
       const shouldOpen = $event.target.checked;

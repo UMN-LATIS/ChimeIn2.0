@@ -191,8 +191,7 @@
               :key="q.id"
               :folder="folder"
               :question="q"
-              @editquestion="load_questions"
-              @deletequestion="delete_question"
+              @change="load_questions"
             />
           </draggable>
         </div>
