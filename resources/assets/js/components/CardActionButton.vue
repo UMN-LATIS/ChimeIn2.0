@@ -1,10 +1,15 @@
 <template>
-  <button class="icon-button" @click="handleClick">
+  <component
+    :is="type"
+    v-bind="{ to, href }"
+    class="icon-button"
+    @click="handleClick"
+  >
     <i class="material-icons icon-button__icon">{{ icon }}</i>
     <div class="icon-button__label">
       <slot />
     </div>
-  </button>
+  </component>
 </template>
 <script>
 export default {
@@ -12,6 +17,19 @@ export default {
     icon: {
       type: String,
       required: true,
+    },
+    to: {
+      type: String,
+    },
+    href: {
+      type: String,
+    },
+  },
+  computed: {
+    type() {
+      if (this.to) return "router-link";
+      if (this.href) return "a";
+      return "button";
     },
   },
   methods: {
