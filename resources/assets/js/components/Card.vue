@@ -8,9 +8,14 @@
       <slot />
     </div>
 
-    <div class="chime-card__actions">
-      <slot name="actions" />
-    </div>
+    <aside class="chime-card__aside">
+      <div class="chime-card__actions">
+        <slot name="actions" />
+      </div>
+      <div class="chime-card__additional-info">
+        <slot name="additional-info" />
+      </div>
+    </aside>
   </div>
 </template>
 <script>
@@ -76,9 +81,19 @@ export default {
   }
 }
 
+.chime-card__aside {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+}
+
 .chime-card__actions {
   display: flex;
   align-items: flex-start;
   padding: 0.25rem 0.5rem;
+}
+
+.chime-card__additional-info {
+  flex-grow: 1;
 }
 </style>

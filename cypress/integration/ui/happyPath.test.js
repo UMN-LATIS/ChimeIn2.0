@@ -12,7 +12,7 @@ describe("happy path", () => {
 
   it("creates a new chime, folder, and multiple choice question", () => {
     // create a chime
-    cy.get("main").contains("Add a Chime").click();
+    cy.get("main").contains("Add Chime").click();
     cy.get("#chime_name_input").type("Test Chime");
     cy.get("#joinInstructions").check();
     cy.get("[data-cy=create-chime-button]").click();
@@ -21,7 +21,7 @@ describe("happy path", () => {
 
     // create a folder
     cy.get("#createFolder").type("Test Folder 1");
-    cy.get("[data-cy=create-folder-button]").contains("Create").click();
+    cy.get("[data-cy=create-folder-button]").contains("Add Folder").click();
 
     // go into the folder
     cy.get("[data-cy=folder-card]").contains("Test Folder 1").click();
@@ -57,7 +57,7 @@ describe("happy path", () => {
     cy.contains("Save").click();
 
     // check that the question was created
-    cy.get("[data-cy=question-list] li").should(
+    cy.get("[data-cy=question-list] .chime-card").should(
       "contain",
       "What is your favorite color?"
     );

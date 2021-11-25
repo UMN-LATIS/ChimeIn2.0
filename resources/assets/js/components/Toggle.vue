@@ -52,6 +52,7 @@ export default {
   --padding: 0.75rem;
   width: calc(var(--width) + 2 * var(--padding) + 2px);
   padding: 0.8rem;
+  padding-bottom: 0.25rem;
 }
 .toggle__label {
   position: relative;

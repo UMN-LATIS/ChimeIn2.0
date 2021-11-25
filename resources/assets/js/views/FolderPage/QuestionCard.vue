@@ -8,25 +8,29 @@
       <span class="question-card__question-type">{{
         questionTypeToString
       }}</span>
-      <Chip :color="totalResponses ? 'primary' : 'muted'" solid="true"
-        >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
-      >
     </footer>
     <div class="flow-text question_list_text" v-html="question.text" />
+
     <component
       v-if="hasSpecializedQuestionDisplay(questionType)"
       class="question-card__choice-display"
       :is="`${questionType}_display`"
       :question="question"
     />
-    <!-- <MultipleChoiceDisplay
-      class="question-card__choice-display"
-      v-if="questionType === 'multiple_choice'"
+
+    <QuestionForm
+      v-if="showEdit"
+      :show="showEdit"
       :question="question"
-    /> -->
+      :folder="folder"
+      control-type="edit"
+      @edited="handleQuestionEdited"
+      @close="showEdit = false"
+    />
 
     <template #actions>
       <Toggle
+        data-cy="toggle-open-question"
         :checked="isOpen"
         :name="`question-${question.id}-isOpen`"
         color="green"
@@ -51,15 +55,14 @@
       >
     </template>
 
-    <QuestionForm
-      v-if="showEdit"
-      :show="showEdit"
-      :question="question"
-      :folder="folder"
-      control-type="edit"
-      @edited="handleQuestionEdited"
-      @close="showEdit = false"
-    />
+    <template #additional-info>
+      <div class="total-responses">
+        <div class="total-responses__label">
+          {{ pluralize("Response", totalResponses) }}
+        </div>
+        <div class="total-responses__number">{{ totalResponses }}</div>
+      </div>
+    </template>
   </Card>
 </template>
 
@@ -207,9 +210,27 @@ export default {
   margin-bottom: 1rem;
 }
 
-/* .question-card__choice-display {
-  padding: 0;
-} */
+.total-responses {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.total-responses__label {
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.total-responses__number {
+  font-size: 3rem;
+}
 </style>
 <style>
 .question-card__choice-display.mult-choice-display {
