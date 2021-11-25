@@ -17,8 +17,8 @@ class LTI13Processor {
 	
     static function periodicTask() {
 
-		$oldestResponse = now()->subMinutes(200);
-		$newestResponse = now()->subMinutes(180);
+		$oldestResponse = now()->subMinutes(200)->setTimezone("America/Chicago");
+		$newestResponse = now()->subMinutes(180)->setTimezone("America/Chicago");
 
 		// Lti1.1 sync
         $folderIds = DB::table('folders')
