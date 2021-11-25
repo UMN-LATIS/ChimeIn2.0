@@ -8,6 +8,9 @@
       <span class="question-card__question-type">{{
         questionTypeToString
       }}</span>
+      <Chip :color="totalResponses ? 'primary' : 'muted'" solid="true"
+        >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
+      >
     </footer>
     <div class="flow-text question_list_text" v-html="question.text" />
 
@@ -53,15 +56,6 @@
       <CardActionButton icon="clear" @click="handleDeleteClick"
         >Delete</CardActionButton
       >
-    </template>
-
-    <template #additional-info>
-      <div class="total-responses">
-        <div class="total-responses__label">
-          {{ pluralize("Response", totalResponses) }}
-        </div>
-        <div class="total-responses__number">{{ totalResponses }}</div>
-      </div>
     </template>
   </Card>
 </template>
