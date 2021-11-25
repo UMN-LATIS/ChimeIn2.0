@@ -1,12 +1,25 @@
 <template>
   <Card class="question-card">
     <footer class="question-card__footer">
-      <span class="question-card__question-type">{{ questionType }}</span>
+      <span class="question-card__question-type">{{
+        questionTypeToString
+      }}</span>
       <Chip color="primary"
         >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
       >
     </footer>
     <div class="flow-text question_list_text" v-html="question.text" />
+    <component
+      v-if="hasSpecializedQuestionDisplay(questionType)"
+      class="question-card__choice-display"
+      :is="`${questionType}_display`"
+      :question="question"
+    />
+    <!-- <MultipleChoiceDisplay
+      class="question-card__choice-display"
+      v-if="questionType === 'multiple_choice'"
+      :question="question"
+    /> -->
 
     <template #actions>
       <Toggle
@@ -52,6 +65,9 @@ import Chip from "../../components/Chip.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
 import Toggle from "../../components/Toggle.vue";
 import QuestionForm from "../QuestionForm/QuestionForm.vue";
+import MultipleChoiceDisplay from "../../components/MultipleChoice/MultipleChoiceDisplay.vue";
+import HeatmapResponseDisplay from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
+import hasSpecializedQuestionDisplay from "../../helpers/hasSpecializedQuestionDisplay";
 
 export default {
   components: {
@@ -60,6 +76,8 @@ export default {
     Chip,
     Toggle,
     QuestionForm,
+    multiple_choice_display: MultipleChoiceDisplay,
+    heatmap_response_display: HeatmapResponseDisplay,
   },
   props: {
     folder: {
@@ -79,7 +97,10 @@ export default {
   },
   computed: {
     questionType() {
-      return this.question.question_info.question_type
+      return this.question.question_info.question_type;
+    },
+    questionTypeToString() {
+      return this.questionType
         .split("_")
         .map((str) => str.charAt(0).toUpperCase() + str.slice(1))
         .join(" ");
@@ -97,6 +118,7 @@ export default {
     },
   },
   methods: {
+    hasSpecializedQuestionDisplay,
     handleEditClick() {
       this.showEdit = true;
     },
@@ -175,5 +197,23 @@ export default {
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: 1rem;
+}
+
+/* .question-card__choice-display {
+  padding: 0;
+} */
+</style>
+<style>
+.question-card__choice-display.mult-choice-display {
+  padding-left: 1rem;
+}
+.question-card__choice-display .questionDisplay {
+  font-size: 1rem;
+}
+.question-card__choice-display.max-height-image {
+  border: 1px solid #ddd;
+  height: 10rem;
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>
