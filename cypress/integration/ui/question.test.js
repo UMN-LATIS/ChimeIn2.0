@@ -51,7 +51,7 @@ describe("question", () => {
         cy.contains("Save").click();
 
         // check that the question was created
-        cy.get("[data-cy=question-list] li").should(
+        cy.get("[data-cy=question-list] .question-card").should(
           "contain",
           "What is your favorite color?"
         );

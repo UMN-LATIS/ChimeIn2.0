@@ -42,7 +42,10 @@
         {{ isOpen ? "Open" : "Closed" }}
       </Toggle>
 
-      <CardActionButton icon="edit" @click="handleEditClick"
+      <CardActionButton
+        data-cy="edit-question-button"
+        icon="edit"
+        @click="handleEditClick"
         >Edit</CardActionButton
       >
 
