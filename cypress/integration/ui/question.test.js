@@ -60,6 +60,12 @@ describe("question", () => {
 
   it("opens a question", () => {
     let testChime, testFolder, testQuestion;
+
+    cy.intercept({
+      method: "POST",
+      url: "/api/chime/*/folder/*/question/*",
+    }).as("apiOpenQuestion");
+
     api
       .createChimeFolderQuestion(favoriteColorQuestion)
       .then(({ chime, folder, question }) => {
@@ -74,6 +80,7 @@ describe("question", () => {
         cy.get("[data-cy=toggle-open-question]").click();
       })
       .then(() => {
+        cy.wait("@apiOpenQuestion", { requestTimeout: 2000 });
         return api.getQuestion({
           chimeId: testChime.id,
           folderId: testFolder.id,
