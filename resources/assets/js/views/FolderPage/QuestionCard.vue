@@ -8,7 +8,7 @@
       <span class="question-card__question-type">{{
         questionTypeToString
       }}</span>
-      <Chip :color="totalResponses ? 'primary' : 'muted'" solid="true"
+      <Chip :color="totalResponses ? 'primary' : 'muted'" :solid="true"
         >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
       >
     </footer>
