@@ -50,13 +50,17 @@
       >
 
       <CardActionButton
+        data-cy="present-question-button"
         icon="play_circle_outline"
         :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${
           question.order - 1
         }`"
         >Present</CardActionButton
       >
-      <CardActionButton icon="clear" @click="handleDeleteClick"
+      <CardActionButton
+        data-cy="delete-question-button"
+        icon="clear"
+        @click="handleDeleteClick"
         >Delete</CardActionButton
       >
     </template>
