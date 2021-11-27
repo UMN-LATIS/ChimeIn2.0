@@ -18,7 +18,8 @@
         >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
       >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
     </div>
-    <div class="container">
+    <Spinner v-if="!ready" />
+    <div v-if="ready" class="container">
       <div class="row mt-4">
         <div class="col-4 align-items-center d-flex">
           <h1 class="h4">{{ folder.name }}</h1>
@@ -176,16 +177,6 @@
           >
             <i class="material-icons pointer">add</i> Add Question
           </button>
-
-          <!-- <Draggable
-            v-if="orderedQuestions.length"
-            v-model="orderedQuestions"
-            class="chime__ordered-folders"
-            handle=".handle"
-            :animation="200"
-            :disabled="false"
-            ghostClass="ghost"
-          > -->
           <Draggable
             v-model="questions"
             data-cy="question-list"
@@ -239,6 +230,7 @@ import {
   selectIsCanvasChime,
   selectCanvasCourseUrl,
 } from "../../helpers/chimeSelectors";
+import Spinner from "../../components/Spinner.vue";
 
 const QuestionForm = () =>
   import(
@@ -254,6 +246,7 @@ export default {
     NavBar,
     QuestionCard,
     Chip,
+    Spinner,
   },
   mixins: [questionsListener],
   props: ["folderId", "chimeId", "user"],
@@ -275,6 +268,7 @@ export default {
       selected_chime: null,
       selected_folder: null,
       synced: false,
+      ready: false,
     };
   },
   computed: {
@@ -302,9 +296,10 @@ export default {
       }
     },
   },
-  created: function () {
-    this.load_folder();
-    this.load_questions();
+  created() {
+    Promise.all([this.load_folder(), this.load_questions()]).then(() => {
+      this.ready = true;
+    });
   },
   methods: {
     reset: function () {
@@ -420,10 +415,15 @@ export default {
           });
       }
     },
-    load_folder: function () {
-      axios.get("/api/chime/" + this.chimeId + "/openQuestions").then((res) => {
-        this.allSessions = res.data.sessions;
-      });
+    load_folder() {
+      return axios
+        .get("/api/chime/" + this.chimeId + "/openQuestions")
+        .then((res) => {
+          this.allSessions = res.data.sessions;
+        })
+        .catch((err) =>
+          console.error(`Error loading folder: ${err.message}`, err.response)
+        );
     },
 
     openAll: function () {
