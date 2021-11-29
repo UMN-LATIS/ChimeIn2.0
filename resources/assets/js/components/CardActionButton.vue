@@ -3,7 +3,7 @@
     :is="type"
     v-bind="{ to, href }"
     class="icon-button"
-    @click="handleClick"
+    @click.stop="handleClick"
   >
     <i class="material-icons icon-button__icon">{{ icon }}</i>
     <div class="icon-button__label">
@@ -48,6 +48,7 @@ export default {
   justify-content: center;
   border: 0;
   background: transparent;
+  cursor: pointer;
 }
 .icon-button__icon {
   display: block;
