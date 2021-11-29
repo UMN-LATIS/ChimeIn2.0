@@ -4,23 +4,16 @@
     data-cy="folder-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
+    @click.native="$router.push(to)"
   >
-    <router-link :to="`/chime/${chime.id}/folder/${folder.id}`">
+    <router-link :to="to">
       <h2>
         {{ folder.name }}
       </h2>
     </router-link>
     <template #actions>
-      <CardActionButton
-        icon="edit"
-        :to="`/chime/${chime.id}/folder/${folder.id}`"
-      >
-        Edit
-      </CardActionButton>
-      <CardActionButton
-        icon="play_circle_outline"
-        :to="`/chime/${chime.id}/folder/${folder.id}/present`"
-      >
+      <CardActionButton icon="edit" :to="to"> Edit </CardActionButton>
+      <CardActionButton icon="play_circle_outline" :to="`${to}/present`">
         Present
       </CardActionButton>
     </template>
@@ -47,6 +40,11 @@ export default {
     showMoveIcon: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    to() {
+      return `/chime/${this.chime.id}/folder/${this.folder.id}`;
     },
   },
 };

@@ -3,6 +3,7 @@
     class="chime-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
+    @click.native="$router.push(to)"
   >
     <router-link :to="to">
       <header class="chime-card__header">
@@ -13,27 +14,27 @@
           <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip>
         </div>
       </header>
-
-      <div v-if="canCurrentUserEdit">
-        <div v-if="isCanvasChime">
-          <DetailsItem>
-            <template #label>Join</template>
-            <a :href="canvasUrl.origin" target="_blank">{{ canvasUrl.host }}</a>
-          </DetailsItem>
-        </div>
-
-        <div v-if="!isCanvasChime">
-          <DetailsItem>
-            <template #label>Access&nbsp;Code</template>
-            {{ hyphenatedAccessCode }}
-          </DetailsItem>
-          <DetailsItem>
-            <template #label>Join</template>
-            <a :href="joinUrl" target="_blank">{{ joinUrl }}</a>
-          </DetailsItem>
-        </div>
-      </div>
     </router-link>
+
+    <div v-if="canCurrentUserEdit">
+      <div v-if="isCanvasChime">
+        <DetailsItem>
+          <template #label>Join</template>
+          <a :href="canvasUrl.origin" target="_blank">{{ canvasUrl.host }}</a>
+        </DetailsItem>
+      </div>
+
+      <div v-if="!isCanvasChime">
+        <DetailsItem>
+          <template #label>Access&nbsp;Code</template>
+          {{ hyphenatedAccessCode }}
+        </DetailsItem>
+        <DetailsItem>
+          <template #label>Join</template>
+          {{ joinUrl }}
+        </DetailsItem>
+      </div>
+    </div>
 
     <template #actions v-if="canCurrentUserEdit">
       <CardActionButton icon="clear" @click="handleChimeDelete(chime)" />
@@ -120,6 +121,7 @@ export default {
 .chime-card__header {
   display: flex;
   align-items: center;
+  margin-bottom: 1rem;
 }
 .chime-card__chip-group {
   margin-left: 1rem;
