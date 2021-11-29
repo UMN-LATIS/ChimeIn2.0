@@ -96,7 +96,7 @@ export default {
   --color: var(--green);
 }
 .toggle__input:checked ~ .toggle__label::after {
-  --translation: calc(100% + 2px);
+  --translation: calc(100% + 4px);
   transform: translateX(var(--translation));
 }
 
