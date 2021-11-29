@@ -11,12 +11,18 @@
       </h2>
     </router-link>
     <template #actions>
-      <CardActionButton icon="edit" @click="handleEditClick"
-        >Edit</CardActionButton
+      <CardActionButton
+        icon="edit"
+        :to="`/chime/${chime.id}/folder/${folder.id}`"
       >
-      <CardActionButton icon="play_circle_outline" @click="handlePresentClick"
-        >Present</CardActionButton
+        Edit
+      </CardActionButton>
+      <CardActionButton
+        icon="play_circle_outline"
+        :to="`/chime/${chime.id}/folder/${folder.id}/present`"
       >
+        Present
+      </CardActionButton>
     </template>
   </Card>
 </template>
@@ -41,20 +47,6 @@ export default {
     showMoveIcon: {
       type: Boolean,
       default: false,
-    },
-  },
-  methods: {
-    handleEditClick() {
-      this.$router.push({
-        name: "folder",
-        params: { chimeId: this.chime.id, folderId: this.folder.id },
-      });
-    },
-    handlePresentClick() {
-      this.$router.push({
-        name: "present",
-        params: { chimeId: this.chime.id, folderId: this.folder.id },
-      });
     },
   },
 };
