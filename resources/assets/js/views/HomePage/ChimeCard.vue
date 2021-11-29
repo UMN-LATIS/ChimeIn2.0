@@ -124,25 +124,4 @@ export default {
 .chime-card__chip-group {
   margin-left: 1rem;
 }
-
-/* .chime-card__details-list {
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  column-gap: 1rem;
-  font-size: 0.9rem;
-  align-items: baseline;
-  margin: 0;
-  margin-top: 0.5rem;
-}
-
-.chime-card__details-list dt {
-  font-weight: normal;
-  text-transform: uppercase;
-  color: #aaa;
-  font-size: 0.7rem;
-}
-.chime-card__details-list dd,
-.chime-card__details-list a {
-  color: #777;
-} */
 </style>

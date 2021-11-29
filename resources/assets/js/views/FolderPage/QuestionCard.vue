@@ -52,9 +52,7 @@
       <CardActionButton
         data-cy="present-question-button"
         icon="play_circle_outline"
-        :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${
-          question.order - 1
-        }`"
+        :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
         >Present</CardActionButton
       >
       <CardActionButton
@@ -108,6 +106,9 @@ export default {
     };
   },
   computed: {
+    orderedQuestionIndex() {
+      return this.question.order - 1;
+    },
     questionType() {
       return this.question.question_info.question_type;
     },
@@ -134,7 +135,6 @@ export default {
     handleEditClick() {
       this.showEdit = true;
     },
-    handlePresentClick() {},
     handleDeleteClick() {
       if (confirm("Are you sure you want to remove this question?")) {
         const chimeId = this.folder.chime_id;
