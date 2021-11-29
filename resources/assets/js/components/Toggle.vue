@@ -60,6 +60,7 @@ export default {
   display: block;
   width: 100%;
   text-align: center;
+  cursor: pointer;
 }
 
 /* toggle outline */
