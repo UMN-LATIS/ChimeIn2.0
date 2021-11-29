@@ -9,7 +9,7 @@
         questionTypeToString
       }}</span>
       <Chip :color="totalResponses ? 'primary' : 'muted'" :solid="true"
-        >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
+        >{{ totalResponses }} {{ "Response" | pluralize(totalResponses) }}</Chip
       >
     </footer>
     <div class="flow-text question_list_text" v-html="question.text" />
@@ -182,9 +182,6 @@ export default {
             )
           );
       }
-    },
-    pluralize(str, count) {
-      return count === 1 ? str : str + "s";
     },
   },
 };
