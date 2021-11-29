@@ -362,7 +362,6 @@ describe("question", () => {
           // wait for equations to render
           cy.get(".katex .mathnormal").should("contain", "e");
 
-          // FIXME: arbitrary wait time. make more deterministic.
           // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.wait(1000);
           cy.get(
@@ -383,6 +382,55 @@ describe("question", () => {
           cy.get(".katex-html");
 
           cy.get("#app").matchImageSnapshot("results-of-equation-choices");
+        });
+    });
+
+    it("renders large labels without clipping,", () => {
+      let testChime, testFolder;
+
+      const questionWithALongChoice = {
+        ...favoriteColorQuestion,
+        questionResponses: [
+          {
+            text: "Etiam porta sem malesuada magna mollis euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam porta sem malesuada magna mollis euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            correct: false,
+          },
+          { text: "Green", correct: false },
+          { text: "Blue", correct: false },
+        ],
+      };
+
+      api
+        .createChimeFolderQuestion(questionWithALongChoice)
+        .then(({ chime, folder }) => {
+          testChime = chime;
+          testFolder = folder;
+        })
+        .then(() => {
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+          // open the question
+          cy.get("[data-cy=toggle-open-question]").click();
+
+          // logout faculty
+          cy.logout();
+        })
+        .then(() => {
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.get(":nth-child(1) > .form-check-label").click();
+        })
+        .then(() => {
+          cy.login("faculty");
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+          cy.get("[data-cy=present-question-button]").click();
+          cy.get("[data-cy=show-results-button]").click();
+
+          // wait for rendering
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(1000);
+          cy.get("#app").matchImageSnapshot(
+            `mult-choice-stats-with-long-labels`
+          );
         });
     });
   });
