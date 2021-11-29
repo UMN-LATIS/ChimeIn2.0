@@ -3,7 +3,6 @@
     class="chime-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
-    @click.native="$router.push(to)"
   >
     <router-link :to="to">
       <header class="chime-card__header">

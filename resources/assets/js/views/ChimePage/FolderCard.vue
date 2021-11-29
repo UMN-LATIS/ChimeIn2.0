@@ -4,7 +4,6 @@
     data-cy="folder-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
-    @click.native="$router.push(to)"
   >
     <router-link :to="to">
       <h2>
