@@ -70,7 +70,7 @@ export default {
 
               // if no bar, don't bother with the label
               if (!bar) {
-                label.textContent = "";
+                label.parentNode.innerHTML = "";
                 return;
               }
 
@@ -82,8 +82,10 @@ export default {
                 Number.parseFloat(bar.getAttribute("height")) +
                 16;
 
+              // set some height with overflow visible to make sure that
+              // foreignObject isn't clipped
               label.parentNode.innerHTML = `
-                <foreignObject width="${width}" height="50" x=${x} y=${y}>
+                <foreignObject width="${width}" height="1" x=${x} y=${y} style="overflow: visible;">
                   ${choices[index]}
                 </foreignObject>
               `;
