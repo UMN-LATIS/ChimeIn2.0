@@ -1,7 +1,7 @@
 <template>
   <Card
     class="chime-card"
-    :icon="showMoveIcon ? 'drag_handle' : 'arrow_forward'"
+    :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
   >
     <router-link :to="to">

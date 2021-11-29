@@ -2,7 +2,7 @@
   <Card
     class="folder-card"
     data-cy="folder-card"
-    :icon="showMoveIcon ? 'drag_handle' : 'arrow_forward'"
+    :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
   >
     <router-link :to="`/chime/${chime.id}/folder/${folder.id}`">

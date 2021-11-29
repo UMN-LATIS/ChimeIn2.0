@@ -1,7 +1,7 @@
 <template>
   <Card
     class="question-card"
-    :icon="showMoveIcon ? 'drag_handle' : 'arrow_forward'"
+    :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
   >
     <footer class="question-card__footer">
@@ -232,7 +232,7 @@ export default {
 </style>
 <style>
 .question-card__choice-display.mult-choice-display {
-  padding-left: 1rem;
+  padding-left: 1.25rem;
 }
 .question-card__choice-display .questionDisplay {
   font-size: 1rem;
