@@ -6,3 +6,4 @@ dist
 .cache
 .temp
 /cypress/**/examples
+/cypress/**/routes.json

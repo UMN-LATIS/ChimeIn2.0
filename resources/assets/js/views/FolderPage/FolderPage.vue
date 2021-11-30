@@ -18,10 +18,12 @@
         >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
       >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
     </div>
-    <div class="container">
-      <div class="row mt-2">
+    <Spinner v-if="!ready" />
+    <div v-if="ready" class="container">
+      <div class="row mt-4">
         <div class="col-4 align-items-center d-flex">
           <h1 class="h4">{{ folder.name }}</h1>
+          <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip>
         </div>
         <div class="col-md-8 col-sm-12">
           <div
@@ -34,30 +36,21 @@
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="show_edit_folder = !show_edit_folder"
             >
-              Folder Settings <i class="material-icons pointer">edit</i>
-            </button>
-
-            <button
-              dusk="new-question-button"
-              data-cy="new-question-button"
-              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-              @click="showModal = true"
-            >
-              New Question <i class="material-icons pointer">add</i>
+              <i class="material-icons pointer">edit</i> Folder Settings
             </button>
             <button
               dusk="open-all-button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="openAll"
             >
-              Open All <i class="material-icons pointer">visibility</i>
+              <i class="material-icons pointer">visibility</i> Open All
             </button>
             <button
               dusk="close-all-button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
               @click="closeAll"
             >
-              Close All <i class="material-icons pointer">visibility_off</i>
+              <i class="material-icons pointer">visibility_off</i> Close All
             </button>
             <router-link
               :to="{
@@ -68,22 +61,20 @@
                   callbackUrl: $route.path,
                 },
               }"
-              tag="button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
-              Participant View
               <i class="material-icons">preview</i>
+              Participant View
             </router-link>
             <router-link
               :to="{
                 name: 'present',
                 params: { chimeId: chimeId, folderId: folderId },
               }"
-              tag="button"
               class="btn btn-sm btn-outline-secondary align-items-center d-flex"
             >
-              Present
               <i class="material-icons">play_arrow</i>
+              Present
             </router-link>
           </div>
         </div>
@@ -179,23 +170,30 @@
 
       <div class="row border-top mt-3 pt-3">
         <div class="col-sm-12">
-          <ul>
-            <draggable
-              v-model="questions"
-              data-cy="question-list"
-              handle=".draghandle"
-              @end="swap_question"
-            >
-              <QuestionRow
-                v-for="q in questions"
-                :key="q.id"
-                :folder="folder"
-                :question="q"
-                @editquestion="load_questions"
-                @deletequestion="delete_question"
-              />
-            </draggable>
-          </ul>
+          <button
+            data-cy="new-question-button"
+            class="btn btn-outline-primary align-items-center d-flex"
+            @click="showModal = true"
+          >
+            <i class="material-icons pointer">add</i> Add Question
+          </button>
+          <Draggable
+            v-model="questions"
+            data-cy="question-list"
+            class="question-list"
+            handle=".handle"
+            ghostClass="ghost"
+            @end="swap_question"
+          >
+            <QuestionCard
+              v-for="q in questions"
+              :key="q.id"
+              :folder="folder"
+              :question="q"
+              :showMoveIcon="questions.length > 1"
+              @change="load_questions"
+            />
+          </Draggable>
         </div>
       </div>
     </div>
@@ -222,11 +220,17 @@
 
 <script>
 import orderBy from "lodash/orderBy";
-import draggable from "vuedraggable";
+import Draggable from "vuedraggable";
 import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
-import QuestionRow from "./QuestionRow.vue";
+import QuestionCard from "./QuestionCard.vue";
+import Chip from "../../components/Chip.vue";
+import {
+  selectIsCanvasChime,
+  selectCanvasCourseUrl,
+} from "../../helpers/chimeSelectors";
+import Spinner from "../../components/Spinner.vue";
 
 const QuestionForm = () =>
   import(
@@ -236,11 +240,13 @@ const QuestionForm = () =>
 
 export default {
   components: {
-    draggable,
+    Draggable,
     QuestionForm,
     ErrorDialog,
     NavBar,
-    QuestionRow,
+    QuestionCard,
+    Chip,
+    Spinner,
   },
   mixins: [questionsListener],
   props: ["folderId", "chimeId", "user"],
@@ -262,6 +268,7 @@ export default {
       selected_chime: null,
       selected_folder: null,
       synced: false,
+      ready: false,
     };
   },
   computed: {
@@ -273,6 +280,14 @@ export default {
       }
       return [];
     },
+    isCanvasChime() {
+      return selectIsCanvasChime(this.chime);
+    },
+    canvasUrl() {
+      const fullCanvasUrlString =
+        selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
+      return new URL(fullCanvasUrlString);
+    },
   },
   watch: {
     show_edit_folder: function (newValue) {
@@ -281,9 +296,10 @@ export default {
       }
     },
   },
-  created: function () {
-    this.load_folder();
-    this.load_questions();
+  created() {
+    Promise.all([this.load_folder(), this.load_questions()]).then(() => {
+      this.ready = true;
+    });
   },
   methods: {
     reset: function () {
@@ -399,10 +415,15 @@ export default {
           });
       }
     },
-    load_folder: function () {
-      axios.get("/api/chime/" + this.chimeId + "/openQuestions").then((res) => {
-        this.allSessions = res.data.sessions;
-      });
+    load_folder() {
+      return axios
+        .get("/api/chime/" + this.chimeId + "/openQuestions")
+        .then((res) => {
+          this.allSessions = res.data.sessions;
+        })
+        .catch((err) =>
+          console.error(`Error loading folder: ${err.message}`, err.response)
+        );
     },
 
     openAll: function () {
@@ -515,11 +536,15 @@ ul li {
   list-style: none;
 }
 
+.question-list {
+  margin: 1rem 0;
+}
+
 .align-items-center h4 {
   margin-bottom: 0;
 }
-
-.btn-group .btn i.material-icons {
-  margin-left: 2px;
+.material-icons {
+  font-size: 1.25rem;
+  margin-right: 0.25rem;
 }
 </style>
