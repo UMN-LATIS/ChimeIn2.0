@@ -425,6 +425,9 @@ describe("question", () => {
           // wait for equations to render
           cy.get(".katex-html");
 
+          // wait for animation to complete
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(1500);
           cy.get("#app").matchImageSnapshot("results-of-equation-choices");
         });
     });
@@ -469,9 +472,9 @@ describe("question", () => {
           cy.get("[data-cy=present-question-button]").click();
           cy.get("[data-cy=show-results-button]").click();
 
-          // wait for rendering
+          // wait for rendering and animation to complete
           // eslint-disable-next-line cypress/no-unnecessary-waiting
-          cy.wait(1000);
+          cy.wait(1500);
           cy.get("#app").matchImageSnapshot(
             `mult-choice-stats-with-long-labels`
           );
@@ -743,6 +746,10 @@ describe("question", () => {
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
           cy.get("[data-cy=show-results-button]").click();
+
+          // wait for animation to complete
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(1500);
 
           // expect the labels to be displayed
           cy.get("[data-cy=chart-container]")
