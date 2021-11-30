@@ -71,8 +71,15 @@
           <p class="text-center m-0">
             <small v-if="chime.lti_course_title" class="text-muted"
               >Not seeing the prompts you're looking for? Make sure you've
-              followed the correct assignment link from Canvas</small
-            >
+              followed the correct assignment link from Canvas.
+            </small>
+            <small
+              v-if="
+                chime.lti_course_title && chime.lti_grade_mode != 'no_grades'
+              "
+              class="text-muted"
+              >Grades will generally be updated in Canvas within 4 hours.
+            </small>
           </p>
         </div>
       </div>
