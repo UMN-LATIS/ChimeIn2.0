@@ -3,6 +3,7 @@
     class="chime-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
+    v-show="showCard"
   >
     <router-link :to="to">
       <header class="chime-card__header">
@@ -35,8 +36,8 @@
       </div>
     </div>
 
-    <template #actions v-if="canCurrentUserEdit">
-      <CardActionButton icon="clear" @click="handleChimeDelete(chime)" />
+    <template #actions>
+      <CardActionButton icon="clear" @click="removeChime(chime)" />
     </template>
   </Card>
 </template>
@@ -75,17 +76,32 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      showCard: true,
+    };
+  },
   methods: {
-    handleChimeDelete() {
-      const confirmation = window.confirm(`Delete chime '${this.chime.name}'?`);
+    removeChime() {
+      // if user can edit, this will delete the chime
+      // if not, this will remove the user from the chime
+      const confirmMessage = this.canCurrentUserEdit
+        ? `Delete chime '${this.chime.name}'?`
+        : `Are you sure you want to remove yourself from '${this.chime.name}'?`;
+
+      const confirmation = window.confirm(confirmMessage);
 
       if (!confirmation) return;
 
+      // optimistic UI: hide card unless failure
+      this.showCard = false;
+
       axios
-        .delete("/api/chime/" + this.chime.id)
+        .delete("/api/chime/" + this.chime.id, { timeout: 2000 })
         .then(() => this.$emit("change"))
         .catch((err) => {
-          console.error("error", "Error in delete chime:", err.response);
+          this.showCard = true;
+          console.error("Error in removeChime request.", err);
         });
     },
   },
