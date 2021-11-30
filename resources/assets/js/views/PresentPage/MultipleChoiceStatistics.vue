@@ -106,7 +106,7 @@ export default {
     },
     shouldRenderLabelsAsHtml() {
       return this.question.question_info.question_responses.some((choice) =>
-        /math .*/.test(choice.text)
+        /<math .*>/.test(choice.text)
       );
     },
     chartData: function () {
