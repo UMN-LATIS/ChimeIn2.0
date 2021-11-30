@@ -1,7 +1,7 @@
 <?php
 namespace Deployer;
 require 'recipe/laravel.php';
-require 'recipe/npm.php';
+require 'recipe/yarn.php';
 
 // Configuration
 
@@ -42,7 +42,7 @@ host('prod')
 
 task('assets:generate', function() {
   cd('{{release_path}}');
-  run('npm run production');
+  run('yarn run production');
 })->desc('Assets generation');
 
 task('deploy:makecache', function() {
@@ -74,8 +74,8 @@ after('deploy:failed', 'deploy:unlock');
 // Migrate database before symlink new release.
 
 before('deploy:symlink', 'artisan:migrate');
-after('deploy:update_code', 'npm:install');
-after('npm:install', 'assets:generate');
-after('npm:install', 'deploy:makecache');
+after('deploy:update_code', 'yarn:install');
+after('yarn:install', 'assets:generate');
+after('yarn:install', 'deploy:makecache');
 after('artisan:queue:restart', 'fix_storage_perms');
 after('artisan:migrate', 'artisan:queue:restart');

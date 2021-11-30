@@ -26,6 +26,12 @@ use App\Http\Controllers\PresentController;
 // this might be wrong
 Route::impersonate();
 
+Route::get("/ltiSelectionPromptDemo", function() {
+    $chime = \App\Chime::first();
+    $chimes = \App\Chime::all();
+    return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$chimes], "lti_resource_title"=>"test course", "resource_link_pk"=>"1111", "chime"=>$chime]);
+});
+
 Route::group(['middleware' => ['shibinjection']], function () {
     
     Route::resource('admin/users', 'Admin\UsersController');
@@ -115,9 +121,10 @@ if (config('shibboleth.emulate_idp') ) {
 }
 
 Route::post('lti', 'LTIHandler@launch');
+Route::put('lti/saveLTISettings/{chime}', 'LTIHandler@saveLTISettings')->name("ltisettings.update");
 Route::get('ltiConfig', 'LTIHandler@configInfo');
 Route::post('lti13/login', 'LTI13Handler@login');
 Route::post('lti13/launch', 'LTI13Handler@launch');
 Route::get('lti13/config', 'LTI13Handler@config');
-Route::put('lti13/saveLTISettings/{chime}', 'LTI13Handler@saveLTISettings')->name("ltisettings.update");
+Route::put('lti13/saveLTISettings/{chime}', 'LTI13Handler@saveLTISettings')->name("ltisettings13.update");
 Route::any('{all}','HomeController@index')->where(['all' => '.*']);

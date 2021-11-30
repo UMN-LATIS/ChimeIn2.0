@@ -109,13 +109,15 @@ export default {
     },
     left_choice_text() {
       return get(
-        this.question.question_info.question_responses.left_choice_text,
+        this.question,
+        "question_info.question_responses.left_choice_text",
         null
       );
     },
     right_choice_text() {
       return get(
-        this.question.question_info.question_responses.right_choice_text,
+        this.question,
+        "question_info.question_responses.right_choice_text",
         null
       );
     },

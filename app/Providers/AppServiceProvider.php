@@ -33,5 +33,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(Cache::class, LTI13Cache::class);
         $this->app->bind(Cookie::class, LTI13Cookie::class);
         $this->app->bind(Database::class, LTI13Database::class);
+
     }
 }
