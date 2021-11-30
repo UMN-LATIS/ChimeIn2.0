@@ -62,7 +62,6 @@ export default {
             }
 
             const elapsed = timestamp - start;
-            console.log("updating labels", elapsed);
 
             // stop looping a bit after animation duration completes
             if (elapsed < ANIMATION_DURATION * 1.25) {
