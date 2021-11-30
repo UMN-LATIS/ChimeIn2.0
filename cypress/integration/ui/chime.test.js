@@ -18,7 +18,7 @@ describe("chime UI", () => {
   context("when not authenticated", () => {
     it("does not allow adding a chime", () => {
       cy.visit("/");
-      cy.contains("Add a chime").should("not.exist");
+      cy.contains("Add Chime").should("not.exist");
     });
 
     it("joins upon entering an access code", () => {
@@ -69,7 +69,7 @@ describe("chime UI", () => {
 
     it("creates a new chime", () => {
       cy.visit("/");
-      cy.get("main").contains("Add a Chime").click();
+      cy.get("main").contains("Add Chime").click();
       cy.get("#chime_name_input").type("Test Chime");
       cy.get("#joinInstructions").check();
       cy.get("[data-cy=create-chime-button]").click();
@@ -83,7 +83,7 @@ describe("chime UI", () => {
       cy.delayResponse("/api/chime*", 1000);
 
       // create a chime
-      cy.contains("Add a Chime").click();
+      cy.contains("Add Chime").click();
       cy.get("#chime_name_input").type("Test Chime");
       cy.get("[data-cy=create-chime-button]").click();
 

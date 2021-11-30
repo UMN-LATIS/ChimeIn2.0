@@ -117,4 +117,25 @@ describe("participating as a guest", () => {
         });
       });
   });
+
+  it("doesnt show option to delete chime", () => {
+    // open testQuestion
+    cy.login("faculty");
+    api.openQuestion({
+      chimeId: testChime.id,
+      folderId: testFolder.id,
+      questionId: testQuestion.id,
+    });
+    cy.logout();
+
+    // join chime as guest
+    cy.visit(`/join/${testChime.access_code}`);
+
+    // go back to Chime Page
+    cy.contains("Home").click();
+
+    cy.get(".chime-card")
+      .first()
+      .matchImageSnapshot(`chime-card-guest-view_1920x1080`);
+  });
 });
