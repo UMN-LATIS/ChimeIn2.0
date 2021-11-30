@@ -31,10 +31,6 @@
 import { GChart } from "vue-google-charts";
 import isObject from "lodash/isObject";
 import insertHtmlLabelsIntoGchart from "../../helpers/insertHtmlLabelsIntoGchart";
-import unescape from "lodash/unescape";
-
-const htmlToPlainText = (htmlString) =>
-  unescape(htmlString.replace(/<[^>]*>/g, ""));
 
 const ANIMATION_DURATION = 1000;
 
@@ -48,8 +44,7 @@ export default {
       visible_responses: [],
       response_search: "",
       chartEvents: {
-        ready: () =>
-          this.shouldRenderLabelsAsHtml && this.handleHtmlChartLabels(),
+        ready: () => this.handleHtmlChartLabels(),
       },
       options: {
         height: "100%",
@@ -104,16 +99,10 @@ export default {
         position: "relative",
       };
     },
-    shouldRenderLabelsAsHtml() {
-      return this.question.question_info.question_responses.some((choice) =>
-        /<math .*>/.test(choice.text)
-      );
-    },
     chartData: function () {
       var questionArray = this.question.question_info.question_responses.map(
         (q) => {
           const choiceHtml = isObject(q) ? q.text : q;
-          const choicePlainText = htmlToPlainText(choiceHtml);
           const totalResponsesForQuestion = this.responses.length;
 
           // number of users making this choice
@@ -124,7 +113,7 @@ export default {
           ).length;
 
           return [
-            this.shouldRenderLabelsAsHtml ? choiceHtml : choicePlainText,
+            choiceHtml,
             totalResponsesForChoice / totalResponsesForQuestion,
             "color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2",
             "Number of Responses:  " +
