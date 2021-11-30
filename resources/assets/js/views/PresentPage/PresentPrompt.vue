@@ -3,8 +3,8 @@
     <div v-if="question" class="col">
       <h1 v-html="question.text"></h1>
       <component
-        v-if="hasSpecializedQuestionDisplay()"
-        :is="question.question_info.question_type + '_display'"
+        v-if="hasSpecializedQuestionDisplay(questionType)"
+        :is="`${questionType}_display`"
         :question="question"
       />
     </div>
@@ -17,20 +17,23 @@
 </template>
 
 <script>
-import DisplayMultipleChoice from "../../components/MultipleChoice/MultipleChoiceDisplay.vue";
-import DisplayHeatmapResponse from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
+import MultipleChoiceDisplay from "../../components/MultipleChoice/MultipleChoiceDisplay.vue";
+import HeatmapResponseDisplay from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
+import hasSpecializedQuestionDisplay from "../../helpers/hasSpecializedQuestionDisplay";
 
 export default {
   components: {
-    multiple_choice_display: DisplayMultipleChoice,
-    heatmap_response_display: DisplayHeatmapResponse,
+    multiple_choice_display: MultipleChoiceDisplay,
+    heatmap_response_display: HeatmapResponseDisplay,
   },
   props: ["question", "session"],
-  methods: {
-    hasSpecializedQuestionDisplay() {
-      const questionType = this.question.question_info.question_type;
-      return ["multiple_choice", "heatmap_response"].includes(questionType);
+  computed: {
+    questionType() {
+      return this.question.question_info.question_type;
     },
+  },
+  methods: {
+    hasSpecializedQuestionDisplay,
   },
 };
 </script>

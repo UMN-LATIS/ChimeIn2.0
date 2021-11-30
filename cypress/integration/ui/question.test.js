@@ -5,9 +5,9 @@ const favoriteColorQuestion = {
   folderName: "Test Folder",
   questionText: "What is your favorite color?",
   questionResponses: [
-    { text: "Red", correct: false },
-    { text: "Green", correct: false },
-    { text: "Blue", correct: false },
+    { text: "<p>Red</p>", correct: false },
+    { text: "<p>Green</p>", correct: false },
+    { text: "<p>Blue</p>", correct: false },
   ],
 };
 
@@ -16,6 +16,31 @@ describe("question", () => {
     cy.refreshDatabase();
     cy.seed();
     cy.login("faculty");
+
+    cy.intercept({
+      method: "POST",
+      url: "/api/chime/*/folder/*/question/*",
+    }).as("apiOpenQuestion");
+
+    cy.intercept({
+      method: "POST",
+      url: "/api/chime/*/folder/*",
+    }).as("apiCreateQuestion");
+
+    cy.intercept({
+      method: "PUT",
+      url: "/api/chime/*/folder/*/question/*",
+    }).as("apiUpdateQuestion");
+
+    cy.intercept({
+      method: "DELETE",
+      url: "/api/chime/*/folder/*/question/*",
+    }).as("apiDeleteQuestion");
+
+    cy.intercept({
+      method: "PUT",
+      url: "/api/chime/*/session/*/response",
+    }).as("apiSubmitResponse");
   });
 
   it("creates a question (multiple choice)", () => {
@@ -51,15 +76,22 @@ describe("question", () => {
         cy.contains("Save").click();
 
         // check that the question was created
-        cy.get("[data-cy=question-list] li").should(
+        cy.get("[data-cy=question-list] .question-card").should(
           "contain",
           "What is your favorite color?"
         );
+
+        // check that question card shows choices
+        cy.get("[data-cy=question-list] .question-card")
+          .should("contain.text", "Red")
+          .should("contain.text", "Green")
+          .should("contain.text", "Blue");
       });
   });
 
   it("opens a question", () => {
     let testChime, testFolder, testQuestion;
+
     api
       .createChimeFolderQuestion(favoriteColorQuestion)
       .then(({ chime, folder, question }) => {
@@ -74,6 +106,7 @@ describe("question", () => {
         cy.get("[data-cy=toggle-open-question]").click();
       })
       .then(() => {
+        cy.wait("@apiOpenQuestion", { requestTimeout: 2000 });
         return api.getQuestion({
           chimeId: testChime.id,
           folderId: testFolder.id,
@@ -88,6 +121,7 @@ describe("question", () => {
 
   it("edits a question prompt", () => {
     let testChime, testFolder, testQuestion;
+
     api
       .createChimeFolderQuestion(favoriteColorQuestion)
       .then(({ chime, folder, question }) => {
@@ -108,9 +142,10 @@ describe("question", () => {
           .type("Updated question prompt");
 
         cy.contains("Save").click();
+        cy.wait("@apiUpdateQuestion");
 
         // expect that the UI is updated on question list page
-        cy.get("[data-cy=question-list] li").should(
+        cy.get("[data-cy=question-list] .question-card").should(
           "contain",
           "Updated question prompt"
         );
@@ -143,6 +178,7 @@ describe("question", () => {
       .then(() => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
         cy.get("[data-cy=delete-question-button]").click();
+        cy.wait("@apiDeleteQuestion");
 
         // check UI that question does not exist
         cy.get("[data-cy=question-list]").should(
@@ -170,6 +206,7 @@ describe("question", () => {
   describe("multiple choice", () => {
     it("marks correct responses", () => {
       let testChime, testFolder, testQuestion;
+
       api
         .createChimeFolderQuestion(favoriteColorQuestion)
         .then(({ chime, folder, question }) => {
@@ -190,6 +227,7 @@ describe("question", () => {
             "response-choice-item--is-correct"
           );
           cy.contains("Save").click();
+          cy.wait("@apiUpdateQuestion");
         })
         .then(() => {
           // check the API that the correct answers match expectation
@@ -232,6 +270,7 @@ describe("question", () => {
 
           cy.get("@test-response").click().clear().type("Updated response");
           cy.contains("Save").click();
+          cy.wait("@apiUpdateQuestion");
 
           // expect that question is updated in presentation view
           cy.get("[data-cy=present-question-button]").click();
@@ -253,6 +292,7 @@ describe("question", () => {
 
     it("removes a response choice", () => {
       let testChime, testFolder, testQuestion;
+
       api
         .createChimeFolderQuestion(favoriteColorQuestion)
         .then(({ chime, folder, question }) => {
@@ -270,6 +310,7 @@ describe("question", () => {
           cy.get("[data-cy=remove-response-button]").first().click();
 
           cy.contains("Save").click();
+          cy.wait("@apiUpdateQuestion");
 
           // expect that question is updated in presentation view
           cy.get("[data-cy=present-question-button]").click();
@@ -298,6 +339,7 @@ describe("question", () => {
     it("creates response choices with equations", () => {
       let testChime;
       let testFolder;
+
       api
         .createChime({ name: "Test Chime" })
         .then((chime) => {
@@ -336,6 +378,7 @@ describe("question", () => {
           );
 
           cy.contains("Save").click();
+          cy.wait("@apiCreateQuestion");
         })
         .then(() => {
           // open the question for presentation
@@ -370,6 +413,7 @@ describe("question", () => {
 
           // click e^πi-1=0
           cy.get(".form-group > :nth-child(3) > .form-check-label").click();
+          cy.wait("@apiSubmitResponse", { requestTimeout: 2000 });
         })
         .then(() => {
           // check that results render properly, including equation labels
@@ -456,6 +500,7 @@ describe("question", () => {
           cy.get("[data-cy=question-type]").type("Free Response{enter}");
           cy.get("[data-cy=question-editor]").type("Free response question?");
           cy.contains("Save").click();
+          cy.wait("@apiCreateQuestion");
 
           // check that the question was created
           cy.get("[data-cy=question-list]").should(
@@ -465,6 +510,7 @@ describe("question", () => {
 
           // open question
           cy.get("[data-cy=toggle-open-question]").click();
+          cy.wait("@apiOpenQuestion");
 
           // logout faculty, become guest user
           cy.logout();
@@ -473,6 +519,7 @@ describe("question", () => {
           cy.visit(`/join/${testChime.access_code}`);
           cy.get("[data-cy=free-response-textarea]").type("Guest response");
           cy.contains("Save").click();
+          cy.wait("@apiSubmitResponse", { requestTimeout: 2000 });
 
           // login as faculty
           cy.login("faculty");
@@ -515,6 +562,7 @@ describe("question", () => {
             `A guy told me one time, "Don't let yourself get attached to anything you are not willing to walk out on in 30 seconds flat if you feel the heat around the corner."`
           );
           cy.contains("Save").click();
+          cy.wait("@apiCreateQuestion");
 
           // check that the question was created
           cy.get("[data-cy=question-list]").should(
@@ -522,8 +570,9 @@ describe("question", () => {
             "Text heatmap question?"
           );
 
-          //   // open question
+          // open question
           cy.get("[data-cy=toggle-open-question]").click();
+          cy.wait("@apiOpenQuestion");
 
           // logout faculty, become guest user
           cy.logout();
@@ -534,6 +583,7 @@ describe("question", () => {
             "[data-cy=text-heatmap-highlighted-text-container]"
           ).setSelection("feel the heat");
           cy.contains("Submit Selection").click();
+          cy.wait("@apiSubmitResponse", { requestTimeout: 2000 });
 
           //   // login as faculty
           cy.login("faculty");
@@ -592,6 +642,7 @@ describe("question", () => {
           cy.get("[data-cy=question-type]").type("Image Response{enter}");
           cy.get("[data-cy=question-editor]").type("Image response question?");
           cy.contains("Save").click();
+          cy.wait("@apiCreateQuestion");
 
           // check that the question was created
           cy.get("[data-cy=question-list]").should(
@@ -601,6 +652,7 @@ describe("question", () => {
 
           // open question
           cy.get("[data-cy=toggle-open-question]").click();
+          cy.wait("@apiOpenQuestion");
 
           // logout faculty, become guest user
           cy.logout();
@@ -637,13 +689,6 @@ describe("question", () => {
       let testChime;
       let testFolder;
 
-      // listen for participant responses
-      // so that we can wait for them to complete
-      cy.intercept({
-        method: "PUT",
-        url: "/api/**/response",
-      }).as("participantResponse");
-
       api
         .createChime({ name: "Test Chime" })
         .then((chime) => {
@@ -663,6 +708,7 @@ describe("question", () => {
           cy.get("#left_choice_text").type("Bad");
           cy.get("#right_choice_text").type("Good");
           cy.contains("Save").click();
+          cy.wait("@apiCreateQuestion");
 
           // check that the question was created
           cy.get("[data-cy=question-list]").should(
@@ -672,6 +718,7 @@ describe("question", () => {
 
           // open question
           cy.get("[data-cy=toggle-open-question]").click();
+          cy.wait("@apiOpenQuestion");
 
           // logout faculty, become guest user
           cy.logout();
@@ -688,7 +735,7 @@ describe("question", () => {
 
               $input[0].dispatchEvent(new Event("change"));
             });
-          cy.wait("@participantResponse", { requestTimeout: 3000 });
+          cy.wait("@apiSubmitResponse");
         })
         .then(() => {
           // login as faculty
@@ -742,11 +789,6 @@ describe("question", () => {
         url: "/api/chime/**/image",
       }).as("upload");
 
-      cy.intercept({
-        method: "PUT",
-        url: "/api/**/response",
-      }).as("heatmapResponse");
-
       api
         .createChime({
           name: "Test Chime",
@@ -786,6 +828,7 @@ describe("question", () => {
           cy.get("[data-cy=image-thumbnail]").should("exist");
 
           cy.contains("Save").click();
+          cy.wait("@apiCreateQuestion");
 
           // check that the question was created
           cy.get("[data-cy=question-list]").should(
@@ -795,6 +838,7 @@ describe("question", () => {
 
           // open question
           cy.get("[data-cy=toggle-open-question]").click();
+          cy.wait("@apiOpenQuestion");
 
           // logout faculty, become guest user
           cy.logout();
@@ -814,9 +858,9 @@ describe("question", () => {
           // note: clicking on different coordinates should cause
           // match image snapshot fail
           cy.get("@image-heatmap-target").click(50, 100);
+          cy.wait("@apiSubmitResponse");
         })
         .then(() => {
-          cy.wait("@heatmapResponse", { requestTimeout: 10000 });
           // check that the circle appears on user interface
           cy.get("@image-heatmap-target").matchImageSnapshot(
             `image-heatmap-response-view_1920x1080`

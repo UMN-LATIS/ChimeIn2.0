@@ -1,5 +1,9 @@
 <template>
-  <ol type="A" data-cy="multiple-choice-options-list">
+  <ol
+    type="A"
+    class="mult-choice-display"
+    data-cy="multiple-choice-options-list"
+  >
     <li
       v-for="response in responses"
       :key="response"

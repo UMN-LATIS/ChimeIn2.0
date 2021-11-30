@@ -1,7 +1,7 @@
 <template>
   <div class="new-folder">
-    <label for="createFolder" class="text-right col-form-label"
-      >Add a folder</label
+    <label for="createFolder" class="text-right visually-hidden col-form-label"
+      >Add Folder</label
     >
     <div class="row">
       <div class="col-8 col-6-md">
@@ -15,16 +15,15 @@
           @keyup.enter="new_folder"
         />
       </div>
-      <div class="col-1 col-2-md">
-        <button
-          data-cy="create-folder-button"
-          type="button"
-          class="btn btn-primary new-folder__button"
-          @click="new_folder"
-        >
-          Create
-        </button>
-      </div>
+      <button
+        data-cy="create-folder-button"
+        type="button"
+        class="btn btn-outline-primary align-items-center d-flex"
+        @click="new_folder"
+      >
+        <i class="material-icons">add</i>
+        Add Folder
+      </button>
     </div>
     <div
       v-if="chime.lti_grade_mode == 'multiple_grades'"

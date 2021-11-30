@@ -5,10 +5,19 @@
     <div class="container">
       <header class="chime__header">
         <div class="chime__header-container">
-          <div>
-            <h1 class="chime__name">{{ chime.name }}</h1>
+          <div class="flex">
+            <h1 class="chime__name">
+              {{ chime.name }}
+            </h1>
+            <Chip
+              v-if="isCanvasChime"
+              color="yellow"
+              :solid="true"
+              title="This chime is linked with Canvas."
+            >
+              Canvas
+            </Chip>
           </div>
-
           <div
             class="chime__control-buttons btn-group"
             role="group"
@@ -23,7 +32,7 @@
               data-cy="toggle-chime-settings-panel"
               @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
             >
-              Chime Settings <span class="material-icons">settings</span>
+              <i class="material-icons">settings</i> Chime Settings
             </button>
 
             <button
@@ -32,7 +41,7 @@
               data-cy="toggle-chime-export-panel"
               @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
             >
-              Export <span class="material-icons">save_alt</span>
+              <i class="material-icons">save_alt</i> Export
             </button>
           </div>
         </div>
@@ -55,107 +64,62 @@
           <p v-if="!ordered_folders.length">
             You don't have any folders yet. Why not create one now?
           </p>
+          <NewFolder
+            class="chime__create-folder"
+            :chime="chime"
+            @newfolder="create_folder"
+          />
+
           <Draggable
-            v-else
+            v-if="ordered_folders.length"
             v-model="ordered_folders"
             class="chime__ordered-folders"
-            handle=".draghandle"
-            :force-fallback="true"
+            handle=".handle"
+            :animation="200"
+            :disabled="false"
+            ghostClass="ghost"
           >
             <FolderCard
               v-for="folder in ordered_folders"
               :key="folder.id"
-              :folder="folder"
               :chime="chime"
-              :draggable="ordered_folders.length > 1"
-              :lti-link="getLtiLink(folder)"
+              :folder="folder"
+              :showMoveIcon="ordered_folders.length > 1"
             />
           </Draggable>
         </div>
-        <NewFolder
-          class="chime__create-folder"
-          :chime="chime"
-          @newfolder="create_folder"
-        />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.chime__header-label {
-  text-transform: uppercase;
-  color: var(--gray-medium);
-  margin: 0 0 0.25rem 0;
-}
-.chime__header {
-  margin: 2rem 0 2rem;
-}
-
-.chime__header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.chime__name {
-  font-size: 2rem;
-}
-
-.chime__control-buttons .material-icons {
-  font-size: 1.25rem;
-  margin-left: 0.25rem;
-}
-
-.chime__control-buttons .btn--is-active {
-  background: var(--gray-dark);
-  color: #fff;
-}
-
-.chime__settings-panel {
-  display: none;
-  margin-top: 1rem;
-  padding: 2rem;
-  background-color: #fafafa;
-  line-height: 1.5;
-  border-radius: 0.25rem;
-  overflow: auto;
-  border: 1px solid var(--gray-light);
-}
-.chime__settings-panel--isOpen {
-  display: block;
-}
-
-@media (max-width: 768px) {
-  .chime__name {
-    font-size: 1.5rem;
-  }
-  .chime__header-container {
-    display: block;
-  }
-}
-</style>
-
 <script>
 import Draggable from "vuedraggable";
 import orderBy from "lodash/orderBy";
-import FolderCard from "./FolderCard.vue";
 import NavBar from "../../components/NavBar.vue";
 import NewFolder from "./NewFolder.vue";
 import Spinner from "../../components/Spinner.vue";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import ChimeManagement from "./ChimeManagement.vue";
 import ChimeExport from "./ChimeExport.vue";
+import FolderCard from "./FolderCard.vue";
+import Chip from "../../components/Chip.vue";
+import {
+  selectIsCanvasChime,
+  selectCanvasCourseUrl,
+} from "../../helpers/chimeSelectors";
 
 export default {
   components: {
     Draggable,
     NavBar,
-    FolderCard,
     NewFolder,
     Spinner,
     ErrorDialog,
     ChimeManagement,
     ChimeExport,
+    FolderCard,
+    Chip,
   },
   props: ["user", "chimeId"],
   data() {
@@ -189,6 +153,14 @@ export default {
             console.log(err.response);
           });
       },
+    },
+    isCanvasChime() {
+      return selectIsCanvasChime(this.chime);
+    },
+    canvasUrl() {
+      const fullCanvasUrlString =
+        selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
+      return new URL(fullCanvasUrlString);
     },
   },
   created: function () {
@@ -242,17 +214,72 @@ export default {
           this.isReady = true;
         });
     },
-    getLtiLink(folder) {
-      // check if there's an lti link for this folder
-      // scrub the url in case it has
-      // `/external_content/success/external_tool_redirect`
-      // at the end
-      return (
-        folder.resource_link_pk &&
-        this.chime.lti_return_url &&
-        this.chime.lti_return_url.replace(/external_content.*/, "")
-      );
-    },
   },
 };
 </script>
+
+<style scoped>
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.chime__header-label {
+  text-transform: uppercase;
+  color: var(--gray-medium);
+  margin: 0 0 0.25rem 0;
+}
+.chime__header {
+  margin: 2rem 0 2rem;
+}
+
+.chime__header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chime__name {
+  font-size: 2rem;
+  line-height: 1;
+  margin: 0;
+  margin-right: 0.5rem;
+}
+
+.chime__control-buttons .material-icons {
+  font-size: 1.25rem;
+  margin-right: 0.25rem;
+}
+
+.chime__control-buttons .btn--is-active {
+  background: var(--gray-dark);
+  color: #fff;
+}
+
+.chime__settings-panel {
+  display: none;
+  margin-top: 1rem;
+  padding: 2rem;
+  background-color: #fafafa;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  overflow: auto;
+  border: 1px solid var(--gray-light);
+}
+.chime__settings-panel--isOpen {
+  display: block;
+}
+
+.chime__create-folder {
+  margin: 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .chime__header-container {
+    display: block;
+  }
+
+  .chime__control-buttons {
+    margin-top: 1rem;
+  }
+}
+</style>

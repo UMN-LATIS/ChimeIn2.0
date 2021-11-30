@@ -4,7 +4,6 @@
 // Vendor
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~vue-select/src/scss/vue-select.scss";
-@import "~pretty-checkbox";
 @import "~katex/dist/katex.min.css";
 
 // Variables
@@ -111,4 +110,17 @@ h5 {
 
 .badge-gold {
   background: var(--gold);
+}
+
+.pointer {
+  cursor: pointer;
+}
+.handle {
+  cursor: move;
+}
+
+// draggable: style while dragging
+.ghost {
+  opacity: 0.5;
+  background: #ccc;
 }

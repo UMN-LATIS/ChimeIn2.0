@@ -27,7 +27,7 @@ export const questionsListener = {
       const url =
         "/api/chime/" + this.get_chime() + "/folder/" + folderId + "/true";
 
-      axios
+      return axios
         .get(url)
         .then((res) => {
           this.folder = res.data;
