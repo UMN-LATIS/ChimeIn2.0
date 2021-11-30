@@ -31,6 +31,10 @@
 import { GChart } from "vue-google-charts";
 import isObject from "lodash/isObject";
 import insertHtmlLabelsIntoGchart from "../../helpers/insertHtmlLabelsIntoGchart";
+import unescape from "lodash/unescape";
+
+const htmlToPlainText = (htmlString) =>
+  unescape(htmlString.replace(/<[^>]*>/g, ""));
 
 const ANIMATION_DURATION = 1000;
 
@@ -44,34 +48,8 @@ export default {
       visible_responses: [],
       response_search: "",
       chartEvents: {
-        /**
-         * To support LaTeX equations, we replace the plain text labels
-         * with HTML.
-         */
-        ready: () => {
-          const chart = this.$refs.googleChart.$el;
-          const htmlLabels = this.question.question_info.question_responses.map(
-            (q) => q.text
-          );
-
-          // when animations are turned on, these labels will be overwritten, so we reinsert the labels with each animation frame
-          let start;
-          const updateLabels = (timestamp) => {
-            if (start === undefined) {
-              start = timestamp;
-            }
-
-            const elapsed = timestamp - start;
-
-            // stop looping a bit after animation duration completes
-            if (elapsed < ANIMATION_DURATION * 1.25) {
-              insertHtmlLabelsIntoGchart(chart, htmlLabels);
-              window.requestAnimationFrame(updateLabels);
-            }
-          };
-
-          window.requestAnimationFrame(updateLabels);
-        },
+        ready: () =>
+          this.shouldRenderLabelsAsHtml && this.handleHtmlChartLabels(),
       },
       options: {
         height: "100%",
@@ -98,36 +76,63 @@ export default {
       },
     };
   },
+  methods: {
+    handleHtmlChartLabels() {
+      const chart = this.$refs.googleChart.$el;
+      const htmlLabels = this.question.question_info.question_responses.map(
+        (q) => q.text
+      );
+      // when animations are turned on, these labels will be overwritten, so we reinsert the labels with each animation frame
+      let start;
+      const updateLabels = (timestamp) => {
+        if (start === undefined) {
+          start = timestamp;
+        }
+        const elapsed = timestamp - start;
+        // stop looping a bit after animation duration completes
+        if (elapsed < ANIMATION_DURATION * 1.25) {
+          insertHtmlLabelsIntoGchart(chart, htmlLabels);
+          window.requestAnimationFrame(updateLabels);
+        }
+      };
+      window.requestAnimationFrame(updateLabels);
+    },
+  },
   computed: {
     myStyles() {
       return {
         position: "relative",
       };
     },
+    shouldRenderLabelsAsHtml() {
+      return this.question.question_info.question_responses.some((choice) =>
+        /math .*/.test(choice.text)
+      );
+    },
     chartData: function () {
       var questionArray = this.question.question_info.question_responses.map(
         (q) => {
-          var questionText = isObject(q) ? q.text : q;
-          var formattedQuestion = questionText;
-          if (isObject(q) && q.correct == true) {
-            formattedQuestion = formattedQuestion + " ✓";
-          }
-          var totalResponsesForAnswer = this.responses.filter((r) =>
+          const choiceHtml = isObject(q) ? q.text : q;
+          const choicePlainText = htmlToPlainText(choiceHtml);
+          const totalResponsesForQuestion = this.responses.length;
+
+          // number of users making this choice
+          const totalResponsesForChoice = this.responses.filter((r) =>
             Array.isArray(r.response_info.choice)
-              ? r.response_info.choice.includes(questionText)
-              : r.response_info.choice == questionText
+              ? r.response_info.choice.includes(choiceHtml)
+              : r.response_info.choice == choiceHtml
           ).length;
-          var totalResponsesForQuestion = this.responses.length;
+
           return [
-            formattedQuestion,
-            totalResponsesForAnswer / totalResponsesForQuestion,
+            this.shouldRenderLabelsAsHtml ? choiceHtml : choicePlainText,
+            totalResponsesForChoice / totalResponsesForQuestion,
             "color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2",
             "Number of Responses:  " +
-              totalResponsesForAnswer +
+              totalResponsesForChoice +
               "\n" +
               "Percentage: " +
               Math.round(
-                (totalResponsesForAnswer / totalResponsesForQuestion) * 10000
+                (totalResponsesForChoice / totalResponsesForQuestion) * 10000
               ) /
                 100 +
               "%",
