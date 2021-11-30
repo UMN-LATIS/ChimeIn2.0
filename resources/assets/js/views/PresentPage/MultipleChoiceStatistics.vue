@@ -30,6 +30,9 @@
 <script>
 import { GChart } from "vue-google-charts";
 import isObject from "lodash/isObject";
+import insertHtmlLabelsIntoGchart from "../../helpers/insertHtmlLabelsIntoGchart";
+
+const ANIMATION_DURATION = 1000;
 
 export default {
   components: {
@@ -47,54 +50,37 @@ export default {
          */
         ready: () => {
           const chart = this.$refs.googleChart.$el;
-          this.$nextTick(() => {
-            // get labels that contain html paragraphs
-            const labels = [...chart.querySelectorAll("text")].filter((el) =>
-              /<p>/.test(el.textContent)
-            );
+          const htmlLabels = this.question.question_info.question_responses.map(
+            (q) => q.text
+          );
 
-            // we'll use the chart bars to help with positioning
-            // getting bars by stroke color... a bit hacky, but it works
-            const bars = [...chart.querySelectorAll('[stroke="#36a2eb"]')];
+          // when animations are turned on, these labels will be overwritten, so we reinsert the labels with each animation frame
+          let start;
+          const updateLabels = (timestamp) => {
+            if (start === undefined) {
+              start = timestamp;
+            }
 
-            // get our choices. textContent of labels likely won't contain
-            // the full response content
-            const choices = this.question.question_info.question_responses.map(
-              (q) => q.text
-            );
+            const elapsed = timestamp - start;
+            console.log("updating labels", elapsed);
 
-            // replace each text node with a `<foreignObject>` element
-            // containing the HTML
-            labels.forEach((label, index) => {
-              const bar = bars[index];
+            // stop looping a bit after animation duration completes
+            if (elapsed < ANIMATION_DURATION * 1.25) {
+              insertHtmlLabelsIntoGchart(chart, htmlLabels);
+              window.requestAnimationFrame(updateLabels);
+            }
+          };
 
-              // if no bar, don't bother with the label
-              if (!bar) {
-                label.parentNode.innerHTML = "";
-                return;
-              }
-
-              // use bar attributes for placing label
-              const x = bar.getAttribute("x");
-              const width = bar.getAttribute("width");
-              const y =
-                Number.parseFloat(bar.getAttribute("y")) +
-                Number.parseFloat(bar.getAttribute("height")) +
-                16;
-
-              // set some height with overflow visible to make sure that
-              // foreignObject isn't clipped
-              label.parentNode.innerHTML = `
-                <foreignObject width="${width}" height="1" x=${x} y=${y} style="overflow: visible;">
-                  ${choices[index]}
-                </foreignObject>
-              `;
-            });
-          });
+          window.requestAnimationFrame(updateLabels);
         },
       },
       options: {
         height: "100%",
+        animation: {
+          duration: ANIMATION_DURATION,
+          easing: "out",
+          startup: true,
+        },
         legend: {
           position: "none",
         },
