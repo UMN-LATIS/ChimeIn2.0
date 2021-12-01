@@ -59,6 +59,7 @@
             <span v-else> View Results </span>
           </button>
           <button
+            v-if="folder.questions.length > 1"
             class="btn btn-outline-primary align-items-center d-flex"
             @click="$emit('nextQuestion')"
           >
@@ -66,6 +67,7 @@
             Next Question
           </button>
           <button
+            v-if="folder.questions.length > 1"
             class="btn btn-outline-primary align-items-center d-flex"
             @click="$emit('previousQuestion')"
           >
