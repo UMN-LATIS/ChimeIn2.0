@@ -89,7 +89,13 @@
       </div>
       <div class="">
         <button class="btn btn-secondary" @click="close">Cancel</button>
-        <button class="btn btn-primary" @click="savePost">Save</button>
+        <button
+          class="btn btn-primary"
+          @click="savePost"
+          :disabled="!question_text.length"
+        >
+          Save
+        </button>
       </div>
     </div>
   </Modal>
