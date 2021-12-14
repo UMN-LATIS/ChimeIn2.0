@@ -394,7 +394,7 @@ class ChimeController extends Controller
              *  I really think there's a better way to pluck the correct choice when the correct key is true, but 
              *  I can't figure out it. Once we're on mysql8, I think this is possible - worst case by synthesizing a view?
              */
-            if($correctOnly && $question->question_info["question_type"] == "multiple_choice") {
+            if($correctOnly > 0 && $question->question_info["question_type"] == "multiple_choice") {
                 // get only the correct objects from the array of answers
                 $correctAnswers = null;
                 $correctText = null;
@@ -416,6 +416,9 @@ class ChimeController extends Controller
                     }
                     if(!$correctText || count(array_intersect($choice, $correctText)) > 0) {
                         $points = 1;
+                    }
+                    if($correctText && $correctOnly == 2 && count(array_intersect($choice, $correctText)) == 0) {
+                        $points = 0.5;
                     }
                 }
                 $result[] = $points;
@@ -627,22 +630,23 @@ class ChimeController extends Controller
     }
 
     private function getRowForResponses(object $responses) {
+        $textResponses = array();
         foreach($responses as $key=>$value) {
-            $responses[$key] = $value->response_text;
+            $textResponses[] = $value->response_text;
         }
         $row = "";
-        if(count($responses) > 1) {
-            $row = json_encode($responses);
+        if(count($textResponses) > 1) {
+            $row = json_encode($textResponses);
         }
-        else if(count($responses) == 0) {
+        else if(count($textResponses) == 0) {
             $row = "";
         }
         else {
-            if(is_array($responses[0])) {
-                $row = json_encode($responses[0]);
+            if(is_array($textResponses[0])) {
+                $row = json_encode($textResponses[0]);
             }
             else {
-                $row = $responses[0];
+                $row = $textResponses[0];
             }
             
         }
