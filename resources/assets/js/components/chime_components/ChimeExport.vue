@@ -1,6 +1,5 @@
 <template>
-  <div class="chime-export">
-    <h2 class="chime-export__heading">Export</h2>
+  <div>
     <form method="post" :action="'/api/chime/' + chime.id + '/export'">
       <input type="hidden" name="_token" :value="csrf" />
       <fieldset class="form-group border p-2">
@@ -40,7 +39,6 @@
           </label>
         </div>
       </fieldset>
-
       <fieldset class="form-group border p-2">
         <legend class="col-form-label w-auto">Export Type</legend>
         <div class="row">
@@ -48,10 +46,10 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input
-                  id="export_type_folder_summary"
                   type="radio"
                   class="form-check-input"
                   name="export_type"
+                  id="export_type_folder_summary"
                   value="folder_summary"
                   checked
                 />
@@ -61,10 +59,10 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input
-                  id="export_type_question_summary"
                   type="radio"
                   class="form-check-input"
                   name="export_type"
+                  id="export_type_question_summary"
                   value="question_summary"
                 />
                 Question Participation
@@ -73,10 +71,10 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input
-                  id="export_type_question_full"
                   type="radio"
                   class="form-check-input"
                   name="export_type"
+                  id="export_type_question_full"
                   value="question_full"
                 />
                 Full Responses
@@ -85,10 +83,10 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input
-                  id="export_type_question_only"
                   type="radio"
                   class="form-check-input"
                   name="export_type"
+                  id="export_type_question_only"
                   value="question_only"
                 />
                 Questions (no responses)
@@ -97,10 +95,10 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input
-                  id="export_type_question_full_sessions"
                   type="radio"
                   class="form-check-input"
                   name="export_type"
+                  id="export_type_question_full_sessions"
                   value="question_sessions"
                 />
                 Individual Sessions with Responses
@@ -116,11 +114,11 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input
-                  id="export_group_all"
-                  v-model="exportGroup"
                   type="radio"
                   class="form-check-input"
+                  v-model="exportGroup"
                   name="export_group"
+                  id="export_group_all"
                   value="all"
                   checked
                 />
@@ -130,11 +128,11 @@
             <div class="form-check">
               <label class="form-check-label">
                 <input
-                  id="export_group_selected"
-                  v-model="exportGroup"
                   type="radio"
                   class="form-check-input"
+                  v-model="exportGroup"
                   name="export_group"
+                  id="export_group_selected"
                   value="selected"
                 />
                 Selected Folders
@@ -142,19 +140,19 @@
             </div>
           </div>
         </div>
-        <div v-if="exportGroup == 'selected'" class="row">
+        <div class="row" v-if="exportGroup == 'selected'">
           <div class="col-sm-10 offset-sm-1">
             <div
+              class="form-check"
               v-for="folder in chime.folders"
               :key="folder.id"
-              class="form-check"
             >
               <label class="form-check-label">
                 <input
-                  id=""
                   type="checkbox"
                   class="form-check-input"
                   name="selectedFolder[]"
+                  id=""
                   :value="folder.id"
                 />
                 {{ folder.name }}
@@ -172,17 +170,7 @@
   </div>
 </template>
 
-<style scoped>
-.chime-export {
-  padding: 1rem;
-  max-width: 40rem;
-}
-
-.chime-export__heading {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-</style>
+<style scoped></style>
 
 <script>
 export default {
@@ -195,9 +183,9 @@ export default {
         .getAttribute("content"),
     };
   },
-  computed: {},
   watch: {},
-  mounted() {},
+  computed: {},
   methods: {},
+  mounted() {},
 };
 </script>
