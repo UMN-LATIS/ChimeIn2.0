@@ -2,13 +2,27 @@
     <div>
         <form method="post" :action="'/api/chime/'+ chime.id + '/export'">
             <input type="hidden" name="_token" :value="csrf">
-
+             <fieldset class="form-group border p-2">
+                 <legend class="col-form-label w-auto">Export Grading</legend>
             <div class="form-check">
               <label class="form-check-label">
-                <input type="checkbox" class="form-check-input" name="only_correct_answers" >
+                <input type="radio" class="form-check-input" name="only_correct_answers" value="0" checked>
+                Count all participation
+              </label>
+            </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="only_correct_answers" value="1" >
                 Only count "correct" answers (for multiple choice)
               </label>
             </div>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="only_correct_answers" value="2">
+                Half credit for participation, full credit for correct answers
+              </label>
+            </div>
+            </fieldset>
             <fieldset class="form-group border p-2">
                 <legend class="col-form-label w-auto">Export Type</legend>
                 <div class="row">

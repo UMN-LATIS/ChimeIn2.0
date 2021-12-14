@@ -393,7 +393,7 @@ class ChimeController extends Controller
              *  I really think there's a better way to pluck the correct choice when the correct key is true, but 
              *  I can't figure out it. Once we're on mysql8, I think this is possible - worst case by synthesizing a view?
              */
-            if($correctOnly && $question->question_info["question_type"] == "multiple_choice") {
+            if($correctOnly > 0 && $question->question_info["question_type"] == "multiple_choice") {
                 // get only the correct objects from the array of answers
                 $correctAnswers = null;
                 $correctText = null;
@@ -415,6 +415,9 @@ class ChimeController extends Controller
                     }
                     if(!$correctText || count(array_intersect($choice, $correctText)) > 0) {
                         $points = 1;
+                    }
+                    if($correctText && $correctOnly == 2 && count(array_intersect($choice, $correctText)) == 0) {
+                        $points = 0.5;
                     }
                 }
                 $result[] = $points;
