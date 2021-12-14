@@ -3,6 +3,7 @@
         <form method="post" :action="'/api/chime/'+ chime.id + '/export'">
             <input type="hidden" name="_token" :value="csrf">
              <fieldset class="form-group border p-2">
+                 <legend class="col-form-label w-auto">Export Grading</legend>
             <div class="form-check">
               <label class="form-check-label">
                 <input type="radio" class="form-check-input" name="only_correct_answers" value="0" checked>
