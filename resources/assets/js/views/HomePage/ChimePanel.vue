@@ -83,13 +83,11 @@ import orderBy from "lodash/orderBy";
 import { EventBus } from "../../EventBus.js";
 import ChimeCard from "./ChimeCard.vue";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
-import draggable from "vuedraggable";
 
 export default {
   components: {
     ChimeCard,
     ChimeManagementOptions,
-    draggable,
   },
   props: ["user"],
   data() {
