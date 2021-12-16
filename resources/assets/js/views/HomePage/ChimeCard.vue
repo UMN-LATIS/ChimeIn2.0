@@ -1,10 +1,5 @@
 <template>
-  <Card
-    class="chime-card"
-    :icon="showMoveIcon ? 'drag_handle' : ''"
-    iconClass="handle"
-    v-show="showCard"
-  >
+  <Card class="chime-card" v-show="showCard">
     <router-link :to="to">
       <header class="chime-card__header">
         <h1 class="chime-card__title">

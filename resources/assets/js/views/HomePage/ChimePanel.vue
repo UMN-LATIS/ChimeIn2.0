@@ -54,7 +54,7 @@
             </div>
           </div>
         </form>
-        <draggable v-if="chimes.length > 0" class="chime-card-group">
+        <div v-if="chimes.length > 0" class="chime-card-group">
           <ChimeCard
             v-for="chime in orderedChimes"
             class="chime-card-group__item"
@@ -64,7 +64,7 @@
             :to="getUserLinkToChime({ user, chime })"
             @change="get_chimes"
           />
-        </draggable>
+        </div>
         <div v-else class="my-3">
           <p v-if="user.guest_user">
             You're currently browsing as a guest. If you have a Chime access
