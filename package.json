@@ -17,7 +17,7 @@
     "test:e2e": "npm run cypress:headless",
     "test:unit": "npm run jest",
     "test": "npm run test:unit && npm run test:e2e",
-    "lint": "eslint './**/*.{js,vue}'",
+    "lint": "eslint './**/*.{js,mjs,cjs,vue}'",
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write .",
     "pretty-quick": "pretty-quick",
