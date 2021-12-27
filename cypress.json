@@ -1,0 +1,13 @@
+{
+  "baseUrl": "http://localhost",
+  "testFiles": "**/*.{test,spec}.js",
+  "video": false,
+  "viewportWidth": 1920,
+  "viewportHeight": 1080,
+  "matchImageSnapshot": {
+    "failureThreshold": 0.1,
+    "failureThresholdType": "percent",
+    "customDiffConfig": { "threshold": 0.1 },
+    "capture": "viewport"
+  }
+}

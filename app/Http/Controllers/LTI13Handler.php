@@ -104,7 +104,6 @@ class LTI13Handler extends Controller
             $resourceLink->save();
         }
         
-     
 
         
 
@@ -161,8 +160,13 @@ class LTI13Handler extends Controller
             else if($chime && !$chime->lti_setup_complete) {
                 $chime->lti13_resource_link_id = $resourceLink->id;
                 $chime->save();
+
+                $explodedName = explode(" ", $chime->name);
+                $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
+                $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                return view("ltiSelectionPrompt", ["chime"=>$chime, "haveLineItem"=>isset($endpointData["lineitem"]), "lti_resource_title"=>$resourceData["title"]]);
+                return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
             }
             else {
                 $chime = new \App\Chime;
@@ -174,9 +178,13 @@ class LTI13Handler extends Controller
                 $chime->access_code = $chime->getUniqueCode();
                 $chime->save();
                 $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
-;
+;       
+                $explodedName = explode(" ", $chime->name);
+                $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
+                $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+
                 // return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-                return view("ltiSelectionPrompt", ["chime"=>$chime, "haveLineItem"=>isset($endpointData["lineitem"]), "lti_resource_title"=>$resourceData["title"]]);
+                return view("ltiSelectionPrompt", ["ltiLaunch"=>["chime"=>$chime], "similar_chimes"=>$similarChimes, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
             }                
         }
         else {
@@ -199,7 +207,7 @@ class LTI13Handler extends Controller
                 }
                 $response = \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
                 if(isset($endpointData["lineitem"]) && !$folder && !$courseHasNonLTIFolders) {
-                    $response = $response->with('lti_error', 'There are no questions created for this assignment, so we\'re showing you all of the open questions for this course. This could be because your instructor hasn\'t added any questions yet. Check with them if you\'re not sure.');
+                    $response = $response->with('lti_error', "There are no questions created for this assignment, so we're showing you all of the open questions for this course. This could be because your instructor hasn't added any questions yet. Check with them if you're not sure.");
                 }
                 return $response;
 
@@ -225,21 +233,6 @@ class LTI13Handler extends Controller
             $folder->lti_lineitem = $resourceLink->endpoint["lineitem"];
             $folder->save();
             return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-        }
-        else if($chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_ONE_GRADE && !isset($resourceLink->endpoint["lineitem"])) {
-            // we don't have a gradebook entry - they must not be accessing via an assignment. We'll push an entry and they can modify it.
-
-            $ags = LTI13Processor::getAGS($chime);     
-            $score_lineitem = \Packback\Lti1p3\LtiLineitem::new()
-            ->setTag('chimein_grade')
-            ->setScoreMaximum(10)
-            ->setLabel('ChimeIn')
-            ->setResourceId($resourceLink->resource_link);
-            $result = $ags->findOrCreateLineitem($score_lineitem);
-            $resourceLink->created_line_item = $result->getId();
-            $resourceLink->save();
-            $req->session()->flash('lti_notice', 'ChimeIn created a new gradebook entry in your Canvas course. By default, the ChimeIn entry is worth 10 points. Feel free to adjust this in Canvas.');
-            
         }
 
         return \Redirect::to("/chime/" . $chime->id);

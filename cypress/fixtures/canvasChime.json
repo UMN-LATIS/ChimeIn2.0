@@ -1,0 +1,62 @@
+{
+  "id": 1878,
+  "access_code": "123456",
+  "created_at": "2021-10-08T12:00:38.000000Z",
+  "updated_at": "2021-11-18T03:08:32.000000Z",
+  "name": "Test Course with Canvas Chime",
+  "lti_return_url": "https://canvas.umn.edu/courses/0000000/external_content/success/external_tool_redirect",
+  "lti_course_title": "Test Course with Canvas Chime",
+  "lti_course_id": "3701774c641e4283b3ee3005cbadf187a431f57f",
+  "require_login": 1,
+  "deleted_at": null,
+  "students_can_view": 0,
+  "join_instructions": 1,
+  "only_correct_answers_lti": 0,
+  "lti_setup_complete": 1,
+  "resource_link_pk": null,
+  "lti13_resource_link_id": null,
+  "lti_grade_mode": null,
+  "show_folder_title_to_participants": 1,
+  "pivot": {
+    "user_id": 555555,
+    "chime_id": 1878,
+    "permission_number": 300,
+    "created_at": "2021-10-08T12:00:38.000000Z",
+    "updated_at": "2021-10-08T15:53:00.000000Z"
+  },
+  "folders": [
+    {
+      "id": 4328,
+      "created_at": "2021-10-08T12:06:06.000000Z",
+      "updated_at": "2021-10-08T12:06:06.000000Z",
+      "name": "Week 1: Warm-up",
+      "chime_id": 1878,
+      "resource_link_pk": null,
+      "deleted_at": null,
+      "order": 2,
+      "lti_lineitem": null
+    },
+    {
+      "id": 4332,
+      "created_at": "2021-10-08T15:50:48.000000Z",
+      "updated_at": "2021-10-08T15:50:48.000000Z",
+      "name": "Week 1: Exit Ticket",
+      "chime_id": 1878,
+      "resource_link_pk": 2027,
+      "deleted_at": null,
+      "order": 1,
+      "lti_lineitem": null
+    },
+    {
+      "id": 4333,
+      "created_at": "2021-10-08T15:53:00.000000Z",
+      "updated_at": "2021-10-08T15:53:00.000000Z",
+      "name": "Week 2: Warm-up",
+      "chime_id": 1878,
+      "resource_link_pk": 2028,
+      "deleted_at": null,
+      "order": 1,
+      "lti_lineitem": null
+    }
+  ]
+}

@@ -25,13 +25,17 @@ class PresentController extends Controller
         $sortedQuestions = $folder->questions()->orderBy('order', 'desc')->get();
 
         foreach($sortedQuestions as $question) {
-            $new_session = $question->sessions()->create();
+            // don't start a session if we've already got one
+            if(!$question->current_session) {
+                $new_session = $question->sessions()->create();
 
-            $question->current_session()->associate($new_session);
-            $question->save();
+                $question->current_session()->associate($new_session);
+                $question->save();
 
-            // $question->save();
-            event(new StartSession($chime, $new_session));
+                // $question->save();
+                event(new StartSession($chime, $new_session));
+            }
+            
 
         }
         return response('Sessions Started');

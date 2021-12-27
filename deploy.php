@@ -1,10 +1,7 @@
 <?php
 namespace Deployer;
 require 'recipe/laravel.php';
-require 'recipe/npm.php';
-
-
-
+require 'recipe/yarn.php';
 
 // Configuration
 
@@ -15,22 +12,21 @@ set('repository', 'https://github.com/UMN-LATIS/ChimeIn2.0.git');
 
 add('shared_files', []);
 add('shared_dirs', []);
-
 add('writable_dirs', []);
 
 // Servers
 
 host('dev')
     ->hostname("cla-chimein-dev.oit.umn.edu")
-    ->user('mcfa0086')
+    ->user('swadm')
     ->stage('development')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
-	->set('deploy_path', '/swadm/var/www/html/');
+    ->set('deploy_path', '/swadm/var/www/html/');
 
 host('stage')
     ->hostname("cla-chimein-tst.oit.umn.edu")
-    ->user('mcfa0086')
+    ->user('swadm')
     ->stage('stage')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
@@ -38,15 +34,15 @@ host('stage')
 
 host('prod')
     ->hostname("cla-chimein-prd.oit.umn.edu")
-    ->user('mcfa0086')
+    ->user('swadm')
     ->stage('production')
     // ->identityFile()
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
-	->set('deploy_path', '/swadm/var/www/html/');
+    ->set('deploy_path', '/swadm/var/www/html/');
 
 task('assets:generate', function() {
   cd('{{release_path}}');
-  run('npm run production');
+  run('yarn run production');
 })->desc('Assets generation');
 
 task('deploy:makecache', function() {
@@ -78,8 +74,8 @@ after('deploy:failed', 'deploy:unlock');
 // Migrate database before symlink new release.
 
 before('deploy:symlink', 'artisan:migrate');
-after('deploy:update_code', 'npm:install');
-after('npm:install', 'assets:generate');
-after('npm:install', 'deploy:makecache');
+after('deploy:update_code', 'yarn:install');
+after('yarn:install', 'assets:generate');
+after('yarn:install', 'deploy:makecache');
 after('artisan:queue:restart', 'fix_storage_perms');
 after('artisan:migrate', 'artisan:queue:restart');

@@ -1,164 +1,37 @@
+import Vue from "vue";
+import VueAnnouncer from "vue-announcer";
+import $ from "jquery";
+import "bootstrap";
+import registerAxios from "./common/axios.js";
+import registerEcho from "./common/echo.js";
+import registerSocketIOClient from "./common/socketioClient.js";
+import registerDevTools from "./common/devtools.js";
+import pluralizeFilter from "./common/pluralize.filter.js";
+import router from "./router.js";
+import store from "./store.js";
 
-require('./bootstrap');
+registerSocketIOClient();
+registerAxios();
+registerEcho();
+registerDevTools();
 
-window.sw = require('stopword')
-
-window.queryString = require('query-string');
-
-window.simpleheat = require('simpleheat');
-
-Vue.mixin({
-    methods: {
-        isObject: obj => typeof obj == "object"
-    }
-});
-
-import EventBus from './event-bus';
-
-import Vuex from 'vuex'
-Vue.use(Vuex)
-
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
-
-import fullscreen from 'vue-fullscreen'
-Vue.use(fullscreen)
-
-import PrettyCheckbox from 'pretty-checkbox-vue';
-Vue.use(PrettyCheckbox);
-
-import VueAnnouncer from 'vue-announcer';
 Vue.use(VueAnnouncer);
 
-// filters
+Vue.filter("pluralize", pluralizeFilter);
 
-Vue.filter('pluralize', (word, amount) => amount > 1 ? `${word}s` : word)
-
-Vue.component('modal',
-    require('./components/modal.vue').default);
-
-import Home from './components/Home.vue';
-Vue.component('home', Home);
-
-import Chime from './components/Chime.vue';
-Vue.component('chime', Chime);
-
-import ChimeStudent from './components/Chime_student.vue';
-Vue.component('ChimeStudent', ChimeStudent);
-
-
-import Present from './components/Present.vue';
-Vue.component('Present', Present);
-
-const Folder = () => import(
-    /* webpackChunkName: "folder" */
-    './components/Folder.vue'
+// $.tooltip requires jquery and bootstrap
+Vue.directive("tooltip", (el, binding) =>
+  $(el).tooltip({
+    title: binding.value,
+    placement: binding.arg,
+    trigger: "hover",
+  })
 );
-Vue.component('Folder', Folder);
 
-Vue.component('error-dialog',
-    require('./components/error_dialog.vue').default);
+import ltilaunch from "./components/lti/ltiLaunch.vue";
+Vue.component("lti-launch", ltilaunch);
 
-Vue.component('navbar',
-    require('./components/Navbar.vue').default);
-Vue.component('chime-panel',
-    require('./components/home_components/ChimePanel.vue').default);
-Vue.component('chime-card',
-    require('./components/home_components/ChimeCard.vue').default);
-
-Vue.component('new-folder',
-    require('./components/chime_components/NewFolder.vue').default);
-Vue.component('folder-card',
-    require('./components/chime_components/FolderCard.vue').default);
-Vue.component('ChimeManagement',
-    require('./components/chime_components/ChimeManagement.vue').default);
-Vue.component('ChimeManagementOptions',
-    require('./components/chime_components/ChimeManagementOptions.vue').default);
-Vue.component('ChimeExport',
-    require('./components/chime_components/ChimeExport.vue').default);
-Vue.component('question',
-    require('./components/chime_components/Question.vue').default);
-
-
-
-Vue.component('student-prompt',
-    require('./components/chime_student_components/Student_Prompt.vue').default);
-Vue.component('response',
-    require('./components/chime_student_components/Response.vue').default);
-Vue.component('multiple_choice',
-    require('./components/questions/response/MultipleChoice.vue').default);
-Vue.component('image_response',
-    require('./components/questions/response/ImageResponse.vue').default);
-Vue.component('free_response',
-    require('./components/questions/response/FreeResponse.vue').default);
-Vue.component('text_heatmap_response',
-    require('./components/questions/response/TextHeatmapResponse.vue').default);
-Vue.component('no_response',
-    require('./components/questions/response/NoResponse.vue').default);
-    Vue.component('slider_response',
-    require('./components/questions/response/Slider.vue').default);
-Vue.component('heatmap_response',
-    require('./components/questions/response/HeatmapResponse.vue').default);
-
-
-
-Vue.component('present-question',
-    require('./components/presentation_components/Present_Question.vue').default);
-
-Vue.component('presentation-prompt',
-    require('./components/presentation_components/Presentation_Prompt.vue').default);
-Vue.component('results-display',
-    require('./components/presentation_components/ResultsDisplay.vue').default);
-Vue.component('multiple_choice_display',
-    require('./components/questions/display/MultipleChoice.vue').default);
-Vue.component('slider_response_display',
-    require('./components/questions/display/Slider.vue').default);
-Vue.component('text_heatmap_response_display',
-    require('./components/questions/display/TextHeatmapResponse.vue').default);
-    Vue.component('free_response_display',
-    require('./components/questions/display/FreeResponse.vue').default);
-Vue.component('no_response_display',
-    require('./components/questions/display/FreeResponse.vue').default);
-Vue.component('image_response_display',
-    require('./components/questions/display/ImageResponse.vue').default);
-Vue.component('heatmap_response_display',
-    require('./components/questions/display/HeatmapResponse.vue').default);
-
-
-
-
-const store = new Vuex.Store({
-    state: {
-        message: null
-    },
-    mutations: {
-        message(state, message) {
-            state.message = message;
-        },
-        clearMessage(state) {
-            state.message = null;
-        }
-    },
-    getters: {
-        message: state => state.message
-    }
-});
-
-const router = new VueRouter({
-    mode: 'history',
-  routes: [
-    { path: "/", component: Home },
-    { path: "/chime/:chimeId", name:'chime', component: Chime, props: true },
-    { path: "/chime/:chimeId/folder/:folderId", name:'folder', component: Folder, props: true },
-    { path: "/chimeParticipant/:chimeId/:folderId?", name:'chimeStudent', component: ChimeStudent, props: true },
-    { path: "/chime/:chimeId/folder/:folderId/present/:questionId?", name:'present', component: Present, props: true }
-    // { path: '/:id?', name: "present", component: require('./components/Present.vue')}
-  ]
-})
-
-const app = new Vue({
-    router,
-    store
-}).$mount('#app');
-
-
+new Vue({
+  router,
+  store,
+}).$mount("#app");
