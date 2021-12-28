@@ -110,8 +110,11 @@ class LTIHandler extends Controller
                         $folder->name = $resource_link_title;
                         $folder->resource_link_pk = $resource_link_pk;
                         $folder->save();
+                        return \Redirect::to("/chime/" . $chime->id . "/folder/" . $folder->id);
                     }
-                    return \Redirect::to("/chime/" . $chime->id);
+                    else {
+                        return \Redirect::to("/chime/" . $chime->id);
+                    }
                 }
                 else if($chime && !$chime->lti_setup_complete) {
                     
