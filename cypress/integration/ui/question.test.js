@@ -439,11 +439,11 @@ describe("question", () => {
         ...favoriteColorQuestion,
         questionResponses: [
           {
-            text: "Etiam porta sem malesuada magna mollis euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam porta sem malesuada magna mollis euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            text: "<p>Etiam porta sem malesuada magna mollis euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam porta sem malesuada magna mollis euismod. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
             correct: false,
           },
-          { text: "Green", correct: false },
-          { text: "Blue", correct: false },
+          { text: "<p>Green</p>", correct: false },
+          { text: "<p>Blue</p>", correct: false },
         ],
       };
 
@@ -477,6 +477,55 @@ describe("question", () => {
           cy.wait(1500);
           cy.get("#app").matchImageSnapshot(
             `mult-choice-stats-with-long-labels`
+          );
+        });
+    });
+
+    it.only("marks a correct choice with check when presenting stats", () => {
+      let testChime, testFolder;
+
+      const questionWithCorrectChoice = {
+        ...favoriteColorQuestion,
+        questionResponses: [
+          {
+            text: "<p>Red</p>",
+            correct: false,
+          },
+          { text: "<p>Green</p>", correct: false },
+          { text: "<p>Blue</p>", correct: true },
+        ],
+      };
+
+      api
+        .createChimeFolderQuestion(questionWithCorrectChoice)
+        .then(({ chime, folder }) => {
+          testChime = chime;
+          testFolder = folder;
+        })
+        .then(() => {
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+          // open the question
+          cy.get("[data-cy=toggle-open-question]").click();
+
+          // logout faculty
+          cy.logout();
+        })
+        .then(() => {
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.get(":nth-child(1) > .form-check-label").click();
+        })
+        .then(() => {
+          cy.login("faculty");
+          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+          cy.get("[data-cy=present-question-button]").click();
+          cy.get("[data-cy=show-results-button]").click();
+
+          // wait for rendering and animation to complete
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(1500);
+          cy.get("#app").matchImageSnapshot(
+            `mult-choice-stats-with-checkmark-on-correct`
           );
         });
     });
