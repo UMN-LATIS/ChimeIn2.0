@@ -90,7 +90,7 @@ export default {
 
       const createChoiceLabelHtml = (prependHtmlFn) => (choice) =>
         `
-        <div style="display: grid; grid-template-rows: 1.5rem 1fr; justify-content: center; align-items: center;">
+        <div style="display: grid; grid-template-rows: 1.5rem 1fr; justify-content: center;">
           ${prependHtmlFn(choice)}
           ${choice.text}
         </div>
