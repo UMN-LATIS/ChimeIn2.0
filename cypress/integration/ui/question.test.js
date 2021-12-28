@@ -481,7 +481,7 @@ describe("question", () => {
         });
     });
 
-    it.only("marks a correct choice with check when presenting stats", () => {
+    it("marks a correct choice with check when presenting stats", () => {
       let testChime, testFolder;
 
       const questionWithCorrectChoice = {
