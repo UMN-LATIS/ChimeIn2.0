@@ -22,7 +22,7 @@ This screencast shows the process.
 
 ChimeIn is available as an "external tool" within the Canvas assignment tool. The screencast below shows the process for creating assignments with ChimeIn, and using ChimeIn within your Canvas course.
 
-<iframe width="100%" height="420" src="https://youtu.be/Wf9YrZ1FAqw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="100%" height="420" src="https://www.youtube.com/embed/Wf9YrZ1FAqw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### Step by Step instructions
 
