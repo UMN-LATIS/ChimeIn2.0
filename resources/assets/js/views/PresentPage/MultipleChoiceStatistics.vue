@@ -80,7 +80,7 @@ export default {
       const checkmarkIcon = `
         <span 
           class="material-icons" 
-          style="font-size: 1rem; color: var(--green); line-height: 1;"
+          style="display: flex; justify-content: center; font-size: 1rem; color: var(--green); line-height: 1;"
         >
           check_circle
         </span>
@@ -98,7 +98,7 @@ export default {
 
       const prependCheckIfCorrect = (choice) => {
         // noop if there's no correct choice
-        if (!hasCorrectChoice) return () => {};
+        if (!hasCorrectChoice) return "";
         return choice.correct ? checkmarkIcon : emptySpan;
       };
 
