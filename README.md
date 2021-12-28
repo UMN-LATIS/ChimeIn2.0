@@ -1,8 +1,12 @@
 # ChimeIn
 
+> Real time polling for your presentations
+
+Chime-In is a web-based "clicker" tool for doing live polling in interactive presentations.
+
 ## Setting up ChimeIn Locally
 
-ChimeIn is designed to run in Docker via `docker compose`.
+Chime in uses Laravel's docker environment, [Laravel Sail](https://laravel.com/docs/8.x/sail) for development. To get sarted:
 
 ```sh
 # Create a .env file
@@ -12,26 +16,42 @@ cp .env.example .env
 # The default `.env.example` will probably be sufficient,
 # but if you're a Safari user, change SESSION_SAME_SITE="none"
 
-# build docker images
-docker compose build
+# Instal php deps
+composer install
 
-# start the containers
-docker compose up
+# Build docker image
+sail build --no-cache
 
-# generate an app key
-docker compose exec app php artisan key:generate
+# Start Sail
+sail up
+
+# create app key, link storage, etc
+sail exec app ./bin/ci.sh
 
 # migrate the database
-docker compose exec app php artisan migrate:fresh
+sail artisan migrate:fresh
+
+# Install node modules
+yarn install
+
+# Start Laravel Mix to compile Vue
+yarn run watch
+
 ```
 
-The application will be running on <http://localhost:8000>.
+The application will be running on <http://localhost>.
 
 ## Using the Application
 
-Start the app: `docker-compose up`.
+```sh
+sail up
+yarn run watch
 
-Load <http://localhost:8000> in your browser.
+# For Hot Module Replacement (HMR), do:
+# yarn run dev && yarn run hot
+```
+
+Load <http://localhost> in your browser.
 
 Login with:
 
@@ -40,21 +60,24 @@ Login with:
 
 Additional users can be configured in `config/shibboleth.php`.
 
-Stop the application: `docker compose down`.
+Stop the application: `sail down`.
 
 ## Running Tests Locally
 
+⚠️ Stop laravel mix's hot module reloading before running cypress.
+
 ```sh
-# build docker images
-docker compose -f docker-compose.test.yml --env-file .env.test build
+yarn run cypress
+```
 
-# start the containers
-docker compose -f docker-compose.test.yml --env-file .env.test up -d
+## Deploy
 
-# configure the app, migrate the db, etc.
-docker compose -f docker-compose.test.yml exec app ./bin/ci.sh
+Servers:
 
-# run tests
-docker compose -f docker-compose.test.yml exec app php artisan dusk
+- Development: https://cla-chimein-dev.oit.umn.edu
+- Test (Staging): https://cla-chimein-tst.oit.umn.edu
+- Production: https://chimein.umn.edu
 
+```sh
+./vendor/bin/dep deploy <environment name>
 ```

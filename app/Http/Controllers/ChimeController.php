@@ -134,10 +134,12 @@ class ChimeController extends Controller
     public function deleteChime(Request $req) {
         $user = $req->user();
         $chime = ($user->chimes()->find($req->route('chime_id')));
-        
-        if ($chime != null && $chime->pivot->permission_number >= 300) {
+        if ($chime == null) {
+            return response('Chime not found', 404);
+        }
+
+        if ($chime->pivot->permission_number >= 300) {
             $chime->delete();
-        
             return response('Chime Deleted', 200);
         } else {
             $user->chimes()->detach($chime);
@@ -366,8 +368,7 @@ class ChimeController extends Controller
 
         usort($sessions, function($a, $b) {
             if(strtotime($a->updated_at) == strtotime($b->updated_at)) {
-                return $a->question->order < $b->question->order;
-                // return 0;
+                return $a->question->order - $b->question->order;
             }
             return strtotime($a->updated_at)<strtotime($b->updated_at)?-1:1;
         });

@@ -20,6 +20,7 @@ class AuthIfNecessary
             $user = new \App\User;
             $user->guest_user=true;
             $user->userType="guest";
+            $user->permission_number = 0;
             $user->email = str_random(10);
             $user->save();
             Auth::login($user);
