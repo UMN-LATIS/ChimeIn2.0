@@ -74,9 +74,38 @@ export default {
   methods: {
     handleHtmlChartLabels() {
       const chart = this.$refs.googleChart.$el;
-      const htmlLabels = this.question.question_info.question_responses.map(
-        (q) => q.text
+      const questionChoices = this.question.question_info.question_responses;
+      const hasCorrectChoice = questionChoices.some((q) => q.correct);
+
+      const checkmarkIcon = `
+        <span 
+          class="material-icons" 
+          style="display: flex; justify-content: center; font-size: 1rem; color: var(--green); line-height: 1;"
+        >
+          check_circle
+        </span>
+      `;
+
+      const emptySpan = "<span></span>";
+
+      const createChoiceLabelHtml = (prependHtmlFn) => (choice) =>
+        `
+        <div style="display: grid; grid-template-rows: 1.5rem 1fr; justify-content: center;">
+          ${prependHtmlFn(choice)}
+          ${choice.text}
+        </div>
+        `;
+
+      const prependCheckIfCorrect = (choice) => {
+        // noop if there's no correct choice
+        if (!hasCorrectChoice) return "";
+        return choice.correct ? checkmarkIcon : emptySpan;
+      };
+
+      const htmlLabels = questionChoices.map(
+        createChoiceLabelHtml(prependCheckIfCorrect)
       );
+
       // when animations are turned on, these labels will be overwritten, so we reinsert the labels with each animation frame
       let start;
       const updateLabels = (timestamp) => {
