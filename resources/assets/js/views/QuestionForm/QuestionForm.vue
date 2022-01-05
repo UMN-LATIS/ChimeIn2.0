@@ -54,6 +54,7 @@
                 v-model="allow_multiple"
                 type="checkbox"
                 class="form-check-input"
+                data-cy="allow-multiple-responses-checkbox"
               />
               Allow Multiple Responses
             </label>

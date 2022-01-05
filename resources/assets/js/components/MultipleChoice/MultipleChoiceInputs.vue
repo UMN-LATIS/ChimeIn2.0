@@ -61,10 +61,7 @@ export default {
     },
   },
   mounted() {
-    let currentResponse = get(this, "response.response_info.choice", null);
-    if (currentResponse !== null) {
-      this.selected = currentResponse;
-    }
+    this.selected = get(this, "response.response_info.choice", this.selected);
   },
 };
 </script>
