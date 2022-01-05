@@ -8,7 +8,7 @@
           class="form-check-input"
           :disabled="disabled"
           :type="question.allow_multiple ? 'checkbox' : 'radio'"
-          :value="option"
+          :value="key"
         />
         <label
           class="form-check-label"
@@ -61,7 +61,7 @@ export default {
     },
   },
   mounted() {
-    this.selected = get(this, "response.response_info.choice", null);
+    this.selected = get(this, "response.response_info.choice", []);
   },
 };
 </script>
