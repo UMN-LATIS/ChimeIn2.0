@@ -43,7 +43,7 @@ class ChimeController extends Controller
 
         $chime->load("folders");
 
-        if ($chime != null && $chime->pivot->permission_number >= 300) {
+        if ($chime != null && ($chime->pivot->permission_number >= 300 || $chime->students_can_view)) {
             return response()->json($chime);
         } else {
             return response()->json(["status"=>"error", "message"=>"You don't have permission to access this Chime"], 403);
