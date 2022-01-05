@@ -198,7 +198,69 @@ describe("question", () => {
   });
 
   it("changes the folder");
-  it("allows multiple reponses");
+  it("allows multiple responses", () => {
+    let testChime;
+    let testFolder;
+    api
+      .createChime({ name: "Test Chime" })
+      .then((chime) => {
+        testChime = chime;
+        return api.createFolder({ name: "Test Folder", chimeId: chime.id });
+      })
+      .then((folder) => {
+        testFolder = folder;
+      })
+      .then(() => {
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+        // create a multiple response question
+        cy.get("[data-cy=new-question-button]").click();
+        cy.get("[data-cy=question-type]").type("Multiple Choice{enter}");
+        cy.get('[data-cy="allow-multiple-responses-checkbox"]').click();
+
+        cy.get("[data-cy=question-editor]").type("Which numbers are prime?");
+        cy.get("[data-cy=add-choice-button]")
+          .click()
+          .type("1{enter}")
+          .type("2{enter}")
+          .type("3{enter}")
+          .type("4{enter}");
+
+        // mark 2 and 3 as correct
+        cy.get(":nth-child(2) > .response-choice-item__correct-toggle").click();
+        cy.get(":nth-child(3) > .response-choice-item__correct-toggle").click();
+
+        cy.contains("Save").click();
+        cy.wait("@apiCreateQuestion");
+      })
+      .then(() => {
+        // open the question
+        cy.get("[data-cy=toggle-open-question]").click();
+        cy.logout();
+      })
+      .then(() => {
+        // join as participant
+        cy.visit(`/join/${testChime.access_code}`);
+
+        // check options
+        cy.get("#radio1_1").click();
+        cy.wait("@apiSubmitResponse");
+        cy.get("#radio1_2").click();
+      })
+      .then(() => {
+        // check that results render properly
+        cy.login("faculty");
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+        cy.get("[data-cy=present-question-button]").click();
+        cy.get("[data-cy=show-results-button]").click();
+
+        // wait for rendering
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(3000);
+        cy.get("#app").matchImageSnapshot("multiple-response");
+      });
+  });
+
   it("supports rich text formatting in the question text");
   it("allows LaTeX in the question text");
   it("creates an anonymous question");
