@@ -40,7 +40,7 @@ export default {
     selected: function (newValue, value) {
       if (
         newValue !== null &&
-        newValue !== value &&
+        newValue != value &&
         !(
           this.response &&
           this.response.response_info &&
@@ -61,7 +61,10 @@ export default {
     },
   },
   mounted() {
-    this.selected = get(this, "response.response_info.choice", []);
+    let currentResponse = get(this, "response.response_info.choice", null);
+    if (currentResponse !== null) {
+      this.selected = currentResponse;
+    }
   },
 };
 </script>
