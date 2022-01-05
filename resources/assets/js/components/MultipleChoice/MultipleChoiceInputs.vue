@@ -8,7 +8,7 @@
           class="form-check-input"
           :disabled="disabled"
           :type="question.allow_multiple ? 'checkbox' : 'radio'"
-          :value="key"
+          :value="option"
         />
         <label
           class="form-check-label"
@@ -40,7 +40,7 @@ export default {
     selected: function (newValue, value) {
       if (
         newValue !== null &&
-        newValue != value &&
+        newValue !== value &&
         !(
           this.response &&
           this.response.response_info &&
