@@ -4,20 +4,19 @@
     <ErrorDialog />
     <div class="container">
       <header class="chime__header">
+        <Chip
+          v-if="true || isCanvasChime"
+          class="chime-header__canvas-chip"
+          color="yellow"
+          :solid="true"
+          title="This chime is linked with Canvas."
+        >
+          Canvas
+        </Chip>
         <div class="chime__header-container">
-          <div class="flex">
-            <h1 class="chime__name">
-              {{ chime.name }}
-            </h1>
-            <Chip
-              v-if="isCanvasChime"
-              color="yellow"
-              :solid="true"
-              title="This chime is linked with Canvas."
-            >
-              Canvas
-            </Chip>
-          </div>
+          <h1 class="chime__name">
+            {{ chime.name }}
+          </h1>
           <div
             class="chime__control-buttons btn-group"
             role="group"
@@ -27,7 +26,12 @@
             }"
           >
             <button
-              class="btn btn-outline-secondary align-items-center d-flex"
+              class="
+                chime__control-button
+                btn btn-outline-secondary
+                align-items-center
+                d-flex
+              "
               :class="{ 'btn--is-active': showSettings }"
               data-cy="toggle-chime-settings-panel"
               @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
@@ -36,7 +40,12 @@
             </button>
 
             <button
-              class="btn btn-outline-secondary align-items-center d-flex"
+              class="
+                chime__control-button
+                btn btn-outline-secondary
+                align-items-center
+                d-flex
+              "
               :class="{ 'btn--is-active': exportPanel }"
               data-cy="toggle-chime-export-panel"
               @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
@@ -232,17 +241,25 @@ export default {
 .chime__header {
   margin: 2rem 0 2rem;
 }
+.chime-header__canvas-chip {
+  margin-bottom: 0.5rem;
+}
 
 .chime__header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* flex-wrap: wrap; */
+  gap: 1rem;
 }
 .chime__name {
   font-size: 2rem;
   line-height: 1;
   margin: 0;
   margin-right: 0.5rem;
+}
+.chime__control-buttons {
+  flex-shrink: 0;
 }
 
 .chime__control-buttons .material-icons {
