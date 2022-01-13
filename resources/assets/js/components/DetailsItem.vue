@@ -21,6 +21,7 @@ export default {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
+  line-height: 1.2;
 }
 .details-item-label {
   font-weight: normal;
