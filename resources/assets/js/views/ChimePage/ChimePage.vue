@@ -5,7 +5,7 @@
     <div class="container">
       <header class="chime__header">
         <Chip
-          v-if="true || isCanvasChime"
+          v-if="isCanvasChime"
           class="chime-header__canvas-chip"
           color="yellow"
           :solid="true"
