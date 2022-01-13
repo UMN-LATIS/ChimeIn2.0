@@ -43,7 +43,7 @@
 .new-folder {
   max-width: 30rem;
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 .new-folder__button {
   flex-shrink: 0;
