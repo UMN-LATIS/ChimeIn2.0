@@ -20,19 +20,21 @@ export default {
   margin: 0.5rem 0;
   display: flex;
   align-items: baseline;
+  gap: 0.5rem;
+  line-height: 1.2;
 }
 .details-item-label {
-  width: 5rem;
   font-weight: normal;
   text-transform: uppercase;
   color: #aaa;
   font-size: 0.7rem;
-  margin-right: 1rem;
 }
 .details-item-value {
   font-size: 0.9rem;
   color: #777;
   user-select: all;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
 
