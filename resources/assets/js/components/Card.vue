@@ -69,6 +69,7 @@ export default {
   flex: 1;
   font-size: 1rem;
   margin: 1rem 0;
+  min-width: 0;
 
   h1,
   h2,
@@ -77,7 +78,18 @@ export default {
   h5 {
     margin: 0;
     font-size: 1.5rem;
-    line-height: 1;
+    line-height: 1.1;
+  }
+
+  @media (max-width: 25rem) {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-size: 1rem;
+      line-height: 1.2;
+    }
   }
 }
 

@@ -11,7 +11,7 @@
       </header>
     </router-link>
 
-    <div v-if="canCurrentUserEdit">
+    <div v-if="canCurrentUserEdit" class="chime-card__join-details">
       <div v-if="isCanvasChime">
         <DetailsItem>
           <template #label>Join</template>
@@ -135,5 +135,9 @@ export default {
 }
 .chime-card__chip-group {
   margin-left: 1rem;
+}
+.chime-card__join-details {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
