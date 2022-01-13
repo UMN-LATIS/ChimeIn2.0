@@ -136,8 +136,4 @@ export default {
 .chime-card__chip-group {
   margin-left: 1rem;
 }
-.chime-card__join-details {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 </style>
