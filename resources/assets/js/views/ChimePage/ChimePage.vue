@@ -5,7 +5,7 @@
     <div class="container">
       <header class="chime__header">
         <Chip
-          v-if="true || isCanvasChime"
+          v-if="isCanvasChime"
           class="chime-header__canvas-chip"
           color="yellow"
           :solid="true"
@@ -254,7 +254,6 @@ export default {
 }
 .chime__name {
   font-size: 2rem;
-  line-height: 1;
   margin: 0;
   margin-right: 0.5rem;
 }

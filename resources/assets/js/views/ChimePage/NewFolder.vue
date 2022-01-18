@@ -1,30 +1,29 @@
 <template>
   <div class="new-folder">
-    <label for="createFolder" class="text-right visually-hidden col-form-label"
-      >Add Folder</label
+    <label for="createFolder" class="visually-hidden">Add Folder</label>
+    <input
+      id="createFolder"
+      v-model="folder_name"
+      type="text"
+      class="form-control new-folder__input"
+      name="createFolder"
+      placeholder="Folder Name"
+      @keyup.enter="new_folder"
+    />
+    <button
+      data-cy="create-folder-button"
+      type="button"
+      class="
+        new-folder__button
+        btn btn-outline-primary
+        align-items-center
+        d-flex
+      "
+      @click="new_folder"
     >
-    <div class="row">
-      <div class="col-8 col-6-md">
-        <input
-          id="createFolder"
-          v-model="folder_name"
-          type="text"
-          class="form-control new-folder__input"
-          name="createFolder"
-          placeholder="Folder Name"
-          @keyup.enter="new_folder"
-        />
-      </div>
-      <button
-        data-cy="create-folder-button"
-        type="button"
-        class="btn btn-outline-primary align-items-center d-flex"
-        @click="new_folder"
-      >
-        <i class="material-icons">add</i>
-        Add Folder
-      </button>
-    </div>
+      <i class="material-icons">add</i>
+      Add Folder
+    </button>
     <div
       v-if="chime.lti_grade_mode == 'multiple_grades'"
       class="alert alert-warning mt-2"
@@ -40,9 +39,14 @@
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 .new-folder {
-  max-width: 40rem;
+  max-width: 30rem;
+  display: flex;
+  gap: 0.5rem;
+}
+.new-folder__button {
+  flex-shrink: 0;
 }
 </style>
 
