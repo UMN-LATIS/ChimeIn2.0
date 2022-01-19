@@ -254,7 +254,6 @@ export default {
 }
 .chime__name {
   font-size: 2rem;
-  line-height: 1;
   margin: 0;
   margin-right: 0.5rem;
 }
