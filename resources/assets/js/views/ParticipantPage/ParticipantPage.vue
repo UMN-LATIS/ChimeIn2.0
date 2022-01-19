@@ -120,6 +120,7 @@ export default {
       responses: [],
       error: null,
       timeout: null,
+      loadTime: null,
     };
   },
   computed: {
@@ -156,7 +157,7 @@ export default {
   },
   mounted: function () {
     this.loadChime();
-
+    this.loadTime = new Date();
     Echo.join("session-status." + this.chimeId)
       .listen("StartSession", (m) => {
         console.log("debug", "message:", m);
@@ -182,6 +183,19 @@ export default {
     window.Echo.connector.socket.on("reconnect", () => {
       console.log("reconnecting and reloading");
       if (this.timeout) clearTimeout(this.timeout);
+
+      const hoursSinceLoad = (new Date() - this.loadTime) / 1000 / 60 / 60;
+      if (hoursSinceLoad >= 8) {
+        Echo.leave("session-status." + this.chimeId);
+        window.Echo.connector.socket.off("reconnect");
+        this.error = "Your session has expired.  Please refresh the page.";
+        this.sessions = [];
+        this.$announcer.set(
+          "Your session has expired. Please refresh the page."
+        );
+        return;
+      }
+
       this.timeout = setTimeout(() => {
         this.loadChime();
       }, 500);
