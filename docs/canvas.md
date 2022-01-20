@@ -12,7 +12,7 @@ ChimeIn needs to be enabled in your Canvas course. This needs to be done once pe
 
 Some instructions will be presented. **You'll need to copy and paste two values** - the "consumer key" and "secret key". It might be helpful to copy these to a temporary text document. Once it's been enabled, you can begin adding ChimeIn assignments.
 
-**Important**: it can take a few minutes for new apps to show up within the Canvas "External Tools" list.
+**Important**: it can take a few minutes for new apps to show up within the Canvas "External Tools" list. **Do not try to add ChimeIn a second time.**
 
 This screencast shows the process.
 
