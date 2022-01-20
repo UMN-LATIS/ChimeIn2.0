@@ -41,9 +41,12 @@
 </template>
 <style scoped>
 .new-folder {
-  max-width: 30rem;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
+}
+.new-folder__input {
+  max-width: 30rem;
 }
 .new-folder__button {
   flex-shrink: 0;
