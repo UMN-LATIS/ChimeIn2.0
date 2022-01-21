@@ -64,3 +64,13 @@ ChimeIn is most often used to check engagement or collect feedback on a topic, r
 If you've cloned a Canvas course from a previous semester, and would like to re-use your ChimeIn questions, simply click on one of your ChimeIn assignments. ChimeIn will ask if you'd like to import the questions and folders from a previous Chime.
 
 We recommend click through each of your ChimeIn assignments from Canvas to ensure they're linked correctly, but that should generally happen automatically.
+
+## Drop Lowest Canvas Chime Assignments from Grades
+
+It's common to use ChimeIn with Canvas to track participation in the gradebook. In some cases, you might want to set up Canvas to allow students to miss a certain number of Chimes before it impacts their grades.
+
+You can use [Canvas assignment groups](https://community.canvaslms.com/t5/Instructor-Guide/How-do-I-add-an-assignment-group-in-a-course/ta-p/970) to group all your chime assignments together, and then [create a rule to drop the lowest X chimes](https://community.canvaslms.com/t5/Instructor-Guide/How-do-I-create-rules-for-an-assignment-group/ta-p/848).
+
+Here's a demo:
+
+<iframe width="100%" height="420" src="https://www.youtube.com/embed/RXczYrezKmY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
