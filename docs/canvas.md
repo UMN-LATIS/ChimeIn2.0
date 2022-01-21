@@ -73,4 +73,4 @@ You can use [Canvas assignment groups](https://community.canvaslms.com/t5/Instru
 
 Here's a demo:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/RXczYrezKmY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="100%" height="420" src="https://www.youtube.com/embed/RXczYrezKmY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
