@@ -9,6 +9,7 @@
     "hot": "mix watch --hot",
     "prod": "npm run production",
     "production": "mix --production",
+    "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "cypress": "cypress open --env failOnSnapshotDiff=false",
     "cypress:headless": "cypress run --browser chrome",
