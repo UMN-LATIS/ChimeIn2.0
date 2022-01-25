@@ -47,6 +47,7 @@ export default {
   --color-inverse: #fff;
   display: inline-flex;
   flex-wrap: nowrap;
+  white-space: nowrap;
   align-items: center;
   color: var(--color);
   border: 1px solid var(--color);
