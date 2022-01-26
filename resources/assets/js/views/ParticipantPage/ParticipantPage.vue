@@ -5,7 +5,7 @@
       :canvasUrl="canvasCourseUrl"
       :joinUrl="joinUrl"
     />
-    <NavBar title="Home" :user="user" :link="'/'" />
+    <NavBar title="Home" :user="user" :link="'/'" v-if="!isCanvasChime" />
     <ErrorDialog />
     <div v-if="error" class="alert alert-warning" role="alert">
       {{ error }}
@@ -37,13 +37,6 @@
               class="tab-pane container active"
               aria-live="polite"
             >
-              <div
-                v-if="filteredSession.length < 1"
-                key="none"
-                class="text-center"
-              >
-                <h1>No Open Questions</h1>
-              </div>
               <div v-if="ltiLaunchWarning" class="text-center">
                 <h1>Chime Access Method Invalid</h1>
                 <p class="text-left">
@@ -55,6 +48,13 @@
                 </p>
               </div>
               <template v-else>
+                <div
+                  v-if="filteredSession.length < 1"
+                  key="none"
+                  class="text-center"
+                >
+                  <h1>No Open Questions</h1>
+                </div>
                 <transition-group v-if="filteredSession.length > 0" name="fade">
                   <ParticipantPrompt
                     v-for="s in filteredSession"
@@ -143,6 +143,9 @@ export default {
     joinUrl() {
       return selectJoinUrl(this.chime);
     },
+    isCanvasChime() {
+      return selectIsCanvasChime(this.chime);
+    },
     inParticipantView() {
       const viewMode = get(this, "$route.query.viewMode", null);
       if (!viewMode) return false;
@@ -168,7 +171,7 @@ export default {
       return [...this.responses].sort(compare);
     },
     ltiLaunchWarning: function () {
-      if (!window.lti_launch && selectIsCanvasChime(this.chime)) {
+      if (!window.lti_launch && this.isCanvasChime) {
         return true;
       }
       return false;
