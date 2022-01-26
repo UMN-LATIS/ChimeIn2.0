@@ -5,7 +5,7 @@
       :canvasUrl="canvasCourseUrl"
       :joinUrl="joinUrl"
     />
-    <NavBar title="Home" :user="user" :link="'/'" v-if="!isCanvasChime" />
+    <NavBar :title="isCanvasChime ? null : 'Home'" :user="user" link="/" />
     <ErrorDialog />
     <div v-if="error" class="alert alert-warning" role="alert">
       {{ error }}
@@ -102,6 +102,9 @@
 <style scoped>
 .nav-item {
   width: 50%;
+}
+.container {
+  margin-top: 1em;
 }
 </style>
 <script>
