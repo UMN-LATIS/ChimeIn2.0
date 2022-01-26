@@ -25,7 +25,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#pastQuestions"
-                >Closed Questions</a
+                >Answered Questions</a
               >
             </li>
           </ul>
@@ -44,20 +44,32 @@
               >
                 <h1>No Open Questions</h1>
               </div>
-              <transition-group v-if="filteredSession.length > 0" name="fade">
-                <ParticipantPrompt
-                  v-for="s in filteredSession"
-                  :key="s.id"
-                  :session="s"
-                  :chime="chime"
-                  :responses="responses"
-                  @updateResponse="updateResponse"
-                />
-              </transition-group>
+              <div v-if="ltiLaunchWarning" class="text-center">
+                <h1>Chime Access Method Invalid</h1>
+                <p class="text-left">
+                  In respond to questions in this Chime, you must follow the
+                  link from your
+                  <a :href="canvasCourseUrl">course Canvas site</a>. You can
+                  still access your previously answered questions using the tab
+                  above.
+                </p>
+              </div>
+              <template v-else>
+                <transition-group v-if="filteredSession.length > 0" name="fade">
+                  <ParticipantPrompt
+                    v-for="s in filteredSession"
+                    :key="s.id"
+                    :session="s"
+                    :chime="chime"
+                    :responses="responses"
+                    @updateResponse="updateResponse"
+                  />
+                </transition-group>
+              </template>
             </div>
             <div id="pastQuestions" class="tab-pane container">
               <div v-if="responses.length < 1" class="text-center">
-                <h1>No Closed Questions</h1>
+                <h1>No Answered Questions</h1>
               </div>
               <Response
                 v-else
@@ -68,7 +80,7 @@
               />
             </div>
           </div>
-          <p class="text-center m-0">
+          <p class="text-center m-0" v-if="!ltiLaunchWarning">
             <small v-if="chime.lti_course_title" class="text-muted"
               >Not seeing the prompts you're looking for? Make sure you've
               followed the correct assignment link from Canvas.
@@ -102,6 +114,7 @@ import ViewModeNotice from "./ViewModeNotice.vue";
 import {
   selectCanvasCourseUrl,
   selectJoinUrl,
+  selectIsCanvasChime,
 } from "../../helpers/chimeSelectors.js";
 
 export default {
@@ -153,6 +166,12 @@ export default {
       }
 
       return [...this.responses].sort(compare);
+    },
+    ltiLaunchWarning: function () {
+      if (!window.lti_launch && selectIsCanvasChime(this.chime)) {
+        return true;
+      }
+      return false;
     },
   },
   mounted: function () {
