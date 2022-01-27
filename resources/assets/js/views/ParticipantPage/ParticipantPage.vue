@@ -40,8 +40,8 @@
               <div v-if="ltiLaunchWarning" class="text-center">
                 <h1>Chime Access Method Invalid</h1>
                 <p class="text-left">
-                  In respond to questions in this Chime, you must follow the
-                  link from your
+                  In order to respond to questions in this Chime, you must
+                  follow the link from your
                   <a :href="canvasCourseUrl">course Canvas site</a>. You can
                   still access your previously answered questions using the tab
                   above.
