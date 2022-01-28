@@ -86,7 +86,7 @@
               Session Responses:
               {{ current_session ? current_session.responses.length : 0 }}
             </li>
-            <li v-else>Total Responses: {{ total_responses }}</li>
+            <li>Total Responses: {{ total_responses }}</li>
             <li>Connected Participants: {{ usersCount - 1 }}</li>
           </ul>
         </div>
