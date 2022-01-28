@@ -5,7 +5,7 @@
       :canvasUrl="canvasCourseUrl"
       :joinUrl="joinUrl"
     />
-    <NavBar title="Home" :user="user" :link="'/'" />
+    <NavBar :title="isCanvasChime ? null : 'Home'" :user="user" link="/" />
     <ErrorDialog />
     <div v-if="error" class="alert alert-warning" role="alert">
       {{ error }}
@@ -25,7 +25,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#pastQuestions"
-                >Closed Questions</a
+                >Answered Questions</a
               >
             </li>
           </ul>
@@ -37,27 +37,42 @@
               class="tab-pane container active"
               aria-live="polite"
             >
-              <div
-                v-if="filteredSession.length < 1"
-                key="none"
-                class="text-center"
-              >
-                <h1>No Open Questions</h1>
+              <div v-if="ltiLaunchWarning">
+                <h1 class="text-center">
+                  Whoops! You Didn't Follow the Link in Canvas
+                </h1>
+                <p class="text-left">
+                  This chime is linked to Canvas. To participate, join this
+                  chime by clicking the assignment link in your Canvas course.
+                </p>
+
+                <a class="btn btn-primary" :href="canvasCourseUrl">
+                  Go to Canvas
+                </a>
               </div>
-              <transition-group v-if="filteredSession.length > 0" name="fade">
-                <ParticipantPrompt
-                  v-for="s in filteredSession"
-                  :key="s.id"
-                  :session="s"
-                  :chime="chime"
-                  :responses="responses"
-                  @updateResponse="updateResponse"
-                />
-              </transition-group>
+              <template v-else>
+                <div
+                  v-if="filteredSession.length < 1"
+                  key="none"
+                  class="text-center"
+                >
+                  <h1>No Open Questions</h1>
+                </div>
+                <transition-group v-if="filteredSession.length > 0" name="fade">
+                  <ParticipantPrompt
+                    v-for="s in filteredSession"
+                    :key="s.id"
+                    :session="s"
+                    :chime="chime"
+                    :responses="responses"
+                    @updateResponse="updateResponse"
+                  />
+                </transition-group>
+              </template>
             </div>
             <div id="pastQuestions" class="tab-pane container">
               <div v-if="responses.length < 1" class="text-center">
-                <h1>No Closed Questions</h1>
+                <h1>No Answered Questions</h1>
               </div>
               <Response
                 v-else
@@ -68,7 +83,7 @@
               />
             </div>
           </div>
-          <p class="text-center m-0">
+          <p class="text-center m-0" v-if="!ltiLaunchWarning">
             <small v-if="chime.lti_course_title" class="text-muted"
               >Not seeing the prompts you're looking for? Make sure you've
               followed the correct assignment link from Canvas.
@@ -91,6 +106,9 @@
 .nav-item {
   width: 50%;
 }
+.container {
+  margin-top: 1em;
+}
 </style>
 <script>
 import get from "lodash/get";
@@ -102,6 +120,7 @@ import ViewModeNotice from "./ViewModeNotice.vue";
 import {
   selectCanvasCourseUrl,
   selectJoinUrl,
+  selectIsCanvasChime,
 } from "../../helpers/chimeSelectors.js";
 
 export default {
@@ -130,6 +149,9 @@ export default {
     joinUrl() {
       return selectJoinUrl(this.chime);
     },
+    isCanvasChime() {
+      return selectIsCanvasChime(this.chime);
+    },
     inParticipantView() {
       const viewMode = get(this, "$route.query.viewMode", null);
       if (!viewMode) return false;
@@ -153,6 +175,12 @@ export default {
       }
 
       return [...this.responses].sort(compare);
+    },
+    ltiLaunchWarning: function () {
+      if (!this.inParticipantView && !window.lti_launch && this.isCanvasChime) {
+        return true;
+      }
+      return false;
     },
   },
   mounted: function () {
@@ -241,12 +269,15 @@ export default {
             );
             console.log("error getting chime:", err.response);
           }
+        })
+        .then(() => {
+          return axios
+            .get("/api/chime/" + this.chimeId + "/responses")
+            .then((res) => {
+              console.log("debug", "Response:", res);
+              this.responses = res.data;
+            });
         });
-
-      axios.get("/api/chime/" + this.chimeId + "/responses").then((res) => {
-        console.log("debug", "Response:", res);
-        this.responses = res.data;
-      });
     },
   },
 };

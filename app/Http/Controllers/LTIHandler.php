@@ -35,6 +35,7 @@ class LTIHandler extends Controller
         
         $tool = new ChimeToolProvider();
         $tool->handleRequest();
+        session(['lti_launch' => true]);
         $launchDomain = $tool->resourceLink->getSetting("custom_canvas_api_domain");
         if(!\App::environment('local') && !in_array($launchDomain, $this->allowedDomains)) {
             abort(401, 'LTI Launch from an invalid domain');
