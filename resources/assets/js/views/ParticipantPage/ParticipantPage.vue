@@ -174,7 +174,7 @@ export default {
       return [...this.responses].sort(compare);
     },
     ltiLaunchWarning: function () {
-      if (!window.lti_launch && this.isCanvasChime) {
+      if (!this.inParticipantView && !window.lti_launch && this.isCanvasChime) {
         return true;
       }
       return false;
