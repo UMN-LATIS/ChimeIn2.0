@@ -269,12 +269,15 @@ export default {
             );
             console.log("error getting chime:", err.response);
           }
+        })
+        .then(() => {
+          return axios
+            .get("/api/chime/" + this.chimeId + "/responses")
+            .then((res) => {
+              console.log("debug", "Response:", res);
+              this.responses = res.data;
+            });
         });
-
-      axios.get("/api/chime/" + this.chimeId + "/responses").then((res) => {
-        console.log("debug", "Response:", res);
-        this.responses = res.data;
-      });
     },
   },
 };
