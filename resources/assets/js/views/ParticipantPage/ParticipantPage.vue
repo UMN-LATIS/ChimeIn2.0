@@ -49,6 +49,17 @@
                 <a class="btn btn-primary" :href="canvasCourseUrl">
                   Go to Canvas
                 </a>
+                <p class="mt-3">
+                  <small class="text-muted">
+                    If you believe this message is in error, you may use
+                    <a href="#" @click.prevent="forceLoad = true">this link</a>
+                    to force the chime to load. You may not recieve credit for
+                    your responses. Please contact your instructor or
+                    <a href="mailto:latistecharch@umn.edu" class="text-muted"
+                      >latistecharch@umn.edu</a
+                    >.
+                  </small>
+                </p>
               </div>
               <template v-else>
                 <div
@@ -140,6 +151,7 @@ export default {
       error: null,
       timeout: null,
       loadTime: null,
+      forceLoad: false,
     };
   },
   computed: {
@@ -177,7 +189,12 @@ export default {
       return [...this.responses].sort(compare);
     },
     ltiLaunchWarning: function () {
-      if (!this.inParticipantView && !window.lti_launch && this.isCanvasChime) {
+      if (
+        !this.forceLoad &&
+        !this.inParticipantView &&
+        !window.lti_launch &&
+        this.isCanvasChime
+      ) {
         return true;
       }
       return false;
