@@ -110,7 +110,13 @@ export default {
             this.error =
               "Error recording response. Your internet connection may be down. ";
           } else {
-            this.error = err.response;
+            if (err.response.data && err.response.data.message) {
+              this.error = err.response.data.message;
+              this.error +=
+                " Please try reloading the page, or contact help@umn.edu. If possible, include a screenshot of this error";
+            } else {
+              this.error = err.response;
+            }
           }
         });
     },
