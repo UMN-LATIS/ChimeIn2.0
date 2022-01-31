@@ -40,11 +40,11 @@ class ResponseController extends Controller
         $chime = $user->chimes()->find($chime->id);
 
         if(!$chime->sessions()->contains($session)) {
-            return response()->json(["message"=>'Session not found'], 403);
+            return response()->json(["message"=>'Session not found.'], 403);
         }
 
         if(!$session->question->current_session || $session->question->current_session->id != $session->id) {
-            return response()->json(["message"=>'Session has been closed'], 403);
+            return response()->json(["message"=>'Session has been closed.'], 403);
         }
         
         if($response) {
@@ -52,7 +52,7 @@ class ResponseController extends Controller
         }
         else {
             if(!$request->get("response_info")) {
-                return response()->json(["message"=>'Responses cannot be blank'], 400);
+                return response()->json(["message"=>'Responses cannot be blank.'], 400);
             }
             $response = $session->responses()->create([
                 'response_info' => $request->get('response_info'),
