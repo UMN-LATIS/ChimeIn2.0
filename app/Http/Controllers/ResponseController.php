@@ -40,14 +40,11 @@ class ResponseController extends Controller
         $chime = $user->chimes()->find($chime->id);
 
         if(!$chime->sessions()->contains($session)) {
-            // TODO ERROR
-            dd($chime
-            ->sessions());
-            return "nope";
+            return response('Session not found', 403);
         }
 
         if(!$session->question->current_session || $session->question->current_session->id != $session->id) {
-            return "nope";
+            return response('Session has been closed', 403);
         }
         
         if($response) {
