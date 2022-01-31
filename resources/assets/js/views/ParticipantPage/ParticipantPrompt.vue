@@ -15,7 +15,11 @@
       <transition name="fade">
         <p v-if="responseUpdated" class="alert alert-info">Response Updated</p>
       </transition>
-      <p v-if="error" class="alert alert-warning">{{ error }} Please reload.</p>
+      <p v-if="error" class="alert alert-warning">
+        {{ error }} Please try reloading the page, or contact
+        <a href="mailto:help@umn.edu">help@umn.edu</a>. If possible, include a
+        screenshot of this error.
+      </p>
 
       <small
         v-if="chime.show_folder_title_to_participants"
@@ -110,7 +114,11 @@ export default {
             this.error =
               "Error recording response. Your internet connection may be down. ";
           } else {
-            this.error = err.response;
+            if (err.response.data && err.response.data.message) {
+              this.error = err.response.data.message;
+            } else {
+              this.error = err.response;
+            }
           }
         });
     },
