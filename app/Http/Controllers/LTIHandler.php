@@ -32,8 +32,8 @@ class LTIHandler extends Controller
 
 
     public function launch() {
-        // DON'T SHIP THIS IT'S FOR DOCKER
-        $_SERVER['SERVER_NAME'] = "127.0.0.1";
+        // // DON'T SHIP THIS IT'S FOR DOCKER
+        // $_SERVER['SERVER_NAME'] = "127.0.0.1";
         $tool = new ChimeToolProvider();
         $tool->handleRequest();
         
