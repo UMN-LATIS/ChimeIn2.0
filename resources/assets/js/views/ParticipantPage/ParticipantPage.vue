@@ -116,6 +116,7 @@
 <style scoped>
 .nav-item {
   width: 50%;
+  align-self: flex-end;
 }
 .container {
   margin-top: 1em;
