@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="col-sm-12">
+  <div class="image-heatmap-response">
+    <div class="image-heatmap-response__image-container">
       <div
         v-if="image_coordinates && targetImageLoaded"
         class="clickPointer"
@@ -18,7 +18,7 @@
         @load="handleTargetImageLoaded"
       />
     </div>
-    <div class="col-sm-12">
+    <div>
       <button
         v-if="
           !disabled &&
@@ -26,7 +26,7 @@
           !create_new_response &&
           question.allow_multiple
         "
-        class="btn btn-primary"
+        class="btn btn-outline-primary"
         variant="primary"
         @click="new_response"
       >
@@ -39,6 +39,10 @@
 <style scoped>
 .max-height-image {
   max-height: 70vh;
+}
+
+.image-heatmap-response__image-container {
+  position: relative;
 }
 
 .clickPointer {

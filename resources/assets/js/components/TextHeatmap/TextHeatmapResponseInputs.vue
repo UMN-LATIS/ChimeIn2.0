@@ -1,62 +1,60 @@
 <template>
   <div>
-    <div class="col-sm-12">
-      <div
-        data-cy="text-heatmap-highlighted-text-container"
-        class="form-group"
-        v-html="highlightedText"
-      />
-      <div class="col-sm-12">
-        <button
-          v-if="(!disabled && !response.id) || create_new_response"
-          class="btn btn-primary"
-          variant="primary"
-          :disabled="disableSubmission"
-          @click="record_response"
-        >
-          Submit Selection
-        </button>
-        <button
-          v-if="
-            !disabled &&
-            response.id &&
-            !create_new_response &&
-            response.response_info.startOffset < 0
-          "
-          class="btn btn-primary"
-          variant="primary"
-          :disabled="disableSubmission"
-          @click="record_response"
-        >
-          Update
-        </button>
-        <button
-          v-if="
-            !disabled &&
-            response.id &&
-            !create_new_response &&
-            response.response_info.startOffset >= 0
-          "
-          class="btn btn-primary"
-          variant="primary"
-          @click="resetSelection"
-        >
-          Reset Selection
-        </button>
-        <button
-          v-if="
-            !disabled &&
-            response.id &&
-            !create_new_response &&
-            question.allow_multiple
-          "
-          class="btn btn-primary"
-          variant="primary"
-          @click="new_response"
-        >
-          Clear and Start a New Response
-        </button>
-      </div>
+    <div
+      data-cy="text-heatmap-highlighted-text-container"
+      class="form-group text-heatmap-highlighted-text-container"
+      v-html="highlightedText"
+    />
+    <div class="d-flex">
+      <button
+        v-if="(!disabled && !response.id) || create_new_response"
+        class="btn btn-outline-primary"
+        variant="primary"
+        :disabled="disableSubmission"
+        @click="record_response"
+      >
+        Submit Selection
+      </button>
+      <button
+        v-if="
+          !disabled &&
+          response.id &&
+          !create_new_response &&
+          response.response_info.startOffset < 0
+        "
+        class="btn btn-outline-primary"
+        variant="primary"
+        :disabled="disableSubmission"
+        @click="record_response"
+      >
+        Update
+      </button>
+      <button
+        v-if="
+          !disabled &&
+          response.id &&
+          !create_new_response &&
+          response.response_info.startOffset >= 0
+        "
+        class="btn btn-outline-primary"
+        variant="primary"
+        @click="resetSelection"
+      >
+        Reset Selection
+      </button>
+      <button
+        v-if="
+          !disabled &&
+          response.id &&
+          !create_new_response &&
+          question.allow_multiple
+        "
+        class="btn btn-outline-primary"
+        variant="primary"
+        @click="new_response"
+      >
+        Clear and Start a New Response
+      </button>
     </div>
   </div>
 </template>
@@ -201,3 +199,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.text-heatmap-highlighted-text-container {
+  padding-left: 1rem;
+  border-left: 0.25rem solid #ddd;
+}
+</style>

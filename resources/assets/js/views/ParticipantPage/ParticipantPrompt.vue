@@ -1,8 +1,22 @@
 <template>
-  <div class="row questionContainer">
-    <div v-if="question.question_info.question_type" class="col-12">
-      <p class="quesiton-text" v-html="question.text"></p>
+  <div
+    class="participant-prompt"
+    v-if="question.question_info.question_type"
+    :class="{
+      'save-succeeded': hasPreviouslySaved || saveSucceeded,
+      'save-failed': saveFailed,
+      'is-saving': isSaving,
+    }"
+  >
+    <div class="prompt-question-container">
+      <header class="prompt-header">
+        {{ saveStatus || questionTypeString }}
+      </header>
 
+      <div v-html="question.text" class="question-text" />
+    </div>
+
+    <div class="prompt-response-area">
       <component
         :is="question.question_info.question_type"
         :question="question"
@@ -10,25 +24,27 @@
         :chime="chime"
         :disabled="false"
         @recordresponse="record_response"
-      >
-      </component>
-      <transition name="fade">
-        <p v-if="responseUpdated" class="alert alert-info">Response Updated</p>
-      </transition>
-      <p v-if="error" class="alert alert-warning">
-        {{ error }} Please try reloading the page, or contact
-        <a href="mailto:help@umn.edu">help@umn.edu</a>. If possible, include a
-        screenshot of this error.
-      </p>
-
-      <small
-        v-if="chime.show_folder_title_to_participants"
-        class="text-muted"
-        data-cy="show-folder-to-participants"
-        ><strong>Folder</strong>: {{ session.question.folder.name }}
-      </small>
-      <hr />
+      />
     </div>
+
+    <transition name="fade">
+      <p v-if="responseUpdated" class="updated-alert alert alert-info">
+        Response Updated
+      </p>
+    </transition>
+
+    <p v-if="error" class="alert alert-danger">
+      {{ error }} Please try reloading the page, or contact
+      <a href="mailto:help@umn.edu">help@umn.edu</a>. If possible, include a
+      screenshot of this error.
+    </p>
+
+    <small
+      v-if="chime.show_folder_title_to_participants"
+      class="text-muted"
+      data-cy="show-folder-to-participants"
+      ><strong>Folder</strong>: {{ session.question.folder.name }}
+    </small>
   </div>
 </template>
 
@@ -55,6 +71,9 @@ export default {
   data: function () {
     return {
       responseUpdated: false,
+      saveSucceeded: false,
+      saveFailed: false,
+      isSaving: false,
       error: null,
       question: {
         question_info: "",
@@ -62,6 +81,15 @@ export default {
     };
   },
   computed: {
+    hasPreviouslySaved() {
+      if (!this.responses) return false;
+
+      const sessionResponses = this.responses.filter(
+        (response) => response.session_id === this.session.id
+      );
+
+      return sessionResponses.length;
+    },
     response: function () {
       if (this.responses.length > 0 && this.session) {
         var foundResponse = null;
@@ -81,6 +109,28 @@ export default {
 
       return {};
     },
+    questionType() {
+      return this.question.question_info.question_type;
+    },
+    questionTypeString() {
+      return this.questionType
+        .split("_")
+        .map((str) => str.charAt(0).toUpperCase() + str.slice(1))
+        .join(" ");
+    },
+    saveStatus() {
+      if (this.isSaving) {
+        return "Saving...";
+      }
+      if (this.saveFailed) {
+        return "Error";
+      }
+      if (this.hasPreviouslySaved || this.saveSucceeded) {
+        return "Saved";
+      }
+
+      return "";
+    },
   },
   created: function () {
     this.question = this.session.question;
@@ -98,9 +148,15 @@ export default {
         url = url + "/" + this.response.id;
       }
 
+      this.isSaving = true;
+      this.saveSucceeded = false;
+      this.saveFailed = false;
+
       axios
         .put(url, { response_info: response })
         .then((res) => {
+          this.isSaving = false;
+          this.saveSucceeded = true;
           console.log("debug", "response recorded:", res);
           this.$emit("updateResponse", res.data);
           this.responseUpdated = true;
@@ -109,6 +165,8 @@ export default {
           }, 1500);
         })
         .catch((err) => {
+          this.isSaving = false;
+          this.saveFailed = true;
           console.error("error", "error recording response", err.response);
           if (!err.response) {
             this.error =
@@ -127,11 +185,59 @@ export default {
 </script>
 
 <style scoped>
-li {
-  font-size: 1.5em;
+.participant-prompt {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-left: 2rem;
+}
+.participant-prompt:before {
+  content: "";
+  display: block;
+  height: 0.8rem;
+  width: 0.8rem;
+  background: #ccc;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
-.col.s12 > .btn {
-  width: 100%;
+.save-succeeded.participant-prompt:before {
+  background: #31d158;
+}
+.is-saving.participant-prompt:before {
+  background: var(--gold);
+}
+.save-failed.participant-prompt:before {
+  background: var(--red);
+}
+
+.prompt-header {
+  line-height: 1;
+  position: relative;
+  text-transform: uppercase;
+  color: #999;
+  font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.save-succeeded .prompt-header {
+  color: #31d158;
+}
+.is-saving .prompt-header {
+  color: var(--gold);
+}
+.save-failed .prompt-header {
+  color: var(--red);
+}
+
+.updated-alert {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 20rem;
+  background: var(--gold-light);
 }
 </style>

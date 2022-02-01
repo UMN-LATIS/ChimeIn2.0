@@ -1,23 +1,21 @@
 <template>
   <div>
-    <div class="col-sm-12">
-      <div class="form-group">
-        <textarea
-          v-model="response_text"
-          data-cy="free-response-textarea"
-          class="form-control"
-          placeholder="Type your response"
-          :rows="3"
-          :disabled="disabled"
-          :max-rows="6"
-        >
-        </textarea>
-      </div>
+    <div class="form-group">
+      <textarea
+        v-model="response_text"
+        data-cy="free-response-textarea"
+        class="form-control"
+        placeholder="Type your response"
+        :rows="3"
+        :disabled="disabled"
+        :max-rows="6"
+      >
+      </textarea>
     </div>
-    <div class="col-sm-12">
+    <div>
       <button
         v-if="(!disabled && !response.id) || create_new_response"
-        class="btn btn-primary"
+        class="btn btn-outline-primary"
         variant="primary"
         @click="record_response"
       >
@@ -25,7 +23,7 @@
       </button>
       <button
         v-if="!disabled && response.id && !create_new_response"
-        class="btn btn-primary"
+        class="btn btn-outline-primary"
         variant="primary"
         @click="record_response"
       >
@@ -38,7 +36,7 @@
           !create_new_response &&
           question.allow_multiple
         "
-        class="btn btn-primary"
+        class="btn btn-outline-primary"
         variant="primary"
         @click="new_response"
       >
