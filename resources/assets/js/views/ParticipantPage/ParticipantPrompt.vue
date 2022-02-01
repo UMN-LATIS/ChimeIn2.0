@@ -11,11 +11,6 @@
     <div class="prompt-question-container">
       <header class="prompt-header">
         {{ saveStatus || questionTypeString }}
-        <transition name="fade">
-          <p v-if="responseUpdated" class="updated-alert alert alert-info">
-            Response Updated
-          </p>
-        </transition>
       </header>
 
       <div v-html="question.text" class="question-text" />
@@ -31,6 +26,12 @@
         @recordresponse="record_response"
       />
     </div>
+
+    <transition name="fade">
+      <p v-if="responseUpdated" class="updated-alert alert alert-info">
+        Response Updated
+      </p>
+    </transition>
 
     <p v-if="error" class="alert alert-danger">
       {{ error }} Please try reloading the page, or contact
@@ -225,12 +226,12 @@ export default {
 }
 
 .prompt-response-area {
-  margin: 1rem 2rem;
+  /* margin: 1rem 2rem; */
 }
 
 .updated-alert {
   position: absolute;
-  top: -0.5rem;
+  bottom: 0.5rem;
   left: 50%;
   transform: translateX(-50%);
   max-width: 20rem;
