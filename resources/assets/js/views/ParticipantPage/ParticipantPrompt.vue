@@ -3,7 +3,7 @@
     class="participant-prompt"
     v-if="question.question_info.question_type"
     :class="{
-      'save-succeeded': saveSucceeded,
+      'save-succeeded': hasPreviouslySaved || saveSucceeded,
       'save-failed': saveFailed,
       'is-saving': isSaving,
     }"
@@ -81,6 +81,15 @@ export default {
     };
   },
   computed: {
+    hasPreviouslySaved() {
+      if (!this.responses) return false;
+
+      const sessionResponses = this.responses.filter(
+        (response) => response.session_id === this.session.id
+      );
+
+      return sessionResponses.length;
+    },
     response: function () {
       if (this.responses.length > 0 && this.session) {
         var foundResponse = null;
@@ -177,9 +186,7 @@ export default {
 
 <style scoped>
 .participant-prompt {
-  /* border-top: 0.5rem solid #eee; */
   position: relative;
-  /* padding: 1rem 0 1rem 2rem; */
   margin-bottom: 2rem;
   padding-left: 2rem;
 }
@@ -223,10 +230,6 @@ export default {
 }
 .save-failed .prompt-header {
   color: var(--red);
-}
-
-.prompt-response-area {
-  /* margin: 1rem 2rem; */
 }
 
 .updated-alert {
