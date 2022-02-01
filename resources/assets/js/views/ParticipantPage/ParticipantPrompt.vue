@@ -122,11 +122,11 @@ export default {
       if (this.isSaving) {
         return "Saving...";
       }
-      if (this.saveSucceeded) {
-        return "Saved";
-      }
       if (this.saveFailed) {
         return "Error";
+      }
+      if (this.hasPreviouslySaved || this.saveSucceeded) {
+        return "Saved";
       }
 
       return "";
