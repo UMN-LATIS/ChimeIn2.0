@@ -17,6 +17,6 @@ export default {
 .text-heatmap-response-display {
   padding-left: 1rem;
   border-left: 0.25rem solid #ddd;
-  font-size: 0.8rem;
+  font-size: 0.8em;
 }
 </style>
