@@ -221,6 +221,9 @@ export default {
 </script>
 
 <style scoped>
+.question-card {
+  line-height: 1.4;
+}
 .open-question-toggle {
   display: flex;
   flex-direction: column;
