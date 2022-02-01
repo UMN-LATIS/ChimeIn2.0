@@ -271,7 +271,7 @@ export default {
         .catch((err) => {
           this.$store.commit(
             "message",
-            "Could not sync Chime. Please contact support at latis@umn.edu."
+            "Could not sync Chime. Please contact support at latistecharch@umn.edu."
           );
           console.log(err);
         });
