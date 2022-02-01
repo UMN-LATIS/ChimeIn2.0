@@ -125,6 +125,7 @@ class LTI13Processor {
 
         foreach($globalUsers as $userId=>$userScore) {
             $score = $userScore["points"] / $totalQuestions;
+			// TODO: test the date stuff
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
@@ -177,6 +178,7 @@ class LTI13Processor {
         $lineItem = new \Packback\Lti1p3\LtiLineitem(["id"=>$lineItemId]);
 		foreach($globalUsers as $userId=>$userScore) {
             $score = $userScore["points"] / $totalQuestions;
+			// TODO: test the date stuff
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
