@@ -107,6 +107,7 @@ import QuestionForm from "../QuestionForm/QuestionForm.vue";
 import MultipleChoiceDisplay from "../../components/MultipleChoice/MultipleChoiceDisplay.vue";
 import HeatmapResponseDisplay from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
 import hasSpecializedQuestionDisplay from "../../helpers/hasSpecializedQuestionDisplay";
+import TextHeatmapResponseDisplay from "../../components/TextHeatmap/TextHeatmapResponseDisplay.vue";
 
 export default {
   components: {
@@ -117,6 +118,7 @@ export default {
     QuestionForm,
     multiple_choice_display: MultipleChoiceDisplay,
     heatmap_response_display: HeatmapResponseDisplay,
+    text_heatmap_response_display: TextHeatmapResponseDisplay,
   },
   props: {
     folder: {
@@ -221,6 +223,9 @@ export default {
 </script>
 
 <style scoped>
+.question-card {
+  line-height: 1.4;
+}
 .open-question-toggle {
   display: flex;
   flex-direction: column;
