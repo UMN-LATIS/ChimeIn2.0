@@ -55,8 +55,8 @@
                     <a href="#" @click.prevent="forceLoad = true">this link</a>
                     to force the chime to load. You may not recieve credit for
                     your responses. Please contact your instructor or
-                    <a href="mailto:latistecharch@umn.edu" class="text-muted"
-                      >latistecharch@umn.edu</a
+                    <a href="mailto:help@umn.edu" class="text-muted"
+                      >help@umn.edu</a
                     >.
                   </small>
                 </p>
