@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>
+  <div class="image-heatmap-response">
+    <div class="image-heatmap-response__image-container">
       <div
         v-if="image_coordinates && targetImageLoaded"
         class="clickPointer"
@@ -39,6 +39,10 @@
 <style scoped>
 .max-height-image {
   max-height: 70vh;
+}
+
+.image-heatmap-response__image-container {
+  position: relative;
 }
 
 .clickPointer {
