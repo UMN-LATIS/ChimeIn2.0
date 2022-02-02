@@ -3,9 +3,6 @@ import * as Sentry from "@sentry/vue";
 import { BrowserTracing } from "@sentry/tracing";
 import Vue from "vue";
 
-const debug = process.env.NODE_ENV !== "production";
-console.log(process.env.MIX_SENTRY_DSN);
-
 export default () =>
   Sentry.init({
     Vue,
@@ -17,7 +14,7 @@ export default () =>
       }),
     ],
     environment: process.env.MIX_APP_ENV,
-    debug,
+    debug: process.env.MIX_APP_ENV !== "production",
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
     // We recommend adjusting this value in production
