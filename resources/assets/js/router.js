@@ -12,7 +12,7 @@ const FolderPage = () =>
 
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
   mode: "history",
   routes: [
     { path: "/", component: HomePage },
@@ -42,3 +42,5 @@ export default new VueRouter({
     },
   ],
 });
+
+export default router;

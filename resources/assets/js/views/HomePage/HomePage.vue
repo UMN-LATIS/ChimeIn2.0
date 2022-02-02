@@ -81,6 +81,8 @@ import { EventBus } from "../../EventBus.js";
 import NavBar from "../../components/NavBar.vue";
 import ChimePanel from "./ChimePanel.vue";
 
+// myUndefinedFunction();
+
 export default {
   components: {
     NavBar,

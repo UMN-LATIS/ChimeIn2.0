@@ -2,6 +2,8 @@ import Vue from "vue";
 import VueAnnouncer from "vue-announcer";
 import $ from "jquery";
 import "bootstrap";
+import * as Sentry from "@sentry/vue";
+import { BrowserTracing } from "@sentry/tracing";
 import registerAxios from "./common/axios.js";
 import registerEcho from "./common/echo.js";
 import registerSocketIOClient from "./common/socketioClient.js";
@@ -14,6 +16,22 @@ registerSocketIOClient();
 registerAxios();
 registerEcho();
 registerDevTools();
+
+Sentry.init({
+  Vue,
+  dsn: "https://07ce91c7268d4a5db1422696422594d2@o59337.ingest.sentry.io/6180515",
+  integrations: [
+    new BrowserTracing({
+      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      tracingOrigins: ["localhost", "my-site-url.com", /^\//],
+    }),
+  ],
+  debug: true,
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
+});
 
 Vue.use(VueAnnouncer);
 
