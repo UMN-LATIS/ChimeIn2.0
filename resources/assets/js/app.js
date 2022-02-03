@@ -15,7 +15,7 @@ registerSocketIOClient();
 registerAxios();
 registerEcho();
 
-if (process.env.MIX_APP_ENV !== "local") registerSentry();
+if (process.env.MIX_SENTRY_DSN) registerSentry();
 if (process.env.MIX_APP_ENV !== "production") registerDevTools();
 
 Vue.use(VueAnnouncer);
