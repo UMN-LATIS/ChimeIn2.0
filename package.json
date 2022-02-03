@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "bundlesize": "bundlesize",
     "dev": "npm run development",
     "development": "mix",
     "watch": "mix watch",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "babel-plugin-dynamic-import-webpack": "^1.1.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "bundlesize": "^0.18.1",
     "cross-env": "^7.0.3",
     "css-loader": "^6.4.0",
     "cypress": "9.1.0",

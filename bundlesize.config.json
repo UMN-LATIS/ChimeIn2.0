@@ -1,0 +1,28 @@
+{
+  "files": [
+    {
+      "path": "./public/js/app.js",
+      "maxSize": "200 KB"
+    },
+    {
+      "path": "./public/js/folder.js",
+      "maxSize": "140 KB"
+    },
+    {
+      "path": "./public/js/FreeResponseStatistics.js",
+      "maxSize": "200 KB"
+    },
+    {
+      "path": "./public/js/ImageResponseStatistics.js",
+      "maxSize": "40 KB"
+    },
+    {
+      "path": "./public/js/multiplechoicestatistics.js",
+      "maxSize": "10 KB"
+    },
+    {
+      "path": "./public/css/app.css",
+      "maxSize": "40 KB"
+    }
+  ]
+}
