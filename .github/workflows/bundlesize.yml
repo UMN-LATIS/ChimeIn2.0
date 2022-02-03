@@ -12,6 +12,8 @@ env:
   MIX_APP_ENV: production
   FORCE_COLOR: 2
   NODE: 16
+  CI_REPO_OWNER: umn-latis
+  CI_REPO_NAME: chimein2.0
 
 jobs:
   bundlewatch:
