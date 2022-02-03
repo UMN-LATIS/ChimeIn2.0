@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "bundlewatch": "bundlewatch",
+    "bundlewatch": "bundlewatch --config .bundlewatch.config.json",
     "dev": "npm run development",
     "development": "mix",
     "watch": "mix watch",

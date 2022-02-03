@@ -24,5 +24,11 @@
       "path": "./public/css/app.css",
       "maxSize": "40 KB"
     }
-  ]
+  ],
+  "ci": {
+    "repoOwner": "UMN-LATIS",
+    "repoName": "ChimeIn2.0",
+    "repoBranchBase": "develop",
+    "trackBranches": ["main", "develop"]
+  }
 }
