@@ -10,7 +10,7 @@ export default () =>
     integrations: [
       new BrowserTracing({
         routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-        tracingOrigins: ["localhost", /^.*chimein.*.umn.edu/, /^\//],
+        tracingOrigins: ["localhost", /.*chimein.*\.umn\.edu/, /^\//],
       }),
     ],
     environment: process.env.MIX_APP_ENV,
