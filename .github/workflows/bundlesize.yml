@@ -1,10 +1,17 @@
 name: Bundlesize
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches-ignore:
+      - "dependabot/**"
+  pull_request:
+  workflow_dispatch:
 
 env:
   # check production bundle sizes
   MIX_APP_ENV: production
+  FORCE_COLOR: 2
+  NODE: 16
 
 jobs:
   bundlesize:
@@ -13,9 +20,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - run: cp .env.example .env
-      - uses: actions/setup-node@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: "${{ env.NODE }}"
+          cache: yarn
       - run: yarn install --frozen-lockfile
       - run: yarn run prod
       - run: yarn bundlesize
