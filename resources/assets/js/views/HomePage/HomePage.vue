@@ -6,6 +6,9 @@
         <h1 class="user-greeting my-3">
           {{ welcome }}, {{ user.guest_user ? "Guest User" : user.name }}
         </h1>
+        <button @click="makeAnError" class="btn btn-outline-danger">
+          Make an Error
+        </button>
 
         <div class="row">
           <div class="col-12 col-md-9">
@@ -111,6 +114,9 @@ export default {
     },
   },
   methods: {
+    makeAnError() {
+      throw new Error("This is a test error");
+    },
     join_chime() {
       console.log(this.access_code);
       this.requires_login = false;
