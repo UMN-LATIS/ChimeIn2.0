@@ -1,0 +1,21 @@
+name: Bundlesize
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  # check production bundle sizes
+  MIX_APP_ENV: production
+
+jobs:
+  bundlesize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: cp .env.example .env
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - run: yarn install --frozen-lockfile
+      - run: yarn run prod
+      - run: yarn bundlesize
