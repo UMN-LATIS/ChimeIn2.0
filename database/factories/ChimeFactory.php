@@ -29,8 +29,7 @@ class ChimeFactory extends Factory
   {
     return $this->state(function () {
       return [
-        "lti_return_url" =>
-          $this->faker->url() . "\/courses\/" . Str::random(5),
+        "lti_return_url" => "https://scratch.canvas.umn.edu/courses/" . random_int(1, 9999). "/assignments",
         "lti_course_title" => $this->faker->unique()->words(3, true),
         "lti_course_id" => Str::random(10),
         "require_login" => 1,
