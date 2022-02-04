@@ -17,12 +17,12 @@ class UsersTableSeeder extends Seeder
   {
     User::factory()
       // chimes
-      ->hasAttached(Chime::factory()->count(3), ["permission_number" => 300])
+      ->hasAttached(Chime::factory()->count(1), ["permission_number" => 300])
       // canvas chimes
       ->hasAttached(
         Chime::factory()
           ->withLTI()
-          ->count(3),
+          ->count(1),
         ["permission_number" => 300]
       )
       ->create([
