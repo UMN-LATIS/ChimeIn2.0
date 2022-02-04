@@ -9,7 +9,7 @@ export function selectCanvasCourseUrl(chime) {
   const url = get(chime, "lti_return_url", null);
   if (!url) return null;
   const found = url.match(/^(?<courseUrl>http.*\/courses\/\d+).*/);
-  return found ? found.groups.courseUrl : url;
+  return found ? found.groups.courseUrl : null;
 }
 
 export const selectJoinUrl = (chime) =>
