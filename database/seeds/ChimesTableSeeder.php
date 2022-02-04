@@ -15,13 +15,13 @@ class ChimesTableSeeder extends Seeder
   public function run(Faker $faker)
   {
     // regular chimes
-    Chime::factory(5)->create();
+    Chime::factory(1)->create();
 
     // LTI Chimes
-    Chime::factory(5)
+    Chime::factory(1)
       ->state(function () use ($faker) {
         return [
-          "lti_return_url" => $faker->url(),
+          "lti_return_url" => $faker->url() . "\/courses\/" . Str::random(5),
           "lti_course_title" => $faker->unique()->words(3, true),
           "lti_course_id" => Str::random(10),
           "require_login" => 1,
