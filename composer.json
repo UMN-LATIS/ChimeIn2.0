@@ -6,6 +6,9 @@
     "optimize-autoloader": true,
     "platform": {
       "php": "7.3.20"
+    },
+    "allow-plugins": {
+      "symfony/thanks": false
     }
   },
   "description": "The Laravel Framework.",
