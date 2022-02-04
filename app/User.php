@@ -2,12 +2,14 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Yadahan\AuthenticationLog\AuthenticationLogable;
 
 class User extends Authenticatable
 {
+    use HasFactory;
     use Notifiable;
     use AuthenticationLogable;
     use \Lab404\Impersonate\Models\Impersonate;
