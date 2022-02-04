@@ -63,9 +63,6 @@ export default {
       type: Object,
       required: true,
     },
-    folderName: {
-      type: String,
-    },
   },
   methods: {
     toHyphenatedCode,
