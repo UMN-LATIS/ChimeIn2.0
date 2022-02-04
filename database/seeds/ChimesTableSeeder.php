@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Faker\Generator as Faker;
 use App\Chime;
 
 class ChimesTableSeeder extends Seeder
@@ -11,7 +10,7 @@ class ChimesTableSeeder extends Seeder
    *
    * @return void
    */
-  public function run(Faker $faker)
+  public function run()
   {
     // regular chimes
     Chime::factory(3)->create();
