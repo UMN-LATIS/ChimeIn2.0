@@ -12,5 +12,10 @@ export function selectCanvasCourseUrl(chime) {
   return found ? found.groups.courseUrl : null;
 }
 
+export function selectLtiReturnUrl(chime) {
+  const urlString = get(chime, "lti_return_url", null);
+  return urlString || null;
+}
+
 export const selectJoinUrl = (chime) =>
   `${window.location.origin}/join/${chime.access_code}`;
