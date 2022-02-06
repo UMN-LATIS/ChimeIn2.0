@@ -7,7 +7,7 @@ use DB;
 
 use IMSGlobal\LTI\ToolProvider;
 use IMSGlobal\LTI\ToolProvider\DataConnector;
-
+use Carbon\Carbon;
 class LTIProcessor {
 	
 	function __construct() {
@@ -41,10 +41,17 @@ class LTIProcessor {
 		foreach($ltiUsers as $user) {
 			if($user->ltiUserId) {
 				$score = 0;
+				$submission_date = null;
+
 				if(array_key_exists($user->ltiUserId, $globalUsers)) {
-					$score = $globalUsers[$user->ltiUserId] / $totalQuestions;
+					$score = $globalUsers[$user->ltiUserId]["points"] / $totalQuestions;
+					$submission_date = $globalUsers[$user->ltiUserId]["submission_date"]->toIso8601String();
 				}
 				$lti_outcome = new ToolProvider\Outcome($score, null);
+				if($submission_date) {
+					$lti_outcome->date = $submission_date;
+				}
+				
 				if(!$resource_link->doOutcomesService(ToolProvider\ResourceLink::EXT_WRITE, $lti_outcome, $user)) {
 					Log::error("Error synchronizing LTI Outcome", ["user"=>$user->ltiUserId, "score"=>$score, "resource"=>$folder->resource_link_pk, "request"=>$resource_link->extRequest]);
 				}
@@ -88,12 +95,19 @@ class LTIProcessor {
 		foreach($ltiUsers as $user) {
 			if($user->ltiUserId) {
 				$score = 0;
+				$submission_date = null;
 				if(array_key_exists($user->ltiUserId, $globalUsers)) {
-					$score = $globalUsers[$user->ltiUserId] / $totalQuestions;
+					$score = $globalUsers[$user->ltiUserId]["points"] / $totalQuestions;
+					$submission_date = $globalUsers[$user->ltiUserId]["submission_date"]->toIso8601String();
+				}
+				$lti_outcome = new ToolProvider\Outcome($score, null);
+				if($submission_date) {
+					$lti_outcome->date = $submission_date;
 				}
 				
-				$lti_outcome = new ToolProvider\Outcome($score, null);
 				$resource_link->doOutcomesService(ToolProvider\ResourceLink::EXT_WRITE, $lti_outcome, $user);
+				
+				
 			}
 		}
 		return true;

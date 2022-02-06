@@ -124,11 +124,12 @@ class LTI13Processor {
         $ags = LTI13Processor::getAGS($chime);
 
         foreach($globalUsers as $userId=>$userScore) {
-            $score = $userScore / $totalQuestions;
+            $score = $userScore["points"] / $totalQuestions;
+			// TODO: test the date stuff
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
-                ->setTimestamp(date(\DateTime::ISO8601))
+                ->setTimestamp($userScore["submission_date"]->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
                 ->setUserId($userId);
@@ -176,11 +177,12 @@ class LTI13Processor {
 
         $lineItem = new \Packback\Lti1p3\LtiLineitem(["id"=>$lineItemId]);
 		foreach($globalUsers as $userId=>$userScore) {
-            $score = $userScore / $totalQuestions;
+            $score = $userScore["points"] / $totalQuestions;
+			// TODO: test the date stuff
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
-                ->setTimestamp(date(\DateTime::ISO8601))
+                ->setTimestamp($userScore["submission_date"]->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
                 ->setUserId($userId);
@@ -238,15 +240,15 @@ class LTI13Processor {
 								
 							}
 							if(count(array_intersect($choice, $correctText)) > 0 && $response->user->{$userKey}) {
-								return ["user"=>$response->user, "points"=>1];
+								return ["user"=>$response->user, "points"=>1, "submission_date"=>$response->created_at];
 							}
 							else if($chime->only_correct_answers_lti == 2) { // partial credit
-								return ["user"=>$response->user, "points"=>0.5];
+								return ["user"=>$response->user, "points"=>0.5, "submission_date"=>$response->created_at];
 							}
 							return false;
 						}
 						else {
-							return $response->user->{$userKey}?["user"=>$response->user, "points"=>1]:false;
+							return $response->user->{$userKey}?["user"=>$response->user, "points"=>1, "submission_date"=>$response->created_at]:false;
 						}
 					}
 				);
@@ -265,14 +267,16 @@ class LTI13Processor {
 		foreach($users as $userCollection) {
 			$user = $userCollection["user"];
 			$points = $userCollection["points"];
+			$submission_date = $userCollection["submission_date"];
 			if(!isset($user->{$userKey})) {
 				continue;
 			}
 			if(array_key_exists($user->{$userKey}, $globalUsers)) {
-				$globalUsers[$user->{$userKey}] += $points;
+				$existingEntry = $globalUsers[$user->{$userKey}];
+				$globalUsers[$user->{$userKey}] = ["points"=>$existingEntry["points"] + $points, "submission_date"=>max($submission_date, $existingEntry["submission_date"])];
 			}
 			else {
-				$globalUsers[$user->{$userKey}] = $points;
+				$globalUsers[$user->{$userKey}] = ["points"=>$points, "submission_date"=>$submission_date];
 			}
 			
 		}
