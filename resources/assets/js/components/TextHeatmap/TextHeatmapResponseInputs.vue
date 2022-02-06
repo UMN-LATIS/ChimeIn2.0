@@ -133,9 +133,11 @@ export default {
   },
   created: function () {
     window.addEventListener("mouseup", this.testForHighlight);
+    window.addEventListener("touchend", this.testForHighlight);
   },
   destroyed: function () {
     window.removeEventListener("mouseup", this.testForHighlight);
+    window.removeEventListener("touchend", this.testForHighlight);
   },
   methods: {
     record_response: function () {
