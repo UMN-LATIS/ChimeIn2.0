@@ -66,6 +66,7 @@ export default {
     return {
       create_new_response: false,
       disableSubmission: true,
+      stored_response: null,
     };
   },
   computed: {
@@ -140,7 +141,7 @@ export default {
     window.removeEventListener("touchend", this.testForHighlight);
   },
   methods: {
-    record_response: function () {
+    store_response: function () {
       const mySelection = window.getSelection();
       // console.log(mySelection);
       var startOffset = 0;
@@ -167,12 +168,19 @@ export default {
           startOffset: startOffset,
           endOffset: endOffset,
         };
-
-        this.$emit("recordresponse", response, this.create_new_response);
-        this.create_new_response = false;
+        this.stored_response = response;
       } else {
-        //if there isn't a selection, reset what's stored
         this.resetSelection();
+      }
+    },
+    record_response: function () {
+      if (this.store_response !== null) {
+        this.$emit(
+          "recordresponse",
+          this.store_response,
+          this.create_new_response
+        );
+        this.create_new_response = false;
       }
     },
     resetSelection() {
@@ -182,8 +190,12 @@ export default {
         startOffset: -1,
         endOffset: -1,
       };
-
-      this.$emit("recordresponse", response, this.create_new_response);
+      this.stored_response = response;
+      this.$emit(
+        "recordresponse",
+        this.stored_response,
+        this.create_new_response
+      );
       return;
     },
     new_response: function () {
