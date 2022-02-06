@@ -15,37 +15,45 @@
     </header>
 
     <div v-if="isCanvasChime" class="join-panel__instructions">
-      <p>
-        Visit your course in Canvas:
-        <a :href="canvasUrl.origin" data-cy="canvas-host" target="_blank">{{
-          canvasUrl.host
-        }}</a>
-      </p>
+      <p>Visit your course in Canvas:</p>
+      <a :href="canvasUrl.origin" data-cy="canvas-host" target="_blank">{{
+        canvasUrl.host
+      }}</a>
 
       <details>
         <summary>Join Instructions for Ungraded Guests</summary>
-        <p>
-          Go to
-          <a data-cy="chime-host" :href="location.origin">{{
-            location.host
-          }}</a>
-          and enter code
-          <b class="join-panel__access-code" data-cy="access-code">{{
-            toHyphenatedCode(chime.access_code)
-          }}</b>
-        </p>
+        <ol>
+          <li>
+            Go to:
+            <a data-cy="chime-host" :href="location.origin">{{
+              location.host
+            }}</a>
+          </li>
+          <li>
+            Enter code
+            <b class="join-panel__access-code" data-cy="access-code">{{
+              toHyphenatedCode(chime.access_code)
+            }}</b>
+          </li>
+        </ol>
       </details>
     </div>
 
     <div v-else class="join-panel__instructions">
-      <p>
-        Go to
-        <a data-cy="chime-host" :href="location.origin">{{ location.host }}</a>
-        and enter code
-        <b class="join-panel__access-code" data-cy="access-code">{{
-          toHyphenatedCode(chime.access_code)
-        }}</b>
-      </p>
+      <ol>
+        <li>
+          Go to:
+          <a data-cy="chime-host" :href="location.origin">{{
+            location.host
+          }}</a>
+        </li>
+        <li>
+          Enter code:
+          <b class="join-panel__access-code" data-cy="access-code">{{
+            toHyphenatedCode(chime.access_code)
+          }}</b>
+        </li>
+      </ol>
     </div>
   </div>
 </template>
@@ -62,9 +70,6 @@ export default {
     chime: {
       type: Object,
       required: true,
-    },
-    folderName: {
-      type: String,
     },
   },
   methods: {
@@ -94,6 +99,7 @@ export default {
   padding: 1rem;
   border-radius: 0.25rem;
   font-size: 0.9rem;
+  min-width: 16rem;
 }
 
 .join-panel__header {
@@ -147,8 +153,13 @@ p {
   margin: 0.5rem 0 0 0;
 }
 
+ol {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+
 details {
-  margin-left: 0.4rem;
   --details-padding: 0.75rem;
   font-size: 0.75rem;
   color: #777;
