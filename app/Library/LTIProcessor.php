@@ -105,8 +105,9 @@ class LTIProcessor {
 					$lti_outcome->date = $submission_date;
 				}
 				
-				$resource_link->doOutcomesService(ToolProvider\ResourceLink::EXT_WRITE, $lti_outcome, $user);
-				
+				if(!$resource_link->doOutcomesService(ToolProvider\ResourceLink::EXT_WRITE, $lti_outcome, $user)) {
+					Log::error("Error synchronizing chime-level LTI Outcome", ["user"=>$user->ltiUserId, "score"=>$score, "resource"=>$folder->resource_link_pk, "request"=>$resource_link->extRequest]);
+				}
 				
 			}
 		}
