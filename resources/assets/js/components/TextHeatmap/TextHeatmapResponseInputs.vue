@@ -143,7 +143,7 @@ export default {
   methods: {
     store_response: function () {
       const mySelection = window.getSelection();
-      // console.log(mySelection);
+
       var startOffset = 0;
       var endOffset = 0;
       // if the selection is not empty (aka does not have same start and end point), grab the offsets
@@ -174,10 +174,10 @@ export default {
       }
     },
     record_response: function () {
-      if (this.store_response !== null) {
+      if (this.stored_response !== null) {
         this.$emit(
           "recordresponse",
-          this.store_response,
+          this.stored_response,
           this.create_new_response
         );
         this.create_new_response = false;
@@ -202,11 +202,17 @@ export default {
       window.getSelection().removeAllRanges();
       this.create_new_response = true;
     },
-    testForHighlight: function () {
+    testForHighlight: function (e) {
+      // on mobile, tapping a button will clear the highlight, which disables the button.
+      // we need to avoid that, so instead we just don't clear the highlight in that case.
+      if (e.target.tagName == "BUTTON") {
+        return;
+      }
       const mySelection = window.getSelection();
       if (mySelection.isCollapsed) {
         this.disableSubmission = true;
       } else {
+        this.store_response();
         this.disableSubmission = false;
       }
     },
