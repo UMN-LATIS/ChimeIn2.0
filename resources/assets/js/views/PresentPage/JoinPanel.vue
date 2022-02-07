@@ -25,12 +25,12 @@
         <ol>
           <li>
             Go to:
-            <a data-cy="chime-host" :href="location.origin">{{
-              location.host
-            }}</a>
+            <a data-cy="chime-host" :href="joinUrl">{{ joinUrl }}</a>
           </li>
           <li>
-            Enter code
+            Alternatively, visit
+            <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
+            enter code:
             <b class="join-panel__access-code" data-cy="access-code">{{
               toHyphenatedCode(chime.access_code)
             }}</b>
