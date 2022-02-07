@@ -29,7 +29,11 @@
 
       <div class="row">
         <div class="col-sm-12">
-          <JoinPanel class="chime-management__join-panel" :chime="chime" />
+          <JoinPanel
+            class="chime-management__join-panel"
+            :chime="chime"
+            :includeFullUrl="true"
+          />
           <ChimeManagementOptions
             :require_login.sync="require_login"
             :students_can_view.sync="students_can_view"

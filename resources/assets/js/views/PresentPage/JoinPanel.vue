@@ -40,7 +40,7 @@
     </div>
 
     <div v-else class="join-panel__instructions">
-      <ol>
+      <ol v-if="includeFullUrl">
         <li>
           Go to:
           <a data-cy="chime-host" :href="joinUrl">{{ joinUrl }}</a>
@@ -49,6 +49,20 @@
           Alternatively, visit
           <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
           enter code:
+          <b class="join-panel__access-code" data-cy="access-code">{{
+            toHyphenatedCode(chime.access_code)
+          }}</b>
+        </li>
+      </ol>
+      <ol v-else>
+        <li>
+          Go to:
+          <a data-cy="chime-host" :href="location.origin">{{
+            location.host
+          }}</a>
+        </li>
+        <li>
+          Enter Code
           <b class="join-panel__access-code" data-cy="access-code">{{
             toHyphenatedCode(chime.access_code)
           }}</b>
@@ -70,6 +84,10 @@ export default {
     chime: {
       type: Object,
       required: true,
+    },
+    includeFullUrl: {
+      type: Boolean,
+      require: false,
     },
   },
   methods: {
