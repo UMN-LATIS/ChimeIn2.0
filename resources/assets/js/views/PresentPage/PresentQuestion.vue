@@ -100,7 +100,7 @@
 <script>
 import PresentPrompt from "./PresentPrompt.vue";
 import PresentResults from "./PresentResults.vue";
-import JoinPanel from "./JoinPanel.vue";
+import JoinPanel from "../../components/JoinPanel.vue";
 
 export default {
   components: {

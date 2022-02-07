@@ -140,7 +140,7 @@ ul {
 
 <script>
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
-import JoinPanel from "../PresentPage/JoinPanel.vue";
+import JoinPanel from "../../components/JoinPanel.vue";
 
 export default {
   components: {
