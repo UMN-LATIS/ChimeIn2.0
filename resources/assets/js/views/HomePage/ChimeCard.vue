@@ -15,7 +15,7 @@
       <div v-if="isCanvasChime">
         <DetailsItem>
           <template #label>Join</template>
-          <a :href="canvasUrl.origin" target="_blank">{{ canvasUrl.host }}</a>
+          <a :href="canvasOrigin" target="_blank">{{ canvasOrigin }}</a>
         </DetailsItem>
       </div>
 
@@ -42,7 +42,7 @@ import Card from "../../components/Card.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
 import Chip from "../../components/Chip.vue";
 import {
-  selectCanvasCourseUrl,
+  selectLtiReturnUrl,
   selectIsCanvasChime,
   selectJoinUrl,
 } from "../../helpers/chimeSelectors.js";
@@ -110,9 +110,11 @@ export default {
     isCanvasChime() {
       return selectIsCanvasChime(this.chime);
     },
-    canvasUrl() {
-      const fullCanvasUrlString = selectCanvasCourseUrl(this.chime);
-      return new URL(fullCanvasUrlString);
+    ltiReturnUrl() {
+      return selectLtiReturnUrl(this.chime);
+    },
+    canvasOrigin() {
+      return new URL(this.ltiReturnUrl).origin;
     },
     joinUrl() {
       return selectJoinUrl(this.chime);
@@ -120,9 +122,6 @@ export default {
     location() {
       return window.location;
     },
-  },
-  mounted() {
-    // this.chime.lti_return_url = `https://mock-canvas.umn.edu/courses/123456`;
   },
 };
 </script>

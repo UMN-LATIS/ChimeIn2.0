@@ -17,7 +17,7 @@
                 class="alert-link"
                 >help site</a
               >. You can also
-              <a href="mailto:clatel@umn.edu" class="alert-link"
+              <a href="mailto:latistecharch@umn.edu" class="alert-link"
                 >drop us a line</a
               >
               and we can arrange a personal introduction.
