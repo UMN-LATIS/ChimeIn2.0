@@ -66,6 +66,7 @@ export default {
     return {
       create_new_response: false,
       disableSubmission: true,
+      stored_response: null,
     };
   },
   computed: {
@@ -133,14 +134,16 @@ export default {
   },
   created: function () {
     window.addEventListener("mouseup", this.testForHighlight);
+    window.addEventListener("touchend", this.testForHighlight);
   },
   destroyed: function () {
     window.removeEventListener("mouseup", this.testForHighlight);
+    window.removeEventListener("touchend", this.testForHighlight);
   },
   methods: {
-    record_response: function () {
+    store_response: function () {
       const mySelection = window.getSelection();
-      // console.log(mySelection);
+
       var startOffset = 0;
       var endOffset = 0;
       // if the selection is not empty (aka does not have same start and end point), grab the offsets
@@ -165,12 +168,19 @@ export default {
           startOffset: startOffset,
           endOffset: endOffset,
         };
-
-        this.$emit("recordresponse", response, this.create_new_response);
-        this.create_new_response = false;
+        this.stored_response = response;
       } else {
-        //if there isn't a selection, reset what's stored
         this.resetSelection();
+      }
+    },
+    record_response: function () {
+      if (this.stored_response !== null) {
+        this.$emit(
+          "recordresponse",
+          this.stored_response,
+          this.create_new_response
+        );
+        this.create_new_response = false;
       }
     },
     resetSelection() {
@@ -180,19 +190,29 @@ export default {
         startOffset: -1,
         endOffset: -1,
       };
-
-      this.$emit("recordresponse", response, this.create_new_response);
+      this.stored_response = response;
+      this.$emit(
+        "recordresponse",
+        this.stored_response,
+        this.create_new_response
+      );
       return;
     },
     new_response: function () {
       window.getSelection().removeAllRanges();
       this.create_new_response = true;
     },
-    testForHighlight: function () {
+    testForHighlight: function (e) {
+      // on mobile, tapping a button will clear the highlight, which disables the button.
+      // we need to avoid that, so instead we just don't clear the highlight in that case.
+      if (e.target.tagName == "BUTTON") {
+        return;
+      }
       const mySelection = window.getSelection();
       if (mySelection.isCollapsed) {
         this.disableSubmission = true;
       } else {
+        this.store_response();
         this.disableSubmission = false;
       }
     },
