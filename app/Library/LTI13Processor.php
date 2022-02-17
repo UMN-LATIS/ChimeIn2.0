@@ -253,16 +253,18 @@ class LTI13Processor {
 					}
 				);
 			}
-		)->flatten(1)->unique(
-			function ($userCollection) {
-				if(isset($userCollection["user"])) {
-					return $userCollection["user"]->id;
-				}
-				else {
-					return $userCollection;
-				}
+		)->flatten(1)->reduce(function($carry, $item) {
+			$user = $item["user"];
+			if(!isset($carry[$user->id])) {
+				$carry[$user->id] = ["user"=>$user, "points"=>0, "submission_date"=>$item["submission_date"]];
 			}
-		);
+			// make sure we grant student the max possible results
+			if($item["points"] > $carry[$user->id]["points"]) {
+				$carry[$user->id]["points"] = $item["points"];
+				$carry[$user->id]["submission_date"] = $item["submission_date"];
+			}
+			return $carry;
+		}, []);
 		
 		foreach($users as $userCollection) {
 			$user = $userCollection["user"];
