@@ -240,15 +240,27 @@ class LTI13Processor {
 								
 							}
 							if(count(array_intersect($choice, $correctText)) > 0 && $response->user->{$userKey}) {
-								return ["user"=>$response->user, "points"=>1, "submission_date"=>$response->created_at];
+								return [
+									"user"=>$response->user, 
+									"points"=>1, 
+									"submission_date"=>$response->created_at
+								];
 							}
 							else if($chime->only_correct_answers_lti == 2) { // partial credit
-								return ["user"=>$response->user, "points"=>0.5, "submission_date"=>$response->created_at];
+								return [
+									"user"=>$response->user, 
+									"points"=>0.5, 
+									"submission_date"=>$response->created_at
+								];
 							}
 							return false;
 						}
 						else {
-							return $response->user->{$userKey}?["user"=>$response->user, "points"=>1, "submission_date"=>$response->created_at]:false;
+							return $response->user->{$userKey}?[
+								"user"=>$response->user, 
+								"points"=>1, 
+								"submission_date"=>$response->created_at
+								]:false;
 						}
 					}
 				);
@@ -261,7 +273,11 @@ class LTI13Processor {
 			$points = $item["points"];
 			
 			if(!isset($carry[$user->id])) {
-				$carry[$user->id] = ["user"=>$user, "points"=>0, "submission_date"=>$submission_date];
+				$carry[$user->id] = [
+					"user"=>$user, 
+					"points"=>0, 
+					"submission_date"=>$submission_date
+				];
 			}
 			// make sure we grant student the max possible results
 			if($points > $carry[$user->id]["points"]) {
@@ -280,10 +296,16 @@ class LTI13Processor {
 			}
 			if(array_key_exists($user->{$userKey}, $globalUsers)) {
 				$existingEntry = $globalUsers[$user->{$userKey}];
-				$globalUsers[$user->{$userKey}] = ["points"=>$existingEntry["points"] + $points, "submission_date"=>max($submission_date, $existingEntry["submission_date"])];
+				$globalUsers[$user->{$userKey}] = [
+					"points"=>$existingEntry["points"] + $points, 
+					"submission_date"=>max($submission_date, $existingEntry["submission_date"])
+				];
 			}
 			else {
-				$globalUsers[$user->{$userKey}] = ["points"=>$points, "submission_date"=>$submission_date];
+				$globalUsers[$user->{$userKey}] = [
+					"points"=>$points, 
+					"submission_date"=>$submission_date
+				];
 			}
 			
 		}
