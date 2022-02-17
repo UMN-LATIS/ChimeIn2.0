@@ -253,7 +253,9 @@ class LTI13Processor {
 					}
 				);
 			}
-		)->flatten(1)->reduce(function($carry, $item) {
+		)->flatten(1)->filter(function($score) {
+			return $score !== false;
+		})->reduce(function($carry, $item) {
 			$user = $item["user"];
 			$submission_date = $item["submission_date"];
 			$points = $item["points"];
