@@ -255,13 +255,16 @@ class LTI13Processor {
 			}
 		)->flatten(1)->reduce(function($carry, $item) {
 			$user = $item["user"];
+			$submission_date = $item["submission_date"];
+			$points = $item["points"];
+			
 			if(!isset($carry[$user->id])) {
-				$carry[$user->id] = ["user"=>$user, "points"=>0, "submission_date"=>$item["submission_date"]];
+				$carry[$user->id] = ["user"=>$user, "points"=>0, "submission_date"=>$submission_date];
 			}
 			// make sure we grant student the max possible results
-			if($item["points"] > $carry[$user->id]["points"]) {
-				$carry[$user->id]["points"] = $item["points"];
-				$carry[$user->id]["submission_date"] = $item["submission_date"];
+			if($points > $carry[$user->id]["points"]) {
+				$carry[$user->id]["points"] = $points;
+				$carry[$user->id]["submission_date"] = $submission_date;
 			}
 			return $carry;
 		}, []);
