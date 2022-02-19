@@ -25,12 +25,12 @@
         <ol>
           <li>
             Go to:
-            <a data-cy="chime-host" :href="location.origin">{{
-              location.host
-            }}</a>
+            <a data-cy="chime-host" :href="joinUrl">{{ joinUrl }}</a>
           </li>
           <li>
-            Enter code
+            Alternatively, visit
+            <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
+            enter code:
             <b class="join-panel__access-code" data-cy="access-code">{{
               toHyphenatedCode(chime.access_code)
             }}</b>
@@ -40,7 +40,7 @@
     </div>
 
     <div v-else class="join-panel__instructions">
-      <ol>
+      <ol v-if="includeFullUrl">
         <li>
           Go to:
           <a data-cy="chime-host" :href="joinUrl">{{ joinUrl }}</a>
@@ -54,6 +54,20 @@
           }}</b>
         </li>
       </ol>
+      <ol v-else>
+        <li>
+          Go to:
+          <a data-cy="chime-host" :href="location.origin">{{
+            location.host
+          }}</a>
+        </li>
+        <li>
+          Enter Code
+          <b class="join-panel__access-code" data-cy="access-code">{{
+            toHyphenatedCode(chime.access_code)
+          }}</b>
+        </li>
+      </ol>
     </div>
   </div>
 </template>
@@ -62,14 +76,18 @@ import {
   selectCanvasCourseUrl,
   selectIsCanvasChime,
   selectJoinUrl,
-} from "../../helpers/chimeSelectors.js";
-import toHyphenatedCode from "../../helpers/toHyphenatedCode.js";
+} from "../helpers/chimeSelectors.js";
+import toHyphenatedCode from "../helpers/toHyphenatedCode.js";
 
 export default {
   props: {
     chime: {
       type: Object,
       required: true,
+    },
+    includeFullUrl: {
+      type: Boolean,
+      require: false,
     },
   },
   methods: {
