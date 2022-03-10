@@ -11,7 +11,7 @@ class LTITest extends TestCase
 
     protected function setUp(): void {
         parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'LTISeeder']);
+        $this->artisan('db:seed', ['--class' => 'LTITestSeeder']);
     }
     /**
      * A basic test example.

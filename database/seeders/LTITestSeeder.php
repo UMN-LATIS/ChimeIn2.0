@@ -4,7 +4,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 Use Schema;
 
-class LTISeeder extends Seeder
+/*
+ * This seeder is only for testing purposes.
+ * It is not used in the production environment.
+ */ 
+class LTITestSeeder extends Seeder
 {
   /**
    * Run the database seeds.
