@@ -4,9 +4,15 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use \App\Library\LTI13Processor;
 class LTITest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void {
+        parent::setUp();
+        $this->artisan('db:seed', ['--class' => 'LTISeeder']);
+    }
     /**
      * A basic test example.
      *
@@ -14,15 +20,38 @@ class LTITest extends TestCase
      */
     public function testLtiGradeCalc()
     {
-        $chime = \App\Chime::factory(1)->withLTI()->create();
-        $folder = \App\Folder::factory(1)->make();
-        $folder->chime_id = $chime->id;
-        $folder->save();
-        $question = \App\Question::factory(1)->make();
-        $question->folder_id = $folder->id;
-        $question->save();
         
+        $chime = \App\Chime::find(4);
         
-        $this->assertTrue(true);
+        $question1 = $chime->folders->first()->questions[0];
+        $question2 = $chime->folders->first()->questions[1];
+
+        $globalUsers = [];
+        $chime->only_correct_answers_lti = 0;
+        LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
+        $this->assertEquals(1, $globalUsers["student-one"]["points"]);
+        $this->assertEquals(1, $globalUsers["student-two"]["points"]);
+        LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
+        $this->assertEquals(2, $globalUsers["student-one"]["points"]);
+        $this->assertEquals(2, $globalUsers["student-two"]["points"]);
+
+        $globalUsers = [];
+        $chime->only_correct_answers_lti = 1;
+        LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
+        $this->assertEquals(1, $globalUsers["student-one"]["points"]);
+        $this->assertArrayNotHasKey("student-two", $globalUsers);
+        LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
+        $this->assertEquals(2, $globalUsers["student-one"]["points"]);
+        $this->assertEquals(1, $globalUsers["student-two"]["points"]);
+
+
+        $globalUsers = [];
+        $chime->only_correct_answers_lti = 2;
+        LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
+        $this->assertEquals(1, $globalUsers["student-one"]["points"]);
+        $this->assertEquals(0.5, $globalUsers["student-two"]["points"]);
+        LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
+        $this->assertEquals(2, $globalUsers["student-one"]["points"]);
+        $this->assertEquals(1.5, $globalUsers["student-two"]["points"]);
     }
 }
