@@ -31,9 +31,13 @@ class LTIHandler extends Controller
     }
 
 
-    public function launch() {
-        // // DON'T SHIP THIS IT'S FOR DOCKER
-        // $_SERVER['SERVER_NAME'] = "127.0.0.1";
+    public function launch(Request $request) {
+        if($request->get("id_token")) {
+            // this is an LTI1.3 launch. Forward over to that controller.
+            $lti13Handler = new LTI13Handler();
+            return $lti13Handler->launch();
+        }
+
         $tool = new ChimeToolProvider();
         $tool->handleRequest();
         

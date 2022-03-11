@@ -39,7 +39,6 @@ class LTI13Handler extends Controller
 
 
     public function launch() {
-
          try {
             $launch = LtiMessageLaunch::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
             ->validate();
