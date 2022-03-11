@@ -12,7 +12,7 @@ use \App\Chime;
 class LTIHandler extends Controller
 {
 
-    private $allowedDomains = ["umnscratch.instructure.com", "canvas.umn.edu", "umn.instructure.com", "scratch.canvas.umn.edu"];
+    private $allowedDomains = ["umnscratch.instructure.com", "canvas.umn.edu", "umn.instructure.com", "scratch.canvas.umn.edu", "umndevelopment.instructure.com"];
 
     public function __construct() {
         if(app()->getProvider('debugbar')) {
