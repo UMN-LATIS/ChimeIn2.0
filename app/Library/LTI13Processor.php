@@ -110,13 +110,9 @@ class LTI13Processor {
 		$globalUsers = [];
 		
 		$chime = $folder->chime;
-		$filterForCorrectAnswers = false;
-		if($chime->only_correct_answers_lti) {
-			$filterForCorrectAnswers = true;
-		}
 		
 		foreach($questions as $question) {
-			LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers, "1.3");
+			$globalUsers = LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers, "1.3");
 		}
 		
         $lineItem = new \Packback\Lti1p3\LtiLineitem(["id"=>$folder->lti_lineitem]);
@@ -161,7 +157,7 @@ class LTI13Processor {
 			
 			foreach($questions as $question) {
 			
-				LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers);
+				$globalUsers = LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers);
 			}
 		
 		}
@@ -192,7 +188,7 @@ class LTI13Processor {
 		return true;
 	}
 	
-	static function getPointsForQuestion($question, $chime, &$globalUsers, $ltiType = "1.1") {
+	static function getPointsForQuestion($question, $chime, $globalUsers, $ltiType = "1.1") {
 		if($ltiType == "1.1") {
 			$userKey = "lti_user_id";
 		}
@@ -200,74 +196,114 @@ class LTI13Processor {
 			$userKey = "lti13_sub_id";
 		}
 
-		$filterForCorrectAnswers = false;
-		if($chime->only_correct_answers_lti) {
-			$filterForCorrectAnswers = true;
-		}
 		$correctText = null;
-		$correctAnswers = null;
-		if($filterForCorrectAnswers) {
-			$correctAnswers = array_filter($question->question_info["question_responses"], 
-				function($k) { 
-					if(isset($k["correct"])) { 
-						return $k["correct"]==true;
+		if($chime->only_correct_answers_lti) {
+			$correctText = LTI13Processor::getCorrectTextForQuestion($question);
+		}
+		
+		$userScores = LTI13Processor::getUserScoresForQuestion($question, $correctText, $chime, $userKey);
+		
+		foreach($userScores as $userCollection) {
+			$user = $userCollection["user"];
+			$points = $userCollection["points"];
+			$submission_date = $userCollection["submission_date"];
+			
+			// no LTI id for this user, skip them. This shouldn't be possible
+			if(!isset($user->{$userKey})) {
+				continue;
+			}
+			
+			if(array_key_exists($user->{$userKey}, $globalUsers)) {
+				$existingEntry = $globalUsers[$user->{$userKey}];
+				$globalUsers[$user->{$userKey}] = [
+					"points"=>$existingEntry["points"] + $points, 
+					"submission_date"=>max($submission_date, $existingEntry["submission_date"])
+				];
+			}
+			else {
+				$globalUsers[$user->{$userKey}] = [
+					"points"=>$points, 
+					"submission_date"=>$submission_date
+				];
+			}
+			
+		}
+		return $globalUsers;
+	}
+	
+	static function getQuestionsWithResponsesCount($questions) {
+		return $questions->filter(function($q) {
+			return $q->sessions->filter(function($s) {
+				return $s->responses->count() > 0;
+			})->count() > 0;
+		})->count();
+	}
+
+	static function getCorrectTextForQuestion(\App\Question $question) : array {
+		$correctAnswers = collect($question->question_info["question_responses"])
+			->filter(
+				function($response) { 
+					if(isset($response["correct"])) { 
+						return $response["correct"]==true;
 					} 
 					return false;
 				}
 			);
-			$correctText = array_map(
-				function($k) { 
-					return $k["text"];
-				}, $correctAnswers
+		
+		$correctText = collect($correctAnswers)
+			->map(
+				function($response) { 
+					return $response["text"];
+				}
 			);
+		
+		return $correctText->toArray();
+
+	}
+
+	static function getUserScoresForQuestion($question, $correctText, $chime, $userKey) {
+		
+		$questionResults = [];
+		foreach($question->sessions as $session) {
+			$questionResults[$session->id] = [];
+			
+			foreach($session->responses as $response) {
+				// if we don't have an LTI entry for this user, we can't do anything. Skip it.
+				if(!$response->user->{$userKey}) {
+					continue;
+				}
+
+				if($correctText) {
+					$userChoice = LTI13Processor::getUserChoiceForResponse($response);
+
+					if(count(array_intersect($userChoice, $correctText)) > 0) {
+						$questionResults[$session->id][] = [
+							"user"=>$response->user, 
+							"points"=>1, 
+							"submission_date"=>$response->created_at
+						];
+					}
+					else if($chime->only_correct_answers_lti == 2) { // partial credit
+						$questionResults[$session->id][] = [
+							"user"=>$response->user, 
+							"points"=>0.5, 
+							"submission_date"=>$response->created_at
+						];
+					}
+				}
+				else {
+					$questionResults[$session->id][] = [
+						"user"=>$response->user, 
+						"points"=>1, 
+						"submission_date"=>$response->created_at
+					];
+				}
+			}
+
+
 		}
 		
-		$users = $question->sessions->map(
-			function ($session) use($correctText, $chime, $userKey) {
-				return $session->responses->map(
-					function ($response) use ($correctText, $chime, $userKey) {
-						// if this question has "correct" answers, see if the respondent got at least one correct
-						// if so pass it back.  
-						if($correctText) {
-							$choice = [];
-							if(isset($response->response_info["choice"])) {
-								if(is_array($response->response_info["choice"])) {
-									$choice = $response->response_info["choice"];
-								}
-								else {
-									$choice = [$response->response_info["choice"]];
-								}
-								
-							}
-							if(count(array_intersect($choice, $correctText)) > 0 && $response->user->{$userKey}) {
-								return [
-									"user"=>$response->user, 
-									"points"=>1, 
-									"submission_date"=>$response->created_at
-								];
-							}
-							else if($chime->only_correct_answers_lti == 2) { // partial credit
-								return [
-									"user"=>$response->user, 
-									"points"=>0.5, 
-									"submission_date"=>$response->created_at
-								];
-							}
-							return false;
-						}
-						else {
-							return $response->user->{$userKey}?[
-								"user"=>$response->user, 
-								"points"=>1, 
-								"submission_date"=>$response->created_at
-								]:false;
-						}
-					}
-				);
-			}
-		)->flatten(1)->filter(function($score) {
-			return $score !== false;
-		})->reduce(function($carry, $item) {
+		$userScores = collect($questionResults)->flatten(1)->reduce(function($carry, $item) {
 			$user = $item["user"];
 			$submission_date = $item["submission_date"];
 			$points = $item["points"];
@@ -287,36 +323,20 @@ class LTI13Processor {
 			return $carry;
 		}, []);
 		
-		foreach($users as $userCollection) {
-			$user = $userCollection["user"];
-			$points = $userCollection["points"];
-			$submission_date = $userCollection["submission_date"];
-			if(!isset($user->{$userKey})) {
-				continue;
-			}
-			if(array_key_exists($user->{$userKey}, $globalUsers)) {
-				$existingEntry = $globalUsers[$user->{$userKey}];
-				$globalUsers[$user->{$userKey}] = [
-					"points"=>$existingEntry["points"] + $points, 
-					"submission_date"=>max($submission_date, $existingEntry["submission_date"])
-				];
+		return $userScores;
+	}
+
+	static function getUserChoiceForResponse($response) {
+		$choice = [];
+		if(isset($response->response_info["choice"])) {
+			if(is_array($response->response_info["choice"])) {
+				$choice = $response->response_info["choice"];
 			}
 			else {
-				$globalUsers[$user->{$userKey}] = [
-					"points"=>$points, 
-					"submission_date"=>$submission_date
-				];
+				$choice = [$response->response_info["choice"]];
 			}
-			
 		}
-	}
-	
-	static function getQuestionsWithResponsesCount($questions) {
-		return $questions->filter(function($q) {
-			return $q->sessions->filter(function($s) {
-				return $s->responses->count() > 0;
-			})->count() > 0;
-		})->count();
+		return $choice;
 	}
 
     static function getAGS($chime) {
