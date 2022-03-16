@@ -1,51 +1,52 @@
 <template>
   <div class="image-response-input">
-    <div v-if="isReady">
-      <div v-if="hasResponse" class="response">
-        <h2 class="response-heading">Your Response</h2>
-        <img
-          data-cy="image-thumbnail"
-          class="responsive-img imageContainer"
-          :src="'/storage/' + response.response_info.image"
-          :alt="response.response_info.image_alt"
-        />
+    <div class="card">
+      <div class="card-body">
+        <section v-if="hasResponse" class="response">
+          <h2 class="response-heading">Your Response</h2>
+          <img
+            data-cy="image-thumbnail"
+            class="responsive-img imageContainer"
+            :src="'/storage/' + response.response_info.image"
+            :alt="response.response_info.image_alt"
+          />
+        </section>
+
+        <div v-if="isOpenQuestion">
+          <ImageUploadDropbox
+            class="image-response__dropbox"
+            v-if="chime"
+            :imageSrc="tempImageSrc"
+            :uploadTo="`/api/chime/${chime.id}/image`"
+            @imageuploaded="handleImageUploaded"
+          >
+            Drag here or <u>browse</u> to
+            {{ hasResponse ? "replace" : "upload" }} your image.
+          </ImageUploadDropbox>
+          <TextAreaInput
+            v-if="isOpenQuestion"
+            label="Alt Text"
+            name="alt-text"
+            value=""
+            placeholder="Describe your image"
+          >
+            <template #description>
+              Used by screenreaders to describe the contents of the image.
+              <a
+                href="https://accessibility.umn.edu/what-you-can-do/start-7-core-skills/alternative-text"
+                >Learn more...</a
+              >
+            </template>
+          </TextAreaInput>
+
+          <p v-if="error">
+            <strong>{{ error }}</strong>
+          </p>
+        </div>
       </div>
-
-      <div v-if="isOpenQuestion">
-        <ImageUploadDropbox
-          class="image-response__dropbox"
-          v-if="chime"
-          :imageSrc="tempImageSrc"
-          :uploadTo="`/api/chime/${chime.id}/image`"
-          @imageuploaded="handleImageUploaded"
-        >
-          Drag here or <u>browse</u> to
-          {{ hasResponse ? "replace" : "upload" }} your image.
-        </ImageUploadDropbox>
-        <TextAreaInput
-          v-if="isOpenQuestion"
-          label="Alt Text"
-          name="alt-text"
-          value=""
-          placeholder="Describe your image"
-        >
-          <template #description>
-            Used by screenreaders to describe the contents of the image.
-            <a
-              href="https://accessibility.umn.edu/what-you-can-do/start-7-core-skills/alternative-text"
-              >Learn more...</a
-            >
-          </template>
-        </TextAreaInput>
-      </div>
-
-      <p v-if="error">
-        <strong>{{ error }}</strong>
-      </p>
-
-      <footer class="image-response__footer" v-if="isOpenQuestion">
+      <footer class="image-response__footer card-footer" v-if="isOpenQuestion">
         <button class="btn btn-outline-primary" :disabled="!hasTempImage">
-          {{ hasTempImage ? "Update" : "Save" }}
+          {{ hasResponse ? "Update" : "Save" }}
         </button>
 
         <button class="btn btn-link" :disabled="!hasTempImage">Clear</button>
@@ -88,9 +89,6 @@ export default {
     isOpenQuestion() {
       return !this.disabled;
     },
-    isReady() {
-      return get(this.response, "response_info", null);
-    },
   },
   methods: {
     clear: function () {
@@ -98,7 +96,7 @@ export default {
     },
     handleImageUploaded(imageSrc) {
       console.log({ imageSrc });
-      this.tmpImageSrc = `/storage/${imageSrc}`;
+      this.tempImageSrc = `/storage/${imageSrc}`;
     },
     attachFile: function (event, fileList) {
       this.isSaving = true;
@@ -131,37 +129,6 @@ export default {
 };
 </script>
 
-<style>
-.dropbox {
-  outline: 2px dashed grey; /* the dash box */
-  outline-offset: -10px;
-  background: #eee;
-  color: dimgray;
-  padding: 10px 10px;
-  min-height: 200px; /* minimum height */
-  position: relative;
-  cursor: pointer;
-}
-
-.input-file {
-  opacity: 0; /* invisible but it's there! */
-  width: 100%;
-  height: 200px;
-  position: absolute;
-  cursor: pointer;
-}
-
-.dropbox:hover {
-  background: #ccc; /* when mouse over to the drop zone, change color */
-}
-
-.dropbox p {
-  font-size: 1.2em;
-  text-align: center;
-  padding: 50px 0;
-}
-</style>
-
 <style scoped>
 .response-heading {
   text-transform: uppercase;
@@ -180,8 +147,10 @@ export default {
   margin-bottom: 1rem;
 }
 
+.card {
+  max-width: 30rem;
+}
 .image-response__dropbox {
   margin-bottom: 1rem;
-  max-width: 30rem;
 }
 </style>
