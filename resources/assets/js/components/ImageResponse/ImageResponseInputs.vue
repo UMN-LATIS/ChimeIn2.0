@@ -154,6 +154,6 @@ export default {
   max-height: 200px;
   padding: 0.5rem;
   border: 1px solid #ccc;
-  margin-bottom: ;
+  margin-bottom: 1rem;
 }
 </style>
