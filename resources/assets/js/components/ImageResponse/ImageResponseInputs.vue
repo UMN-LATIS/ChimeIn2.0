@@ -1,31 +1,24 @@
 <template>
   <div>
     <div v-if="response.response_info">
-      <img
-        v-if="!create_new_response"
-        data-cy="image-thumbnail"
-        class="responsive-img imageContainer"
-        :src="'/storage/' + response.response_info.image"
-      />
+      <div v-if="hasResponse" class="response">
+        <h2 class="response-heading">Your Response</h2>
+        <img
+          data-cy="image-thumbnail"
+          class="responsive-img imageContainer"
+          :src="'/storage/' + response.response_info.image"
+        />
+      </div>
     </div>
-    <div v-if="!disabled" class="dropbox">
-      <input
-        data-cy="image-dropzone"
-        type="file"
-        accept="image/jpeg, image/heic, image/png"
-        class="form-control-file input-file"
-        @change="attachFile($event.target.name, $event.target.files)"
-      />
-      <p v-if="isInitial">
-        Drag your image here to upload<br />
-        or click to browse
-      </p>
-      <p v-if="!isInitial && !isSaving">
-        Drag your image here to upload<br />
-        or click to browse to replace your image
-      </p>
-      <p v-if="isSaving">Uploading file...</p>
-    </div>
+    <ImageUploadDropbox
+      v-if="chime"
+      :imageSrc="tmpImageSrc"
+      :uploadTo="`/api/chime/${chime.id}/image`"
+      @imageuploaded="handleImageUploaded"
+    >
+      Drag here or <u>browse</u> to
+      {{ hasResponse ? "replace" : "upload" }} your image.
+    </ImageUploadDropbox>
     <p v-if="error">
       <strong>{{ error }}</strong>
     </p>
@@ -45,12 +38,77 @@
   </div>
 </template>
 
-<style>
-.imageContainer {
-  max-width: 400px;
-  max-height: 400px;
-}
+<script>
+import ImageUploadDropbox from "./ImageUploadDropbox.vue";
+import { get } from "lodash";
 
+export default {
+  components: { ImageUploadDropbox },
+  props: ["question", "response", "disabled", "chime"],
+  data() {
+    return {
+      isInitial: this.response ? false : true,
+      isSaving: false,
+      create_new_response: false,
+      error: null,
+      tmpImageSrc: null,
+    };
+  },
+  computed: {
+    responseImage() {
+      const filename = get(this.response, "response_info.image", null);
+      return {
+        src: filename ? `/storage/${filename}` : null,
+        alt: get(this.response, "response_info.image_alt", ""),
+      };
+    },
+    hasResponse() {
+      return !!this.responseImage.src;
+    },
+    hasTmpImage() {
+      return !!this.tmpImageSrc;
+    },
+  },
+  methods: {
+    clear: function () {
+      this.create_new_response = true;
+    },
+    handleImageUploaded(imageSrc) {
+      console.log({ imageSrc });
+      this.tmpImageSrc = `/storage/${imageSrc}`;
+    },
+    attachFile: function (event, fileList) {
+      this.isSaving = true;
+      this.isInitial = false;
+      let formData = new FormData();
+      Array.from(Array(fileList.length).keys()).map((x) => {
+        formData.append("image", fileList[x], fileList[x].name);
+      });
+      axios
+        .post("/api/chime/" + this.chime.id + "/image", formData)
+        .then((res) => {
+          const response = {
+            question_type: "image_response",
+            image: res.data.image,
+            image_name: fileList[0].name,
+          };
+          this.isSaving = false;
+          // this.isInitial= true;
+          this.$emit("recordresponse", response, this.create_new_response);
+          this.create_new_response = false;
+          this.error = null;
+        })
+        .catch((err) => {
+          if (err.response) {
+            this.error = err.response.data.message;
+          }
+        });
+    },
+  },
+};
+</script>
+
+<style>
 .dropbox {
   outline: 2px dashed grey; /* the dash box */
   outline-offset: -10px;
@@ -81,49 +139,21 @@
 }
 </style>
 
-<script>
-export default {
-  props: ["question", "response", "disabled", "chime"],
-  data() {
-    return {
-      isInitial: this.response ? false : true,
-      isSaving: false,
-      create_new_response: false,
-      error: null,
-    };
-  },
-  methods: {
-    clear: function () {
-      this.create_new_response = true;
-    },
-    attachFile: function (event, fileList) {
-      this.isSaving = true;
-      this.isInitial = false;
-      let formData = new FormData();
-      Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append("image", fileList[x], fileList[x].name);
-      });
+<style scoped>
+.response-heading {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+  color: #777;
+  margin: 0.5rem 0;
+}
 
-      axios
-        .post("/api/chime/" + this.chime.id + "/image", formData)
-        .then((res) => {
-          const response = {
-            question_type: "image_response",
-            image: res.data.image,
-            image_name: fileList[0].name,
-          };
-          this.isSaving = false;
-          // this.isInitial= true;
-          this.$emit("recordresponse", response, this.create_new_response);
-          this.create_new_response = false;
-          this.error = null;
-        })
-        .catch((err) => {
-          if (err.response) {
-            this.error = err.response.data.message;
-          }
-        });
-    },
-  },
-};
-</script>
+.imageContainer {
+  max-width: 200px;
+  max-height: 200px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  margin-bottom: ;
+}
+</style>
