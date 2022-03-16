@@ -4,12 +4,20 @@
       <div class="card-body">
         <section v-if="hasResponse" class="response">
           <h2 class="response-heading">Your Response</h2>
-          <img
-            data-cy="image-thumbnail"
-            class="responsive-img imageContainer"
-            :src="'/storage/' + response.response_info.image"
-            :alt="response.response_info.image_alt"
-          />
+          <figure class="response__figure">
+            <img
+              data-cy="image-thumbnail"
+              class="responsive-img imageContainer"
+              :src="'/storage/' + response.response_info.image"
+              :alt="response.response_info.image_alt"
+            />
+            <figcaption
+              class="response__figcaption"
+              v-if="response.response_info.image_alt"
+            >
+              {{ response.response_info.image_alt }}
+            </figcaption>
+          </figure>
         </section>
 
         <div v-if="isOpenQuestion">
@@ -27,7 +35,7 @@
             v-if="isOpenQuestion"
             label="Alt Text"
             name="alt-text"
-            value=""
+            v-model="imageAlt"
             placeholder="Describe your image"
           >
             <template #description>
@@ -128,11 +136,24 @@ export default {
 }
 
 .imageContainer {
-  max-width: 200px;
-  max-height: 200px;
   padding: 0.5rem;
+}
+
+.response__figure {
   border: 1px solid #ccc;
   margin-bottom: 1rem;
+  border-radius: 0.25rem;
+}
+
+.response__figcaption {
+  font-size: 0.75rem;
+  padding: 1rem;
+  background: #eee;
+}
+
+img {
+  display: block;
+  max-width: 100%;
 }
 
 .card {

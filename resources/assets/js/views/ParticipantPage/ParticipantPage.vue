@@ -313,12 +313,12 @@ export default {
 .nav {
   display: flex;
   padding: 1rem;
-  gap: 1rem;
+  gap: 0.5rem;
   align-items: center;
   border-bottom: 0;
   border-bottom: 1px solid var(--neutral-300);
 }
 .tab-pane {
-  padding: 2rem 0;
+  padding: 2rem 1rem;
 }
 </style>
