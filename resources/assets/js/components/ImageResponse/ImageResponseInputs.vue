@@ -16,7 +16,7 @@
           <ImageUploadDropbox
             class="image-response__dropbox"
             v-if="chime"
-            :imageSrc="tempImageSrc"
+            :imageSrc="tempImagePath"
             :uploadTo="`/api/chime/${chime.id}/image`"
             @imageuploaded="handleImageUploaded"
           >
@@ -38,14 +38,14 @@
               >
             </template>
           </TextAreaInput>
-
-          <p v-if="error">
-            <strong>{{ error }}</strong>
-          </p>
         </div>
       </div>
       <footer class="image-response__footer card-footer" v-if="isOpenQuestion">
-        <button class="btn btn-outline-primary" :disabled="!hasTempImage">
+        <button
+          class="btn btn-outline-primary"
+          :disabled="!hasTempImage"
+          @click="handleSave"
+        >
           {{ hasResponse ? "Update" : "Save" }}
         </button>
 
@@ -68,8 +68,9 @@ export default {
       isInitial: this.response ? false : true,
       isSaving: false,
       create_new_response: false,
-      error: null,
       tempImageSrc: null,
+      tempImageName: null,
+      imageAlt: "",
     };
   },
   computed: {
@@ -89,41 +90,28 @@ export default {
     isOpenQuestion() {
       return !this.disabled;
     },
+    tempImagePath() {
+      return this.hasTempImage ? `/storage/${this.tempImageSrc}` : null;
+    },
   },
   methods: {
-    clear: function () {
-      this.create_new_response = true;
+    handleImageUploaded({ src, name }) {
+      this.tempImageSrc = src;
+      this.tempImageName = name;
     },
-    handleImageUploaded(imageSrc) {
-      console.log({ imageSrc });
-      this.tempImageSrc = `/storage/${imageSrc}`;
-    },
-    attachFile: function (event, fileList) {
-      this.isSaving = true;
-      this.isInitial = false;
-      let formData = new FormData();
-      Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append("image", fileList[x], fileList[x].name);
-      });
-      axios
-        .post("/api/chime/" + this.chime.id + "/image", formData)
-        .then((res) => {
-          const response = {
-            question_type: "image_response",
-            image: res.data.image,
-            image_name: fileList[0].name,
-          };
-          this.isSaving = false;
-          // this.isInitial= true;
-          this.$emit("recordresponse", response, this.create_new_response);
-          this.create_new_response = false;
-          this.error = null;
-        })
-        .catch((err) => {
-          if (err.response) {
-            this.error = err.response.data.message;
-          }
-        });
+    handleSave() {
+      const response = {
+        question_type: "image_response",
+        image: this.tempImageSrc,
+        image_name: this.tempImageName,
+        image_alt: this.imageAlt,
+      };
+
+      this.$emit("recordresponse", response, this.create_new_response);
+      this.create_new_response = false;
+      this.tempImageSrc = null;
+      this.tempImageName = null;
+      this.imageAlt = null;
     },
   },
 };

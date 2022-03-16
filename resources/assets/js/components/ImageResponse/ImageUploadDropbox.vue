@@ -83,7 +83,10 @@ export default {
         .then((response) => {
           console.log({ response });
           this.isUploading = false;
-          this.$emit("imageuploaded", response.data.image);
+          this.$emit("imageuploaded", {
+            src: response.data.image,
+            name: selectedFile.name,
+          });
         })
         .catch((error) => {
           console.error({ error });
