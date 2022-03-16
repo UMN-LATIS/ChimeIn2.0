@@ -292,14 +292,6 @@ export default {
 </script>
 
 <style scoped>
-/* .nav-item {
-  width: 50%;
-  align-self: flex-end;
-} */
-.container {
-  margin-top: 1em;
-}
-
 .participant-page__main {
   border-top: 1px solid var(--neutral-300);
   background: var(--neutral-200);
@@ -309,6 +301,10 @@ export default {
   border: 0;
   border-radius: 1rem;
   color: var(--neutral-500);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.05rem;
 }
 .nav-link.active {
   background: white;
@@ -319,6 +315,10 @@ export default {
   padding: 1rem;
   gap: 1rem;
   align-items: center;
+  border-bottom: 0;
   border-bottom: 1px solid var(--neutral-300);
+}
+.tab-pane {
+  padding: 2rem 0;
 }
 </style>
