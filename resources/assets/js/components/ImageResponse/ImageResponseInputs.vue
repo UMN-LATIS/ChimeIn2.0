@@ -1,49 +1,66 @@
 <template>
-  <div>
-    <div v-if="response.response_info">
+  <div class="image-response-input">
+    <div v-if="isReady">
       <div v-if="hasResponse" class="response">
         <h2 class="response-heading">Your Response</h2>
         <img
           data-cy="image-thumbnail"
           class="responsive-img imageContainer"
           :src="'/storage/' + response.response_info.image"
+          :alt="response.response_info.image_alt"
         />
       </div>
-    </div>
-    <ImageUploadDropbox
-      v-if="chime"
-      :imageSrc="tmpImageSrc"
-      :uploadTo="`/api/chime/${chime.id}/image`"
-      @imageuploaded="handleImageUploaded"
-    >
-      Drag here or <u>browse</u> to
-      {{ hasResponse ? "replace" : "upload" }} your image.
-    </ImageUploadDropbox>
-    <p v-if="error">
-      <strong>{{ error }}</strong>
-    </p>
-    <div
-      v-if="
-        question.allow_multiple &&
-        !disabled &&
-        response &&
-        response.response_info
-      "
-      class="form-group"
-    >
-      <button class="btn btn-primary" @click="clear">
-        Clear and Start a New Response
-      </button>
+
+      <div v-if="isOpenQuestion">
+        <ImageUploadDropbox
+          class="image-response__dropbox"
+          v-if="chime"
+          :imageSrc="tempImageSrc"
+          :uploadTo="`/api/chime/${chime.id}/image`"
+          @imageuploaded="handleImageUploaded"
+        >
+          Drag here or <u>browse</u> to
+          {{ hasResponse ? "replace" : "upload" }} your image.
+        </ImageUploadDropbox>
+        <TextAreaInput
+          v-if="isOpenQuestion"
+          label="Alt Text"
+          name="alt-text"
+          value=""
+          placeholder="Describe your image"
+        >
+          <template #description>
+            Used by screenreaders to describe the contents of the image.
+            <a
+              href="https://accessibility.umn.edu/what-you-can-do/start-7-core-skills/alternative-text"
+              >Learn more...</a
+            >
+          </template>
+        </TextAreaInput>
+      </div>
+
+      <p v-if="error">
+        <strong>{{ error }}</strong>
+      </p>
+
+      <footer class="image-response__footer" v-if="isOpenQuestion">
+        <button class="btn btn-outline-primary" :disabled="!hasTempImage">
+          {{ hasTempImage ? "Update" : "Save" }}
+        </button>
+
+        <button class="btn btn-link" :disabled="!hasTempImage">Clear</button>
+      </footer>
     </div>
   </div>
 </template>
 
 <script>
 import ImageUploadDropbox from "./ImageUploadDropbox.vue";
+import TextAreaInput from "../TextAreaInput.vue";
 import { get } from "lodash";
 
 export default {
-  components: { ImageUploadDropbox },
+  components: { ImageUploadDropbox, TextAreaInput },
   props: ["question", "response", "disabled", "chime"],
   data() {
     return {
@@ -51,7 +68,7 @@ export default {
       isSaving: false,
       create_new_response: false,
       error: null,
-      tmpImageSrc: null,
+      tempImageSrc: null,
     };
   },
   computed: {
@@ -65,8 +82,14 @@ export default {
     hasResponse() {
       return !!this.responseImage.src;
     },
-    hasTmpImage() {
-      return !!this.tmpImageSrc;
+    hasTempImage() {
+      return !!this.tempImageSrc;
+    },
+    isOpenQuestion() {
+      return !this.disabled;
+    },
+    isReady() {
+      return get(this.response, "response_info", null);
     },
   },
   methods: {
@@ -155,5 +178,10 @@ export default {
   padding: 0.5rem;
   border: 1px solid #ccc;
   margin-bottom: 1rem;
+}
+
+.image-response__dropbox {
+  margin-bottom: 1rem;
+  max-width: 30rem;
 }
 </style>
