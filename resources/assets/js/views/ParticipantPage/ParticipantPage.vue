@@ -11,102 +11,106 @@
       {{ error }}
     </div>
     <vue-announcer />
+    <main class="participant-page__main container">
+      <div class="card">
+        <!-- nav tabs -->
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                data-toggle="tab"
+                href="#currentQuestions"
+                >Open Questions</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#pastQuestions"
+                >Answered Questions</a
+              >
+            </li>
+          </ul>
+        </div>
 
-    <!-- nav tabs -->
-    <main class="participant-page__main">
-      <div>
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a
-              class="nav-link active"
-              data-toggle="tab"
-              href="#currentQuestions"
-              >Open Questions</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#pastQuestions"
-              >Answered Questions</a
-            >
-          </li>
-        </ul>
-      </div>
+        <div class="tab-content">
+          <!-- openQuestions -->
+          <div
+            id="currentQuestions"
+            class="tab-pane container active"
+            aria-live="polite"
+          >
+            <div v-if="ltiLaunchWarning">
+              <h1 class="text-center">
+                Whoops! You Didn't Follow the Link in Canvas
+              </h1>
+              <p class="text-left">
+                This chime is linked to Canvas. To participate, join this chime
+                by clicking the assignment link in your Canvas course.
+              </p>
 
-      <div class="tab-content">
-        <!-- openQuestions -->
-        <div
-          id="currentQuestions"
-          class="tab-pane container active"
-          aria-live="polite"
-        >
-          <div v-if="ltiLaunchWarning">
-            <h1 class="text-center">
-              Whoops! You Didn't Follow the Link in Canvas
-            </h1>
-            <p class="text-left">
-              This chime is linked to Canvas. To participate, join this chime by
-              clicking the assignment link in your Canvas course.
-            </p>
-
-            <a class="btn btn-primary" :href="canvasCourseUrl">
-              Go to Canvas
-            </a>
-            <p class="mt-3">
-              <small class="text-muted">
-                If you believe this message is in error, you may use
-                <a href="#" @click.prevent="forceLoad = true">this link</a>
-                to force the chime to load. You may not recieve credit for your
-                responses. Please contact your instructor or
-                <a href="mailto:help@umn.edu" class="text-muted">help@umn.edu</a
-                >.
-              </small>
-            </p>
-          </div>
-          <template v-else>
-            <div
-              v-if="filteredSession.length < 1"
-              key="none"
-              class="text-center"
-            >
-              <h1>No Open Questions</h1>
+              <a class="btn btn-primary" :href="canvasCourseUrl">
+                Go to Canvas
+              </a>
+              <p class="mt-3">
+                <small class="text-muted">
+                  If you believe this message is in error, you may use
+                  <a href="#" @click.prevent="forceLoad = true">this link</a>
+                  to force the chime to load. You may not recieve credit for
+                  your responses. Please contact your instructor or
+                  <a href="mailto:help@umn.edu" class="text-muted"
+                    >help@umn.edu</a
+                  >.
+                </small>
+              </p>
             </div>
-            <transition-group v-if="filteredSession.length > 0" name="fade">
-              <ParticipantPrompt
-                v-for="s in filteredSession"
-                :key="s.id"
-                :session="s"
-                :chime="chime"
-                :responses="responses"
-                @updateResponse="updateResponse"
-              />
-            </transition-group>
-          </template>
-        </div>
-
-        <!-- answered Questions -->
-        <div id="pastQuestions" class="tab-pane container">
-          <div v-if="responses.length < 1" class="text-center">
-            <h1>No Answered Questions</h1>
+            <template v-else>
+              <div
+                v-if="filteredSession.length < 1"
+                key="none"
+                class="text-center"
+              >
+                <h1>No Open Questions</h1>
+              </div>
+              <transition-group v-if="filteredSession.length > 0" name="fade">
+                <ParticipantPrompt
+                  v-for="s in filteredSession"
+                  :key="s.id"
+                  :session="s"
+                  :chime="chime"
+                  :responses="responses"
+                  @updateResponse="updateResponse"
+                />
+              </transition-group>
+            </template>
           </div>
-          <Response
-            v-else
-            v-for="(response, i) in sortedResponses"
-            :key="i"
-            :chime="chime"
-            :response="response"
-          />
+
+          <!-- answered Questions -->
+          <div id="pastQuestions" class="tab-pane container">
+            <div v-if="responses.length < 1" class="text-center">
+              <h1>No Answered Questions</h1>
+            </div>
+            <Response
+              v-else
+              v-for="(response, i) in sortedResponses"
+              :key="i"
+              :chime="chime"
+              :response="response"
+            />
+          </div>
+          <p class="text-center m-0" v-if="!ltiLaunchWarning">
+            <small v-if="chime.lti_course_title" class="text-muted"
+              >Not seeing the prompts you're looking for? Make sure you've
+              followed the correct assignment link from Canvas.
+            </small>
+            <small
+              v-if="
+                chime.lti_course_title && chime.lti_grade_mode != 'no_grades'
+              "
+              class="text-muted"
+              >Grades will generally be updated in Canvas within 4 hours.
+            </small>
+          </p>
         </div>
-        <p class="text-center m-0" v-if="!ltiLaunchWarning">
-          <small v-if="chime.lti_course_title" class="text-muted"
-            >Not seeing the prompts you're looking for? Make sure you've
-            followed the correct assignment link from Canvas.
-          </small>
-          <small
-            v-if="chime.lti_course_title && chime.lti_grade_mode != 'no_grades'"
-            class="text-muted"
-            >Grades will generally be updated in Canvas within 4 hours.
-          </small>
-        </p>
       </div>
     </main>
   </div>
@@ -292,31 +296,9 @@ export default {
 </script>
 
 <style scoped>
-.participant-page__main {
-  border-top: 1px solid var(--neutral-300);
-  background: var(--neutral-200);
-}
-
-.nav-link {
-  border: 0;
-  border-radius: 1rem;
-  color: var(--neutral-500);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 0.05rem;
-}
-.nav-link.active {
-  background: white;
-  color: var(--neutral-900);
-}
-.nav {
-  display: flex;
-  padding: 1rem;
-  gap: 0.5rem;
-  align-items: center;
-  border-bottom: 0;
-  border-bottom: 1px solid var(--neutral-300);
+.nav-item {
+  width: 50%;
+  text-align: center;
 }
 .tab-pane {
   padding: 2rem 1rem;

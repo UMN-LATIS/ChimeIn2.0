@@ -1,65 +1,56 @@
 <template>
   <div class="image-response-input">
-    <div class="card">
-      <div class="card-body">
-        <section v-if="hasResponse" class="response">
-          <h2 class="response-heading">Your Response</h2>
-          <figure class="response__figure">
-            <img
-              data-cy="image-thumbnail"
-              class="responsive-img imageContainer"
-              :src="'/storage/' + response.response_info.image"
-              :alt="response.response_info.image_alt"
-            />
-            <figcaption
-              class="response__figcaption"
-              v-if="response.response_info.image_alt"
-            >
-              {{ response.response_info.image_alt }}
-            </figcaption>
-          </figure>
-        </section>
-
-        <div v-if="isOpenQuestion">
-          <ImageUploadDropbox
-            class="image-response__dropbox"
-            v-if="chime"
-            :imageSrc="tempImagePath"
-            :uploadTo="`/api/chime/${chime.id}/image`"
-            @imageuploaded="handleImageUploaded"
-          >
-            Drag here or <u>browse</u> to
-            {{ hasResponse ? "replace" : "upload" }} your image.
-          </ImageUploadDropbox>
-          <TextAreaInput
-            v-if="isOpenQuestion"
-            label="Alt Text"
-            name="alt-text"
-            v-model="imageAlt"
-            placeholder="Describe your image"
-          >
-            <template #description>
-              Used by screenreaders to describe the contents of the image.
-              <a
-                href="https://accessibility.umn.edu/what-you-can-do/start-7-core-skills/alternative-text"
-                >Learn more...</a
-              >
-            </template>
-          </TextAreaInput>
-        </div>
-      </div>
-      <footer class="image-response__footer card-footer" v-if="isOpenQuestion">
-        <button
-          class="btn btn-outline-primary"
-          :disabled="!hasTempImage"
-          @click="handleSave"
+    <section v-if="hasResponse" class="response">
+      <figure class="response__figure">
+        <img
+          data-cy="image-thumbnail"
+          class="responsive-img imageContainer"
+          :src="'/storage/' + response.response_info.image"
+          :alt="response.response_info.image_alt"
+        />
+        <figcaption
+          class="response__figcaption"
+          v-if="response.response_info.image_alt"
         >
-          {{ hasResponse ? "Update" : "Save" }}
-        </button>
+          {{ response.response_info.image_alt }}
+        </figcaption>
+      </figure>
+    </section>
 
-        <button class="btn btn-link" :disabled="!hasTempImage">Clear</button>
-      </footer>
+    <div v-if="isOpenQuestion">
+      <div class="dropbox-group">
+        <ImageUploadDropbox
+          class="dropbox-group__uploader"
+          v-if="chime"
+          :imageSrc="tempImagePath"
+          :uploadTo="`/api/chime/${chime.id}/image`"
+          @imageuploaded="handleImageUploaded"
+        >
+          Drag here or <u>browse</u> to
+          {{ hasResponse ? "replace" : "upload" }} your image.
+        </ImageUploadDropbox>
+        <TextAreaInput
+          v-if="isOpenQuestion"
+          class="dropbox-group__alt-input"
+          label="Alt Text"
+          name="alt-text"
+          v-model="imageAlt"
+          placeholder="Describe your image"
+          visuallyHideLabel
+        />
+      </div>
     </div>
+    <footer class="image-response__footer" v-if="isOpenQuestion">
+      <button
+        class="btn btn-outline-primary"
+        :disabled="!hasTempImage"
+        @click="handleSave"
+      >
+        {{ saveButtonText }}
+      </button>
+
+      <button class="btn btn-link" :disabled="!hasTempImage">Clear</button>
+    </footer>
   </div>
 </template>
 
@@ -101,6 +92,17 @@ export default {
     tempImagePath() {
       return this.hasTempImage ? `/storage/${this.tempImageSrc}` : null;
     },
+    saveButtonText() {
+      if (!this.hasResponse) {
+        return "Save";
+      }
+
+      if (this.question.allow_multiple) {
+        return "Add Response";
+      }
+
+      return "Update";
+    },
   },
   methods: {
     handleImageUploaded({ src, name }) {
@@ -132,7 +134,10 @@ export default {
   letter-spacing: 0.5px;
   font-weight: bold;
   color: #777;
-  margin: 0.5rem 0;
+  margin: 0;
+}
+.response-header {
+  margin-bottom: 0.5rem;
 }
 
 .imageContainer {
@@ -142,7 +147,6 @@ export default {
 .response__figure {
   border: 1px solid #ccc;
   margin-bottom: 1rem;
-  border-radius: 0.25rem;
 }
 
 .response__figcaption {
@@ -159,7 +163,19 @@ img {
 .card {
   max-width: 30rem;
 }
-.image-response__dropbox {
-  margin-bottom: 1rem;
+.dropbox-group {
+  background: #eee;
+}
+.dropbox-group__alt-input {
+  padding: 0.5rem;
+  margin-top: -0.25rem;
+}
+</style>
+
+<style>
+.dropbox-group__alt-input textarea {
+  background: #fafafa;
+  font-size: 0.75rem;
+  border-radius: 0;
 }
 </style>

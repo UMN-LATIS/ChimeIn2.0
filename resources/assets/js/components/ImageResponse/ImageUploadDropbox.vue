@@ -14,15 +14,13 @@
       {{ errorText }}
     </div>
     <div class="image-upload__dropbox">
+      <h3 v-if="hasImage" class="image-upload__dropbox-heading">Preview</h3>
       <img
         v-if="hasImage"
         class="image-upload__preview"
         :src="imageSrc"
         alt="preview of image to be submitted with response"
       />
-      <h3 v-if="hasImage" class="image-upload__dropbox-heading">
-        Response Preview
-      </h3>
 
       <input
         type="file"
@@ -111,7 +109,7 @@ export default {
   /* border: 2px dashed #aaa; */
   outline: 2px dashed #aaa;
   outline-offset: -0.5rem;
-  background: hsla(0, 0%, 0%, 0.05);
+  background: #eee;
   color: #333;
   min-height: 150px; /* minimum height */
   position: relative;
