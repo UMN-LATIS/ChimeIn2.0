@@ -115,4 +115,103 @@ describe("image response", () => {
 
   it("shows responses in answered questions tab");
 
+  it.only("allows multiple responses", () => {
+    let testChime;
+    let testFolder;
+
+    api
+      .createChime({
+        name: "Test Chime",
+      })
+      .then((chime) => {
+        testChime = chime;
+        return api.createFolder({
+          name: "Test Folder",
+          chimeId: chime.id,
+        });
+      })
+      .then((folder) => {
+        testFolder = folder;
+      })
+      .then(() => {
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+        // create the question
+        cy.get("[data-cy=new-question-button]").click();
+        cy.get("[data-cy=question-type]").type("Image Response{enter}");
+
+        // make it a multiple response question
+        cy.get("[data-cy=allow-multiple-responses-checkbox]").click();
+
+        // add question text and save
+        cy.get("[data-cy=question-editor]").type("Image response question?");
+        cy.contains("Save").click();
+        cy.wait("@apiCreateQuestion");
+
+        // open question
+        cy.get("[data-cy=toggle-open-question]").click();
+        cy.wait("@apiOpenQuestion");
+
+        // logout faculty, become guest user
+        cy.logout();
+
+        // as a guest, attach an image
+        cy.visit(`/join/${testChime.access_code}`);
+        cy.get("[data-cy=image-dropzone]").attachFile("goldy-650x435.jpg");
+
+        // wait for upload to finish
+        cy.wait("@upload", { requestTimeout: 10000 });
+
+        // add alt text
+        cy.get('.textarea-input > [data-cy="alt-text-input"]').type("Goldy");
+        cy.contains("Save").click();
+
+        // expect the image thumbnail to be displayed
+        cy.get("[data-cy=image-response-thumbnail]")
+          .should("exist")
+          .should("have.attr", "alt", "Goldy");
+
+        // add a second image
+        cy.get("[data-cy=image-dropzone]").attachFile(
+          "goldy-with-cape-650x435.jpg"
+        );
+
+        // wait for upload to finish
+        cy.wait("@upload", { requestTimeout: 10000 });
+
+        // add alt text
+        cy.get('.textarea-input > [data-cy="alt-text-input"]').type(
+          "Goldy with Cape"
+        );
+        cy.contains("Add Response").click();
+
+        // most recent response should be displayed
+        cy.get("[data-cy=image-response-thumbnail]")
+          .should("exist")
+          .should("have.attr", "alt", "Goldy with Cape");
+
+        // both responses should show in the Answered Questions tab
+        cy.contains("Answered Questions").click();
+        cy.get("#pastQuestions [data-cy=image-response-thumbnail]").should(
+          "have.length",
+          2
+        );
+
+        // faculty should see all responses
+
+        //   // login as faculty
+        //   cy.login("faculty");
+        //   cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+        //   cy.get("[data-cy=present-question-button]").click();
+        //   cy.get("[data-cy=show-results-button]").click();
+
+        //   // expect goldy image to be displayed
+        //   // just checking extension for now, as name could have changed
+        //   // to the image's hash
+        //   cy.get("[data-cy=image-responses]")
+        //     .find("img")
+        //     .should("have.attr", "src")
+        //     .should("include", ".jpg");
+      });
+  });
 });
