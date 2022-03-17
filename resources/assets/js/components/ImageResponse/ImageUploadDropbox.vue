@@ -44,8 +44,12 @@
           Drag your image here or
           <u>browse</u> to select.
         </slot>
-        <div class="image-upload__spinner" v-if="isUploading">
-          <i class="fas fa-spinner fa-spin fa-3x"></i>
+        <div
+          v-if="isUploading"
+          class="spinner-border text-secondary"
+          role="status"
+        >
+          <span class="sr-only">Loading...</span>
         </div>
       </div>
     </div>
