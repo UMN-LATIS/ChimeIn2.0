@@ -67,7 +67,6 @@ export default {
     return {
       isInitial: this.response ? false : true,
       isSaving: false,
-      create_new_response: false,
       tempImageSrc: null,
       tempImageName: null,
       imageAlt: "",
@@ -80,6 +79,9 @@ export default {
         src: filename ? `/storage/${filename}` : null,
         alt: get(this.response, "response_info.image_alt", ""),
       };
+    },
+    shouldAddNewResponse() {
+      return this.question.allow_multiple;
     },
     hasResponse() {
       return !!this.responseImage.src;
@@ -118,8 +120,7 @@ export default {
         image_alt: this.imageAlt,
       };
 
-      this.$emit("recordresponse", response, this.create_new_response);
-      this.create_new_response = false;
+      this.$emit("recordresponse", response, this.shouldAddNewResponse);
       this.tempImageSrc = null;
       this.tempImageName = null;
       this.imageAlt = null;
