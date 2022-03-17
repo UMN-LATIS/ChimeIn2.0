@@ -15,13 +15,20 @@
     </div>
     <div class="image-upload__dropbox">
       <h3 v-if="hasImage" class="image-upload__dropbox-heading">Preview</h3>
-      <img
-        v-if="hasImage"
-        class="image-upload__preview"
-        :src="imageSrc"
-        alt="preview of image to be submitted with response"
-        data-cy="image-preview"
-      />
+      <div class="preview" v-if="hasImage">
+        <img
+          class="preview__img"
+          :src="imageSrc"
+          alt="preview of image to be submitted with response"
+          data-cy="image-preview"
+        />
+        <button
+          @click="$emit('removePreviewImage')"
+          class="preview__remove-img-button"
+        >
+          <span class="material-icons">cancel</span>
+        </button>
+      </div>
 
       <input
         type="file"
@@ -57,7 +64,7 @@ export default {
       required: true,
     },
   },
-  emits: ["imageuploaded"],
+  emits: ["imageUploaded", "removePreviewImage"],
   data() {
     return {
       isUploading: false,
@@ -83,7 +90,7 @@ export default {
         .then((response) => {
           console.log({ response });
           this.isUploading = false;
-          this.$emit("imageuploaded", {
+          this.$emit("imageUploaded", {
             src: response.data.image,
             name: selectedFile.name,
           });
@@ -98,13 +105,26 @@ export default {
 };
 </script>
 <style scoped>
-.image-upload__preview {
+.preview {
+  position: relative;
+}
+.preview__img {
   max-width: 200px;
   max-height: 200px;
   position: relative;
   padding: 0.5rem;
   border: 1px solid #ccc;
   background: #fff;
+}
+.preview__remove-img-button {
+  color: var(--gray-dark);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  z-index: 20;
 }
 
 .image-upload__dropbox {

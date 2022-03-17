@@ -24,7 +24,8 @@
           v-if="chime"
           :imageSrc="tempImagePath"
           :uploadTo="`/api/chime/${chime.id}/image`"
-          @imageuploaded="handleImageUploaded"
+          @imageUploaded="handleImageUploaded"
+          @removePreviewImage="handlePreviewRemoveImage"
         >
           Drag here or <u>browse</u> to
           {{ hasResponse ? "replace" : "upload" }} your image.
@@ -111,6 +112,10 @@ export default {
     handleImageUploaded({ src, name }) {
       this.tempImageSrc = src;
       this.tempImageName = name;
+    },
+    handlePreviewRemoveImage() {
+      this.tempImageSrc = null;
+      this.tempImageName = null;
     },
     handleSave() {
       const response = {
