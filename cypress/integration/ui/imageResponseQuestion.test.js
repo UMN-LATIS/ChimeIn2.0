@@ -113,9 +113,7 @@ describe("image response", () => {
       });
   });
 
-  it("shows responses in answered questions tab");
-
-  it.only("allows multiple responses", () => {
+  it("allows multiple responses", () => {
     let testChime;
     let testFolder;
 
