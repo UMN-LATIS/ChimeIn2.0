@@ -51,7 +51,15 @@
         {{ saveButtonText }}
       </button>
 
-      <button class="btn btn-link" :disabled="!hasTempImage">Clear</button>
+      <!-- when multiple responses are allowed, this button allows a user to override creating a new response and instead replace previous response -->
+      <button
+        v-if="question.allow_multiple"
+        class="btn btn-link"
+        @click="handleUpdatePreviousResponse"
+        :disabled="!hasTempImage"
+      >
+        Update Previous
+      </button>
     </footer>
   </div>
 </template>
@@ -66,7 +74,6 @@ export default {
   props: ["question", "response", "disabled", "chime"],
   data() {
     return {
-      isInitial: this.response ? false : true,
       isSaving: false,
       tempImageSrc: null,
       tempImageName: null,
@@ -94,7 +101,7 @@ export default {
       return !this.disabled;
     },
     tempImagePath() {
-      return this.hasTempImage ? `/storage/${this.tempImageSrc}` : null;
+      return this.tempImageSrc ? `/storage/${this.tempImageSrc}` : null;
     },
     saveButtonText() {
       if (!this.hasResponse) {
@@ -109,6 +116,11 @@ export default {
     },
   },
   methods: {
+    resetForm() {
+      this.tempImageSrc = null;
+      this.tempImageName = null;
+      this.imageAlt = "";
+    },
     handleImageUploaded({ src, name }) {
       this.tempImageSrc = src;
       this.tempImageName = name;
@@ -116,6 +128,19 @@ export default {
     handlePreviewRemoveImage() {
       this.tempImageSrc = null;
       this.tempImageName = null;
+    },
+    handleUpdatePreviousResponse() {
+      const response = {
+        question_type: "image_response",
+        image: this.tempImageSrc,
+        image_name: this.tempImageName,
+        image_alt: this.imageAlt,
+      };
+
+      // override shouldAddNewResponse by setting last arg to false
+      // this will allow the user to replace the previous response with this one
+      this.$emit("recordresponse", response, false);
+      this.resetForm();
     },
     handleSave() {
       const response = {
@@ -126,9 +151,7 @@ export default {
       };
 
       this.$emit("recordresponse", response, this.shouldAddNewResponse);
-      this.tempImageSrc = null;
-      this.tempImageName = null;
-      this.imageAlt = null;
+      this.resetForm();
     },
   },
 };
