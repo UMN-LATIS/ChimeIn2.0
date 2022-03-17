@@ -152,6 +152,7 @@ export default {
 }
 
 .response__figure {
+  display: inline-block;
   border: 1px solid #ccc;
   margin-bottom: 1rem;
 }
@@ -164,7 +165,8 @@ export default {
 
 img {
   display: block;
-  max-width: 100%;
+  max-width: 400px;
+  max-height: 400px;
 }
 
 .card {
