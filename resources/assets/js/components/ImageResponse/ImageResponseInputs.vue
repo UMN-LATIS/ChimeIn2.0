@@ -27,8 +27,7 @@
           @imageUploaded="handleImageUploaded"
           @removePreviewImage="handlePreviewRemoveImage"
         >
-          Drag here or <u>browse</u> to
-          {{ hasResponse ? "replace" : "upload" }} your image.
+          Drag here or <u>browse</u> to select your image.
         </ImageUploadDropbox>
         <TextAreaInput
           v-if="isOpenQuestion"
