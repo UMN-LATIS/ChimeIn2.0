@@ -197,21 +197,29 @@ describe("image response", () => {
           2
         );
 
-        // faculty should see all responses
-
         // login as faculty
         cy.login("faculty");
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
         cy.get("[data-cy=present-question-button]").click();
         cy.get("[data-cy=show-results-button]").click();
 
-        // expect goldy image to be displayed
+        // faculty should see both responses as thumbnails
         cy.get("[data-cy=image-responses] img")
           .should("have.length", 2)
           .then((images) => {
             expect(images[0].alt).to.equal("Goldy");
             expect(images[1].alt).to.equal("Goldy with Cape");
           });
+
+        // after clicking the manage button, faculty should see both responses
+        // and their alt attributes in the responses table
+        cy.contains("Manage").click();
+        cy.get("[data-cy=responses-table]").should("exist");
+        cy.get("[data-cy=responses-table]").should("contain", "Goldy");
+        cy.get("[data-cy=responses-table]").should(
+          "contain",
+          "Goldy with Cape"
+        );
       });
   });
 });

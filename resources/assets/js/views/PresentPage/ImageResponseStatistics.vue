@@ -21,7 +21,7 @@
           </lightbox>
         </div>
 
-        <table v-if="filterImages" class="table">
+        <table v-if="filterImages" class="table" data-cy="responses-table">
           <thead>
             <tr>
               <th scope="col">Image</th>
@@ -39,7 +39,9 @@
                   class="img-fluid"
                 />
               </td>
-              <td></td>
+              <td>
+                {{ response.response_info.image_alt || "" }}
+              </td>
               <td>
                 {{ question.anonymous ? "Anonymous" : response.user.name }}
               </td>
