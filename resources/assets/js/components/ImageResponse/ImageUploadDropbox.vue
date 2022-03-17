@@ -42,7 +42,7 @@
       <div class="image-upload__status">
         <slot v-if="!isUploading">
           Drag your image here or
-          <u>browse</u> to {{ hasImage ? "replace" : "upload" }}.
+          <u>browse</u> to select.
         </slot>
         <div class="image-upload__spinner" v-if="isUploading">
           <i class="fas fa-spinner fa-spin fa-3x"></i>
