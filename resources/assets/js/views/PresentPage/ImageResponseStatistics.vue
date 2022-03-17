@@ -35,6 +35,7 @@
               <td style="width: 15%">
                 <img
                   :src="'/storage/' + response.response_info.image"
+                  :alt="response.response_info.image_alt || ''"
                   class="img-fluid"
                 />
               </td>
@@ -79,10 +80,10 @@ export default {
   },
   computed: {
     images: function () {
-      return this.responses.map((elem) => {
+      return this.responses.map((response) => {
         return {
-          src: "/storage/" + elem.response_info.image,
-          title: "",
+          src: "/storage/" + response.response_info.image,
+          title: response.response_info.image_alt || "",
         };
       });
     },

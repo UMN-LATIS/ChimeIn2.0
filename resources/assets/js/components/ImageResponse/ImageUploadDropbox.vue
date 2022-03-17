@@ -20,6 +20,7 @@
         class="image-upload__preview"
         :src="imageSrc"
         alt="preview of image to be submitted with response"
+        data-cy="image-preview"
       />
 
       <input
@@ -28,6 +29,7 @@
         @change="onFileChange"
         id="image-upload-file"
         accept="image/gif, image/png, image/jpeg, image/webp"
+        data-cy="image-dropzone"
       />
 
       <div class="image-upload__status">

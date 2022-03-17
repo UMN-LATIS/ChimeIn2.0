@@ -3,7 +3,7 @@
     <section v-if="hasResponse" class="response">
       <figure class="response__figure">
         <img
-          data-cy="image-thumbnail"
+          data-cy="image-response-thumbnail"
           class="responsive-img imageContainer"
           :src="'/storage/' + response.response_info.image"
           :alt="response.response_info.image_alt"
@@ -37,6 +37,7 @@
           v-model="imageAlt"
           placeholder="Describe your image"
           visuallyHideLabel
+          data-cy="alt-text-input"
         />
       </div>
     </div>
