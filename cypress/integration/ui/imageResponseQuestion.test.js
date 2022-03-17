@@ -199,19 +199,19 @@ describe("image response", () => {
 
         // faculty should see all responses
 
-        //   // login as faculty
-        //   cy.login("faculty");
-        //   cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
-        //   cy.get("[data-cy=present-question-button]").click();
-        //   cy.get("[data-cy=show-results-button]").click();
+        // login as faculty
+        cy.login("faculty");
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+        cy.get("[data-cy=present-question-button]").click();
+        cy.get("[data-cy=show-results-button]").click();
 
-        //   // expect goldy image to be displayed
-        //   // just checking extension for now, as name could have changed
-        //   // to the image's hash
-        //   cy.get("[data-cy=image-responses]")
-        //     .find("img")
-        //     .should("have.attr", "src")
-        //     .should("include", ".jpg");
+        // expect goldy image to be displayed
+        cy.get("[data-cy=image-responses] img")
+          .should("have.length", 2)
+          .then((images) => {
+            expect(images[0].alt).to.equal("Goldy");
+            expect(images[1].alt).to.equal("Goldy with Cape");
+          });
       });
   });
 });

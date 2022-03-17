@@ -84,6 +84,7 @@ export default {
         return {
           src: "/storage/" + response.response_info.image,
           title: response.response_info.image_alt || "",
+          alt: response.response_info.image_alt || "",
         };
       });
     },
