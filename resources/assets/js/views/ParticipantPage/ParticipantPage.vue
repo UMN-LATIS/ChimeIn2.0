@@ -295,16 +295,35 @@ export default {
 };
 </script>
 
+<style>
+.btn.btn-primary {
+  color: var(--gray-darker);
+}
+</style>
+
 <style scoped>
 @media (max-width: 30rem) {
   .participant-page__main {
     padding: 0;
   }
 }
-
-.nav-item {
-  width: 50%;
+.nav-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   text-align: center;
+  margin-bottom: -13px;
+}
+
+.nav-link {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--gray-dark);
+}
+
+.nav-link.active {
+  border-top: 3px solid var(--gold-light);
+  height: 100%;
+  font-weight: bold;
 }
 .tab-pane {
   padding: 2rem 1rem;
