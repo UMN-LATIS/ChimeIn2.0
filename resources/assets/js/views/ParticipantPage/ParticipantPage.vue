@@ -296,6 +296,12 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 30rem) {
+  .participant-page__main {
+    padding: 0;
+  }
+}
+
 .nav-item {
   width: 50%;
   text-align: center;
