@@ -5,15 +5,16 @@
       :canvasUrl="canvasCourseUrl"
       :joinUrl="joinUrl"
     />
-    <NavBar title="Home" :user="user" :link="'/'" />
+    <NavBar :title="isCanvasChime ? null : 'Home'" :user="user" link="/" />
     <ErrorDialog />
     <div v-if="error" class="alert alert-warning" role="alert">
       {{ error }}
     </div>
     <vue-announcer />
-    <div class="container">
+    <main class="participant-page__main container">
       <div class="card">
-        <div class="card-header text-center">
+        <!-- nav tabs -->
+        <div class="card-header">
           <ul class="nav nav-tabs card-header-tabs">
             <li class="nav-item">
               <a
@@ -25,18 +26,44 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#pastQuestions"
-                >Closed Questions</a
+                >Answered Questions</a
               >
             </li>
           </ul>
         </div>
-        <div class="card-body">
-          <div class="tab-content">
-            <div
-              id="currentQuestions"
-              class="tab-pane container active"
-              aria-live="polite"
-            >
+
+        <div class="tab-content">
+          <!-- openQuestions -->
+          <div
+            id="currentQuestions"
+            class="tab-pane container active"
+            aria-live="polite"
+          >
+            <div v-if="ltiLaunchWarning">
+              <h1 class="text-center">
+                Whoops! You Didn't Follow the Link in Canvas
+              </h1>
+              <p class="text-left">
+                This chime is linked to Canvas. To participate, join this chime
+                by clicking the assignment link in your Canvas course.
+              </p>
+
+              <a class="btn btn-primary" :href="canvasCourseUrl">
+                Go to Canvas
+              </a>
+              <p class="mt-3">
+                <small class="text-muted">
+                  If you believe this message is in error, you may use
+                  <a href="#" @click.prevent="forceLoad = true">this link</a>
+                  to force the chime to load. You may not recieve credit for
+                  your responses. Please contact your instructor or
+                  <a href="mailto:help@umn.edu" class="text-muted"
+                    >help@umn.edu</a
+                  >.
+                </small>
+              </p>
+            </div>
+            <template v-else>
               <div
                 v-if="filteredSession.length < 1"
                 key="none"
@@ -54,21 +81,23 @@
                   @updateResponse="updateResponse"
                 />
               </transition-group>
-            </div>
-            <div id="pastQuestions" class="tab-pane container">
-              <div v-if="responses.length < 1" class="text-center">
-                <h1>No Closed Questions</h1>
-              </div>
-              <Response
-                v-else
-                v-for="(response, i) in sortedResponses"
-                :key="i"
-                :chime="chime"
-                :response="response"
-              />
-            </div>
+            </template>
           </div>
-          <p class="text-center m-0">
+
+          <!-- answered Questions -->
+          <div id="pastQuestions" class="tab-pane container">
+            <div v-if="responses.length < 1" class="text-center">
+              <h1>No Answered Questions</h1>
+            </div>
+            <Response
+              v-else
+              v-for="(response, i) in sortedResponses"
+              :key="i"
+              :chime="chime"
+              :response="response"
+            />
+          </div>
+          <p class="text-center m-0" v-if="!ltiLaunchWarning">
             <small v-if="chime.lti_course_title" class="text-muted"
               >Not seeing the prompts you're looking for? Make sure you've
               followed the correct assignment link from Canvas.
@@ -83,15 +112,10 @@
           </p>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
-<style scoped>
-.nav-item {
-  width: 50%;
-}
-</style>
 <script>
 import get from "lodash/get";
 import ErrorDialog from "../../components/ErrorDialog.vue";
@@ -102,6 +126,7 @@ import ViewModeNotice from "./ViewModeNotice.vue";
 import {
   selectCanvasCourseUrl,
   selectJoinUrl,
+  selectIsCanvasChime,
 } from "../../helpers/chimeSelectors.js";
 
 export default {
@@ -121,6 +146,7 @@ export default {
       error: null,
       timeout: null,
       loadTime: null,
+      forceLoad: false,
     };
   },
   computed: {
@@ -129,6 +155,9 @@ export default {
     },
     joinUrl() {
       return selectJoinUrl(this.chime);
+    },
+    isCanvasChime() {
+      return selectIsCanvasChime(this.chime);
     },
     inParticipantView() {
       const viewMode = get(this, "$route.query.viewMode", null);
@@ -153,6 +182,17 @@ export default {
       }
 
       return [...this.responses].sort(compare);
+    },
+    ltiLaunchWarning: function () {
+      if (
+        !this.forceLoad &&
+        !this.inParticipantView &&
+        !window.lti_launch &&
+        this.isCanvasChime
+      ) {
+        return true;
+      }
+      return false;
     },
   },
   mounted: function () {
@@ -241,13 +281,34 @@ export default {
             );
             console.log("error getting chime:", err.response);
           }
+        })
+        .then(() => {
+          return axios
+            .get("/api/chime/" + this.chimeId + "/responses")
+            .then((res) => {
+              console.log("debug", "Response:", res);
+              this.responses = res.data;
+            });
         });
-
-      axios.get("/api/chime/" + this.chimeId + "/responses").then((res) => {
-        console.log("debug", "Response:", res);
-        this.responses = res.data;
-      });
     },
   },
 };
 </script>
+<style scoped>
+@media (max-width: 30rem) {
+  .participant-page__main {
+    padding: 0;
+  }
+}
+
+.nav-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: flex-end;
+  text-align: center;
+}
+
+.tab-pane {
+  padding: 2rem 1rem;
+}
+</style>

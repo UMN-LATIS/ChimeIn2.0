@@ -4,22 +4,31 @@
     :icon="showMoveIcon ? 'drag_handle' : ''"
     iconClass="handle"
   >
-    <footer class="question-card__footer">
-      <span class="question-card__question-type">{{
-        questionTypeToString
-      }}</span>
+    <header class="question-card__header">
+      <h2 class="question-card__question-type">
+        <router-link
+          :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
+        >
+          {{ questionTypeToString }}
+        </router-link>
+      </h2>
       <Chip :color="totalResponses ? 'primary' : 'muted'" :solid="true"
         >{{ totalResponses }} {{ "Response" | pluralize(totalResponses) }}</Chip
       >
-    </footer>
-    <div class="flow-text question_list_text" v-html="question.text" />
+    </header>
 
-    <component
-      v-if="hasSpecializedQuestionDisplay(questionType)"
-      class="question-card__choice-display"
-      :is="`${questionType}_display`"
-      :question="question"
-    />
+    <router-link
+      :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
+    >
+      <div class="flow-text question_list_text" v-html="question.text" />
+
+      <component
+        v-if="hasSpecializedQuestionDisplay(questionType)"
+        class="question-card__choice-display"
+        :is="`${questionType}_display`"
+        :question="question"
+      />
+    </router-link>
 
     <QuestionForm
       v-if="showEdit"
@@ -42,25 +51,49 @@
         {{ isOpen ? "Open" : "Closed" }}
       </Toggle>
 
-      <CardActionButton
-        data-cy="edit-question-button"
-        icon="edit"
-        @click="handleEditClick"
-        >Edit</CardActionButton
-      >
+      <div class="dropdown question-card__dropdown">
+        <button
+          type="button"
+          data-toggle="dropdown"
+          aria-expanded="false"
+          class="question-card__dropdown-button"
+        >
+          <i class="material-icons">more_vert</i>
+        </button>
+        <ul
+          class="dropdown-menu dropdown-menu-right question-card__dropdown-list"
+          aria-labelledby="moreOptionsDropdownButton"
+        >
+          <li>
+            <CardActionButton
+              class="dropdown-item question-card__action-button"
+              data-cy="edit-question-button"
+              icon="edit"
+              @click="handleEditClick"
+              >Edit</CardActionButton
+            >
+          </li>
 
-      <CardActionButton
-        data-cy="present-question-button"
-        icon="play_circle_outline"
-        :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
-        >Present</CardActionButton
-      >
-      <CardActionButton
-        data-cy="delete-question-button"
-        icon="clear"
-        @click="handleDeleteClick"
-        >Delete</CardActionButton
-      >
+          <li>
+            <CardActionButton
+              class="dropdown-item question-card__action-button"
+              data-cy="present-question-button"
+              icon="play_circle_outline"
+              :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
+              >Present</CardActionButton
+            >
+          </li>
+          <li>
+            <CardActionButton
+              class="dropdown-item question-card__action-button"
+              data-cy="delete-question-button"
+              icon="clear"
+              @click="handleDeleteClick"
+              >Delete</CardActionButton
+            >
+          </li>
+        </ul>
+      </div>
     </template>
   </Card>
 </template>
@@ -74,6 +107,7 @@ import QuestionForm from "../QuestionForm/QuestionForm.vue";
 import MultipleChoiceDisplay from "../../components/MultipleChoice/MultipleChoiceDisplay.vue";
 import HeatmapResponseDisplay from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
 import hasSpecializedQuestionDisplay from "../../helpers/hasSpecializedQuestionDisplay";
+import TextHeatmapResponseDisplay from "../../components/TextHeatmap/TextHeatmapResponseDisplay.vue";
 
 export default {
   components: {
@@ -84,6 +118,7 @@ export default {
     QuestionForm,
     multiple_choice_display: MultipleChoiceDisplay,
     heatmap_response_display: HeatmapResponseDisplay,
+    text_heatmap_response_display: TextHeatmapResponseDisplay,
   },
   props: {
     folder: {
@@ -188,6 +223,9 @@ export default {
 </script>
 
 <style scoped>
+.question-card {
+  line-height: 1.4;
+}
 .open-question-toggle {
   display: flex;
   flex-direction: column;
@@ -201,10 +239,12 @@ export default {
   font-size: 0.8rem;
   font-weight: bold;
 }
-.question-card__footer {
+.question-card__header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
+  gap: 0.25rem;
   margin-bottom: 1rem;
 }
 
@@ -228,6 +268,41 @@ export default {
 
 .total-responses__number {
   font-size: 3rem;
+}
+
+.question-card .question-card__action-button {
+  flex-direction: row;
+  justify-content: left;
+  gap: 0.5rem;
+  padding: 0.25rem 1rem;
+}
+.question-card__dropdown-button {
+  display: block;
+  border: 0;
+  background: transparent;
+  padding: 0.8rem 0;
+}
+
+@media (min-width: 48rem) {
+  .question-card__dropdown .dropdown-menu {
+    display: flex;
+    position: initial;
+    z-index: initial;
+    float: initial;
+    min-width: initial;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: 0;
+  }
+  .question-card .question-card__action-button {
+    flex-direction: column;
+    gap: 0;
+    padding: 0.75rem;
+  }
+  .question-card__dropdown-button {
+    display: none;
+  }
 }
 </style>
 <style>

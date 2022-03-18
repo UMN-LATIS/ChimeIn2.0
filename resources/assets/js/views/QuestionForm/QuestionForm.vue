@@ -348,7 +348,7 @@ export default {
         .catch((err) => {
           this.$store.commit(
             "message",
-            "Could not store this image. Please contact support at latis@umn.edu. The full error was: " +
+            "Could not store this image. Please contact support at latistecharch@umn.edu. The full error was: " +
               err.response
           );
         });

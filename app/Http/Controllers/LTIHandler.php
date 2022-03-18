@@ -32,9 +32,12 @@ class LTIHandler extends Controller
 
 
     public function launch() {
-        
+        // // DON'T SHIP THIS IT'S FOR DOCKER
+        // $_SERVER['SERVER_NAME'] = "127.0.0.1";
         $tool = new ChimeToolProvider();
         $tool->handleRequest();
+        
+        session(['lti_launch' => true]);
         $launchDomain = $tool->resourceLink->getSetting("custom_canvas_api_domain");
         if(!\App::environment('local') && !in_array($launchDomain, $this->allowedDomains)) {
             abort(401, 'LTI Launch from an invalid domain');

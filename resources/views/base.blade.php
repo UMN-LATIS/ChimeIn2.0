@@ -146,6 +146,7 @@
 				</body>
 				
 				<script>window.pusherKey = '{{ env('PUSHER_APP_KEY') }}'</script>
+				<script>window.lti_launch = '{{ session('lti_launch') }}'</script>
 				<script src="{{ mix('js/app.js') }}"></script>
 
 				@yield('footer')

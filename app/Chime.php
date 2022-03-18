@@ -7,11 +7,11 @@ use Sessions;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Chime extends Model
 {
-    use SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
     
     protected $fillable = ['name', 'access_code', 'require_login', 'students_can_view', 'join_instructions', 'only_correct_answers_lti', 'resource_link_pk', 'lti_grade_mode', 'show_folder_title_to_participants'];
 

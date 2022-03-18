@@ -61,3 +61,6 @@ jobs:
         with:
           name: cypress-snapshots
           path: cypress/snapshots
+
+      - name: Execute Unit tests via PHPUnit
+        run: docker-compose exec -T app php artisan test

@@ -1,9 +1,24 @@
 <?php
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(App\Folder::class, function (Faker $faker) {
+class FolderFactory extends Factory
+{
+  protected $model = \App\Folder::class;
+
+  /**
+   * Define the model's default state.
+   *
+   * @return array
+   */
+  public function definition()
+  {
     return [
-        'name' => $faker->name
+      "name" => $this->faker->words(3, true)
     ];
-});
+  }
+
+
+}

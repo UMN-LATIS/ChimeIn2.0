@@ -1,0 +1,34 @@
+{
+  "files": [
+    {
+      "path": "./public/js/app.js",
+      "maxSize": "1 MB"
+    },
+    {
+      "path": "./public/js/folder.js",
+      "maxSize": "1 MB"
+    },
+    {
+      "path": "./public/js/FreeResponseStatistics.js",
+      "maxSize": "1 MB"
+    },
+    {
+      "path": "./public/js/ImageResponseStatistics.js",
+      "maxSize": "1 MB"
+    },
+    {
+      "path": "./public/js/multiplechoicestatistics.js",
+      "maxSize": "1 MB"
+    },
+    {
+      "path": "./public/css/app.css",
+      "maxSize": "1 MB"
+    }
+  ],
+  "ci": {
+    "repoOwner": "UMN-LATIS",
+    "repoName": "ChimeIn2.0",
+    "repoBranchBase": "develop",
+    "trackBranches": ["main", "develop"]
+  }
+}

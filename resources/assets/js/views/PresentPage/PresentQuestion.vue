@@ -26,7 +26,7 @@
       <JoinPanel
         v-if="showJoinInstructions"
         :chime="chime"
-        :folderName="folder.name"
+        :includeFullUrl="false"
         class="present-page__join-panel mb-2"
       />
 
@@ -86,7 +86,7 @@
               Session Responses:
               {{ current_session ? current_session.responses.length : 0 }}
             </li>
-            <li v-else>Total Responses: {{ total_responses }}</li>
+            <li>Total Responses: {{ total_responses }}</li>
             <li>Connected Participants: {{ usersCount - 1 }}</li>
           </ul>
         </div>
@@ -100,7 +100,7 @@
 <script>
 import PresentPrompt from "./PresentPrompt.vue";
 import PresentResults from "./PresentResults.vue";
-import JoinPanel from "./JoinPanel.vue";
+import JoinPanel from "../../components/JoinPanel.vue";
 
 export default {
   components: {

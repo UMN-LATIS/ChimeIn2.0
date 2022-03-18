@@ -1,129 +1,212 @@
 <template>
-  <div>
-    <div v-if="response.response_info">
-      <img
-        v-if="!create_new_response"
-        data-cy="image-thumbnail"
-        class="responsive-img imageContainer"
-        :src="'/storage/' + response.response_info.image"
-      />
+  <div class="image-response-input">
+    <section v-if="hasResponse" class="response">
+      <figure class="response__figure">
+        <img
+          data-cy="image-response-thumbnail"
+          class="responsive-img imageContainer"
+          :src="'/storage/' + response.response_info.image"
+          :alt="response.response_info.image_alt"
+        />
+        <figcaption
+          class="response__figcaption"
+          v-if="response.response_info.image_alt"
+        >
+          {{ response.response_info.image_alt }}
+        </figcaption>
+      </figure>
+    </section>
+
+    <div v-if="isOpenQuestion">
+      <div class="dropbox-group">
+        <ImageUploadDropbox
+          class="dropbox-group__uploader"
+          v-if="chime"
+          :imageSrc="tempImagePath"
+          :uploadTo="`/api/chime/${chime.id}/image`"
+          @imageUploaded="handleImageUploaded"
+          @removePreviewImage="handlePreviewRemoveImage"
+        >
+          Drag here or <u>browse</u> to select your image.
+        </ImageUploadDropbox>
+        <TextAreaInput
+          v-if="isOpenQuestion"
+          class="dropbox-group__alt-input"
+          label="Alt Text"
+          name="alt-text"
+          v-model="imageAlt"
+          placeholder="Describe your image"
+          visuallyHideLabel
+          data-cy="alt-text-input"
+        />
+      </div>
     </div>
-    <div v-if="!disabled" class="dropbox">
-      <input
-        data-cy="image-dropzone"
-        type="file"
-        accept="image/jpeg, image/heic, image/png"
-        class="form-control-file input-file"
-        @change="attachFile($event.target.name, $event.target.files)"
-      />
-      <p v-if="isInitial">
-        Drag your image here to upload<br />
-        or click to browse
-      </p>
-      <p v-if="!isInitial && !isSaving">
-        Drag your image here to upload<br />
-        or click to browse to replace your image
-      </p>
-      <p v-if="isSaving">Uploading file...</p>
-    </div>
-    <p v-if="error">
-      <strong>{{ error }}</strong>
-    </p>
-    <div
-      v-if="
-        question.allow_multiple &&
-        !disabled &&
-        response &&
-        response.response_info
-      "
-      class="form-group"
-    >
-      <button class="btn btn-primary" @click="clear">
-        Clear and Start a New Response
+    <footer class="image-response__footer" v-if="isOpenQuestion">
+      <button
+        class="btn btn-outline-primary"
+        :disabled="!hasTempImage"
+        @click="handleSave"
+      >
+        {{ saveButtonText }}
       </button>
-    </div>
+
+      <!-- when multiple responses are allowed, this button allows a user to override creating a new response and instead replace previous response -->
+      <button
+        v-if="question.allow_multiple"
+        class="btn btn-link"
+        @click="handleUpdatePreviousResponse"
+        :disabled="!hasTempImage"
+      >
+        Update Previous
+      </button>
+    </footer>
   </div>
 </template>
 
-<style>
-.imageContainer {
-  max-width: 400px;
-  max-height: 400px;
-}
-
-.dropbox {
-  outline: 2px dashed grey; /* the dash box */
-  outline-offset: -10px;
-  background: lightcyan;
-  color: dimgray;
-  padding: 10px 10px;
-  min-height: 200px; /* minimum height */
-  position: relative;
-  cursor: pointer;
-}
-
-.input-file {
-  opacity: 0; /* invisible but it's there! */
-  width: 100%;
-  height: 200px;
-  position: absolute;
-  cursor: pointer;
-}
-
-.dropbox:hover {
-  background: lightblue; /* when mouse over to the drop zone, change color */
-}
-
-.dropbox p {
-  font-size: 1.2em;
-  text-align: center;
-  padding: 50px 0;
-}
-</style>
-
 <script>
+import ImageUploadDropbox from "./ImageUploadDropbox.vue";
+import TextAreaInput from "../TextAreaInput.vue";
+import { get } from "lodash";
+
 export default {
+  components: { ImageUploadDropbox, TextAreaInput },
   props: ["question", "response", "disabled", "chime"],
   data() {
     return {
-      isInitial: this.response ? false : true,
       isSaving: false,
-      create_new_response: false,
-      error: null,
+      tempImageSrc: null,
+      tempImageName: null,
+      imageAlt: "",
     };
   },
-  methods: {
-    clear: function () {
-      this.create_new_response = true;
+  computed: {
+    responseImage() {
+      const filename = get(this.response, "response_info.image", null);
+      return {
+        src: filename ? `/storage/${filename}` : null,
+        alt: get(this.response, "response_info.image_alt", ""),
+      };
     },
-    attachFile: function (event, fileList) {
-      this.isSaving = true;
-      this.isInitial = false;
-      let formData = new FormData();
-      Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append("image", fileList[x], fileList[x].name);
-      });
+    shouldAddNewResponse() {
+      return this.question.allow_multiple;
+    },
+    hasResponse() {
+      return !!this.responseImage.src;
+    },
+    hasTempImage() {
+      return !!this.tempImageSrc;
+    },
+    isOpenQuestion() {
+      return !this.disabled;
+    },
+    tempImagePath() {
+      return this.tempImageSrc ? `/storage/${this.tempImageSrc}` : null;
+    },
+    saveButtonText() {
+      if (!this.hasResponse) {
+        return "Save";
+      }
 
-      axios
-        .post("/api/chime/" + this.chime.id + "/image", formData)
-        .then((res) => {
-          const response = {
-            question_type: "image_response",
-            image: res.data.image,
-            image_name: fileList[0].name,
-          };
-          this.isSaving = false;
-          // this.isInitial= true;
-          this.$emit("recordresponse", response, this.create_new_response);
-          this.create_new_response = false;
-          this.error = null;
-        })
-        .catch((err) => {
-          if (err.response) {
-            this.error = err.response.data.message;
-          }
-        });
+      if (this.question.allow_multiple) {
+        return "Add Response";
+      }
+
+      return "Update";
+    },
+  },
+  methods: {
+    resetForm() {
+      this.tempImageSrc = null;
+      this.tempImageName = null;
+      this.imageAlt = "";
+    },
+    handleImageUploaded({ src, name }) {
+      this.tempImageSrc = src;
+      this.tempImageName = name;
+    },
+    handlePreviewRemoveImage() {
+      this.tempImageSrc = null;
+      this.tempImageName = null;
+    },
+    handleUpdatePreviousResponse() {
+      const response = {
+        question_type: "image_response",
+        image: this.tempImageSrc,
+        image_name: this.tempImageName,
+        image_alt: this.imageAlt,
+      };
+
+      // override shouldAddNewResponse by setting last arg to false
+      // this will allow the user to replace the previous response with this one
+      this.$emit("recordresponse", response, false);
+      this.resetForm();
+    },
+    handleSave() {
+      const response = {
+        question_type: "image_response",
+        image: this.tempImageSrc,
+        image_name: this.tempImageName,
+        image_alt: this.imageAlt,
+      };
+
+      this.$emit("recordresponse", response, this.shouldAddNewResponse);
+      this.resetForm();
     },
   },
 };
 </script>
+
+<style scoped>
+.response-heading {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+  color: #777;
+  margin: 0;
+}
+.response-header {
+  margin-bottom: 0.5rem;
+}
+
+.imageContainer {
+  padding: 0.5rem;
+}
+
+.response__figure {
+  display: inline-block;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+.response__figcaption {
+  font-size: 0.75rem;
+  padding: 1rem;
+  background: #eee;
+}
+
+img {
+  display: block;
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.card {
+  max-width: 30rem;
+}
+.dropbox-group {
+  background: #eee;
+}
+.dropbox-group__alt-input {
+  padding: 0.5rem;
+  margin-top: -0.25rem;
+}
+</style>
+
+<style>
+.dropbox-group__alt-input textarea {
+  background: #fafafa;
+  font-size: 0.75rem;
+  border-radius: 0;
+}
+</style>
