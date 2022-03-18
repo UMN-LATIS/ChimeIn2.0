@@ -307,11 +307,12 @@ export default {
     padding: 0;
   }
 }
+
 .nav-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: flex-end;
   text-align: center;
-  margin-bottom: -13px;
 }
 
 .nav-link {
