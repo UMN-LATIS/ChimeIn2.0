@@ -308,17 +308,6 @@ export default {
   text-align: center;
 }
 
-.nav-link {
-  font-size: 12px;
-  color: var(--gray-darker);
-  text-transform: uppercase;
-}
-
-.nav-link.active {
-  border-top: 3px solid var(--gold);
-  font-weight: bold;
-}
-
 .tab-pane {
   padding: 2rem 1rem;
 }
