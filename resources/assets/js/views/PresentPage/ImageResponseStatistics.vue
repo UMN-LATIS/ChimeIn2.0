@@ -21,7 +21,7 @@
           </lightbox>
         </div>
 
-        <table v-if="filterImages" class="table">
+        <table v-if="filterImages" class="table" data-cy="responses-table">
           <thead>
             <tr>
               <th scope="col">Image</th>
@@ -35,10 +35,13 @@
               <td style="width: 15%">
                 <img
                   :src="'/storage/' + response.response_info.image"
+                  :alt="response.response_info.image_alt || ''"
                   class="img-fluid"
                 />
               </td>
-              <td></td>
+              <td>
+                {{ response.response_info.image_alt || "" }}
+              </td>
               <td>
                 {{ question.anonymous ? "Anonymous" : response.user.name }}
               </td>
@@ -79,10 +82,11 @@ export default {
   },
   computed: {
     images: function () {
-      return this.responses.map((elem) => {
+      return this.responses.map((response) => {
         return {
-          src: "/storage/" + elem.response_info.image,
-          title: "",
+          src: "/storage/" + response.response_info.image,
+          title: response.response_info.image_alt || "",
+          alt: response.response_info.image_alt || "",
         };
       });
     },
