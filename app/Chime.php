@@ -54,12 +54,12 @@ LIMIT 1');
     public function lti13_resource_link() {
         return $this->belongsTo(LTI13ResourceLink::class);
     }
+
+    public function presenters() {
+      return $this->usersWithPermission(CHIMEIN_PRESENTER);
+    }
+
+    public function usersWithPermission(permissionNumber) {
+      return $this->users()->wherePivot('permission_number', permissionNumber);
+    }
 }
-
-// Chime::deleting(function($chime) {
-//     $users = $chime->users()->get();
-
-//     foreach($users as $u) {
-//         $u->chimes()->detach($chime);
-//     }
-// });
