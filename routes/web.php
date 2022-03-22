@@ -7,6 +7,8 @@ use App\Http\Controllers\ChimeController;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\PresentController;
+use App\Http\Controllers\UsersController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +37,9 @@ Route::get("/ltiSelectionPromptDemo", function() {
 Route::group(['middleware' => ['shibinjection']], function () {
     
     Route::resource('admin/users', 'Admin\UsersController');
+
+    Route::get('/api/users/self', 'UsersController@getCurrentUser');
+
     Route::get('/', 'HomeController@index')->name("home");
     Route::get('/loginAndRedirect', 'HomeController@loginAndRedirect');
     Route::model('chime', '\App\Chime');
