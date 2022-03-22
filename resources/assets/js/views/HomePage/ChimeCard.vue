@@ -32,11 +32,40 @@
     </div>
 
     <template #actions>
-      <CardActionButton icon="clear" @click="$emit('removeChime', chime)" />
+      <CardActionButton icon="clear" @click="toggleRemoveConfirmModal" />
     </template>
+
+    <Portal>
+      <Modal
+        :show="isRemoveConfirmModalOpen"
+        @close="toggleRemoveConfirmModal"
+        class="chime-card__modal"
+      >
+        <h2>Remove yourself?</h2>
+        <p>You will no longer be able to access this chime.</p>
+        <div class="modal__button-group">
+          <button
+            class="btn btn-danger modal__button"
+            @click="handleRemoveSelf"
+          >
+            <i class="material-icons modal__button-icon">person_remove</i>
+            Remove Myself
+          </button>
+          <button
+            v-if="canCurrentUserEdit"
+            class="btn btn-outline-danger modal__button"
+            @click="handleDeleteChime"
+          >
+            <i class="material-icons modal__button-icon">delete</i>
+            Delete Chime
+          </button>
+        </div>
+      </Modal>
+    </Portal>
   </Card>
 </template>
 <script>
+import { Portal } from "@linusborg/vue-simple-portal";
 import toHyphenatedCode from "../../helpers/toHyphenatedCode";
 import Card from "../../components/Card.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
@@ -49,6 +78,7 @@ import {
 import isPermittedOnChime from "../../helpers/isPermittedOnChime";
 import { PERMISSIONS } from "../../helpers/constants";
 import DetailsItem from "../../components/DetailsItem.vue";
+import Modal from "../../components/Modal.vue";
 
 export default {
   components: {
@@ -56,6 +86,8 @@ export default {
     CardActionButton,
     Chip,
     DetailsItem,
+    Modal,
+    Portal,
   },
   props: {
     chime: {
@@ -71,35 +103,13 @@ export default {
       default: false,
     },
   },
+  emits: ["deleteChime", "removeSelfFromChime"],
   data() {
     return {
       showCard: true,
+      isRemoveConfirmModalOpen: false,
     };
   },
-  // methods: {
-  //   removeChime() {
-  //     // if user can edit, this will delete the chime
-  //     // if not, this will remove the user from the chime
-  //     const confirmMessage = this.canCurrentUserEdit
-  //       ? `Delete chime '${this.chime.name}'?`
-  //       : `Are you sure you want to remove yourself from '${this.chime.name}'?`;
-
-  //     const confirmation = window.confirm(confirmMessage);
-
-  //     if (!confirmation) return;
-
-  //     // optimistic UI: hide card unless failure
-  //     this.showCard = false;
-
-  //     axios
-  //       .delete("/api/chime/" + this.chime.id, { timeout: 2000 })
-  //       .then(() => this.$emit("change"))
-  //       .catch((err) => {
-  //         this.showCard = true;
-  //         console.error("Error in removeChime request.", err);
-  //       });
-  //   },
-  // },
   computed: {
     canCurrentUserEdit() {
       return isPermittedOnChime(PERMISSIONS.EDIT, this.chime);
@@ -123,6 +133,17 @@ export default {
       return window.location;
     },
   },
+  methods: {
+    handleDeleteChime() {
+      console.log("delete chime");
+    },
+    handleRemoveSelf() {
+      console.log("remove self");
+    },
+    toggleRemoveConfirmModal() {
+      this.isRemoveConfirmModalOpen = !this.isRemoveConfirmModalOpen;
+    },
+  },
 };
 </script>
 
@@ -134,5 +155,23 @@ export default {
 }
 .chime-card__chip-group {
   margin-left: 1rem;
+}
+
+.modal__button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modal__button {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+@media (max-width: 38rem) {
+  .modal__button-group {
+    flex-direction: column;
+  }
 }
 </style>

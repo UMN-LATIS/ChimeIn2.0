@@ -63,37 +63,9 @@
             :showMoveIcon="orderedChimes.length > 1"
             :to="getUserLinkToChime({ user, chime })"
             @change="get_chimes"
-            @removeChime="handleRemoveChime"
+            @deleteChime="console.log('baleeted event')"
+            @removeSelfFromChime="console.log('remove self event')"
           />
-          <Modal :show="isRemoveConfirmOpen">
-            <h2>Remove yourself?</h2>
-            <p>You will no longer be able to access this chime.</p>
-            <div class="d-flex justify-content-between">
-              <button
-                class="btn btn-outline-secondary align-items-center d-flex"
-                @click="isRemoveConfirmOpen = false"
-              >
-                Cancel
-              </button>
-              <div class="align-items-center d-flex">
-                <button
-                  v-if="this.canCurrentUserEdit"
-                  class="btn btn-outline-danger align-items-center d-flex mr-2"
-                  @click="deleteChime"
-                >
-                  <i class="material-icons mr-2">delete</i>
-                  Delete Chime
-                </button>
-                <button
-                  class="btn btn-danger align-items-center d-flex"
-                  @click="removeSelfFromChime"
-                >
-                  <i class="material-icons mr-2">person_remove</i>
-                  Remove Myself
-                </button>
-              </div>
-            </div>
-          </Modal>
         </div>
         <div v-else class="my-3">
           <p v-if="user.guest_user">
@@ -113,13 +85,11 @@ import orderBy from "lodash/orderBy";
 import { EventBus } from "../../EventBus.js";
 import ChimeCard from "./ChimeCard.vue";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
-import Modal from "../../components/Modal.vue";
 
 export default {
   components: {
     ChimeCard,
     ChimeManagementOptions,
-    Modal,
   },
   props: ["user"],
   data() {
@@ -135,7 +105,7 @@ export default {
     };
   },
   computed: {
-    orderedChimes: function () {
+    orderedChimes() {
       return orderBy(this.chimes, "created_at", ["desc"]);
     },
   },
@@ -191,39 +161,38 @@ export default {
           console.error("error", "Error in get chimes:", err.response);
         });
     },
-    removeSelfFromChime() {
-      console.log("removeSelfFromChime");
-    },
-    deleteChime() {
-      // if user can edit, this will delete the chime
-      // if not, this will remove the user from the chime
-      // const confirmMessage = this.canCurrentUserEdit
-      //   ? `Delete chime '${this.chime.name}'?`
-      //   : `Are you sure you want to remove yourself from '${this.chime.name}'?`;
+    // removeSelfFromChime() {
+    //   console.log("removeSelfFromChime");
+    // },
+    // deleteChime() {
+    //   // if user can edit, this will delete the chime
+    //   // if not, this will remove the user from the chime
+    //   // const confirmMessage = this.canCurrentUserEdit
+    //   //   ? `Delete chime '${this.chime.name}'?`
+    //   //   : `Are you sure you want to remove yourself from '${this.chime.name}'?`;
 
-      const confirmation = window.confirm(
-        `Delete chime ${this.modalChime.name}?`
-      );
+    //   const confirmation = window.confirm(
+    //     `Delete chime ${this.modalChime.name}?`
+    //   );
 
-      if (!confirmation) return;
+    //   if (!confirmation) return;
 
-      // optimistic UI: hide card unless failure
-      this.showCard = false;
-      this.isRemoveConfirmOpen = false;
+    //   // optimistic UI: hide card unless failure
+    //   this.showCard = false;
+    //   this.isRemoveConfirmOpen = false;
 
-      axios
-        .delete("/api/chime/" + this.modalChime.id, { timeout: 2000 })
-        .then(() => this.$emit("change"))
-        .catch((err) => {
-          this.showCard = true;
-          console.error("Error in removeChime request.", err);
-        });
-    },
-    handleRemoveChime(chime) {
-      console.log("handleRemoveChime", chime);
-      this.isRemoveConfirmOpen = true;
-      this.modalChime = chime;
-    },
+    //   axios
+    //     .delete("/api/chime/" + this.modalChime.id, { timeout: 2000 })
+    //     .then(() => this.$emit("change"))
+    //     .catch((err) => {
+    //       this.showCard = true;
+    //       console.error("Error in removeChime request.", err);
+    //     });
+    // },
+    // handleRemoveChime(chime) {
+    //   this.isRemoveConfirmOpen = true;
+    //   this.modalChime = chime;
+    // },
   },
 };
 </script>

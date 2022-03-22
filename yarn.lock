@@ -1166,6 +1166,13 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@linusborg/vue-simple-portal@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@linusborg/vue-simple-portal/-/vue-simple-portal-0.1.5.tgz#d21ec54d3345713de7985e042b89e8ccb74833f8"
+  integrity sha512-dq+oubEVW4UabBoQxmH97GiDa+F6sTomw4KcXFHnXEpw69rdkXFCxo1WzwuvWjoLiUVYJTyN1dtlUvTa50VcXg==
+  dependencies:
+    nanoid "^3.1.20"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -7016,6 +7023,11 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.npmjs.org/mute-stream/-/mute-stream-0.0.7.tgz"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
+
+nanoid@^3.1.20:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.1.tgz#6347a18cac88af88f58af0b3594b723d5e99bb35"
+  integrity sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==
 
 nanoid@^3.1.30:
   version "3.2.0"
