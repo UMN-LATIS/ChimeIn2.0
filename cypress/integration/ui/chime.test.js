@@ -62,6 +62,11 @@ describe("chime UI", () => {
     });
   });
 
+  context("when authenticated as a student", () => {
+    it("lets student remove themselves from the chime");
+    it("does not show an option to delete a chime");
+  });
+
   context("when authenticated as faculty", () => {
     beforeEach(() => {
       cy.login("faculty");
@@ -76,6 +81,10 @@ describe("chime UI", () => {
       cy.url().should("match", /chime\/[0-9]+$/);
       cy.get("h1").should("contain", "Test Chime");
     });
+
+    it("deletes a chime");
+    it("removes self from a chime when if not the only presenter");
+    it("shows error when removing self from chime if the only presenter");
 
     it("show a spinner while waiting for chime data to load", () => {
       cy.visit("/");
