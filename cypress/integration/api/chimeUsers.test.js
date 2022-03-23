@@ -50,7 +50,52 @@ describe("chimeUser api", () => {
       });
   });
 
-  it("does not allow participants/guests to change role");
+  it("does not allow participants/guests get users", () => {
+    cy.logout();
+    cy.login("student");
+    cy.visit("/join/" + testChime.access_code);
+
+    api
+      .getChimeUsers({ chimeId: testChime.id }, { failOnStatusCode: false })
+      .then((response) => {
+        expect(response.status).to.equal(403);
+      });
+  });
+
+  it("does not allow participants/guests to change role", () => {
+    let student = null;
+
+    cy.logout();
+    cy.login("student");
+    cy.visit("/join/" + testChime.access_code)
+      .then(() => {
+        // get a valid student ID
+        cy.login("faculty");
+        return api.getChimeUsers(
+          { chimeId: testChime.id },
+          { failOnStatusCode: false }
+        );
+      })
+      .then((users) => {
+        student = users.find((u) => u.permission_number === 100);
+      })
+      .then(() => {
+        cy.logout();
+        cy.login("student");
+        return api.updateChimeUser(
+          {
+            chimeId: testChime.id,
+            userId: student.id,
+            permissionNumber: 300,
+          },
+          { failOnStatusCode: false }
+        );
+      })
+      .then((response) => {
+        expect(response.status).to.equal(403);
+      });
+  });
+
   it("gets info about current user");
 
   // it("should remove a user from a chime", () => {
