@@ -1,4 +1,4 @@
-import * as api from "./chime.js";
+import * as api from "./user.js";
 
 describe("/api/users", () => {
   beforeEach(() => {
