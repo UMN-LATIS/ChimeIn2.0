@@ -110,13 +110,6 @@ describe("chimeUser api", () => {
         student = users[1];
         expect(users).to.have.length(2);
 
-        // promote student to presenter so that
-        // api.updateChimeUser({
-        //   chimeId: testChime.id,
-        //   userId: user.id,
-        //   permissionNumber: 300,
-        // });
-
         api.removeChimeUser({ chimeId: testChime.id, userId: student.id });
       })
       .then(() => api.getChimeUsers({ chimeId: testChime.id }))
@@ -127,9 +120,72 @@ describe("chimeUser api", () => {
       });
   });
 
-  it("lets presenters remove another presenter from a chime");
+  it("lets presenters remove another presenter from a chime", () => {
+    let faculty = null;
+    let student = null;
 
-  it("lets participants remove themselves");
+    cy.logout();
+    cy.login("student");
+    cy.visit("/join/" + testChime.access_code);
+    cy.login("faculty");
+
+    api
+      .getChimeUsers({ chimeId: testChime.id })
+      .then((users) => {
+        [faculty, student] = users;
+        expect(users).to.have.length(2);
+
+        api.updateChimeUser({
+          chimeId: testChime.id,
+          userId: student.id,
+          permissionNumber: 300,
+        });
+      })
+      .then(() => {
+        // now that the student's a presenter,
+        // they should be able to remove the faculty
+        cy.login("student");
+        api.removeChimeUser({ chimeId: testChime.id, userId: faculty.id });
+      })
+      .then(() => api.getChimeUsers({ chimeId: testChime.id }))
+      .then((users) => {
+        // only the faculty remains
+        expect(users).to.have.length(1);
+        expect(users[0].email).to.equal("latistecharch+student@umn.edu");
+      });
+  });
+
+  it("lets participants remove themselves with userId = 'self'", () => {
+    // let faculty = null;
+    // let student = null;
+
+    cy.logout();
+    cy.login("student");
+    cy.visit("/join/" + testChime.access_code);
+    cy.login("faculty");
+
+    api
+      .getChimeUsers({ chimeId: testChime.id })
+      .then((users) => {
+        // [faculty, student] = users;
+        expect(users).to.have.length(2);
+      })
+      .then(() => {
+        // now that the student's a presenter,
+        // they should be able to remove the faculty
+        cy.login("student");
+        api.removeChimeUser({ chimeId: testChime.id, userId: "self" });
+      })
+      .then(() => {
+        cy.login("faculty");
+        return api.getChimeUsers({ chimeId: testChime.id });
+      })
+      .then((users) => {
+        // only the faculty remains
+        expect(users).to.have.length(1);
+        expect(users[0].email).to.equal("latistecharch+faculty@umn.edu");
+      });
+  });
   it("doesnt let participants delete a chime");
 
   it("lets presenters remove themselves when there are other presenters");
