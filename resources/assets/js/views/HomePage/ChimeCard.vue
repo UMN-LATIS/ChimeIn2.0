@@ -1,5 +1,5 @@
 <template>
-  <Card class="chime-card" v-show="showCard">
+  <Card class="chime-card" v-if="showCard">
     <router-link :to="to">
       <header class="chime-card__header">
         <h1 class="chime-card__title">
@@ -31,7 +31,11 @@
       </div>
     </div>
     <template #actions>
-      <CardActionButton icon="clear" @click="toggleRemoveConfirmModal" />
+      <CardActionButton
+        icon="clear"
+        data-cy="remove-button"
+        @click="toggleRemoveConfirmModal"
+      />
     </template>
 
     <Portal>
@@ -56,6 +60,7 @@
             v-if="canRemoveSelf"
             class="btn btn-danger modal__button"
             @click="handleRemoveSelf"
+            data-cy="modal__remove-self-button"
           >
             <i class="material-icons modal__button-icon">person_remove</i>
             Remove Myself
@@ -68,6 +73,7 @@
               'btn-outline-danger': !isDeletePrimaryModalAction,
             }"
             @click="handleDeleteChime"
+            data-cy="modal__delete-chime-button"
           >
             <i class="material-icons modal__button-icon">delete</i>
             Delete Chime
@@ -180,8 +186,7 @@ export default {
 
       axios
         .delete(`/api/chime/${this.chime.id}/users/self`, { timeout: 2000 })
-        .then((response) => console.log("response", response))
-        // .then(() => this.$emit("change"))
+        .then(() => this.$emit("change"))
         .catch((err) => {
           this.showCard = true;
           console.error("Error in removeChime request.", err);

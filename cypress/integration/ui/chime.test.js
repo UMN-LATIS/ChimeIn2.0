@@ -63,7 +63,43 @@ describe("chime UI", () => {
   });
 
   context("when authenticated as a student", () => {
-    it("lets student remove themselves from the chime");
+    it("lets student remove themselves from the chime", () => {
+      let testChime;
+
+      cy.login("faculty");
+      api
+        .createChimeFolderQuestion({
+          chimeName: "Test Chime",
+          folderName: "Test Folder",
+          questionText,
+          questionResponses,
+        })
+        .then(({ chime, folder, question }) => {
+          testChime = chime;
+
+          api.openQuestion({
+            chimeId: chime.id,
+            folderId: folder.id,
+            questionId: question.id,
+          });
+        })
+        .then(() => {
+          // as a student, join the chime, then go back to the chime list
+          cy.login("student");
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.visit("/");
+        })
+        .then(() => {
+          // as a student, remove themselves from the chime
+          cy.get('[data-cy="remove-button"]').click();
+          cy.get('[data-cy="modal__remove-self-button"]').click();
+        })
+        .then(() => {
+          // chime should be gone
+          cy.contains("Test Chime").should("not.exist");
+          cy.contains("access to 0 chimes").should("exist");
+        });
+    });
     it("does not show an option to delete a chime");
   });
 
