@@ -132,7 +132,7 @@ describe("chime UI", () => {
         })
         .then(() => {
           // Only the remove myself button should be visible
-          cy.contains("Delete").should("not.be.visible");
+          cy.get(".modal__button-group").should("not.contain.text", "Delete");
           cy.contains("Leave Chime").should("be.visible");
         });
     });
