@@ -148,9 +148,6 @@ describe("chimeUser api", () => {
   });
 
   it("lets participants remove themselves with userId = 'self'", () => {
-    // let faculty = null;
-    // let student = null;
-
     cy.logout();
     cy.login("student");
     cy.visit("/join/" + testChime.access_code);
@@ -159,7 +156,6 @@ describe("chimeUser api", () => {
     api
       .getChimeUsers({ chimeId: testChime.id })
       .then((users) => {
-        // [faculty, student] = users;
         expect(users).to.have.length(2);
       })
       .then(() => {
