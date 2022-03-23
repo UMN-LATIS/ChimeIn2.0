@@ -225,11 +225,10 @@ class ChimeController extends Controller
 
       $chime = Auth::user()->chimes()->findOrFail($chimeId);
       $chimeUser = $chime->users()->findOrFail($userId);
-      // debug($chimeUser);
 
-    //   // is this the last presenter on the chime?
-    //   // if so, the user needs to assign the chime to a new presenter
-    //   // or delete the chime
+      // is this the last presenter on the chime?
+      // if so, the user needs to assign the chime to a new presenter
+      // or delete the chime
       abort_if(
         $chime->presenters->count() < 2 
         && $chimeUser->isPresenter($chimeId),
