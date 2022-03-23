@@ -186,13 +186,63 @@ describe("chimeUser api", () => {
         expect(users[0].email).to.equal("latistecharch+faculty@umn.edu");
       });
   });
-  it("doesnt let participants delete a chime");
 
-  it("lets presenters remove themselves when there are other presenters");
-  it("lets presenters delete a chime");
-  it(
-    "does not let presenters remove themselves if they are the only presenter"
-  );
+  it("lets presenters remove themselves when there are other presenters", () => {
+    let student = null;
 
-  it("should remove a user from a chime");
+    cy.logout();
+    cy.login("student");
+    cy.visit("/join/" + testChime.access_code);
+    cy.login("faculty");
+
+    api
+      .getChimeUsers({ chimeId: testChime.id })
+      .then((users) => {
+        student = users[1];
+        expect(users).to.have.length(2);
+
+        api.updateChimeUser({
+          chimeId: testChime.id,
+          userId: student.id,
+          permissionNumber: 300,
+        });
+      })
+      .then(() => {
+        // now that the student's a presenter,
+        // they should be able to remove the faculty
+        cy.login("student");
+        api.removeChimeUser({ chimeId: testChime.id, userId: "self" });
+      })
+      .then(() => {
+        cy.login("faculty");
+        api.getChimeUsers({ chimeId: testChime.id });
+      })
+      .then((users) => {
+        // only the faculty remains
+        expect(users).to.have.length(1);
+        expect(users[0].email).to.equal("latistecharch+faculty@umn.edu");
+      });
+  });
+
+  it("does not let presenters remove themselves if they are the only presenter", () => {
+    api
+      .getChimeUsers({ chimeId: testChime.id })
+      .then(() => {
+        return api.removeChimeUser(
+          { chimeId: testChime.id, userId: "self" },
+          {
+            failOnStatusCode: false,
+          }
+        );
+      })
+      .then((response) => {
+        expect(response.status).to.equal(405);
+        api.getChimeUsers({ chimeId: testChime.id });
+      })
+      .then((users) => {
+        // only the faculty remains
+        expect(users).to.have.length(1);
+        expect(users[0].email).to.equal("latistecharch+faculty@umn.edu");
+      });
+  });
 });
