@@ -30,8 +30,6 @@
         </DetailsItem>
       </div>
     </div>
-
-    {{ canRemoveSelf }}
     <template #actions>
       <CardActionButton icon="clear" @click="toggleRemoveConfirmModal" />
     </template>
