@@ -59,7 +59,7 @@ LIMIT 1');
       return $this->usersWithPermission(CHIMEIN_PRESENTER);
     }
 
-    public function usersWithPermission(permissionNumber) {
-      return $this->users()->wherePivot('permission_number', permissionNumber);
+    public function usersWithPermission($permissionNumber) {
+      return $this->users()->wherePivot('permission_number', $permissionNumber);
     }
 }
