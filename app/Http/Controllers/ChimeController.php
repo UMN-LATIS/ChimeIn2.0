@@ -190,6 +190,27 @@ class ChimeController extends Controller
         return response()->json(["success"=>true]);
     }
 
+    public function updateChimeUser(Request $request, Chime $chime, User $user) 
+    {
+      abort_unless(Auth::user()->canEditChime($chime->id), 403);
+      $request->validate([
+        'permission_number' => [
+          'required', 
+          'integer', 
+          'numeric', 
+          'multiple_of:100',
+          'min:0',
+          'max:300'
+        ]
+      ]);
+
+      $chime->users()->updateExistingPivot($user->id, [
+        'permission_number' => $request->input('permission_number')
+      ]);
+
+      return response()->json(["success"=>true]);
+    }
+
     public function addUser(Request $req) {
         $user = $req->user();
         $newUser = User::where('email', $req->get('email'))->first();
@@ -219,7 +240,7 @@ class ChimeController extends Controller
         }
     }
 
-    public function removeUser($chimeId, $userId)
+    public function removeChimeUser($chimeId, $userId)
     {
       abort_unless(
         Auth::user()->canEditChime($chimeId)
