@@ -72,7 +72,10 @@ class ChimeController extends Controller
 
 
     public function getChimes(Request $req) {
-        $chimes = $req->user()->chimes()->get();
+        $chimes = $req->user()
+          ->chimes()
+          ->withCount('presenters')
+          ->get();
         return response()->json($chimes);
     }
     
