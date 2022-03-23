@@ -45,14 +45,18 @@
         class="chime-card__modal"
       >
         <div v-if="canRemoveSelf">
-          <h2>Remove yourself?</h2>
-          <p>You will no longer be able to access this chime.</p>
+          <h2>Leave Chime?</h2>
+          <p>
+            You will be removed from
+            <i>{{ chime.name }}</i
+            >.
+          </p>
         </div>
         <div v-if="!canRemoveSelf">
           <h2>Delete Chime?</h2>
           <p>
-            This chime with all of its folders, questions, and responses will be
-            deleted.
+            <i>{{ chime.name }}</i> will be deleted, including all of its
+            folders, questions, and responses.
           </p>
         </div>
         <div class="modal__button-group">
@@ -63,7 +67,7 @@
             data-cy="modal__remove-self-button"
           >
             <i class="material-icons modal__button-icon">person_remove</i>
-            Remove Myself
+            Leave Chime
           </button>
           <button
             v-if="canCurrentUserEdit"
@@ -123,7 +127,7 @@ export default {
       default: false,
     },
   },
-  emits: ["delete", "removeSelf"],
+  emits: ["change"],
   data() {
     return {
       showCard: true,

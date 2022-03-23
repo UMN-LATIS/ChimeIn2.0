@@ -100,7 +100,42 @@ describe("chime UI", () => {
           cy.contains("access to 0 chimes").should("exist");
         });
     });
-    it("does not show an option to delete a chime");
+
+    it("x shows options to remove self, but not to to delete the chime", () => {
+      let testChime;
+
+      cy.login("faculty");
+      api
+        .createChimeFolderQuestion({
+          chimeName: "Test Chime",
+          folderName: "Test Folder",
+          questionText,
+          questionResponses,
+        })
+        .then(({ chime, folder, question }) => {
+          testChime = chime;
+
+          api.openQuestion({
+            chimeId: chime.id,
+            folderId: folder.id,
+            questionId: question.id,
+          });
+        })
+        .then(() => {
+          // as a student, join the chime, then go back to the chime list
+          cy.login("student");
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.visit("/");
+        })
+        .then(() => {
+          cy.get('[data-cy="remove-button"]').click();
+        })
+        .then(() => {
+          // Only the remove myself button should be visible
+          cy.contains("Delete").should("not.be.visible");
+          cy.contains("Leave Chime").should("be.visible");
+        });
+    });
   });
 
   context("when authenticated as faculty", () => {
@@ -120,7 +155,6 @@ describe("chime UI", () => {
 
     it("deletes a chime");
     it("removes self from a chime when if not the only presenter");
-    it("shows error when removing self from chime if the only presenter");
 
     it("show a spinner while waiting for chime data to load", () => {
       cy.visit("/");
