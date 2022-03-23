@@ -153,8 +153,74 @@ describe("chime UI", () => {
       cy.get("h1").should("contain", "Test Chime");
     });
 
-    it("deletes a chime");
-    it("removes self from a chime when if not the only presenter");
+    it("deletes a chime", () => {
+      cy.login("faculty");
+      api
+        .createChimeFolderQuestion({
+          chimeName: "Test Chime",
+          folderName: "Test Folder",
+          questionText,
+          questionResponses,
+        })
+        .then(() => {
+          cy.visit("/");
+          cy.get('[data-cy="remove-button"]').click();
+          cy.get('[data-cy="modal__delete-chime-button"]').click();
+        })
+        .then(() => {
+          // chime should be gone
+          cy.contains("Test Chime").should("not.exist");
+          cy.contains("access to 0 chimes").should("exist");
+        });
+    });
+
+    it("removes self from a chime when if not the only presenter", () => {
+      // first create a chime
+      let testChime;
+      let secondPresenter;
+
+      cy.login("faculty");
+      api
+        .createChime({ name: "New Chime" })
+        .then((chime) => {
+          testChime = chime;
+        })
+        .then(() => {
+          // add a second user to the chime and promote them to presenter
+          cy.login("student");
+          cy.visit("/join/" + testChime.access_code);
+        })
+        .then(() => {
+          cy.login("faculty");
+          api.getChimeUsers({ chimeId: testChime.id }).then((users) => {
+            secondPresenter = users[1];
+            api.updateChimeUser({
+              chimeId: testChime.id,
+              userId: secondPresenter.id,
+              permissionNumber: 300,
+            });
+          });
+        })
+        .then(() => {
+          // as the first presenter, I should be able to leave the chime
+          // since the chime will no longer be orphaned
+          cy.visit("/");
+          cy.get('[data-cy="remove-button"]').click();
+          cy.get('[data-cy="modal__remove-self-button"]').click();
+        })
+        .then(() => {
+          // chime should be gone for this user
+          cy.contains("New Chime").should("not.exist");
+          cy.contains("access to 0 chimes").should("exist");
+        })
+        .then(() => {
+          // but chime should still be there for other user
+          cy.login("student");
+          cy.visit("/");
+          cy.contains("New Chime").should("exist");
+          cy.contains("access to 1 chime").should("exist");
+        });
+    });
 
     it("show a spinner while waiting for chime data to load", () => {
       cy.visit("/");
