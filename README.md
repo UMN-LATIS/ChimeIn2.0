@@ -72,11 +72,11 @@ yarn run cypress
 
 ## Deploy
 
-Servers:
-
-- Development: https://cla-chimein-dev.oit.umn.edu
-- Test (Staging): https://cla-chimein-tst.oit.umn.edu
-- Production: https://chimein.umn.edu
+| Enviroment Name | URL                                   |
+| --------------- | ------------------------------------- |
+| `dev`           | <https://cla-chimein-dev.oit.umn.edu> |
+| `stage`         | <https://cla-chimein-tst.oit.umn.edu> |
+| `prod`          | <https://chimein.umn.edu>             |
 
 ```sh
 ./vendor/bin/dep deploy <environment name>
