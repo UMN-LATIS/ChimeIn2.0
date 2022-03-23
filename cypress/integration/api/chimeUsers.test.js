@@ -1,13 +1,5 @@
 import { createChime } from "./chime.js";
 import * as api from "./chimeUser.js";
-// import { getCurrentUser } from "./user.js";
-
-// function addGuestUserToChime({ access_code }) {
-//   cy.logout();
-
-//   // join chime as guest
-//   return cy.visit("/join/" + access_code).then(() => getCurrentUser());
-// }
 
 describe("chimeUser api", () => {
   let testChime = null;
