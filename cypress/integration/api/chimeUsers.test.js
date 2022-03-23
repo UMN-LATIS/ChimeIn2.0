@@ -96,27 +96,47 @@ describe("chimeUser api", () => {
       });
   });
 
-  it("gets info about current user");
+  it("lets presenters remove a participant from a chime", () => {
+    let student = null;
 
-  // it("should remove a user from a chime", () => {
-  //   let guestUser = null;
+    cy.logout();
+    cy.login("student");
+    cy.visit("/join/" + testChime.access_code);
+    cy.login("faculty");
 
-  //   addGuestUserToChime(testChime)
-  //     .then((user) => {
-  //       guestUser = user;
+    api
+      .getChimeUsers({ chimeId: testChime.id })
+      .then((users) => {
+        student = users[1];
+        expect(users).to.have.length(2);
 
-  //       // verify that guest is in chime
-  //       cy.login("faculty");
-  //       api.getChimeUsers({ chimeId: testChime.id }).should("have.length", 2);
-  //     })
-  //     .then(() => {
-  //       api
-  //         .removeChimeUser({ chimeId: testChime.id, userId: guestUser.id })
-  //         .then(() => {
-  //           api
-  //             .getChimeUsers({ chimeId: testChime.id })
-  //             .should("have.length", 1);
-  //         });
-  //     });
-  // });
+        // promote student to presenter so that
+        // api.updateChimeUser({
+        //   chimeId: testChime.id,
+        //   userId: user.id,
+        //   permissionNumber: 300,
+        // });
+
+        api.removeChimeUser({ chimeId: testChime.id, userId: student.id });
+      })
+      .then(() => api.getChimeUsers({ chimeId: testChime.id }))
+      .then((users) => {
+        // only the faculty remains
+        expect(users).to.have.length(1);
+        expect(users[0].email).to.equal("latistecharch+faculty@umn.edu");
+      });
+  });
+
+  it("lets presenters remove another presenter from a chime");
+
+  it("lets participants remove themselves");
+  it("doesnt let participants delete a chime");
+
+  it("lets presenters remove themselves when there are other presenters");
+  it("lets presenters delete a chime");
+  it(
+    "does not let presenters remove themselves if they are the only presenter"
+  );
+
+  it("should remove a user from a chime");
 });

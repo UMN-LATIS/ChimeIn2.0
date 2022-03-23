@@ -35,14 +35,18 @@ export function updateChimeUser(
   );
 }
 
-// export function removeChimeUser({ chimeId, userId }) {
-//   return cy.csrfToken().then((_token) => {
-//     cy.request({
-//       method: DELETE,
-//       url: `/api/chime/${chimeId}/users/${userId}`,
-//       body: {
-//         _token,
-//       },
-//     }).its("body");
-//   });
-// }
+export function removeChimeUser({ chimeId, userId }, opts) {
+  return cy.csrfToken().then((_token) => {
+    cy.request({
+      method: "DELETE",
+      url: `/api/chime/${chimeId}/users/${userId}`,
+      body: {
+        _token,
+      },
+      ...opts,
+    }).then((req) => {
+      if (req.status !== 200) return req;
+      return req.body;
+    });
+  });
+}
