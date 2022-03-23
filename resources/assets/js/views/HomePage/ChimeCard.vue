@@ -1,5 +1,5 @@
 <template>
-  <Card class="chime-card" v-show="showCard">
+  <Card class="chime-card" v-if="showCard">
     <router-link :to="to">
       <header class="chime-card__header">
         <h1 class="chime-card__title">
@@ -30,13 +30,65 @@
         </DetailsItem>
       </div>
     </div>
-
     <template #actions>
-      <CardActionButton icon="clear" @click="removeChime(chime)" />
+      <CardActionButton
+        icon="clear"
+        data-cy="remove-button"
+        @click="toggleRemoveConfirmModal"
+      />
     </template>
+
+    <Portal>
+      <Modal
+        :show="isRemoveConfirmModalOpen"
+        @close="toggleRemoveConfirmModal"
+        class="chime-card__modal"
+      >
+        <div v-if="canRemoveSelf">
+          <h2>Leave Chime?</h2>
+          <p>
+            You will be removed from
+            <i>{{ chime.name }}</i
+            >.
+          </p>
+        </div>
+        <div v-if="!canRemoveSelf">
+          <h2>Delete Chime?</h2>
+          <p>
+            <i>{{ chime.name }}</i> will be deleted, including all of its
+            folders, questions, and responses.
+          </p>
+        </div>
+        <div class="modal__button-group">
+          <button
+            v-if="canRemoveSelf"
+            class="btn btn-danger modal__button"
+            @click="handleRemoveSelf"
+            data-cy="modal__remove-self-button"
+          >
+            <i class="material-icons modal__button-icon">person_remove</i>
+            Leave Chime
+          </button>
+          <button
+            v-if="canCurrentUserEdit"
+            class="btn modal__button"
+            :class="{
+              'btn-danger': isDeletePrimaryModalAction,
+              'btn-outline-danger': !isDeletePrimaryModalAction,
+            }"
+            @click="handleDeleteChime"
+            data-cy="modal__delete-chime-button"
+          >
+            <i class="material-icons modal__button-icon">delete</i>
+            Delete Chime
+          </button>
+        </div>
+      </Modal>
+    </Portal>
   </Card>
 </template>
 <script>
+import { Portal } from "@linusborg/vue-simple-portal";
 import toHyphenatedCode from "../../helpers/toHyphenatedCode";
 import Card from "../../components/Card.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
@@ -49,6 +101,8 @@ import {
 import isPermittedOnChime from "../../helpers/isPermittedOnChime";
 import { PERMISSIONS } from "../../helpers/constants";
 import DetailsItem from "../../components/DetailsItem.vue";
+import Modal from "../../components/Modal.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -56,6 +110,8 @@ export default {
     CardActionButton,
     Chip,
     DetailsItem,
+    Modal,
+    Portal,
   },
   props: {
     chime: {
@@ -71,38 +127,28 @@ export default {
       default: false,
     },
   },
+  emits: ["change"],
   data() {
     return {
       showCard: true,
+      isRemoveConfirmModalOpen: false,
     };
-  },
-  methods: {
-    removeChime() {
-      // if user can edit, this will delete the chime
-      // if not, this will remove the user from the chime
-      const confirmMessage = this.canCurrentUserEdit
-        ? `Delete chime '${this.chime.name}'?`
-        : `Are you sure you want to remove yourself from '${this.chime.name}'?`;
-
-      const confirmation = window.confirm(confirmMessage);
-
-      if (!confirmation) return;
-
-      // optimistic UI: hide card unless failure
-      this.showCard = false;
-
-      axios
-        .delete("/api/chime/" + this.chime.id, { timeout: 2000 })
-        .then(() => this.$emit("change"))
-        .catch((err) => {
-          this.showCard = true;
-          console.error("Error in removeChime request.", err);
-        });
-    },
   },
   computed: {
     canCurrentUserEdit() {
       return isPermittedOnChime(PERMISSIONS.EDIT, this.chime);
+    },
+    isPresenter() {
+      return isPermittedOnChime(PERMISSIONS.PRESENT, this.chime);
+    },
+    isLastPresenter() {
+      return this.isPresenter && this.chime.presenters_count < 2;
+    },
+    canRemoveSelf() {
+      return !this.isLastPresenter;
+    },
+    isDeletePrimaryModalAction() {
+      return !this.canRemoveSelf;
     },
     hyphenatedAccessCode() {
       return toHyphenatedCode(this.chime.access_code);
@@ -123,6 +169,37 @@ export default {
       return window.location;
     },
   },
+  methods: {
+    handleDeleteChime() {
+      // optimistic UI update: hide card unless failure
+      this.showCard = false;
+      this.isRemoveConfirmModalOpen = false;
+
+      axios
+        .delete(`/api/chime/${this.chime.id}`, { timeout: 2000 })
+        .then(() => this.$emit("change"))
+        .catch((err) => {
+          this.showCard = true;
+          console.error("Error in removeChime request.", err);
+        });
+    },
+    handleRemoveSelf() {
+      // optimistic UI update: hide card unless failure
+      this.showCard = false;
+      this.isRemoveConfirmModalOpen = false;
+
+      axios
+        .delete(`/api/chime/${this.chime.id}/users/self`, { timeout: 2000 })
+        .then(() => this.$emit("change"))
+        .catch((err) => {
+          this.showCard = true;
+          console.error("Error in removeChime request.", err);
+        });
+    },
+    toggleRemoveConfirmModal() {
+      this.isRemoveConfirmModalOpen = !this.isRemoveConfirmModalOpen;
+    },
+  },
 };
 </script>
 
@@ -134,5 +211,23 @@ export default {
 }
 .chime-card__chip-group {
   margin-left: 1rem;
+}
+
+.modal__button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modal__button {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+@media (max-width: 38rem) {
+  .modal__button-group {
+    flex-direction: column;
+  }
 }
 </style>

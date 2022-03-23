@@ -32,6 +32,11 @@ class Chime extends Model
             ->withTimestamps();
     }
 
+    public function presenters() {
+      return $this->belongsToMany(User::class)
+        ->wherePivot('permission_number', CHIMEIN_PRESENTER);
+    }
+
     public function sessions() {
 
         $sessions = DB::table('sessions')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->join('chimes', 'folders.chime_id', '=', 'chimes.id')->where('chimes.id', $this->id)->select("sessions.*")->get();
@@ -54,12 +59,5 @@ LIMIT 1');
     public function lti13_resource_link() {
         return $this->belongsTo(LTI13ResourceLink::class);
     }
+
 }
-
-// Chime::deleting(function($chime) {
-//     $users = $chime->users()->get();
-
-//     foreach($users as $u) {
-//         $u->chimes()->detach($chime);
-//     }
-// });

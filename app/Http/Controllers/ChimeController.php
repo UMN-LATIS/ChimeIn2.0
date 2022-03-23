@@ -72,7 +72,10 @@ class ChimeController extends Controller
 
 
     public function getChimes(Request $req) {
-        $chimes = $req->user()->chimes()->get();
+        $chimes = $req->user()
+          ->chimes()
+          ->withCount('presenters')
+          ->get();
         return response()->json($chimes);
     }
     
@@ -187,6 +190,27 @@ class ChimeController extends Controller
         return response()->json(["success"=>true]);
     }
 
+    public function updateChimeUser(Request $request, Chime $chime, User $user) 
+    {
+      abort_unless(Auth::user()->canEditChime($chime->id), 403);
+      $request->validate([
+        'permission_number' => [
+          'required', 
+          'integer', 
+          'numeric', 
+          'multiple_of:100',
+          'min:0',
+          'max:300'
+        ]
+      ]);
+
+      $chime->users()->updateExistingPivot($user->id, [
+        'permission_number' => $request->input('permission_number')
+      ]);
+
+      return response()->json(["success"=>true]);
+    }
+
     public function addUser(Request $req) {
         $user = $req->user();
         $newUser = User::where('email', $req->get('email'))->first();
@@ -216,6 +240,34 @@ class ChimeController extends Controller
         }
     }
 
+    public function removeChimeUser($chimeId, $userId)
+    {
+      abort_unless(
+        Auth::user()->canEditChime($chimeId)
+          || $userId === 'self',
+        403
+      );
+
+      if ($userId === 'self') {
+        $userId = Auth::user()->id;
+      }
+
+      $chime = Auth::user()->chimes()->findOrFail($chimeId);
+      $chimeUser = $chime->users()->findOrFail($userId);
+
+      // is this the last presenter on the chime?
+      // if so, the user needs to assign the chime to a new presenter
+      // or delete the chime
+      abort_if(
+        $chime->presenters->count() < 2
+          && $chimeUser->isPresenter($chimeId),
+        405,
+        "Method not allowed. Cannot remove user `$userId` on chime `$chimeId`. This user is the last user with a presentation role. Chimes must always have one presenter. Either make another presenter or delete this chime if you no longer need it."
+      );
+
+      $chime->users()->detach($userId);
+      return response('Removed user from Chime', 200);
+    }
    
   
     public function getImage(Request $req) {
