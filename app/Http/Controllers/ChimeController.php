@@ -219,8 +219,13 @@ class ChimeController extends Controller
         }
     }
 
-    public function removeUser($chimeId, $userId) {
-      abort_unless(Auth::user()->canEditChime($chimeId), 403);
+    public function removeUser($chimeId, $userId)
+    {
+      abort_unless(
+        Auth::user()->canEditChime($chimeId)
+          || $userId === 'self',
+        403
+      );
 
       if ($userId === 'self') {
         $userId = Auth::user()->id;
@@ -233,13 +238,13 @@ class ChimeController extends Controller
       // if so, the user needs to assign the chime to a new presenter
       // or delete the chime
       abort_if(
-        $chime->presenters->count() < 2 
-        && $chimeUser->isPresenter($chimeId),
+        $chime->presenters->count() < 2
+          && $chimeUser->isPresenter($chimeId),
         405,
         "Method not allowed. Cannot remove user `$userId` on chime `$chimeId`. This user is the last user with a presentation role. Chimes must always have one presenter. Either make another presenter or delete this chime if you no longer need it."
       );
 
-      $chimeUser->detach($chime->id);
+      $chime->users()->detach($userId);
       return response('Removed user from Chime', 200);
     }
    
