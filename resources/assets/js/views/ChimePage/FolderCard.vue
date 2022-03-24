@@ -135,6 +135,10 @@ export default {
 </script>
 
 <style scoped>
+.folder-card {
+  align-items: center;
+}
+
 .folder-card__contents {
   display: grid;
   grid-template-columns: 1fr auto;
