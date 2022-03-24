@@ -111,7 +111,6 @@ export default {
   },
   methods: {
     handleClickDelete() {
-      console.log("click");
       this.isRemoveConfirmModalOpen = true;
     },
     handleCloseModal() {
