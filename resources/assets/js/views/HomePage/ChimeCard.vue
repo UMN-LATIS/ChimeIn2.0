@@ -2,8 +2,9 @@
   <Card class="chime-card" v-if="showCard">
     <router-link :to="to">
       <header class="chime-card__header">
-        <h1 class="chime-card__title">
-          {{ chime.name }}
+        <h1 class="chime-card__title align-bottom">
+          {{ chime.name
+          }}<i class="material-icons align-bottom">chevron_right</i>
         </h1>
         <div class="chime-card__chip-group">
           <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip>
@@ -205,7 +206,8 @@ export default {
 
 <style scoped>
 .chime-card__header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   margin-bottom: 1rem;
 }

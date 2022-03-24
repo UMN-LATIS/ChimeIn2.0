@@ -6,22 +6,24 @@
     iconClass="handle"
     v-if="isFolderVisible"
   >
-    <div class="folder-card__contents">
-      <router-link :to="to">
+    <router-link :to="to">
+      <div class="folder-card__contents">
         <h2 class="folder-card__name">
-          {{ folder.name }}
+          {{ folder.name
+          }}<i class="material-icons align-bottom">chevron_right</i>
         </h2>
-      </router-link>
-      <div>
-        <Chip :color="folder.questions_count ? 'dark' : 'muted'" :solid="true">
-          <span v-if="folder.questions_count">
+
+        <div>
+          <Chip
+            :color="folder.questions_count ? 'dark' : 'muted'"
+            :solid="true"
+          >
             {{ folder.questions_count }}
             {{ "Question" | pluralize(folder.questions_count) }}
-          </span>
-          <span v-else>No Questions</span>
-        </Chip>
+          </Chip>
+        </div>
       </div>
-    </div>
+    </router-link>
     <template #actions>
       <CardActionButton icon="edit" :to="to"> Edit </CardActionButton>
       <CardActionButton icon="play_circle_outline" :to="`${to}/present`">
@@ -104,15 +106,7 @@ export default {
   gap: 0.5rem;
 }
 
-.folder-card__name {
-  font-size: 1.25rem;
-  line-height: 1.2;
-}
-
 @media (max-width: 48rem) {
-  .folder-card__name {
-    font-size: 1rem;
-  }
   .folder-card__contents {
     display: flex;
     flex-direction: column;
