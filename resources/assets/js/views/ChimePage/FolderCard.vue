@@ -8,17 +8,19 @@
   >
     <div class="folder-card__contents">
       <router-link :to="to">
-        <h2>
+        <h2 class="folder-card__name">
           {{ folder.name }}
         </h2>
       </router-link>
-      <Chip :color="folder.questions_count ? 'dark' : 'muted'" :solid="true">
-        <span v-if="folder.questions_count">
-          {{ folder.questions_count }}
-          {{ "Question" | pluralize(folder.questions_count) }}
-        </span>
-        <span v-else>No Questions</span>
-      </Chip>
+      <div>
+        <Chip :color="folder.questions_count ? 'dark' : 'muted'" :solid="true">
+          <span v-if="folder.questions_count">
+            {{ folder.questions_count }}
+            {{ "Question" | pluralize(folder.questions_count) }}
+          </span>
+          <span v-else>No Questions</span>
+        </Chip>
+      </div>
     </div>
     <template #actions>
       <CardActionButton icon="edit" :to="to"> Edit </CardActionButton>
@@ -97,11 +99,23 @@ export default {
 
 <style scoped>
 .folder-card__contents {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+}
+
+.folder-card__name {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+@media (max-width: 48rem) {
+  .folder-card__name {
+    font-size: 1rem;
+  }
+  .folder-card__contents {
+    display: flex;
+    flex-direction: column;
+  }
 }
 </style>
