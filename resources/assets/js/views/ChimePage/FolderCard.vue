@@ -58,6 +58,7 @@
               align-items-center
             "
             @click="handleDeleteFolder"
+            data-cy="confirm-delete-button"
           >
             <i class="material-icons modal__button-icon mr-2">delete</i>
             Delete Folder

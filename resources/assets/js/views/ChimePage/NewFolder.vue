@@ -9,6 +9,7 @@
       name="createFolder"
       placeholder="Folder Name"
       @keyup.enter="new_folder"
+      data-cy="new-folder-input"
     />
     <button
       data-cy="create-folder-button"
