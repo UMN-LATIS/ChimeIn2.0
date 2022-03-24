@@ -32,23 +32,55 @@
       <CardActionButton
         data-cy="delete-folder-button"
         icon="clear"
-        @click="handleDeleteClick"
+        @click="handleClickDelete"
       >
         Delete
       </CardActionButton>
     </template>
+
+    <Portal>
+      <Modal
+        :show="isRemoveConfirmModalOpen"
+        @close="handleCloseModal"
+        class="folder-card__modal"
+      >
+        <h2>Delete Folder?</h2>
+        <p>
+          <i>{{ folder.name }}</i> will be deleted, including all of its
+          questions and responses.
+        </p>
+        <div class="modal__button-group">
+          <button
+            class="
+              btn btn-danger
+              modal__button
+              d-inline-flex
+              align-items-center
+            "
+            @click="handleDeleteFolder"
+          >
+            <i class="material-icons modal__button-icon mr-2">delete</i>
+            Delete Folder
+          </button>
+        </div>
+      </Modal>
+    </Portal>
   </Card>
 </template>
 <script>
+import { Portal } from "@linusborg/vue-simple-portal";
 import Card from "../../components/Card.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
 import Chip from "../../components/Chip.vue";
+import Modal from "../../components/Modal.vue";
 
 export default {
   components: {
     Card,
     CardActionButton,
     Chip,
+    Portal,
+    Modal,
   },
   props: {
     chime: {
@@ -68,6 +100,7 @@ export default {
   data() {
     return {
       isFolderVisible: true,
+      isRemoveConfirmModalOpen: false,
     };
   },
   computed: {
@@ -76,16 +109,20 @@ export default {
     },
   },
   methods: {
-    handleDeleteClick() {
-      if (!confirm("Are you sure you want to remove this folder?")) {
-        return;
-      }
-
+    handleClickDelete() {
+      console.log("click");
+      this.isRemoveConfirmModalOpen = true;
+    },
+    handleCloseModal() {
+      this.isRemoveConfirmModalOpen = false;
+    },
+    handleDeleteFolder() {
       const chimeId = this.folder.chime_id;
       const folderId = this.folder.id;
 
       // optimistic UI: hide folder
       this.isFolderVisible = false;
+      this.isRemoveConfirmModalOpen = false;
 
       axios
         .delete(`/api/chime/${chimeId}/folder/${folderId}`)
