@@ -29,7 +29,7 @@ describe("folder", () => {
       });
   });
 
-  it.only("deletes a folder", () => {
+  it("deletes a folder", () => {
     let testChime;
     api
       .createChime({ name: "Test Chime" })
