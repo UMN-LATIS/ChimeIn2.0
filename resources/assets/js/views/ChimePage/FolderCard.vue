@@ -9,10 +9,8 @@
     <router-link :to="to">
       <div class="folder-card__contents">
         <h2 class="folder-card__name">
-          {{ folder.name
-          }}<i class="material-icons align-bottom">chevron_right</i>
+          {{ folder.name }}
         </h2>
-
         <div>
           <Chip
             :color="folder.questions_count ? 'dark' : 'muted'"
