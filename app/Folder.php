@@ -11,6 +11,7 @@ class Folder extends Model
 
     protected $fillable = ['name', 'order'];
     protected $dates = ['deleted_at'];
+    protected $withCount = ['questions'];
     
     public function chime() {
         return $this->belongsTo(Chime::class);
