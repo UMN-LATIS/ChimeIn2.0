@@ -338,7 +338,7 @@ class ChimeController extends Controller
             $new_folder = $chime->folders()->create([
                 'name' => $req->get('folder_name'),
                 'order' => $order_num
-            ]);
+            ])->loadCount('questions');
         
             return response()->json($new_folder);
         } else {

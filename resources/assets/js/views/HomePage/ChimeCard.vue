@@ -2,7 +2,7 @@
   <Card class="chime-card" v-if="showCard">
     <router-link :to="to">
       <header class="chime-card__header">
-        <h1 class="chime-card__title">
+        <h1 class="chime-card__title align-bottom">
           {{ chime.name }}
         </h1>
         <div class="chime-card__chip-group">
@@ -205,7 +205,8 @@ export default {
 
 <style scoped>
 .chime-card__header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   margin-bottom: 1rem;
 }
