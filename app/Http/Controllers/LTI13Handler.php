@@ -103,19 +103,7 @@ class LTI13Handler extends Controller
             $resourceLink->save();
         }
         
-
-        if($lisData["person_sourcedid"]== "SISIDformcfa0086") {
-            $lisData["person_sourcedid"] = 2328381;
-        }
-        // our dev instance sends this value. need to make it a real emplid
-        if($lisData["person_sourcedid"] == "SISID4elevator") {
-            $lisData["person_sourcedid"] = 1111111;
-        }
-        // our dev instance sends this value. need to make it a real emplid
-        if($lisData["person_sourcedid"] == "emplidFORjohnsojr") {
-            $lisData["person_sourcedid"] = 1111112;
-        }
-        
+        $lisData = $this->mungeLisData($lisData);
 
         if(!$lisData["person_sourcedid"] || !is_numeric($lisData["person_sourcedid"])) {
             return view("errors.emplid");
@@ -297,24 +285,24 @@ class LTI13Handler extends Controller
                                     "target_link_uri" => url("lti13/launch"),
                                     "canvas_icon_class" => "icon-lti"
                                 ],
-                                [
-                                    "text"=>"ChimeIn",
-                                    "enabled"=>true,
-                                    "placement"=>"course_navigation",
-                                    "message_type"=>"LtiResourceLinkRequest",
-                                    "target_link_uri"=>url("lti13/launch"),
-                                    "canvas_icon_class"=>"icon-lti",
-                                    "windowTarget"=> "_blank"
-                                ],
-                                [
-                                    "text"=>"ChimeIn",
-                                    "enabled"=>true,
-                                    "placement"=>"link_selection",
-                                    "message_type"=>"LtiResourceLinkRequest",
-                                    "target_link_uri"=>url("lti13/launch"),
-                                    "canvas_icon_class"=>"icon-lti",
-                                    "windowTarget"=> "_blank"
-                                ]
+                                // [
+                                //     "text"=>"ChimeIn",
+                                //     "enabled"=>true,
+                                //     "placement"=>"course_navigation",
+                                //     "message_type"=>"LtiResourceLinkRequest",
+                                //     "target_link_uri"=>url("lti13/launch"),
+                                //     "canvas_icon_class"=>"icon-lti",
+                                //     "windowTarget"=> "_blank"
+                                // ],
+                                // [
+                                //     "text"=>"ChimeIn",
+                                //     "enabled"=>true,
+                                //     "placement"=>"link_selection",
+                                //     "message_type"=>"LtiResourceLinkRequest",
+                                //     "target_link_uri"=>url("lti13/launch"),
+                                //     "canvas_icon_class"=>"icon-lti",
+                                //     "windowTarget"=> "_blank"
+                                // ]
                             ]
                         ]
                     ]
@@ -348,5 +336,20 @@ class LTI13Handler extends Controller
             return $folder;
         }
         return false;
+    }
+
+    private function mungeLisData($lisData) {
+        if($lisData["person_sourcedid"]== "SISIDformcfa0086") {
+            $lisData["person_sourcedid"] = 2328381;
+        }
+        // our dev instance sends this value. need to make it a real emplid
+        if($lisData["person_sourcedid"] == "SISID4elevator") {
+            $lisData["person_sourcedid"] = 1111111;
+        }
+        // our dev instance sends this value. need to make it a real emplid
+        if($lisData["person_sourcedid"] == "emplidFORjohnsojr") {
+            $lisData["person_sourcedid"] = 1111112;
+        }
+        return $lisData;
     }
 }
