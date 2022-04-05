@@ -91,7 +91,7 @@
     "vue-json-csv": "^1.2.12",
     "vue-katex": "^0.5.0",
     "vue-router": "^3.5.1",
-    "vue-select": "^3.11.2",
+    "vue-select": "^3.18.3",
     "vue-simple-lightbox": "https://github.com/cmcfadden/vue-simple-lightbox.git",
     "vue-template-compiler": "^2.6.12",
     "vue-wordcloud": "https://github.com/UMN-LATIS/vue-wordcloud/tarball/master",
