@@ -59,7 +59,7 @@
     "@linusborg/vue-simple-portal": "^0.1.5",
     "axios": "^0.21",
     "bootstrap": "^4.6.0",
-    "chart.js": "^2.9.4",
+    "chart.js": "^3.7.1",
     "compromise": "^11.14.3",
     "difflib": "^0.2.4",
     "dotenv": "^5.0.1",
