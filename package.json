@@ -52,7 +52,7 @@
     "sass": "^1.43.2",
     "sass-loader": "^12.2.0",
     "vue-loader": "^15.9.7",
-    "webpack": "^5.58.2",
+    "webpack": "^5.71.0",
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "dependencies": {
