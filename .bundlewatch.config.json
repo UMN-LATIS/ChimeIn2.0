@@ -1,27 +1,11 @@
 {
   "files": [
     {
-      "path": "./public/js/app.js",
+      "path": "./public/js/*.js",
       "maxSize": "1 MB"
     },
     {
-      "path": "./public/js/folder.js",
-      "maxSize": "1 MB"
-    },
-    {
-      "path": "./public/js/FreeResponseStatistics.js",
-      "maxSize": "1 MB"
-    },
-    {
-      "path": "./public/js/ImageResponseStatistics.js",
-      "maxSize": "1 MB"
-    },
-    {
-      "path": "./public/js/multiplechoicestatistics.js",
-      "maxSize": "1 MB"
-    },
-    {
-      "path": "./public/css/app.css",
+      "path": "./public/css/*.css",
       "maxSize": "1 MB"
     }
   ],
