@@ -19,16 +19,6 @@
       "HEAD"
     ]
   },
-  "debugbar.telescope": {
-    "name": "debugbar.telescope",
-    "domain": null,
-    "action": "Barryvdh\\Debugbar\\Controllers\\TelescopeController@show",
-    "uri": "_debugbar/telescope/{id}",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
   "debugbar.assets.css": {
     "name": "debugbar.assets.css",
     "domain": null,
@@ -125,7 +115,7 @@
   "shibboleth-login": {
     "name": "shibboleth-login",
     "domain": null,
-    "action": "StudentAffairsUwm\\Shibboleth\\Controllers\\ShibbolethController@login",
+    "action": "\\StudentAffairsUwm\\Shibboleth\\Controllers\\ShibbolethController@login",
     "uri": "shibboleth-login",
     "method": [
       "GET",
@@ -135,7 +125,7 @@
   "shibboleth-authenticate": {
     "name": "shibboleth-authenticate",
     "domain": null,
-    "action": "StudentAffairsUwm\\Shibboleth\\Controllers\\ShibbolethController@idpAuthenticate",
+    "action": "\\StudentAffairsUwm\\Shibboleth\\Controllers\\ShibbolethController@idpAuthenticate",
     "uri": "shibboleth-authenticate",
     "method": [
       "GET",
@@ -145,7 +135,7 @@
   "shibboleth-logout": {
     "name": "shibboleth-logout",
     "domain": null,
-    "action": "StudentAffairsUwm\\Shibboleth\\Controllers\\ShibbolethController@destroy",
+    "action": "\\StudentAffairsUwm\\Shibboleth\\Controllers\\ShibbolethController@destroy",
     "uri": "shibboleth-logout",
     "method": [
       "GET",

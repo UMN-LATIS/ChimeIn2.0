@@ -98,10 +98,12 @@ export default {
       chimes: [],
       showAdd: false,
       chime_name: "",
+      modalChime: null,
+      isRemoveConfirmOpen: false,
     };
   },
   computed: {
-    orderedChimes: function () {
+    orderedChimes() {
       return orderBy(this.chimes, "created_at", ["desc"]);
     },
   },

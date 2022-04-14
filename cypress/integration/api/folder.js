@@ -7,9 +7,9 @@ export function getAllFolders({ chimeId }) {
   return getChime({ chimeId }).its("folders");
 }
 
-export function createFolder({ chimeId, name, folder_name, ...rest }) {
+export function createFolder({ chimeId, name, ...rest }) {
   if (!chimeId) throw Error("chimeId is required");
-  if (!name && !folder_name) throw Error("folder_name (or name) is required");
+  if (!name) throw Error("folder name `name` is required");
 
   return cy.csrfToken().then((_token) => {
     return cy
@@ -18,7 +18,7 @@ export function createFolder({ chimeId, name, folder_name, ...rest }) {
         url: `/api/chime/${chimeId}/folder`,
         body: {
           _token,
-          folder_name: folder_name || name,
+          folder_name: name,
           ...rest,
         },
       })
