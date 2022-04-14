@@ -38,6 +38,9 @@
                 :require_login.sync="requireLogin"
                 :students_can_view.sync="studentsCanView"
                 :join_instructions.sync="joinInstructions"
+                :show_folder_title_to_participants.sync="
+                  showFolderTitleToParticipants
+                "
                 :new_chime="true"
               />
             </div>
@@ -95,6 +98,7 @@ export default {
       requireLogin: false,
       studentsCanView: false,
       joinInstructions: true,
+      showFolderTitleToParticipants: false,
       chimes: [],
       showAdd: false,
       chime_name: "",
@@ -134,6 +138,7 @@ export default {
           require_login: this.requireLogin,
           students_can_view: this.studentsCanView,
           join_instructions: this.joinInstructions,
+          show_folder_title_to_participants: this.showFolderTitleToParticipants,
         })
         .then((res) => {
           console.log("debug", "Chime Created:", res);
