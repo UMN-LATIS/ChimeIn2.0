@@ -1,0 +1,5 @@
+<?php
+
+define('CHIMEIN_GUEST', 0);
+define('CHIMEIN_PARTICIPANT', 100);
+define('CHIMEIN_PRESENTER', 300);

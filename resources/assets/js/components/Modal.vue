@@ -2,6 +2,10 @@
   <transition name="modal">
     <div v-show="show" class="modal-mask" @mousedown="close">
       <div class="modal-container" @mousedown.stop>
+        <button v-if="closeable" @click="close" class="modal__close-button">
+          <i class="material-icons">close</i>
+          <span class="sr-only">Close</span>
+        </button>
         <slot></slot>
       </div>
     </div>
@@ -10,7 +14,16 @@
 
 <script>
 export default {
-  props: ["show"],
+  props: {
+    show: {
+      type: Boolean,
+      default: false,
+    },
+    closeable: {
+      type: Boolean,
+      default: true,
+    },
+  },
   mounted: function () {
     document.addEventListener("keydown", (e) => {
       if (this.show && e.keyCode == 27) {
@@ -65,6 +78,7 @@ export default {
   font-family: Helvetica, Arial, sans-serif;
   max-height: calc(100vh - 40px);
   overflow-y: auto;
+  position: relative;
 }
 
 .modal-header {
@@ -81,5 +95,18 @@ export default {
 .modal-body {
   padding: 0;
   margin: 10px 0;
+}
+.modal__close-button {
+  border: none;
+  background: none;
+  position: absolute;
+  right: 0;
+  top: 0.5rem;
+}
+
+@media (max-width: 28rem) {
+  .modal-container {
+    width: 90%;
+  }
 }
 </style>

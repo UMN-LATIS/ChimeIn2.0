@@ -41,6 +41,14 @@ class User extends Authenticatable
     public function responses() {
         return $this->hasMany(Response::class);
     }
+
+    public function isPresenter($chimeId) {
+      return $this->chimes()->findOrFail($chimeId)->pivot->permission_number === CHIMEIN_PRESENTER;
+    }
+
+    public function canEditChime($chimeId) {
+      return $this->isPresenter($chimeId) || $this->global_admin;
+    }
 }
 
 User::deleting(function($user) {

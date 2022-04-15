@@ -18,5 +18,14 @@ mix
   .sourceMaps(false, "source-map");
 
 if (mix.inProduction()) {
-  mix.version();
+  mix
+    .version()
+    // added to version chunks with hash in filename
+    // rather than just appending a hash via query string
+    .webpackConfig({
+      output: {
+        chunkFilename: "js/[name].[chunkhash].js",
+        publicPath: "/",
+      },
+    });
 }

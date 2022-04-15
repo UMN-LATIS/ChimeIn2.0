@@ -94,6 +94,7 @@
               :chime="chime"
               :folder="folder"
               :showMoveIcon="ordered_folders.length > 1"
+              @change="loadChime"
             />
           </Draggable>
         </div>
@@ -172,8 +173,10 @@ export default {
       return new URL(fullCanvasUrlString);
     },
   },
-  created: function () {
-    this.reloadChime();
+  async mounted() {
+    this.isReady = false;
+    await this.loadChime();
+    this.isReady = true;
   },
   methods: {
     toggle(value, { setToFalse = [], setToTrue = [] } = {}) {
@@ -190,23 +193,30 @@ export default {
         alert("You must enter a name for this folder.");
         return;
       }
-      if (this.chime.folders.filter((e) => e.name === folder_name).length < 1) {
-        axios
-          .post("/api/chime/" + this.chime.id + "/folder", {
-            folder_name: folder_name,
-          })
-          .then((res) => {
-            console.log(res);
-            this.chime.folders.push(res.data);
-          })
-          .catch((err) => {
-            console.log(err.response);
-          });
+
+      // prevent duplicate folders from being created
+      // in case the network is slow
+      if (this.chime.folders.find((f) => f.name === folder_name)) {
+        console.error(
+          `Folder with the folder name '${folder_name}' already exists.`
+        );
+        return;
       }
-    },
-    reloadChime: function () {
-      this.isReady = false;
+
       axios
+        .post("/api/chime/" + this.chime.id + "/folder", {
+          folder_name: folder_name,
+        })
+        .then((res) => {
+          console.log(res);
+          this.chime.folders.push(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    loadChime() {
+      return axios
         .get("/api/chime/" + this.chimeId)
         .then((res) => {
           this.chime = res.data;
@@ -217,10 +227,7 @@ export default {
             "message",
             "Could not load Chime. You may not have permission to view this page. "
           );
-          console.log(err);
-        })
-        .finally(() => {
-          this.isReady = true;
+          console.error(err);
         });
     },
   },

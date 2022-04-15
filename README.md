@@ -16,8 +16,13 @@ cp .env.example .env
 # The default `.env.example` will probably be sufficient,
 # but if you're a Safari user, change SESSION_SAME_SITE="none"
 
-# Instal php deps
-composer install
+# Install php deps
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
+    laravelsail/php81-composer:latest \
+    composer install --ignore-platform-reqs
 
 # Build docker image
 sail build --no-cache
@@ -72,11 +77,11 @@ yarn run cypress
 
 ## Deploy
 
-Servers:
-
-- Development: https://cla-chimein-dev.oit.umn.edu
-- Test (Staging): https://cla-chimein-tst.oit.umn.edu
-- Production: https://chimein.umn.edu
+| Enviroment Name | URL                                   |
+| --------------- | ------------------------------------- |
+| `dev`           | <https://cla-chimein-dev.cla.umn.edu> |
+| `stage`         | <https://cla-chimein-tst.cla.umn.edu> |
+| `prod`          | <https://chimein.umn.edu>             |
 
 ```sh
 ./vendor/bin/dep deploy <environment name>

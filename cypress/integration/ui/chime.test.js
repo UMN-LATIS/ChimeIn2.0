@@ -62,6 +62,82 @@ describe("chime UI", () => {
     });
   });
 
+  context("when authenticated as a student", () => {
+    it("lets student remove themselves from the chime", () => {
+      let testChime;
+
+      cy.login("faculty");
+      api
+        .createChimeFolderQuestion({
+          chimeName: "Test Chime",
+          folderName: "Test Folder",
+          questionText,
+          questionResponses,
+        })
+        .then(({ chime, folder, question }) => {
+          testChime = chime;
+
+          api.openQuestion({
+            chimeId: chime.id,
+            folderId: folder.id,
+            questionId: question.id,
+          });
+        })
+        .then(() => {
+          // as a student, join the chime, then go back to the chime list
+          cy.login("student");
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.visit("/");
+        })
+        .then(() => {
+          // as a student, remove themselves from the chime
+          cy.get('[data-cy="remove-button"]').click();
+          cy.get('[data-cy="modal__remove-self-button"]').click();
+        })
+        .then(() => {
+          // chime should be gone
+          cy.contains("Test Chime").should("not.exist");
+          cy.contains("access to 0 chimes").should("exist");
+        });
+    });
+
+    it("x shows options to remove self, but not to to delete the chime", () => {
+      let testChime;
+
+      cy.login("faculty");
+      api
+        .createChimeFolderQuestion({
+          chimeName: "Test Chime",
+          folderName: "Test Folder",
+          questionText,
+          questionResponses,
+        })
+        .then(({ chime, folder, question }) => {
+          testChime = chime;
+
+          api.openQuestion({
+            chimeId: chime.id,
+            folderId: folder.id,
+            questionId: question.id,
+          });
+        })
+        .then(() => {
+          // as a student, join the chime, then go back to the chime list
+          cy.login("student");
+          cy.visit(`/join/${testChime.access_code}`);
+          cy.visit("/");
+        })
+        .then(() => {
+          cy.get('[data-cy="remove-button"]').click();
+        })
+        .then(() => {
+          // Only the remove myself button should be visible
+          cy.get(".modal__button-group").should("not.contain.text", "Delete");
+          cy.contains("Leave Chime").should("be.visible");
+        });
+    });
+  });
+
   context("when authenticated as faculty", () => {
     beforeEach(() => {
       cy.login("faculty");
@@ -75,6 +151,75 @@ describe("chime UI", () => {
       cy.get("[data-cy=create-chime-button]").click();
       cy.url().should("match", /chime\/[0-9]+$/);
       cy.get("h1").should("contain", "Test Chime");
+    });
+
+    it("deletes a chime", () => {
+      cy.login("faculty");
+      api
+        .createChimeFolderQuestion({
+          chimeName: "Test Chime",
+          folderName: "Test Folder",
+          questionText,
+          questionResponses,
+        })
+        .then(() => {
+          cy.visit("/");
+          cy.get('[data-cy="remove-button"]').click();
+          cy.get('[data-cy="modal__delete-chime-button"]').click();
+        })
+        .then(() => {
+          // chime should be gone
+          cy.contains("Test Chime").should("not.exist");
+          cy.contains("access to 0 chimes").should("exist");
+        });
+    });
+
+    it("removes self from a chime when if not the only presenter", () => {
+      // first create a chime
+      let testChime;
+      let secondPresenter;
+
+      cy.login("faculty");
+      api
+        .createChime({ name: "New Chime" })
+        .then((chime) => {
+          testChime = chime;
+        })
+        .then(() => {
+          // add a second user to the chime and promote them to presenter
+          cy.login("student");
+          cy.visit("/join/" + testChime.access_code);
+        })
+        .then(() => {
+          cy.login("faculty");
+          api.getChimeUsers({ chimeId: testChime.id }).then((users) => {
+            secondPresenter = users[1];
+            api.updateChimeUser({
+              chimeId: testChime.id,
+              userId: secondPresenter.id,
+              permissionNumber: 300,
+            });
+          });
+        })
+        .then(() => {
+          // as the first presenter, I should be able to leave the chime
+          // since the chime will no longer be orphaned
+          cy.visit("/");
+          cy.get('[data-cy="remove-button"]').click();
+          cy.get('[data-cy="modal__remove-self-button"]').click();
+        })
+        .then(() => {
+          // chime should be gone for this user
+          cy.contains("New Chime").should("not.exist");
+          cy.contains("access to 0 chimes").should("exist");
+        })
+        .then(() => {
+          // but chime should still be there for other user
+          cy.login("student");
+          cy.visit("/");
+          cy.contains("New Chime").should("exist");
+          cy.contains("access to 1 chime").should("exist");
+        });
     });
 
     it("show a spinner while waiting for chime data to load", () => {

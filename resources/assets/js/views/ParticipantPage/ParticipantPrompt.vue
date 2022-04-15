@@ -188,7 +188,7 @@ export default {
 .participant-prompt {
   position: relative;
   margin-bottom: 2rem;
-  padding-left: 2rem;
+  padding-left: 1.25rem;
 }
 .participant-prompt:before {
   content: "";
@@ -215,6 +215,7 @@ export default {
   line-height: 1;
   position: relative;
   text-transform: uppercase;
+  font-weight: bold;
   color: #999;
   font-size: 0.8rem;
   display: flex;
