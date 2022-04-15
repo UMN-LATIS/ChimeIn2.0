@@ -248,7 +248,7 @@ class LTI13Handler extends Controller
             "title" => "ChimeIn",
             "description" => "ChimeIn Student Response Tool",
             "oidc_initiation_url" => url("lti13/login"),
-            "target_link_uri" => url("lti/launch"),
+            "target_link_uri" => url("lti13/launch"),
             "scopes" => [
                 "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
                 "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
@@ -272,24 +272,24 @@ class LTI13Handler extends Controller
                                     "target_link_uri" => url("lti13/launch"),
                                     "canvas_icon_class" => "icon-lti"
                                 ],
-                                // [
-                                //     "text"=>"ChimeIn",
-                                //     "enabled"=>true,
-                                //     "placement"=>"course_navigation",
-                                //     "message_type"=>"LtiResourceLinkRequest",
-                                //     "target_link_uri"=>url("lti13/launch"),
-                                //     "canvas_icon_class"=>"icon-lti",
-                                //     "windowTarget"=> "_blank"
-                                // ],
-                                // [
-                                //     "text"=>"ChimeIn",
-                                //     "enabled"=>true,
-                                //     "placement"=>"link_selection",
-                                //     "message_type"=>"LtiResourceLinkRequest",
-                                //     "target_link_uri"=>url("lti13/launch"),
-                                //     "canvas_icon_class"=>"icon-lti",
-                                //     "windowTarget"=> "_blank"
-                                // ]
+                                [
+                                    "text"=>"ChimeIn",
+                                    "enabled"=>true,
+                                    "placement"=>"course_navigation",
+                                    "message_type"=>"LtiResourceLinkRequest",
+                                    "target_link_uri"=>url("lti13/launch"),
+                                    "canvas_icon_class"=>"icon-lti",
+                                    "windowTarget"=> "_blank"
+                                ],
+                                [
+                                    "text"=>"ChimeIn",
+                                    "enabled"=>true,
+                                    "placement"=>"link_selection",
+                                    "message_type"=>"LtiResourceLinkRequest",
+                                    "target_link_uri"=>url("lti13/launch"),
+                                    "canvas_icon_class"=>"icon-lti",
+                                    "windowTarget"=> "_blank"
+                                ]
                             ]
                         ]
                     ]
