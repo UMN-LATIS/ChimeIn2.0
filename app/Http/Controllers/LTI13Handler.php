@@ -33,7 +33,7 @@ class LTI13Handler extends Controller
 
      public function login() {
         return LtiOidcLogin::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
-            ->doOidcLoginRedirect(url("lti13/launch"))
+            ->doOidcLoginRedirect(url("lti/launch"))
             ->doRedirect();
     }
 
@@ -62,7 +62,7 @@ class LTI13Handler extends Controller
             window.parent.postMessage(
   {
     messageType: "requestFullWindowLaunch",
-    data: "' . url("lti13/launch") . '"
+    data: "' . url("lti/launch") . '"
   },
   "*"
 )           
@@ -261,7 +261,7 @@ class LTI13Handler extends Controller
             "title" => "ChimeIn",
             "description" => "ChimeIn Student Response Tool",
             "oidc_initiation_url" => url("lti13/login"),
-            "target_link_uri" => url("lti13/launch"),
+            "target_link_uri" => url("lti/launch"),
             "scopes" => [
                 "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
                 "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
@@ -282,7 +282,7 @@ class LTI13Handler extends Controller
                                     "enabled" => true,
                                     "placement" => "assignment_selection",
                                     "message_type" => "LtiResourceLinkRequest",
-                                    "target_link_uri" => url("lti13/launch"),
+                                    "target_link_uri" => url("lti/launch"),
                                     "canvas_icon_class" => "icon-lti"
                                 ],
                                 // [
