@@ -84,7 +84,7 @@
     "vue": "^2.6.12",
     "vue-announcer": "^1.0.6",
     "vue-carousel": "^0.7.3",
-    "vue-chartjs": "^3.5.1",
+    "vue-chartjs": "^4.0.7",
     "vue-cli": "^2.9.6",
     "vue-fullscreen": "^2.2.0",
     "vue-google-charts": "^0.3.3",

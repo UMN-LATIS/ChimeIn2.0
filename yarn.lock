@@ -1463,13 +1463,6 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/chart.js@^2.7.55":
-  version "2.9.34"
-  resolved "https://registry.npmjs.org/@types/chart.js/-/chart.js-2.9.34.tgz"
-  integrity sha512-CtZVk+kh1IN67dv+fB0CWmCLCRrDJgqOj15qPic2B1VCMovNO6B7Vhf/TgPpNscjhAL1j+qUntDMWb9A4ZmPTg==
-  dependencies:
-    moment "^2.10.2"
-
 "@types/clean-css@^4.2.5":
   version "4.2.5"
   resolved "https://registry.npmjs.org/@types/clean-css/-/clean-css-4.2.5.tgz"
@@ -7141,11 +7134,6 @@ mkdirp@^0.5.1, mkdirp@^0.5.5:
   dependencies:
     minimist "^1.2.5"
 
-moment@^2.10.2:
-  version "2.29.2"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.2.tgz#00910c60b20843bcba52d37d58c628b47b1f20e4"
-  integrity sha512-UgzG4rvxYpN15jgCmVJwac49h9ly9NurikMWGPdVxm8GZD6XjkKPxDTjQQ43gtGgnV3X0cAyWDdP2Wexoquifg==
-
 mri@^1.1.5:
   version "1.2.0"
   resolved "https://registry.npmjs.org/mri/-/mri-1.2.0.tgz"
@@ -9862,12 +9850,10 @@ vue-carousel@^0.7.3:
   resolved "https://registry.npmjs.org/vue-carousel/-/vue-carousel-0.7.3.tgz"
   integrity sha512-CZxNpaBAT2nPjsefqG6gmkqwRCttzGvX/FiJBHH/5LAZlW/fOSEyIqkme+2EBBIF0hFenDXGSO0xd4wOmkv0mw==
 
-vue-chartjs@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.npmjs.org/vue-chartjs/-/vue-chartjs-3.5.1.tgz"
-  integrity sha512-foocQbJ7FtveICxb4EV5QuVpo6d8CmZFmAopBppDIGKY+esJV8IJgwmEW0RexQhxqXaL/E1xNURsgFFYyKzS/g==
-  dependencies:
-    "@types/chart.js" "^2.7.55"
+vue-chartjs@^4.0.7:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-4.0.7.tgz#bf15a8f1f2f4482351e22f34e0400adbfd6209fb"
+  integrity sha512-nlUIyZx/+83BlA+b7Q9JTV96IXweb+atiod2ciYiJyoaGgJ7nBAzt/7L9gugW8gpiqeYqS3ogAlE+y9YyhkTzw==
 
 vue-cli@^2.9.6:
   version "2.9.6"
