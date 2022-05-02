@@ -11,10 +11,10 @@ jobs:
 
       - run: cp .env.example .env
 
-      - name: Setup PHP 7.4 to match server
+      - name: Setup PHP 8.1 to match server
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "7.4"
+          php-version: "8.1"
 
       - run: composer install --no-interaction --prefer-dist
 
