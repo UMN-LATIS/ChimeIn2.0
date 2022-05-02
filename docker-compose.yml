@@ -3,17 +3,17 @@ version: "3"
 services:
   app:
     build:
-      context: ./docker/7.4
+      context: ./docker/8.1
       dockerfile: Dockerfile
       args:
-        WWWGROUP: 1000
-    image: sail-8.0/app
+        WWWGROUP: "${WWWGROUP}"
+    image: sail-8.1/app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
       - "${APP_PORT:-80}:80"
     environment:
-      WWWUSER: 1000
+      WWWUSER: "${WWWUSER}"
       LARAVEL_SAIL: 1
       XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
       XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
@@ -31,7 +31,7 @@ services:
       - redis
     entrypoint: "./docker/start.sh"
   scheduler:
-    image: sail-8.0/app
+    image: sail-8.1/app
     container_name: laravel-scheduler
     depends_on:
       - app
@@ -43,7 +43,7 @@ services:
       - sail
     entrypoint: "./docker/start.sh"
   queue:
-    image: sail-8.0/app
+    image: sail-8.1/app
     container_name: laravel-queue
     depends_on:
       - app
