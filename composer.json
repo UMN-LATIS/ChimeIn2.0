@@ -5,7 +5,7 @@
     "sort-packages": true,
     "optimize-autoloader": true,
     "platform": {
-      "php": "7.3.20"
+      "php": "8.1"
     },
     "allow-plugins": {
       "symfony/thanks": false
@@ -33,14 +33,14 @@
     }
   ],
   "require": {
-    "php": "~7.2",
+    "php": "^8.1",
     "deployer/deployer": "^6.3",
     "deployer/dist": "^6.3",
     "doctrine/dbal": "^3.3",
     "dyrynda/laravel-cascade-soft-deletes": "^4.1",
     "imsglobal/lti": "dev-master",
     "intervention/image": "^2.4",
-    "lab404/laravel-impersonate": "^1.4",
+    "lab404/laravel-impersonate": "^1.7",
     "laravel/framework": "8.*",
     "laravel/helpers": "^1.4",
     "laravel/tinker": "~2.0",
