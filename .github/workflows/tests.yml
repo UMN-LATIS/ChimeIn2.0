@@ -16,7 +16,7 @@ jobs:
         with:
           php-version: "8.1"
 
-      - run: composer install --no-interaction --prefer-dist
+      - run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
 
       - name: Build
         run: docker-compose build
