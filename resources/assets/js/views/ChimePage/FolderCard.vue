@@ -1,10 +1,10 @@
 <template>
   <Card
+    v-if="isFolderVisible"
     class="folder-card"
     data-cy="folder-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
-    iconClass="handle"
-    v-if="isFolderVisible"
+    icon-class="handle"
   >
     <router-link :to="to">
       <div class="folder-card__contents">
@@ -17,6 +17,7 @@
             :solid="true"
           >
             {{ folder.questions_count }}
+            <!-- eslint-disable-next-line vue/no-deprecated-filter -->
             {{ "Question" | pluralize(folder.questions_count) }}
           </Chip>
         </div>
@@ -36,11 +37,11 @@
       </CardActionButton>
     </template>
 
-    <Portal>
+    <Teleport to="body">
       <Modal
         :show="isRemoveConfirmModalOpen"
-        @close="handleCloseModal"
         class="folder-card__modal"
+        @close="handleCloseModal"
       >
         <h2>Delete Folder?</h2>
         <p>
@@ -49,25 +50,19 @@
         </p>
         <div class="modal__button-group">
           <button
-            class="
-              btn btn-danger
-              modal__button
-              d-inline-flex
-              align-items-center
-            "
-            @click="handleDeleteFolder"
+            class="btn btn-danger modal__button d-inline-flex align-items-center"
             data-cy="confirm-delete-button"
+            @click="handleDeleteFolder"
           >
             <i class="material-icons modal__button-icon mr-2">delete</i>
             Delete Folder
           </button>
         </div>
       </Modal>
-    </Portal>
+    </Teleport>
   </Card>
 </template>
 <script>
-import { Portal } from "@linusborg/vue-simple-portal";
 import Card from "../../components/Card.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
 import Chip from "../../components/Chip.vue";
@@ -78,7 +73,6 @@ export default {
     Card,
     CardActionButton,
     Chip,
-    Portal,
     Modal,
   },
   props: {
