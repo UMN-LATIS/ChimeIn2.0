@@ -82,7 +82,7 @@
 import throttle from "lodash/throttle";
 import wordcloud from "vue-wordcloud/src/components/WordCloud";
 import nlp from "compromise";
-import stemmer from "stemmer";
+import { stemmer } from "stemmer";
 import difflib from "difflib";
 import sw from "stopword";
 
