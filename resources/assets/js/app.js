@@ -1,7 +1,8 @@
-import Vue from "vue";
+import { createApp } from "vue";
 import VueAnnouncer from "vue-announcer";
 import $ from "jquery";
 import "bootstrap";
+import ltilaunch from "./components/lti/ltiLaunch.vue";
 import registerAxios from "./common/axios.js";
 import registerEcho from "./common/echo.js";
 import registerSocketIOClient from "./common/socketioClient.js";
@@ -15,12 +16,13 @@ registerAxios();
 registerEcho();
 registerDevTools();
 
-Vue.use(VueAnnouncer);
+const app = createApp({});
 
-Vue.filter("pluralize", pluralizeFilter);
+app.use(VueAnnouncer);
 
-// $.tooltip requires jquery and bootstrap
-Vue.directive("tooltip", (el, binding) =>
+app.filter("pluralize", pluralizeFilter);
+
+app.directive("tooltip", (el, binding) =>
   $(el).tooltip({
     title: binding.value,
     placement: binding.arg,
@@ -28,10 +30,6 @@ Vue.directive("tooltip", (el, binding) =>
   })
 );
 
-import ltilaunch from "./components/lti/ltiLaunch.vue";
-Vue.component("lti-launch", ltilaunch);
+app.component("LtiLaunch", ltilaunch);
 
-new Vue({
-  router,
-  store,
-}).$mount("#app");
+app.use(router).use(store).mount("#app");
