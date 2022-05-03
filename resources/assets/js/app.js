@@ -8,7 +8,6 @@ import registerAxios from "./common/axios.js";
 import registerEcho from "./common/echo.js";
 import registerSocketIOClient from "./common/socketioClient.js";
 import registerDevTools from "./common/devtools.js";
-import pluralizeFilter from "./common/pluralize.filter.js";
 import router from "./router.js";
 import store from "./store.js";
 
@@ -20,8 +19,6 @@ registerDevTools();
 const app = createApp({});
 
 app.use(VueAnnouncer);
-
-app.filter("pluralize", pluralizeFilter);
 
 app.directive("tooltip", (el, binding) =>
   $(el).tooltip({

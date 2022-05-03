@@ -4,7 +4,7 @@
       <div class="col-12">
         <p data-cy="chime-count-summary">
           You have access to {{ chimes.length }}
-          {{ "chime" | pluralize(chimes.length) }}.
+          {{ pluralize("chime", chimes.length) }}.
         </p>
         <button
           v-if="!user.guest_user"
@@ -35,10 +35,10 @@
             </div>
             <div class="row">
               <ChimeManagementOptions
-                :require_login.sync="requireLogin"
-                :students_can_view.sync="studentsCanView"
-                :join_instructions.sync="joinInstructions"
-                :show_folder_title_to_participants.sync="
+                v-model:require_login="requireLogin"
+                v-model:students_can_view="studentsCanView"
+                v-model:join_instructions="joinInstructions"
+                v-model:show_folder_title_to_participants="
                   showFolderTitleToParticipants
                 "
                 :new_chime="true"
@@ -60,10 +60,10 @@
         <div v-if="chimes.length > 0" class="chime-card-group">
           <ChimeCard
             v-for="chime in orderedChimes"
-            class="chime-card-group__item"
             :key="chime.id"
+            class="chime-card-group__item"
             :chime="chime"
-            :showMoveIcon="orderedChimes.length > 1"
+            :show-move-icon="orderedChimes.length > 1"
             :to="getUserLinkToChime({ user, chime })"
             @change="get_chimes"
           />
@@ -86,6 +86,7 @@ import orderBy from "lodash/orderBy";
 import { EventBus } from "../../EventBus.js";
 import ChimeCard from "./ChimeCard.vue";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
+import pluralize from "../../common/pluralize.js";
 
 export default {
   components: {
@@ -119,6 +120,7 @@ export default {
     });
   },
   methods: {
+    pluralize,
     getUserLinkToChime({ chime }) {
       const isUserEditorOfChime = (chime) =>
         chime.pivot.permission_number >= 200;

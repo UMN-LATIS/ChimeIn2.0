@@ -2,7 +2,7 @@
   <Card
     class="question-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
-    iconClass="handle"
+    icon-class="handle"
   >
     <header class="question-card__header">
       <h2 class="question-card__question-type">
@@ -13,7 +13,7 @@
         </router-link>
       </h2>
       <Chip :color="totalResponses ? 'primary' : 'muted'" :solid="true"
-        >{{ totalResponses }} {{ "Response" | pluralize(totalResponses) }}</Chip
+        >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
       >
     </header>
 
@@ -23,9 +23,9 @@
       <div class="flow-text question_list_text" v-html="question.text" />
 
       <component
+        :is="`${questionType}_display`"
         v-if="hasSpecializedQuestionDisplay(questionType)"
         class="question-card__choice-display"
-        :is="`${questionType}_display`"
         :question="question"
       />
     </router-link>
@@ -108,6 +108,7 @@ import MultipleChoiceDisplay from "../../components/MultipleChoice/MultipleChoic
 import HeatmapResponseDisplay from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
 import hasSpecializedQuestionDisplay from "../../helpers/hasSpecializedQuestionDisplay";
 import TextHeatmapResponseDisplay from "../../components/TextHeatmap/TextHeatmapResponseDisplay.vue";
+import pluralize from "../../common/pluralize";
 
 export default {
   components: {
@@ -166,6 +167,7 @@ export default {
     },
   },
   methods: {
+    pluralize,
     hasSpecializedQuestionDisplay,
     handleEditClick() {
       this.showEdit = true;

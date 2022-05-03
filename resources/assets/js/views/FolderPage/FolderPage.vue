@@ -12,7 +12,7 @@
       role="alert"
     >
       You have {{ otherFolderSessions.length }}
-      {{ "question" | pluralize(otherFolderSessions.length) }} open outside this
+      {{ pluralize("question", otherFolderSessions.length) }} open outside this
       folder. Would you like to
       <a class="pointer" href="" @click.prevent="closeOthers"
         >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
@@ -182,7 +182,7 @@
             data-cy="question-list"
             class="question-list"
             handle=".handle"
-            ghostClass="ghost"
+            ghost-class="ghost"
             @end="swap_question"
           >
             <QuestionCard
@@ -190,7 +190,7 @@
               :key="q.id"
               :folder="folder"
               :question="q"
-              :showMoveIcon="questions.length > 1"
+              :show-move-icon="questions.length > 1"
               @change="load_questions"
             />
           </Draggable>
@@ -231,6 +231,7 @@ import {
   selectCanvasCourseUrl,
 } from "../../helpers/chimeSelectors";
 import Spinner from "../../components/Spinner.vue";
+import pluralize from "../../common/pluralize.js";
 
 const QuestionForm = () =>
   import(
@@ -302,6 +303,7 @@ export default {
     });
   },
   methods: {
+    pluralize,
     reset: function () {
       if (
         confirm(

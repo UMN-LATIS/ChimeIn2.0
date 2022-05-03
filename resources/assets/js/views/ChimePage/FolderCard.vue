@@ -17,8 +17,7 @@
             :solid="true"
           >
             {{ folder.questions_count }}
-            <!-- eslint-disable-next-line vue/no-deprecated-filter -->
-            {{ "Question" | pluralize(folder.questions_count) }}
+            {{ pluralize("Question", folder.questions_count) }}
           </Chip>
         </div>
       </div>
@@ -67,6 +66,7 @@ import Card from "../../components/Card.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
 import Chip from "../../components/Chip.vue";
 import Modal from "../../components/Modal.vue";
+import pluralize from "../../common/pluralize.js";
 
 export default {
   components: {
@@ -102,6 +102,7 @@ export default {
     },
   },
   methods: {
+    pluralize,
     handleClickDelete() {
       this.isRemoveConfirmModalOpen = true;
     },
