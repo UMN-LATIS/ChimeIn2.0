@@ -1,5 +1,6 @@
 import { createApp } from "vue";
-import VueAnnouncer from "vue-announcer";
+import VueAnnouncer from "@vue-a11y/announcer";
+import "@vue-a11y/announcer/dist/style.css";
 import $ from "jquery";
 import "bootstrap";
 import ltilaunch from "./components/lti/ltiLaunch.vue";
