@@ -83,7 +83,6 @@
 
 <script>
 import orderBy from "lodash/orderBy";
-import { EventBus } from "../../EventBus.js";
 import ChimeCard from "./ChimeCard.vue";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 import pluralize from "../../common/pluralize.js";
@@ -93,14 +92,14 @@ export default {
     ChimeCard,
     ChimeManagementOptions,
   },
-  props: ["user"],
+  props: ["user", "chimes"],
+  emits: ["update:chimes"],
   data() {
     return {
       requireLogin: false,
       studentsCanView: false,
       joinInstructions: true,
       showFolderTitleToParticipants: false,
-      chimes: [],
       showAdd: false,
       chime_name: "",
       modalChime: null,
@@ -111,13 +110,6 @@ export default {
     orderedChimes() {
       return orderBy(this.chimes, "created_at", ["desc"]);
     },
-  },
-  created: function () {
-    this.get_chimes();
-    var self = this;
-    EventBus.$on("chimesChanged", function () {
-      self.get_chimes();
-    });
   },
   methods: {
     pluralize,
@@ -145,7 +137,7 @@ export default {
         .then((res) => {
           console.log("debug", "Chime Created:", res);
           this.showAdd = false;
-          EventBus.$emit("chimesChanged");
+          this.$emit("update:chimes", res.data);
           this.$router.push({
             name: "chime",
             params: { chimeId: res.data.id },
@@ -155,17 +147,17 @@ export default {
           console.log("error", "Error in create chime:", err.response);
         });
     },
-    get_chimes() {
-      axios
-        .get("/api/chime")
-        .then((res) => {
-          console.log("debug", "Get Chimes:", res);
-          this.chimes = res.data;
-        })
-        .catch((err) => {
-          console.error("error", "Error in get chimes:", err.response);
-        });
-    },
+    // get_chimes() {
+    //   axios
+    //     .get("/api/chime")
+    //     .then((res) => {
+    //       console.log("debug", "Get Chimes:", res);
+    //       this.chimes = res.data;
+    //     })
+    //     .catch((err) => {
+    //       console.error("error", "Error in get chimes:", err.response);
+    //     });
+    // },
   },
 };
 </script>
