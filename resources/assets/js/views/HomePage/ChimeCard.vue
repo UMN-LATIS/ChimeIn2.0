@@ -175,7 +175,9 @@ export default {
 
       axios
         .delete(`/api/chime/${this.chime.id}`, { timeout: 2000 })
-        .then(() => this.$emit("change"))
+        .then(() => {
+          this.$emit("change");
+        })
         .catch((err) => {
           this.showCard = true;
           console.error("Error in removeChime request.", err);

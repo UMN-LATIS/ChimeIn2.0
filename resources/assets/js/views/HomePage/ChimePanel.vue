@@ -65,7 +65,7 @@
             :chime="chime"
             :show-move-icon="orderedChimes.length > 1"
             :to="getUserLinkToChime({ user, chime })"
-            @change="get_chimes"
+            @change="handleChimeCardChange"
           />
         </div>
         <div v-else class="my-3">
@@ -113,6 +113,9 @@ export default {
   },
   methods: {
     pluralize,
+    handleChimeCardChange(payload) {
+      this.$emit("update:chimes", payload);
+    },
     getUserLinkToChime({ chime }) {
       const isUserEditorOfChime = (chime) =>
         chime.pivot.permission_number >= 200;

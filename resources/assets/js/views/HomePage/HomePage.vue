@@ -114,6 +114,9 @@ export default {
       ];
     },
   },
+  mounted() {
+    this.get_chimes();
+  },
   methods: {
     get_chimes() {
       axios
