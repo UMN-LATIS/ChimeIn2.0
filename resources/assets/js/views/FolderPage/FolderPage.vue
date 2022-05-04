@@ -177,23 +177,23 @@
           >
             <i class="material-icons pointer">add</i> Add Question
           </button>
-          <Draggable
+          <!-- <Draggable
             v-model="questions"
             data-cy="question-list"
             class="question-list"
             handle=".handle"
             ghost-class="ghost"
             @end="swap_question"
-          >
-            <QuestionCard
-              v-for="q in questions"
-              :key="q.id"
-              :folder="folder"
-              :question="q"
-              :show-move-icon="questions.length > 1"
-              @change="load_questions"
-            />
-          </Draggable>
+          > -->
+          <QuestionCard
+            v-for="q in questions"
+            :key="q.id"
+            :folder="folder"
+            :question="q"
+            :show-move-icon="questions.length > 1"
+            @change="load_questions"
+          />
+          <!-- </Draggable> -->
         </div>
       </div>
     </div>
@@ -220,7 +220,7 @@
 
 <script>
 import orderBy from "lodash/orderBy";
-import Draggable from "vuedraggable";
+// import Draggable from "vuedraggable";
 import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
@@ -241,7 +241,7 @@ const QuestionForm = () =>
 
 export default {
   components: {
-    Draggable,
+    // Draggable,
     QuestionForm,
     ErrorDialog,
     NavBar,

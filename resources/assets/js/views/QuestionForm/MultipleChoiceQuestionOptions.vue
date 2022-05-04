@@ -8,44 +8,44 @@
     </header>
 
     <ol class="response-choice-list" data-cy="response-choice-list">
-      <draggable :list="question_responses">
-        <li
-          v-for="(response, i) in question_responses"
-          :key="i"
-          class="is-draggable response-choice-item"
-          :class="{ 'response-choice-item--is-correct': response.correct }"
+      <!-- <draggable :list="question_responses"> -->
+      <li
+        v-for="(response, i) in question_responses"
+        :key="i"
+        class="is-draggable response-choice-item"
+        :class="{ 'response-choice-item--is-correct': response.correct }"
+      >
+        <div
+          class="response-choice-item__correct-toggle"
+          title="Mark Response Correct"
         >
-          <div
-            class="response-choice-item__correct-toggle"
-            title="Mark Response Correct"
+          <input v-model="response.correct" type="checkbox" />
+          <label class="visually-hidden">Correct?</label>
+        </div>
+        <div class="response-choice-item__contents">
+          <label :for="`response-text-${i}`" class="visually-hidden"
+            >Response Text</label
           >
-            <input v-model="response.correct" type="checkbox" />
-            <label class="visually-hidden">Correct?</label>
-          </div>
-          <div class="response-choice-item__contents">
-            <label :for="`response-text-${i}`" class="visually-hidden"
-              >Response Text</label
-            >
-            <VueEditor
-              :id="`response-text-${i}`"
-              ref="responseInput"
-              v-model="response.text"
-              class="response-choice-item__text"
-              :name="`response-text-${i}`"
-              :editor-toolbar="choiceEditorToolbar"
-              :editor-options="choiceEditorOptions"
-            />
+          <VueEditor
+            :id="`response-text-${i}`"
+            ref="responseInput"
+            v-model="response.text"
+            class="response-choice-item__text"
+            :name="`response-text-${i}`"
+            :editor-toolbar="choiceEditorToolbar"
+            :editor-options="choiceEditorOptions"
+          />
 
-            <button
-              class="response-choice-item__remove"
-              data-cy="remove-response-button"
-              @click="remove(i)"
-            >
-              <i class="material-icons inline-icon">clear</i>
-            </button>
-          </div>
-        </li>
-      </draggable>
+          <button
+            class="response-choice-item__remove"
+            data-cy="remove-response-button"
+            @click="remove(i)"
+          >
+            <i class="material-icons inline-icon">clear</i>
+          </button>
+        </div>
+      </li>
+      <!-- </draggable> -->
     </ol>
     <button
       class="btn btn-outline-primary add-choice-button"
@@ -57,6 +57,90 @@
   </section>
 </template>
 
+<script>
+import { VueEditor } from "vue2-editor";
+// import draggable from "vuedraggable";
+
+export default {
+  components: {
+    // draggable,
+    VueEditor,
+  },
+  props: {
+    question_responses: Array,
+  },
+  computed: {
+    // note: don't use arrow functions so that `this` is bound properly
+    choiceEditorOptions(thisComponent) {
+      return {
+        bounds: ".response-choice-item__contents",
+        modules: {
+          formula: true,
+          keyboard: {
+            bindings: {
+              13: {
+                key: 13,
+                handler() {
+                  thisComponent.addChoice();
+                },
+              },
+            },
+          },
+        },
+      };
+    },
+    choiceEditorToolbar: () => ["formula"],
+  },
+  mounted() {
+    // if question responses is empty, initialize with blank array
+    // perhaps this should be the parents job?
+    if (!this.question_responses) {
+      this.$emit("update:question_responses", []);
+    }
+  },
+  methods: {
+    remove(responseIndex) {
+      const updatedResponses = this.question_responses.filter(
+        (_, i) => i !== responseIndex
+      );
+      this.$emit("update:question_responses", updatedResponses);
+    },
+    focusEditor(responseIndex) {
+      // use last index by default
+      if (typeof responseIndex === "undefined") {
+        responseIndex = this.question_responses.length - 1;
+      }
+      this.$refs.responseInput[responseIndex].quill.focus();
+    },
+    addChoice() {
+      // remove any empty responses and then add a new responses
+      const updatedResponses = this.question_responses
+        .filter((r) => r.text !== "")
+        .concat([
+          {
+            text: "",
+            correct: false,
+          },
+        ]);
+
+      this.$emit("update:question_responses", updatedResponses);
+
+      // focus new choice on next tick
+      this.$nextTick(function () {
+        this.focusEditor();
+      });
+    },
+    createTrueFalseQuestion: function () {
+      const updatedResponses = [
+        { text: "True", correct: false },
+        { text: "False", correct: false },
+      ];
+
+      this.$emit("update:question_responses", updatedResponses);
+    },
+  },
+};
+</script>
 <style scoped>
 label {
   margin: 0;
@@ -141,6 +225,7 @@ label {
   margin-top: 1rem;
 }
 </style>
+
 <style>
 /**
 * override default quill editor styles
@@ -174,88 +259,3 @@ label {
   fill: #fff;
 }
 </style>
-
-<script>
-import { VueEditor } from "vue2-editor";
-import draggable from "vuedraggable";
-
-export default {
-  components: {
-    draggable,
-    VueEditor,
-  },
-  props: {
-    question_responses: Array,
-  },
-  computed: {
-    // note: don't use arrow functions so that `this` is bound properly
-    choiceEditorOptions(thisComponent) {
-      return {
-        bounds: ".response-choice-item__contents",
-        modules: {
-          formula: true,
-          keyboard: {
-            bindings: {
-              13: {
-                key: 13,
-                handler() {
-                  thisComponent.addChoice();
-                },
-              },
-            },
-          },
-        },
-      };
-    },
-    choiceEditorToolbar: () => ["formula"],
-  },
-  mounted() {
-    // if question responses is empty, initialize with blank array
-    // perhaps this should be the parents job?
-    if (!this.question_responses) {
-      this.$emit("update:question_responses", []);
-    }
-  },
-  methods: {
-    remove(responseIndex) {
-      const updatedResponses = this.question_responses.filter(
-        (_, i) => i !== responseIndex
-      );
-      this.$emit("update:question_responses", updatedResponses);
-    },
-    focusEditor(responseIndex) {
-      // use last index by default
-      if (typeof responseIndex === "undefined") {
-        responseIndex = this.question_responses.length - 1;
-      }
-      this.$refs.responseInput[responseIndex].quill.focus();
-    },
-    addChoice() {
-      // remove any empty responses and then add a new responses
-      const updatedResponses = this.question_responses
-        .filter((r) => r.text !== "")
-        .concat([
-          {
-            text: "",
-            correct: false,
-          },
-        ]);
-
-      this.$emit("update:question_responses", updatedResponses);
-
-      // focus new choice on next tick
-      this.$nextTick(function () {
-        this.focusEditor();
-      });
-    },
-    createTrueFalseQuestion: function () {
-      const updatedResponses = [
-        { text: "True", correct: false },
-        { text: "False", correct: false },
-      ];
-
-      this.$emit("update:question_responses", updatedResponses);
-    },
-  },
-};
-</script>
