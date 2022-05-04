@@ -1,15 +1,17 @@
 <template>
-  <component
-    :is="type"
-    v-bind="{ to, href }"
-    class="icon-button"
-    @click.stop="handleClick"
-  >
-    <i class="material-icons icon-button__icon">{{ icon }}</i>
-    <div class="icon-button__label">
-      <slot />
-    </div>
-  </component>
+  <div>
+    <component
+      :is="type"
+      v-bind="{ to, href }"
+      class="icon-button"
+      @click.stop="handleClick"
+    >
+      <i class="material-icons icon-button__icon">{{ icon }}</i>
+      <div class="icon-button__label">
+        <slot />
+      </div>
+    </component>
+  </div>
 </template>
 <script>
 export default {
@@ -34,6 +36,7 @@ export default {
   },
   methods: {
     handleClick(event) {
+      console.log("CardActionButton click", event);
       this.$emit("click", event);
     },
   },
