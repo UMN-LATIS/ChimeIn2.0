@@ -23,7 +23,7 @@
       <div class="row mt-4">
         <div class="col-4 align-items-center d-flex">
           <h1 class="h4">{{ folder.name }}</h1>
-          <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip>
+          <!-- <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip> -->
         </div>
         <div class="col-md-8 col-sm-12">
           <div
@@ -225,28 +225,35 @@ import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import QuestionCard from "./QuestionCard.vue";
-import Chip from "../../components/Chip.vue";
-import {
-  selectIsCanvasChime,
-  selectCanvasCourseUrl,
-} from "../../helpers/chimeSelectors";
+// import Chip from "../../components/Chip.vue";
+// import {
+//   selectIsCanvasChime,
+//   selectCanvasCourseUrl,
+// } from "../../helpers/chimeSelectors";
 import Spinner from "../../components/Spinner.vue";
 import pluralize from "../../common/pluralize.js";
+// import QuestionForm from "../QuestionForm/QuestionForm.vue";
+import { defineAsyncComponent } from "vue";
 
-const QuestionForm = () =>
-  import(
-    /* webpackChunkName: "QuestionForm" */
-    "../QuestionForm/QuestionForm.vue"
-  );
+// const QuestionForm = () =>
+//   import(
+//     /* webpackChunkName: "QuestionForm" */
+//     "../QuestionForm/QuestionForm.vue"
+//   );
 
 export default {
   components: {
     // Draggable,
-    QuestionForm,
     ErrorDialog,
     NavBar,
     QuestionCard,
-    Chip,
+    QuestionForm: defineAsyncComponent(() =>
+      import(
+        /* webpackChunkName: "QuestionForm" */
+        "../QuestionForm/QuestionForm.vue"
+      )
+    ),
+    // Chip,
     Spinner,
   },
   mixins: [questionsListener],
@@ -281,14 +288,14 @@ export default {
       }
       return [];
     },
-    isCanvasChime() {
-      return selectIsCanvasChime(this.chime);
-    },
-    canvasUrl() {
-      const fullCanvasUrlString =
-        selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
-      return new URL(fullCanvasUrlString);
-    },
+    // isCanvasChime() {
+    //   return selectIsCanvasChime(this.chime);
+    // },
+    // canvasUrl() {
+    //   const fullCanvasUrlString =
+    //     selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
+    //   return new URL(fullCanvasUrlString);
+    // },
   },
   watch: {
     show_edit_folder: function (newValue) {

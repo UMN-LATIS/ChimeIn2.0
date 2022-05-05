@@ -10,13 +10,13 @@
         </div>
         <div class="col-sm-9">
           <div v-if="folders" class="form-group">
-            <v-select
+            <!-- <v-select
               v-model="folder_id"
               :options="folders"
               label="name"
               :reduce="(folder) => folder.id"
               :clearable="false"
-            ></v-select>
+            ></v-select> -->
           </div>
         </div>
         <div class="col-sm-3">
@@ -24,13 +24,13 @@
         </div>
         <div class="col-sm-9">
           <div class="form-group">
-            <v-select
+            <!-- <v-select
               v-model="question_type"
               data-cy="question-type"
               :options="question_types"
               :reduce="(question_type) => question_type.id"
               :clearable="false"
-            ></v-select>
+            ></v-select> -->
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@
       <hr />
       <div class="row">
         <div class="col">
-          <vue-editor
+          <!-- <vue-editor
             v-model="question_text"
             data-cy="question-editor"
             placeholder="Question Text"
@@ -73,14 +73,14 @@
             :use-custom-image-handler="true"
             @image-added="handle_image_added"
           >
-          </vue-editor>
+          </vue-editor> -->
         </div>
       </div>
 
       <component
-        v-if="question_type !== 'image_response'"
         :is="question_type + '_response'"
-        :question_responses.sync="question_responses"
+        v-if="question_type !== 'image_response'"
+        v-model:question_responses="question_responses"
         :chime_id="folder.chime_id"
       ></component>
     </div>
@@ -92,8 +92,8 @@
         <button class="btn btn-secondary" @click="close">Cancel</button>
         <button
           class="btn btn-primary"
-          @click="savePost"
           :disabled="!question_text.length"
+          @click="savePost"
         >
           Save
         </button>
@@ -101,17 +101,6 @@
     </div>
   </Modal>
 </template>
-
-<style scoped>
-.deleteIcon {
-  vertical-align: middle !important;
-}
-
-.choiceRow {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-</style>
 
 <script>
 import katex from "katex";
@@ -356,3 +345,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.deleteIcon {
+  vertical-align: middle !important;
+}
+
+.choiceRow {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+</style>
