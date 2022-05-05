@@ -10,13 +10,13 @@
         </div>
         <div class="col-sm-9">
           <div v-if="folders" class="form-group">
-            <!-- <v-select
+            <v-select
               v-model="folder_id"
               :options="folders"
               label="name"
               :reduce="(folder) => folder.id"
               :clearable="false"
-            ></v-select> -->
+            ></v-select>
           </div>
         </div>
         <div class="col-sm-3">
@@ -24,13 +24,13 @@
         </div>
         <div class="col-sm-9">
           <div class="form-group">
-            <!-- <v-select
+            <v-select
               v-model="question_type"
               data-cy="question-type"
               :options="question_types"
               :reduce="(question_type) => question_type.id"
               :clearable="false"
-            ></v-select> -->
+            ></v-select>
           </div>
         </div>
       </div>
