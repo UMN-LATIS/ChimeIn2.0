@@ -53,3 +53,8 @@ const toolbar = [
   ["link", "image"],
 ];
 </script>
+<style>
+.ql-editor {
+  min-height: 10rem;
+}
+</style>

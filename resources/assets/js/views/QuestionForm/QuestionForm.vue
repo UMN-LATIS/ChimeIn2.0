@@ -62,16 +62,12 @@
         </div>
       </div>
       <hr />
-      <div class="row">
-        <div class="col">
-          <VEditor
-            v-model="question_text"
-            data-cy="question-editor"
-            placeholder="Question Text"
-            :imageHandler="handleImageAdded"
-          />
-        </div>
-      </div>
+      <VEditor
+        v-model="question_text"
+        data-cy="question-editor"
+        placeholder="Question Text"
+        :imageHandler="handleImageAdded"
+      />
 
       <component
         :is="question_type + '_response'"
