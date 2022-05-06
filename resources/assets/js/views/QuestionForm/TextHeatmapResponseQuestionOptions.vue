@@ -7,8 +7,8 @@
         v-model="heatmap_text"
         data-cy="heatmap-text-editor"
         placeholder="Heatmap Text"
-        :editorToolbar="toolbar"
-        :editorOptions="editorOptions"
+        :toolbar="toolbar"
+        :options="editorOptions"
         @input="emitChanges"
       />
     </div>

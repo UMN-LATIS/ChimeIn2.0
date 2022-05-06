@@ -32,8 +32,8 @@
             v-model="response.text"
             class="response-choice-item__text"
             :name="`response-text-${i}`"
-            :editorToolbar="choiceEditorToolbar"
-            :editorOptions="choiceEditorOptions"
+            :toolbar="choiceEditorToolbar"
+            :options="choiceEditorOptions"
           />
 
           <button
@@ -168,7 +168,7 @@ label {
   align-items: center;
   border: 1px solid #ddd;
   border-radius: 0.25rem;
-  flex-grow: 1;
+  flex: 1;
 }
 
 .response-choice-item--is-correct .response-choice-item__contents,
@@ -234,17 +234,23 @@ label {
 .response-choice-item .response-choice-item__text {
   display: flex;
   align-items: baseline;
-  flex-direction: row-reverse;
+  flex: 1;
+  order: -1;
 }
 .response-choice-item .response-choice-item__text .ql-container {
-  border: 0;
   flex-grow: 1;
 }
-.response-choice-item .response-choice-item__text .ql-toolbar {
-  border: 0;
-}
+
 .response-choice-item .ql-editor {
+  flex: 1;
   min-height: auto;
+}
+
+.response-choice-item .ql-toolbar.ql-snow,
+.response-choice-item .ql-container.ql-snow,
+.response-choice-item .response-choice-item__text .ql-toolbar,
+.response-choice-item .response-choice-item__text .ql-container {
+  border: 0;
 }
 
 .response-choice-item .quillWrapper .ql-snow.ql-toolbar .ql-formats {
@@ -257,5 +263,8 @@ label {
 .response-choice-item--is-correct .ql-snow .ql-fill,
 .response-choice-item--is-correct .ql-snow .ql-stroke.ql-fill {
   fill: #fff;
+}
+.response-choice-item .ql-toolbar.ql-snow .ql-formats {
+  margin: 0;
 }
 </style>

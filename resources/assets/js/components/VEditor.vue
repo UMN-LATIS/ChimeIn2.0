@@ -6,6 +6,7 @@
     contentType="html"
     theme="snow"
     @update:content="(val) => $emit('update:modelValue', val)"
+    @ready="(quill) => $emit('ready', quill)"
   />
 </template>
 <script setup>
@@ -25,7 +26,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(["update:modelValue"]);
+defineEmits(["update:modelValue", "ready"]);
 
 const modules = [
   {
@@ -56,5 +57,9 @@ const toolbar = [
 <style>
 .ql-editor {
   min-height: 10rem;
+}
+
+.ql-container {
+  font-size: 1rem;
 }
 </style>
