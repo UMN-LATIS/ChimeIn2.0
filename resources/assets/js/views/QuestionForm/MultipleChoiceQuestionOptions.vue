@@ -26,14 +26,14 @@
           <label :for="`response-text-${i}`" class="visually-hidden"
             >Response Text</label
           >
-          <VueEditor
+          <VEditor
             :id="`response-text-${i}`"
             ref="responseInput"
             v-model="response.text"
             class="response-choice-item__text"
             :name="`response-text-${i}`"
-            :editor-toolbar="choiceEditorToolbar"
-            :editor-options="choiceEditorOptions"
+            :editorToolbar="choiceEditorToolbar"
+            :editorOptions="choiceEditorOptions"
           />
 
           <button
@@ -58,13 +58,13 @@
 </template>
 
 <script>
-import { VueEditor } from "vue2-editor";
+import VEditor from "../../components/VEditor.vue";
 // import draggable from "vuedraggable";
 
 export default {
   components: {
     // draggable,
-    VueEditor,
+    VEditor,
   },
   props: {
     question_responses: Array,

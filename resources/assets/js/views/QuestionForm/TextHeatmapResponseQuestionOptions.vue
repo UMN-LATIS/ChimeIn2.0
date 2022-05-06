@@ -3,12 +3,12 @@
     <div class="col">
       <hr />
       <p>Heatmap Text:</p>
-      <vue-editor
+      <VEditor
         v-model="heatmap_text"
         data-cy="heatmap-text-editor"
         placeholder="Heatmap Text"
-        :editor-toolbar="toolbar"
-        :editor-options="editorOptions"
+        :editorToolbar="toolbar"
+        :editorOptions="editorOptions"
         @input="emitChanges"
       />
     </div>
@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import { VueEditor } from "vue2-editor";
+import VEditor from "../../components/VEditor.vue";
 
 export default {
   name: "TextHeatmapResponse",
   components: {
-    "vue-editor": VueEditor,
+    VEditor,
   },
   props: ["question_responses"],
   data: function () {

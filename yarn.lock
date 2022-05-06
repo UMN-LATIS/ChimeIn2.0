@@ -7763,7 +7763,7 @@ quill-image-uploader@^1.2.2:
   resolved "https://registry.yarnpkg.com/quill-image-uploader/-/quill-image-uploader-1.2.2.tgz#ef4722f0394fbbcdef937d9ad29b4b43e2f5c3f3"
   integrity sha512-23jM2SVJC2W4hCXre4PX1hy4Lk3fBNVIognvHoyKTLl0AjQOiCSnsoIoUSnS2+9+wxvZIk6ET/cMVvtwpERa6g==
 
-quill@^1.3.6, quill@^1.3.7:
+quill@^1.3.7:
   version "1.3.7"
   resolved "https://registry.npmjs.org/quill/-/quill-1.3.7.tgz"
   integrity sha512-hG/DVzh/TiknWtE6QmWAF/pxoZKYxfe3J/d/+ShUWkDvvkZQVTPeVmUJVu1uE6DDooC4fWTiCLh84ul89oNz5g==
@@ -9244,13 +9244,6 @@ vue-template-compiler@^2.6.14:
     d3-cloud "^1.2.4"
     vue "^2.3.3"
     vue-resize-directive "^1.0.0"
-
-vue2-editor@^2.10.3:
-  version "2.10.3"
-  resolved "https://registry.yarnpkg.com/vue2-editor/-/vue2-editor-2.10.3.tgz#ada62d5d623db71613a1b613f3b738056e35e117"
-  integrity sha512-99rWL93xfGeFRrq8NY5L7U+Cog/Uenx+UOOJragtxtbhBE9Rv5/C3P/YhJhjMECSbQyHFjUriqv1S3mghvU9Kg==
-  dependencies:
-    quill "^1.3.6"
 
 vue@^2.0.0, vue@^2.3.3, vue@^2.5.17:
   version "2.6.14"
