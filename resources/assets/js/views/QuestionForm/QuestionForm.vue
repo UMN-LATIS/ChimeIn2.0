@@ -10,13 +10,13 @@
         </div>
         <div class="col-sm-9">
           <div v-if="folders" class="form-group">
-            <v-select
+            <VSelect
               v-model="folder_id"
               :options="folders"
               label="name"
               :reduce="(folder) => folder.id"
               :clearable="false"
-            ></v-select>
+            ></VSelect>
           </div>
         </div>
         <div class="col-sm-3">
@@ -24,13 +24,13 @@
         </div>
         <div class="col-sm-9">
           <div class="form-group">
-            <v-select
+            <VSelect
               v-model="question_type"
               data-cy="question-type"
               :options="question_types"
               :reduce="(question_type) => question_type.id"
               :clearable="false"
-            ></v-select>
+            ></VSelect>
           </div>
         </div>
       </div>
@@ -64,16 +64,12 @@
       <hr />
       <div class="row">
         <div class="col">
-          <!-- <vue-editor
+          <VEditor
             v-model="question_text"
             data-cy="question-editor"
             placeholder="Question Text"
-            :editor-toolbar="toolbar"
-            :editor-options="editorOptions"
-            :use-custom-image-handler="true"
-            @image-added="handle_image_added"
-          >
-          </vue-editor> -->
+            :imageHandler="handleImageAdded"
+          />
         </div>
       </div>
 
@@ -106,7 +102,6 @@
 import katex from "katex";
 window.katex = katex;
 
-import { VueEditor, Quill } from "vue2-editor";
 import MultipleChoiceQuestionOptions from "./MultipleChoiceQuestionOptions.vue";
 import SliderResponseQuestionOptions from "./SliderResponseQuestionOptions.vue";
 import FreeResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
@@ -114,41 +109,19 @@ import TextHeatmapResponseQuestionOptions from "./TextHeatmapResponseQuestionOpt
 import HeatmapResponseQuestionOptions from "./HeatmapResponseQuestionOptions.vue";
 import NoResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
 import Modal from "../../components/Modal.vue";
-
-import VueSelect from "vue-select";
-
-const Embed = Quill.import("blots/embed");
-
-class ImageBlot extends Embed {
-  static create(value) {
-    let node = super.create();
-    node.setAttribute("src", value.url);
-    node.setAttribute("class", "img-fluid");
-    return node;
-  }
-
-  static value(node) {
-    return {
-      url: node.getAttribute("url"),
-    };
-  }
-}
-
-ImageBlot.blotName = "image";
-ImageBlot.tagName = "img";
-
-Quill.register(ImageBlot);
+import VSelect from "../../components/VSelect.vue";
+import VEditor from "../../components/VEditor.vue";
 
 export default {
   components: {
-    VueEditor,
+    VEditor,
+    VSelect,
     multiple_choice_response: MultipleChoiceQuestionOptions,
     slider_response_response: SliderResponseQuestionOptions,
     free_response_response: FreeResponseQuestionOptions,
     text_heatmap_response_response: TextHeatmapResponseQuestionOptions,
     heatmap_response_response: HeatmapResponseQuestionOptions,
     no_response_response: NoResponseQuestionOptions,
-    "v-select": VueSelect,
     Modal,
   },
   props: ["question", "show", "folder", "controlType"],
@@ -191,27 +164,6 @@ export default {
           id: "no_response",
           label: "No Response (placeholder)",
         },
-      ],
-      toolbar: [
-        ["bold", "italic", "underline", "align"],
-        [
-          {
-            list: "ordered",
-          },
-          {
-            list: "bullet",
-          },
-        ],
-        [
-          {
-            script: "sub",
-          },
-          {
-            script: "super",
-          },
-          "formula",
-        ],
-        ["link", "image"],
       ],
       editorOptions: {
         bounds: ".modal-body",
@@ -321,18 +273,14 @@ export default {
           });
       }
     },
-    handle_image_added: function (file, editor, cursor, reset) {
-      console.log("file:", file);
-      let form_data = new FormData();
-      form_data.append("image", file);
+    handleImageAdded(file) {
+      const form = new FormData();
+      form.append("image", file);
 
-      axios
-        .post("/api/chime/" + this.folder.chime_id + "/image", form_data)
+      return axios
+        .post(`/api/chime/${this.folder.chime_id}/image`, form)
         .then((res) => {
-          editor.insertEmbed(cursor, "image", {
-            url: "/storage/" + res.data.image,
-          });
-          reset();
+          return `/storage/${res.data.image}`;
         })
         .catch((err) => {
           this.$store.commit(
@@ -340,6 +288,8 @@ export default {
             "Could not store this image. Please contact support at latistecharch@umn.edu. The full error was: " +
               err.response
           );
+          console.log(err);
+          throw err;
         });
     },
   },
