@@ -61,8 +61,8 @@ const emit = defineEmits(["update", "enter", "remove"]);
 const quill = ref(null);
 
 const options = {
-  toolbar: ["formula"],
   modules: {
+    toolbar: ["formula"],
     keyboard: {
       bindings: {
         13: {
