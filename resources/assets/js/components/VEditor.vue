@@ -1,19 +1,9 @@
 <template>
-  <QuillEditor
-    :content="modelValue"
-    :modules="modules"
-    :toolbar="toolbar"
-    contentType="html"
-    theme="snow"
-    @update:content="(val) => $emit('update:modelValue', val)"
-    @ready="(quill) => $emit('ready', quill)"
-  />
+  <div ref="editorContainerRef" class="v-editor"></div>
 </template>
 <script setup>
-import { QuillEditor } from "@vueup/vue-quill";
-import BlotFormatter from "quill-blot-formatter";
-import QuillImageUploader from "quill-image-uploader";
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import { onMounted, onUnmounted, ref } from "vue";
+import useQuill from "../hooks/useQuill.js";
 
 const props = defineProps({
   modelValue: {
@@ -24,35 +14,41 @@ const props = defineProps({
     type: Function,
     default: (file) => Promise.resolve(console.log("no image handler", file)),
   },
+  options: {
+    type: Object,
+    default: () => ({}),
+  },
+  modules: {
+    type: Array,
+    default: () => [],
+  },
 });
 
-defineEmits(["update:modelValue", "ready"]);
+const emit = defineEmits(["update:modelValue", "ready"]);
+const editorContainerRef = ref(null);
 
-const modules = [
-  {
-    name: "blotFormatter",
-    module: BlotFormatter,
-    options: {
-      /* options */
-    },
-  },
-  {
-    name: "imageUploader",
-    module: QuillImageUploader,
-    options: {
-      upload(file) {
-        return props.imageHandler(file);
-      },
-    },
-  },
-];
+const { quill, onAttachImage, onTextChange } = useQuill({
+  editorContainerRef,
+  options: props.options,
+  modules: props.modules,
+  // onAttachImage: props.imageHandler,
+  // onTextChange: (contents) => emit("update:modelValue", contents),
+});
 
-const toolbar = [
-  ["bold", "italic", "underline", "align"],
-  [{ list: "ordered" }, { list: "bullet" }],
-  [{ script: "sub" }, { script: "super" }, "formula"],
-  ["link", "image"],
-];
+const removeImageHandler = onAttachImage(props.imageHandler);
+const removeTextChangeHandler = onTextChange((contents) => {
+  console.log("textChange", contents);
+  emit("update:modelValue", contents);
+});
+
+onMounted(() => {
+  emit("ready", quill);
+});
+
+onUnmounted(() => {
+  removeImageHandler();
+  removeTextChangeHandler();
+});
 </script>
 <style>
 .ql-editor {
