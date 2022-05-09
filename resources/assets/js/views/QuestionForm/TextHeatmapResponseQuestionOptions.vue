@@ -24,6 +24,7 @@ export default {
     VEditor,
   },
   props: ["question_responses"],
+  emits: ["update:question_responses"],
   data: function () {
     return {
       heatmap_text: this.question_responses.heatmap_text,
@@ -63,10 +64,8 @@ export default {
       },
     };
   },
-
   methods: {
     emitChanges: function () {
-      console.log("fda");
       this.$emit("update:question_responses", {
         heatmap_text: this.heatmap_text,
       });

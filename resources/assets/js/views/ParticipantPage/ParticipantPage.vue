@@ -10,7 +10,7 @@
     <div v-if="error" class="alert alert-warning" role="alert">
       {{ error }}
     </div>
-    <vue-announcer />
+    <VueAnnouncer />
     <main class="participant-page__main container">
       <div class="card">
         <!-- nav tabs -->
@@ -71,7 +71,7 @@
               >
                 <h1>No Open Questions</h1>
               </div>
-              <transition-group v-if="filteredSession.length > 0" name="fade">
+              <TransitionGroup v-if="filteredSession.length > 0" name="fade">
                 <ParticipantPrompt
                   v-for="s in filteredSession"
                   :key="s.id"
@@ -80,7 +80,7 @@
                   :responses="responses"
                   @updateResponse="updateResponse"
                 />
-              </transition-group>
+              </TransitionGroup>
             </template>
           </div>
 
@@ -90,14 +90,14 @@
               <h1>No Answered Questions</h1>
             </div>
             <Response
-              v-else
               v-for="(response, i) in sortedResponses"
+              v-else
               :key="i"
               :chime="chime"
               :response="response"
             />
           </div>
-          <p class="text-center m-0" v-if="!ltiLaunchWarning">
+          <p v-if="!ltiLaunchWarning" class="text-center m-0">
             <small v-if="chime.lti_course_title" class="text-muted"
               >Not seeing the prompts you're looking for? Make sure you've
               followed the correct assignment link from Canvas.
@@ -200,7 +200,6 @@ export default {
     this.loadTime = new Date();
     Echo.join("session-status." + this.chimeId)
       .listen("StartSession", (m) => {
-        console.log("debug", "message:", m);
         this.sessions.unshift(m.session);
         this.$announcer.set(
           "A new question has been open.  There are " +
@@ -221,7 +220,6 @@ export default {
       });
 
     window.Echo.connector.socket.on("reconnect", () => {
-      console.log("reconnecting and reloading");
       if (this.timeout) clearTimeout(this.timeout);
 
       const hoursSinceLoad = (new Date() - this.loadTime) / 1000 / 60 / 60;
@@ -241,7 +239,7 @@ export default {
       }, 500);
     });
   },
-  beforeDestroy: function () {
+  beforeUnmount: function () {
     Echo.leave("session-status." + this.chimeId);
     window.Echo.connector.socket.off("reconnect");
   },
@@ -262,7 +260,6 @@ export default {
       axios
         .get("/api/chime/" + this.chimeId + "/openQuestions")
         .then((res) => {
-          console.log("debug", "chime:", res);
           this.chime = res.data.chime;
           document.title = this.chime.name;
           this.sessions = res.data.sessions.reverse();
@@ -279,14 +276,13 @@ export default {
               "message",
               "Could not load Chime. You may not have permission to view this page. "
             );
-            console.log("error getting chime:", err.response);
+            console.error("error getting chime:", err);
           }
         })
         .then(() => {
           return axios
             .get("/api/chime/" + this.chimeId + "/responses")
             .then((res) => {
-              console.log("debug", "Response:", res);
               this.responses = res.data;
             });
         });

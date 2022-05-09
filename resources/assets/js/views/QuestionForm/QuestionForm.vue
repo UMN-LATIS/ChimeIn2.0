@@ -256,8 +256,7 @@ export default {
       } else {
         axios
           .post(url, responseBlock)
-          .then((res) => {
-            console.log(res);
+          .then(() => {
             this.close();
           })
           .catch((err) => {
@@ -284,7 +283,7 @@ export default {
             "Could not store this image. Please contact support at latistecharch@umn.edu. The full error was: " +
               err.response
           );
-          console.log(err);
+          console.error(err);
           throw err;
         });
     },

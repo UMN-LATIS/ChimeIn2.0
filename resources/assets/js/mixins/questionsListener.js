@@ -38,7 +38,7 @@ export const questionsListener = {
             "message",
             "Could not load questions. You may not have permission to view this page. "
           );
-          console.log(err);
+          console.error(err);
         });
     },
   },
@@ -84,8 +84,6 @@ export const questionsListener = {
         });
 
         if (!targetSession) {
-          console.log("Session does not exist.  Weird");
-          console.log(m);
           return;
         }
 

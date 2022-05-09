@@ -63,7 +63,7 @@
             :key="chime.id"
             class="chime-card-group__item"
             :chime="chime"
-            :show-move-icon="orderedChimes.length > 1"
+            :showMoveIcon="orderedChimes.length > 1"
             :to="getUserLinkToChime({ user, chime })"
             @change="handleChimeCardChange"
           />
@@ -138,7 +138,6 @@ export default {
           show_folder_title_to_participants: this.showFolderTitleToParticipants,
         })
         .then((res) => {
-          console.log("debug", "Chime Created:", res);
           this.showAdd = false;
           this.$emit("update:chimes", res.data);
           this.$router.push({
@@ -147,20 +146,9 @@ export default {
           });
         })
         .catch((err) => {
-          console.log("error", "Error in create chime:", err.response);
+          console.error(err);
         });
     },
-    // get_chimes() {
-    //   axios
-    //     .get("/api/chime")
-    //     .then((res) => {
-    //       console.log("debug", "Get Chimes:", res);
-    //       this.chimes = res.data;
-    //     })
-    //     .catch((err) => {
-    //       console.error("error", "Error in get chimes:", err.response);
-    //     });
-    // },
   },
 };
 </script>

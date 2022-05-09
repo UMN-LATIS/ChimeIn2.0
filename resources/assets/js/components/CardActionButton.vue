@@ -27,6 +27,7 @@ export default {
       type: String,
     },
   },
+  emits: ["click"],
   computed: {
     type() {
       if (this.to) return "router-link";
@@ -36,7 +37,6 @@ export default {
   },
   methods: {
     handleClick(event) {
-      console.log("CardActionButton click", event);
       this.$emit("click", event);
     },
   },

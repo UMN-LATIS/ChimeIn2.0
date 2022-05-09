@@ -122,7 +122,6 @@ export default {
       axios
         .get("/api/chime")
         .then((res) => {
-          console.log("debug", "Get Chimes:", res);
           this.chimes = res.data;
         })
         .catch((err) => {
@@ -133,7 +132,6 @@ export default {
       this.get_chimes();
     },
     join_chime() {
-      console.log(this.access_code);
       this.requires_login = false;
       this.chime_not_found = false;
       axios

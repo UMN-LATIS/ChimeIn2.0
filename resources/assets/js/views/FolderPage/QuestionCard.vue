@@ -2,7 +2,7 @@
   <Card
     class="question-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
-    icon-class="handle"
+    iconClass="handle"
   >
     <header class="question-card__header">
       <h2 class="question-card__question-type">
@@ -35,7 +35,7 @@
       :show="showEdit"
       :question="question"
       :folder="folder"
-      control-type="edit"
+      controlType="edit"
       @edited="handleQuestionEdited"
       @close="showEdit = false"
     />
@@ -136,6 +136,7 @@ export default {
     },
   },
   events: ["change"],
+  emits: ["change"],
   data: function () {
     return {
       showEdit: false,
@@ -183,7 +184,7 @@ export default {
         axios
           .delete(url)
           .then(() => this.$emit("change"))
-          .catch((err) => console.log(err.response));
+          .catch((err) => console.error(err));
       }
     },
     handleQuestionEdited() {

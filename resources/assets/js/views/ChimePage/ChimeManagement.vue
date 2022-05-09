@@ -35,11 +35,11 @@
             :includeFullUrl="true"
           />
           <ChimeManagementOptions
-            :require_login.sync="require_login"
-            :students_can_view.sync="students_can_view"
-            :join_instructions.sync="join_instructions"
-            :only_correct_answers_lti.sync="only_correct_answers_lti"
-            :show_folder_title_to_participants.sync="
+            v-model:require_login="require_login"
+            v-model:students_can_view="students_can_view"
+            v-model:join_instructions="join_instructions"
+            v-model:only_correct_answers_lti="only_correct_answers_lti"
+            v-model:show_folder_title_to_participants="
               show_folder_title_to_participants
             "
           />
@@ -113,31 +113,6 @@
   </div>
 </template>
 
-<style scoped>
-.chime-management {
-  padding: 1rem;
-}
-.chime-management__heading {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-ul li {
-  list-style: none;
-}
-ul {
-  padding: 0;
-}
-
-.clickToChange {
-  cursor: pointer;
-}
-
-.chime-management__join-panel {
-  margin-bottom: 1rem;
-}
-</style>
-
 <script>
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
@@ -148,6 +123,7 @@ export default {
     JoinPanel,
   },
   props: ["chime"],
+  emits: ["update:chime"],
   data: function () {
     return {
       users: [],
@@ -228,7 +204,7 @@ export default {
           this.$emit("update:chime", localChime);
         })
         .catch((err) => {
-          console.log(err.response);
+          console.error(err);
         });
     },
     deleteUser: function (key) {
@@ -244,12 +220,11 @@ export default {
         .put(url, {
           users: this.users,
         })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           this.loadUsers();
         })
         .catch((err) => {
-          console.error(err.response);
+          console.error(err);
         });
     },
     loadUsers: function () {
@@ -260,7 +235,7 @@ export default {
           this.users = res.data;
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     },
     sync: function () {
@@ -276,9 +251,34 @@ export default {
             "message",
             "Could not sync Chime. Please contact support at latistecharch@umn.edu."
           );
-          console.log(err);
+          console.error(err);
         });
     },
   },
 };
 </script>
+
+<style scoped>
+.chime-management {
+  padding: 1rem;
+}
+.chime-management__heading {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+ul li {
+  list-style: none;
+}
+ul {
+  padding: 0;
+}
+
+.clickToChange {
+  cursor: pointer;
+}
+
+.chime-management__join-panel {
+  margin-bottom: 1rem;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <div
-    class="participant-prompt"
     v-if="question.question_info.question_type"
+    class="participant-prompt"
     :class="{
       'save-succeeded': hasPreviouslySaved || saveSucceeded,
       'save-failed': saveFailed,
@@ -13,7 +13,7 @@
         {{ saveStatus || questionTypeString }}
       </header>
 
-      <div v-html="question.text" class="question-text" />
+      <div class="question-text" v-html="question.text" />
     </div>
 
     <div class="prompt-response-area">
@@ -27,11 +27,11 @@
       />
     </div>
 
-    <transition name="fade">
+    <Transition name="fade">
       <p v-if="responseUpdated" class="updated-alert alert alert-info">
         Response Updated
       </p>
-    </transition>
+    </Transition>
 
     <p v-if="error" class="alert alert-danger">
       {{ error }} Please try reloading the page, or contact
@@ -68,6 +68,7 @@ export default {
     heatmap_response: ImageHeatmapResponse,
   },
   props: ["session", "chime", "responses"],
+  emits: ["updateResponse"],
   data: function () {
     return {
       responseUpdated: false,
@@ -157,7 +158,6 @@ export default {
         .then((res) => {
           this.isSaving = false;
           this.saveSucceeded = true;
-          console.log("debug", "response recorded:", res);
           this.$emit("updateResponse", res.data);
           this.responseUpdated = true;
           setTimeout(() => {

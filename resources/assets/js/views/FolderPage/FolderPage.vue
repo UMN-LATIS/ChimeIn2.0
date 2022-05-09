@@ -190,7 +190,7 @@
             :key="q.id"
             :folder="folder"
             :question="q"
-            :show-move-icon="questions.length > 1"
+            :showMoveIcon="questions.length > 1"
             @change="load_questions"
           />
           <!-- </Draggable> -->
@@ -208,8 +208,8 @@
         },
       }"
       :folder="folder"
-      :chime-id="chimeId"
-      control-type="create"
+      :chimeId="chimeId"
+      controlType="create"
       @close="
         showModal = false;
         load_questions();
@@ -342,7 +342,6 @@ export default {
         };
       });
 
-      console.log(newOrder);
       const url =
         "/api/chime/" +
         this.folder.chime_id +
@@ -354,11 +353,8 @@ export default {
         .put(url, {
           question_order: newOrder,
         })
-        .then((res) => {
-          console.log(res);
-        })
         .catch((err) => {
-          console.log(err.response);
+          console.error(err);
         });
 
       this.load_questions();
@@ -376,8 +372,7 @@ export default {
 
         axios
           .delete(url)
-          .then((res) => {
-            console.log(res);
+          .then(() => {
             const question_index = self.questions.findIndex(
               (e) => e.id === questionId
             );
@@ -387,7 +382,7 @@ export default {
             });
           })
           .catch((err) => {
-            console.log(err.response);
+            console.error(err);
           });
       }
     },
@@ -420,7 +415,7 @@ export default {
             });
           })
           .catch((err) => {
-            console.log(err.response);
+            console.error(err);
           });
       }
     },
@@ -528,7 +523,7 @@ export default {
             "message",
             "Could not sync Chime. Please contact support at latistecharch@umn.edu."
           );
-          console.log(err);
+          console.error(err);
         });
     },
   },

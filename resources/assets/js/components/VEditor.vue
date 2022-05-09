@@ -12,7 +12,7 @@ const props = defineProps({
   },
   imageHandler: {
     type: Function,
-    default: (file) => Promise.resolve(console.log("no image handler", file)),
+    default: () => Promise.resolve(),
   },
   options: {
     type: Object,
@@ -37,7 +37,6 @@ const { quill, onAttachImage, onTextChange } = useQuill({
 
 const removeImageHandler = onAttachImage(props.imageHandler);
 const removeTextChangeHandler = onTextChange((contents) => {
-  console.log("textChange", contents);
   emit("update:modelValue", contents);
 });
 

@@ -83,7 +83,6 @@ function addChoice() {
       .getElementById(`response-choice-item-${newChoiceIndex}`)
       .querySelector(".ql-editor");
 
-    console.log(lastItem);
     lastItem.focus();
   });
 }

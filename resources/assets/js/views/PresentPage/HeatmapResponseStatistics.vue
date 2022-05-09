@@ -13,19 +13,6 @@
   </div>
 </template>
 
-<style>
-.max-height-image {
-  max-height: 70vh;
-}
-
-canvas {
-  position: absolute;
-}
-img {
-  positon: absolute;
-}
-</style>
-
 <script>
 import simpleheat from "simpleheat";
 
@@ -42,7 +29,7 @@ export default {
   created() {
     window.addEventListener("resize", this.drawImage);
   },
-  destroyed() {
+  unmounted() {
     window.removeEventListener("resize", this.drawImage);
   },
   mounted() {},
@@ -54,8 +41,6 @@ export default {
       targetCanvas.height = targetImage.clientHeight;
       var scaleFactorX = targetImage.clientWidth / targetImage.naturalWidth;
       var scaleFactorY = targetImage.clientHeight / targetImage.naturalHeight;
-      console.log(scaleFactorX);
-      console.log(scaleFactorY);
 
       var data = this.responses.map((r) => {
         return [
@@ -69,3 +54,16 @@ export default {
   },
 };
 </script>
+
+<style>
+.max-height-image {
+  max-height: 70vh;
+}
+
+canvas {
+  position: absolute;
+}
+img {
+  positon: absolute;
+}
+</style>

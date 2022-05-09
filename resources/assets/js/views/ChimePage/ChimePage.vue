@@ -83,7 +83,7 @@
             :key="folder.id"
             :chime="chime"
             :folder="folder"
-            :show-move-icon="ordered_folders.length > 1"
+            :showMoveIcon="ordered_folders.length > 1"
             @change="loadChime"
           />
           <!-- </Draggable> -->
@@ -139,7 +139,6 @@ export default {
         return orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
       },
       set(value) {
-        console.log(value);
         value.map((f, index) => (f.order = index + 1));
         const url = "/api/chime/" + this.chime.id;
         axios
@@ -150,7 +149,7 @@ export default {
             this.chime.folders = value;
           })
           .catch((err) => {
-            console.log(err.response);
+            console.error(err);
           });
       },
     },
@@ -198,7 +197,6 @@ export default {
           folder_name: folder_name,
         })
         .then((res) => {
-          console.log(res);
           this.chime.folders.push(res.data);
         })
         .catch((err) => {

@@ -6,11 +6,11 @@
       <template v-if="question.sessions.length > 0">
         <select v-model="selected" class="mb-3 form-control col-6">
           <option
-            :value="question.value"
             v-for="question in question.sessions
               .map((el) => ({ value: el.id, text: el.created_at }))
               .concat({ value: 0, text: 'All' })"
             :key="question.id"
+            :value="question.value"
           >
             {{ question.text }}
           </option>
@@ -21,7 +21,7 @@
           v-if="selected_session"
           :responses="selected_session.responses"
           :question="question"
-          :chime-id="chimeId"
+          :chimeId="chimeId"
           @removeResponse="removeResponse($event)"
         >
         </component>
@@ -77,6 +77,7 @@ export default {
     heatmap_response_statistics: HeatmapResponseStatistics,
   },
   props: ["sessions", "session", "question", "chimeId"],
+  emits: ["reload"],
   data: function () {
     return {
       selected: null,
@@ -121,7 +122,7 @@ export default {
           this.$emit("reload");
         })
         .catch((err) => {
-          console.log(err.response);
+          console.error(err);
         });
     },
   },
