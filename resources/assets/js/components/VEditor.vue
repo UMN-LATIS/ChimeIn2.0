@@ -27,12 +27,14 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue", "ready"]);
 const editorContainerRef = ref(null);
 
-const { quill, onAttachImage, onTextChange } = useQuill({
+const {
+  onAttachImage,
+  onTextChange,
+  setHTML: setEditorHTML,
+} = useQuill({
   editorContainerRef,
   options: props.options,
   modules: props.modules,
-  // onAttachImage: props.imageHandler,
-  // onTextChange: (contents) => emit("update:modelValue", contents),
 });
 
 const removeImageHandler = onAttachImage(props.imageHandler);
@@ -41,7 +43,7 @@ const removeTextChangeHandler = onTextChange((contents) => {
 });
 
 onMounted(() => {
-  emit("ready", quill);
+  setEditorHTML(props.modelValue);
 });
 
 onUnmounted(() => {

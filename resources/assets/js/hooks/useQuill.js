@@ -76,6 +76,21 @@ export default function useQuill({
     };
   };
 
+  const setText = (text) => {
+    quill.value.setText(text);
+  };
+
+  const setHTML = (html) => {
+    if (!quill.value) {
+      console.error("Canot set HTML before quill is initialized");
+      return;
+    }
+    quill.value.root.innerHTML = html;
+  };
+
+  const getHTML = () => quill.value?.root.innerHTML || "";
+  const getText = () => quill.value?.getText() || "";
+
   onMounted(() => {
     const mergedOptions = mergeDeepRight(defaultOptions, options);
     quill.value = new Quill(editorContainerRef.value, mergedOptions);
@@ -87,9 +102,12 @@ export default function useQuill({
   });
 
   return {
-    quill,
     onTextChange,
     onAttachImage,
+    getText,
+    setText,
+    getHTML,
+    setHTML,
     getQuill: () => quill.value,
   };
 }
