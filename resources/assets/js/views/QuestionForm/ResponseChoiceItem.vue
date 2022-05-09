@@ -57,7 +57,7 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["update", "onEnter", "remove"]);
+const emit = defineEmits(["update", "enter", "remove"]);
 const quill = ref(null);
 
 const options = {
@@ -67,8 +67,8 @@ const options = {
       bindings: {
         13: {
           key: 13,
-          handler: (event) => {
-            emit("onEnter", { event, quill: quill.value });
+          handler: () => {
+            emit("enter");
           },
         },
       },

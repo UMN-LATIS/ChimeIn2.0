@@ -20,6 +20,7 @@
           :correct="response.correct"
           @update="(updatedChoice) => handleUpdate(i, updatedChoice)"
           @remove="handleRemove(i)"
+          @enter="addChoice"
         />
       </li>
       <!-- </draggable> -->
