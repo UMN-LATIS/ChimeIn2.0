@@ -11,10 +11,10 @@
 
     <Spinner v-if="!chime" />
     <div v-if="chime" class="container-fluid present-container">
-      <fullscreen ref="fullscreen" @change="fullscreenChange">
+      <Fullscreen ref="fullscreen" @change="fullscreenChange">
         <PresentQuestion
           v-if="current_question_item"
-          :users-count="usersCount"
+          :usersCount="usersCount"
           :question="current_question_item"
           :chime="chime"
           :folder="folder"
@@ -24,13 +24,13 @@
           @toggle="toggle"
           @reload="reload"
         />
-      </fullscreen>
+      </Fullscreen>
     </div>
   </div>
 </template>
 
 <script>
-import { component as fullscreen } from "vue-fullscreen";
+import { component as Fullscreen } from "vue-fullscreen";
 import { questionsListener } from "../../mixins/questionsListener";
 import toHyphenatedCode from "../../helpers/toHyphenatedCode.js";
 import ErrorDialog from "../../components/ErrorDialog.vue";
@@ -40,7 +40,7 @@ import Spinner from "../../components/Spinner.vue";
 
 export default {
   components: {
-    fullscreen,
+    Fullscreen,
     ErrorDialog,
     NavBar,
     PresentQuestion,
@@ -90,7 +90,7 @@ export default {
       this.chime = res.data;
     });
   },
-  beforeDestroy: function () {
+  beforeUnmount: function () {
     Echo.leave("session-status." + this.chimeId);
   },
   methods: {

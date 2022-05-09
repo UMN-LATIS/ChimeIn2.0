@@ -10,7 +10,7 @@
       <PresentResults
         v-if="show_results"
         :question="question"
-        :chime-id="chime.id"
+        :chimeId="chime.id"
         @reload="$emit('reload')"
       />
       <PresentPrompt

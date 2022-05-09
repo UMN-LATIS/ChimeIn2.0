@@ -9159,10 +9159,10 @@ vue-eslint-parser@^8.0.1:
     lodash "^4.17.21"
     semver "^7.3.5"
 
-vue-fullscreen@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/vue-fullscreen/-/vue-fullscreen-2.6.1.tgz#447ed7e3a848cffe5870ecbea2c240d8ffacc5f4"
-  integrity sha512-bbMJDKj2ZhsAwLcsvh8oV8WJeqAr2zxTHysvf7H8wSqaJTn5CnHXMSMbP9Tz4L/54I7jNQIdyA7VZ+EKAG+svg==
+vue-fullscreen@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/vue-fullscreen/-/vue-fullscreen-3.1.1.tgz#385097e0b43f4604ded99adb0ceb225dea3e0326"
+  integrity sha512-I59sIO0O22116gwVPo1qM2cNf5binEC5vTswIm8qJsqgatGfFquIJANpoVggSUS2EgUF0Xg4tHliT1ITcwQw8Q==
   dependencies:
     screenfull "^5.1.0"
 
