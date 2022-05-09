@@ -3884,11 +3884,6 @@ de-indent@^1.0.2:
   resolved "https://registry.npmjs.org/de-indent/-/de-indent-1.0.2.tgz"
   integrity sha1-sgOOhG3DO6pXlhKNCAS0VbjB4h0=
 
-debounce@^1.1.0:
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/debounce/-/debounce-1.2.1.tgz"
-  integrity sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==
-
 debug@2.6.9:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz"
@@ -9166,12 +9161,10 @@ vue-fullscreen@^3.1.1:
   dependencies:
     screenfull "^5.1.0"
 
-vue-google-charts@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.npmjs.org/vue-google-charts/-/vue-google-charts-0.3.3.tgz"
-  integrity sha512-dvp5C0m3uAfB7PbAWPOqnYGJLUKyK0NPmnjOE8FDUhVySeErojOPZVd5zNOq4m9RhhwmNFP31bsxVYNb+0+f9w==
-  dependencies:
-    debounce "^1.1.0"
+vue-google-charts@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/vue-google-charts/-/vue-google-charts-0.4.0.tgz#28d1fba11dd3555d5a56d6843842833e482663c0"
+  integrity sha512-BwvMRgSlZH0pSA37UdkJ1Fe6qaHAS/f+ZYpZ4ls8RdP/Nejm+VVjpitjUeLT26GkyrLWkJhRxuRAHAE3rVZoCg==
 
 vue-json-csv@^2.1.0:
   version "2.1.0"
