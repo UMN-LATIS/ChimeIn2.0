@@ -118,6 +118,7 @@
 
 <script>
 import get from "lodash/get";
+import updateList from "ramda/es/update.js";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import ParticipantPrompt from "./ParticipantPrompt.vue";
@@ -244,17 +245,16 @@ export default {
     window.Echo.connector.socket.off("reconnect");
   },
   methods: {
-    updateResponse: function (newResponse) {
-      var updateInPlace = false;
-      this.responses.forEach((response, index) => {
-        if (response.id == newResponse.id) {
-          updateInPlace = true;
-          this.$set(this.responses, index, newResponse);
-        }
-      });
-      if (!updateInPlace) {
-        this.responses.push(newResponse);
-      }
+    updateResponse: function (updatedResponse) {
+      const responseIndex = this.responses.findIndex(
+        (response) => response.id === updatedResponse.id
+      );
+
+      const isNewResponse = responseIndex === -1;
+
+      this.responses = isNewResponse
+        ? this.responses.concat(updatedResponse)
+        : updateList(responseIndex, updatedResponse, this.responses);
     },
     loadChime: function () {
       axios
