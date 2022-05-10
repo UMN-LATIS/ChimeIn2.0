@@ -1,7 +1,7 @@
 <template>
   <div class="present-page">
     <NavBar
-      v-if="!folder.student_view"
+      v-if="!folder?.student_view"
       title="Back to Folder"
       :user="user"
       :host="host"
@@ -9,130 +9,127 @@
     />
     <ErrorDialog />
 
-    <Spinner v-if="!chime" />
+    <Spinner v-if="!folder" />
     <div v-if="chime" class="container-fluid present-container">
-      <Fullscreen ref="fullscreen" @change="fullscreenChange">
+      <Fullscreen ref="fullscreenRef" @change="isFullscreen = !isFullscreen">
         <PresentQuestion
-          v-if="current_question_item"
+          v-if="currentQuestion"
           :usersCount="usersCount"
-          :question="current_question_item"
+          :question="currentQuestion"
           :chime="chime"
           :folder="folder"
-          @nextQuestion="next_question"
-          @previousQuestion="previous_question"
-          @sessionUpdated="load_questions"
-          @toggle="toggle"
-          @reload="reload"
+          @nextQuestion="nextQuestion"
+          @previousQuestion="previousQuestion"
+          @sessionUpdated="refreshQuestions"
+          @toggle="() => fullscreenRef.toggle()"
+          @reload="refreshQuestions"
         />
       </Fullscreen>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { onMounted, ref, computed } from "vue";
 import { component as Fullscreen } from "vue-fullscreen";
-import { questionsListener } from "../../mixins/questionsListener";
-import toHyphenatedCode from "../../helpers/toHyphenatedCode.js";
+// import { questionsListener } from "../../mixins/questionsListener";
+import useQuestionListener from "../../hooks/useQuestionListener.js";
+// import toHyphenatedCode from "../../helpers/toHyphenatedCode.js";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import PresentQuestion from "./PresentQuestion.vue";
 import Spinner from "../../components/Spinner.vue";
+import { useRouter } from "vue-router";
+import { mathMod } from "ramda";
 
-export default {
-  components: {
-    Fullscreen,
-    ErrorDialog,
-    NavBar,
-    PresentQuestion,
-    Spinner,
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true,
   },
-  mixins: [questionsListener],
-  props: ["user", "chimeId", "folderId", "questionId"],
-  data() {
-    return {
-      folder: { name: "" },
-      questions: [],
-      show_results: false,
-      current_question: 0,
-      fullscreen: false,
-      chime: null,
-    };
+  chimeId: {
+    type: Number,
+    required: true,
   },
-  computed: {
-    current_question_item: function () {
-      if (!this.questions || this.questions.length == 0) {
-        return false;
-      }
-      return this.questions[this.current_question];
-    },
-    host: function () {
-      if (this.chime && this.chime.join_instructions) {
-        return window.location.host;
-      }
-      return null;
-    },
-    hyphenatedCode: function () {
-      if (!this.chime || !this.chime.join_instructions) {
-        return "";
-      }
-      return toHyphenatedCode(this.chime.access_code);
-    },
+  folderId: {
+    type: Number,
+    required: true,
   },
-  watch: {
-    $route(to) {
-      this.current_question = parseInt(to.params.questionId);
-    },
+  questionIndex: {
+    type: Number,
+    default: 0,
   },
-  mounted: function () {
-    this.current_question = parseInt(this.$route.params.questionId) || 0;
-    this.load_questions();
-    axios.get("/api/chime/" + this.chimeId).then((res) => {
-      this.chime = res.data;
+});
+
+const {
+  folder,
+  questions,
+  refresh: refreshQuestions,
+} = useQuestionListener({
+  chimeId: props.chimeId,
+  folderId: props.folderId,
+});
+const chime = ref(null);
+const isFullscreen = ref(false);
+const fullscreenRef = ref(null);
+
+const currentQuestion = computed(() => {
+  if (props.questionIndex >= questions.length) {
+    console.error(
+      `No question exists at index ${props.questionIndex} in ${questions}`
+    );
+    return null;
+  }
+  return questions[props.questionIndex];
+});
+
+const host = computed(() =>
+  chime.value && chime.value.join_instructions ? window.location.host : null
+);
+// const hyphenatedCode = computed(() =>
+//   chime.value && chime.value.join_instructions
+//     ? toHyphenatedCode(chime.value.access_code)
+//     : ""
+// );
+
+const router = useRouter();
+
+function nextQuestion() {
+  const nextQuestionIndex = mathMod(props.questionindex + 1, questions.length);
+
+  router.replace({
+    name: "present",
+    params: {
+      chimeId: props.chimeId,
+      folderId: props.folderId,
+      questionIndex: nextQuestionIndex,
+    },
+  });
+}
+
+function previousQuestion() {
+  const prevQuestionIndex = mathMod(props.questionIndex - 1, questions.length);
+
+  router.replace({
+    name: "present",
+    params: {
+      chimeId: props.chimeId,
+      folderId: props.folderId,
+      questionIndex: prevQuestionIndex,
+    },
+  });
+}
+
+onMounted(() => {
+  axios
+    .get(`/api/chime/${props.chimeId}`)
+    .then((res) => {
+      chime.value = res.data;
+    })
+    .catch((err) => {
+      console.error(`cannot get chime ${props.chimeId}`, err);
     });
-  },
-  beforeUnmount: function () {
-    Echo.leave("session-status." + this.chimeId);
-  },
-  methods: {
-    toggle() {
-      this.$refs["fullscreen"].toggle();
-    },
-    reload() {
-      this.load_questions();
-    },
-    fullscreenChange(fullscreen) {
-      this.fullscreen = fullscreen;
-    },
-    next_question: function () {
-      var target = 0;
-      if (this.questions.length > this.current_question + 1) {
-        target = this.current_question + 1;
-      }
-      this.$router.replace({
-        name: "present",
-        params: {
-          chimeId: this.chimeId,
-          folderId: this.folderId,
-          questionId: target,
-        },
-      });
-    },
-    previous_question: function () {
-      var target = this.current_question - 1;
-      if (this.current_question - 1 < 0) {
-        target = this.questions.length - 1;
-      }
-      this.$router.replace({
-        name: "present",
-        params: {
-          chimeId: this.chimeId,
-          folderId: this.folderId,
-          questionId: target,
-        },
-      });
-    },
-  },
-};
+});
 </script>
 
 <style>

@@ -16,25 +16,37 @@ const routes = [
     path: "/chime/:chimeId",
     name: "chime",
     component: ChimePage,
-    props: true,
+    props: (route) => ({
+      chimeId: Number.parseInt(route.params.chimeId),
+    }),
   },
   {
     path: "/chime/:chimeId/folder/:folderId",
     name: "folder",
     component: FolderPage,
-    props: true,
+    props: (route) => ({
+      chimeId: Number.parseInt(route.params.chimeId),
+      folderId: Number.parseInt(route.params.folderId),
+    }),
   },
   {
     path: "/chimeParticipant/:chimeId/:folderId?",
     name: "chimeStudent",
     component: ParticipantPage,
-    props: true,
+    props: (route) => ({
+      chimeId: Number.parseInt(route.params.chimeId),
+      folderId: Number.parseInt(route.params.folderId),
+    }),
   },
   {
-    path: "/chime/:chimeId/folder/:folderId/present/:questionId?",
+    path: "/chime/:chimeId/folder/:folderId/present/:questionIndex?",
     name: "present",
     component: PresentPage,
-    props: true,
+    props: (route) => ({
+      chimeId: Number.parseInt(route.params.chimeId),
+      folderId: Number.parseInt(route.params.folderId),
+      questionIndex: Number.parseInt(route.params.questionIndex),
+    }),
   },
 ];
 
