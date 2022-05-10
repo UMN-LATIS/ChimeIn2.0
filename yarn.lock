@@ -10005,10 +10005,9 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-"vue-wordcloud@https://github.com/UMN-LATIS/vue-wordcloud/tarball/master":
+"vue-wordcloud@https://github.com/UMN-LATIS/vue-wordcloud.git":
   version "1.0.2"
-  resolved "https://github.com/UMN-LATIS/vue-wordcloud/tarball/master"
-  integrity sha512-OC+C2o0qnLciO7SECh+OgAtqpEyT/SwFSUUpHR087vLzyaUF8U6flot62jPzV+TOG0rleZN0EUkI+UyBAeoH4g==
+  resolved "https://github.com/UMN-LATIS/vue-wordcloud.git#a22c6e82bf853cd82cadd1d1f6434c2313f69f57"
   dependencies:
     d3 "^4.10.0"
     d3-cloud "^1.2.4"
