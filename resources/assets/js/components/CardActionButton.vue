@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <component
-      :is="type"
-      v-bind="{ to, href }"
-      class="icon-button"
-      @click.stop="handleClick"
-    >
-      <i class="material-icons icon-button__icon">{{ icon }}</i>
-      <div class="icon-button__label">
-        <slot />
-      </div>
-    </component>
-  </div>
+  <component
+    :is="type"
+    v-bind="{ to, href }"
+    class="icon-button"
+    @click.stop="handleClick"
+  >
+    <i class="material-icons icon-button__icon">{{ icon }}</i>
+    <div class="icon-button__label">
+      <slot />
+    </div>
+  </component>
 </template>
 <script>
 export default {
