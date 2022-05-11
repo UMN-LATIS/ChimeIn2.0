@@ -34,7 +34,7 @@ class LTIProcessor {
 		$chime = $folder->chime;
 
 		foreach($questions as $question) {
-			LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers, "1.1");
+			$globalUsers = LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers, "1.1");
 		}
 
 		
@@ -87,7 +87,7 @@ class LTIProcessor {
 			$totalQuestions += LTI13Processor::getQuestionsWithResponsesCount($questions);
 			
 			foreach($questions as $question) {
-				LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers, "1.1");
+				$globalUsers = LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers, "1.1");
 			}
 		
 		}

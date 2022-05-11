@@ -39,7 +39,6 @@ class LTI13Handler extends Controller
 
 
     public function launch() {
-
          try {
             $launch = LtiMessageLaunch::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
             ->validate();
@@ -104,8 +103,7 @@ class LTI13Handler extends Controller
             $resourceLink->save();
         }
         
-
-        
+        $lisData = $this->mungeLisData($lisData);
 
         if(!$lisData["person_sourcedid"] || !is_numeric($lisData["person_sourcedid"])) {
             return view("errors.emplid");
@@ -133,7 +131,8 @@ class LTI13Handler extends Controller
             $chime = \App\Chime::where('lti_course_id', $contextData["id"])->first();
             // it's an instructor, let's check if this assingment exists
             if($chime && $chime->lti_setup_complete) {
-                
+                // update our resourceLink in case this is a migrated lti1.1
+                $chime->lti13_resource_link_id = $resourceLink->id;
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 $chime->save();
 
@@ -142,9 +141,15 @@ class LTI13Handler extends Controller
 
                     // check if the lineitem attached matches a folder
                     $folder = \App\Folder::where("lti_lineitem", $endpointData["lineitem"])->first();
+                    
+                    if(!$folder && $chime) {
+                        // let's check if the chime has this folder created without a resource link
+                        $folder = $this->relinkSimilarFolder($chime, $resourceData["title"], $endpointData["lineitem"]);
+                    }
                     if($folder) {
                         return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
                     }
+                    
 
                     // we need to make a new folder
                     $folder = new \App\Folder;
@@ -184,7 +189,7 @@ class LTI13Handler extends Controller
                 $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
 
                 // return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
-                return view("ltiSelectionPrompt", ["ltiLaunch"=>["chime"=>$chime], "similar_chimes"=>$similarChimes, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
+                return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime , "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
             }                
         }
         else {
@@ -198,11 +203,19 @@ class LTI13Handler extends Controller
                 $folderId = null;
                 $folder = null;
                 $courseHasNonLTIFolders = false;
-                if(isset($endpointData["lineitem"]) && $folder = \App\Folder::where("lti_lineitem", $endpointData["lineitem"])->first()) {
-                    $folderId = $folder->id;
-                    if($folder->chime->folders->filter(function($folder) { return !$folder->lti_lineitem;})->count() > 0) {
-                        $folderId = null;
-                        $courseHasNonLTIFolders = true;
+                if(isset($endpointData["lineitem"])) {
+                    $folder = \App\Folder::where("lti_lineitem", $endpointData["lineitem"])->first();
+                    
+                    if(!$folder && $chime) {
+                        // let's check if the chime has this folder created without a resource link
+                        $folder = $this->relinkSimilarFolder($chime, $resourceData["title"], $endpointData["lineitem"]);
+                    }
+                    if($folder) {
+                        $folderId = $folder->id;
+                        if($folder->chime->folders->filter(function($folder) { return !$folder->lti_lineitem;})->count() > 0) {
+                            $folderId = null;
+                            $courseHasNonLTIFolders = true;
+                        }
                     }
                 }
                 $response = \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
@@ -272,24 +285,24 @@ class LTI13Handler extends Controller
                                     "target_link_uri" => url("lti13/launch"),
                                     "canvas_icon_class" => "icon-lti"
                                 ],
-                                [
-                                    "text"=>"ChimeIn",
-                                    "enabled"=>true,
-                                    "placement"=>"course_navigation",
-                                    "message_type"=>"LtiResourceLinkRequest",
-                                    "target_link_uri"=>url("lti13/launch"),
-                                    "canvas_icon_class"=>"icon-lti",
-                                    "windowTarget"=> "_blank"
-                                ],
-                                [
-                                    "text"=>"ChimeIn",
-                                    "enabled"=>true,
-                                    "placement"=>"link_selection",
-                                    "message_type"=>"LtiResourceLinkRequest",
-                                    "target_link_uri"=>url("lti13/launch"),
-                                    "canvas_icon_class"=>"icon-lti",
-                                    "windowTarget"=> "_blank"
-                                ]
+                                // [
+                                //     "text"=>"ChimeIn",
+                                //     "enabled"=>true,
+                                //     "placement"=>"course_navigation",
+                                //     "message_type"=>"LtiResourceLinkRequest",
+                                //     "target_link_uri"=>url("lti13/launch"),
+                                //     "canvas_icon_class"=>"icon-lti",
+                                //     "windowTarget"=> "_blank"
+                                // ],
+                                // [
+                                //     "text"=>"ChimeIn",
+                                //     "enabled"=>true,
+                                //     "placement"=>"link_selection",
+                                //     "message_type"=>"LtiResourceLinkRequest",
+                                //     "target_link_uri"=>url("lti13/launch"),
+                                //     "canvas_icon_class"=>"icon-lti",
+                                //     "windowTarget"=> "_blank"
+                                // ]
                             ]
                         ]
                     ]
@@ -311,5 +324,32 @@ class LTI13Handler extends Controller
         ];
 
         return response()->json($configArray);
+    }
+
+    private function relinkSimilarFolder($chime, $folderTitle, $resourceLink) {
+        $folder = $chime->folders->where("name", $folderTitle)->where("lti_lineitem", null)->first();
+        // this is an imported folder, update it
+        if($folder && $chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
+            $folder->lti_lineitem = $resourceLink;
+            $folder->resource_link_pk = null;
+            $folder->save();
+            return $folder;
+        }
+        return false;
+    }
+
+    private function mungeLisData($lisData) {
+        if($lisData["person_sourcedid"]== "SISIDformcfa0086") {
+            $lisData["person_sourcedid"] = 2328381;
+        }
+        // our dev instance sends this value. need to make it a real emplid
+        if($lisData["person_sourcedid"] == "SISID4elevator" || $lisData["person_sourcedid"]  == "Dx7a7sg9zz") {
+            $lisData["person_sourcedid"] = 1111111;
+        }
+        // our dev instance sends this value. need to make it a real emplid
+        if($lisData["person_sourcedid"] == "emplidFORjohnsojr") {
+            $lisData["person_sourcedid"] = 1111112;
+        }
+        return $lisData;
     }
 }
