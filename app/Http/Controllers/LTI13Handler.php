@@ -343,7 +343,7 @@ class LTI13Handler extends Controller
             $lisData["person_sourcedid"] = 2328381;
         }
         // our dev instance sends this value. need to make it a real emplid
-        if($lisData["person_sourcedid"] == "SISID4elevator") {
+        if($lisData["person_sourcedid"] == "SISID4elevator" || $lisData["person_sourcedid"]  == "Dx7a7sg9zz") {
             $lisData["person_sourcedid"] = 1111111;
         }
         // our dev instance sends this value. need to make it a real emplid
