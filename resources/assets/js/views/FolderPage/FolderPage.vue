@@ -306,6 +306,19 @@ export default {
   },
   created() {
     Promise.all([this.load_folder(), this.load_questions()]).then(() => {
+      const isParticipantView = this.folder.student_view;
+      if (isParticipantView) {
+        this.$store.commit(
+          "message",
+          "Unauthorized: Only presenters may edit chimes."
+        );
+        console.error(
+          `User ${JSON.stringify(this.user)} is not a presenter for this chime.`
+        );
+
+        // hide questions from users
+        this.questions = [];
+      }
       this.ready = true;
     });
   },
