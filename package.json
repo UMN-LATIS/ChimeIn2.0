@@ -83,7 +83,7 @@
     "stopword": "^0.1.19",
     "vue": "^2.6.12",
     "vue-announcer": "^1.0.6",
-    "vue-carousel": "^0.7.3",
+    "vue-carousel": "^0.18.0",
     "vue-chartjs": "^3.5.1",
     "vue-cli": "^2.9.6",
     "vue-fullscreen": "^2.2.0",
