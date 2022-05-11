@@ -28,7 +28,7 @@ host('stage')
     ->set('hostname',"cla-chimein-tst.oit.umn.edu")
     ->set('remote_user','swadm')
     ->set('labels', ['stage' => 'stage'])
-    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
+    ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
 host('prod')
@@ -49,14 +49,14 @@ task('deploy:makecache', function() {
 })->desc('Make Cache');
 
 
-task('fix_storage_perms', function () {
-  cd('{{release_path}}');
-  run('touch storage/logs/laravel.log');
-  run('sudo chown apache storage/logs/laravel.log');
-  run('sudo chgrp apache storage/logs/laravel.log');
-})->desc("Fix Apache Logs");
+// task('fix_storage_perms', function () {
+//   cd('{{release_path}}');
+//   run('touch storage/logs/laravel.log');
+//   run('sudo chown apache storage/logs/laravel.log');
+//   run('sudo chgrp apache storage/logs/laravel.log');
+// })->desc("Fix Apache Logs");
 
-after('artisan:migrate', 'fix_storage_perms');
+// after('artisan:migrate', 'fix_storage_perms');
 
 // [Optional] if deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
@@ -66,5 +66,5 @@ before('deploy:symlink', 'artisan:migrate');
 after('deploy:update_code', 'yarn:install');
 after('yarn:install', 'assets:generate');
 after('yarn:install', 'deploy:makecache');
-after('artisan:queue:restart', 'fix_storage_perms');
+// after('artisan:queue:restart', 'fix_storage_perms');
 after('artisan:migrate', 'artisan:queue:restart');
