@@ -81,7 +81,7 @@
     "socket.io-client": "^2.4.0",
     "stemmer": "^1.0.5",
     "stopword": "^0.1.19",
-    "vue": "^2.6.12",
+    "vue": "^3.2.33",
     "vue-announcer": "^1.0.6",
     "vue-carousel": "^0.7.3",
     "vue-chartjs": "^3.5.1",
