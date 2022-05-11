@@ -1,7 +1,8 @@
 <?php
 namespace Deployer;
+
 require 'recipe/laravel.php';
-require 'recipe/yarn.php';
+require 'contrib/yarn.php';
 
 // Configuration
 
@@ -17,26 +18,23 @@ add('writable_dirs', []);
 // Servers
 
 host('dev')
-    ->hostname("cla-chimein-dev.oit.umn.edu")
-    ->user('swadm')
-    ->stage('development')
-    // ->identityFile()
-    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
+    ->set('hostname',"cla-chimein-dev.oit.umn.edu")
+    ->set('remote_user', 'swadm')
+    ->set('labels', ['stage' => 'development'])
+    ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
 host('stage')
-    ->hostname("cla-chimein-tst.oit.umn.edu")
-    ->user('swadm')
-    ->stage('stage')
-    // ->identityFile()
+    ->set('hostname',"cla-chimein-tst.oit.umn.edu")
+    ->set('remote_user','swadm')
+    ->set('labels', ['stage' => 'stage'])
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
 host('prod')
-    ->hostname("cla-chimein-prd.oit.umn.edu")
-    ->user('swadm')
-    ->stage('production')
-    // ->identityFile()
+    ->set('hostname', "cla-chimein-prd.oit.umn.edu")
+    ->set('remote_user','swadm')
+    ->set('labels', ['stage' => 'production'])
     ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
@@ -51,28 +49,19 @@ task('deploy:makecache', function() {
 })->desc('Make Cache');
 
 
-task('fix_storage_perms', '
-    touch storage/logs/laravel.log
-    sudo chown apache storage/logs/laravel.log
-    sudo chgrp apache storage/logs/laravel.log
-')->desc("Fix Apache Logs");
+task('fix_storage_perms', function () {
+  cd('{{release_path}}');
+  run('touch storage/logs/laravel.log');
+  run('sudo chown apache storage/logs/laravel.log');
+  run('sudo chgrp apache storage/logs/laravel.log');
+})->desc("Fix Apache Logs");
 
-// $result = run("scl enable rh-php56 'php -v'");
-// Tasks
-
-// desc('Restart PHP-FPM service');
-// task('php-fpm:restart', function () {
-//     // The user must have rights for restart service
-//     // /etc/sudoers: username ALL=NOPASSWD:/bin/systemctl restart php-fpm.service
-//     run('sudo systemctl restart php-fpm.service');
-// });
-// after('deploy:symlink', 'php-fpm:restart');
+after('artisan:migrate', 'fix_storage_perms');
 
 // [Optional] if deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
 
 // Migrate database before symlink new release.
-
 before('deploy:symlink', 'artisan:migrate');
 after('deploy:update_code', 'yarn:install');
 after('yarn:install', 'assets:generate');

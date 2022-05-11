@@ -34,7 +34,7 @@ class ResponseController extends Controller
         return response()->json($responseModels);
     }
 
-    public function createOrUpdateResponse(Chime $chime, Session $session, Response $response = null, Request $request) {
+    public function createOrUpdateResponse(Request $request, Chime $chime, Session $session, Response $response = null) {
         $user = Auth::user();
 
         $chime = $user->chimes()->find($chime->id);
