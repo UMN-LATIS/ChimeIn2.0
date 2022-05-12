@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2020",
+    "target": "esnext",
+    "module": "esnext",
+    // this enables stricter inference for data properties on `this`
+    "strict": true,
+    "jsx": "preserve",
     "moduleResolution": "node",
-    "baseUrl": "./",
-    // "strict": true, // Enable strict type-checking options
-    "skipLibCheck": true, // Skip type checking of declaration files
-    "noImplicitAny": false // Bypass raising errors on `any` type
-  },
-  "include": ["resources/assets/js/**/*"] // Frontend paths pattern
+    "noImplicitAny": false
+  }
 }
