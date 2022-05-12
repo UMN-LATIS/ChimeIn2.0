@@ -59,8 +59,10 @@
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
+    "ts-loader": "^9.3.0",
     "typescript": "^4.6.4",
     "vue-loader": "^16.0.0",
+    "vue-tsc": "^0.34.13",
     "webpack": "^5.72.0",
     "webpack-bundle-analyzer": "^4.5.0"
   },
