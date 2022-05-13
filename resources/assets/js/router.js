@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "./views/HomePage/HomePage.vue";
 import ChimePage from "./views/ChimePage/ChimePage.vue";
+import FolderPage from "./views/FolderPage/FolderPage.vue";
 import ParticipantPage from "./views/ParticipantPage/ParticipantPage.vue";
 import PresentPage from "./views/PresentPage/PresentPage.vue";
 
-const FolderPage = () =>
-  import(
-    /* webpackChunkName: "folder" */
-    "./views/FolderPage/FolderPage.vue"
-  );
+const toInt = (value, fallback = undefined) => {
+  const n = Number.parseInt(value);
+  return Number.isNaN(n) ? fallback : n;
+};
 
 const routes = [
   { path: "/", component: HomePage },
@@ -17,7 +17,7 @@ const routes = [
     name: "chime",
     component: ChimePage,
     props: (route) => ({
-      chimeId: Number.parseInt(route.params.chimeId),
+      chimeId: toInt(route.params.chimeId),
     }),
   },
   {
@@ -25,8 +25,8 @@ const routes = [
     name: "folder",
     component: FolderPage,
     props: (route) => ({
-      chimeId: Number.parseInt(route.params.chimeId),
-      folderId: Number.parseInt(route.params.folderId),
+      chimeId: toInt(route.params.chimeId),
+      folderId: toInt(route.params.folderId),
     }),
   },
   {
@@ -34,8 +34,8 @@ const routes = [
     name: "chimeStudent",
     component: ParticipantPage,
     props: (route) => ({
-      chimeId: Number.parseInt(route.params.chimeId),
-      folderId: Number.parseInt(route.params.folderId),
+      chimeId: toInt(route.params.chimeId),
+      folderId: toInt(route.params.folderId, 0),
     }),
   },
   {
@@ -43,9 +43,9 @@ const routes = [
     name: "present",
     component: PresentPage,
     props: (route) => ({
-      chimeId: Number.parseInt(route.params.chimeId),
-      folderId: Number.parseInt(route.params.folderId),
-      questionIndex: Number.parseInt(route.params.questionIndex),
+      chimeId: toInt(route.params.chimeId),
+      folderId: toInt(route.params.folderId),
+      questionIndex: toInt(route.params.questionIndex, 0),
     }),
   },
 ];
