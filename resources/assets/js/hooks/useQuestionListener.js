@@ -118,6 +118,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
   return {
     folder,
     questions,
+    usersCount,
     refresh,
   };
 }

@@ -108,7 +108,13 @@ export default {
     PresentResults,
     JoinPanel,
   },
-  props: ["question", "chime", "folder", "usersCount"],
+  props: {
+    question: { type: Object, required: true },
+    chime: { type: Object, required: true },
+    folder: { type: Object, required: true },
+    usersCount: { type: Number, required: true },
+  },
+  emits: ["nextQuestion", "previousQuestion"],
   data() {
     return {
       show_results: false,
