@@ -43,7 +43,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
       .joining(() => (usersCount.value += 1))
       .leaving(() => (usersCount.value -= 1))
       .listen("StartSession", function onEchoStartSession(event) {
-        console.log("Start Session");
+        console.log("Start Session", { event });
         const question = questions.value.find(
           (q) => q.id === event.session.question.id
         );
@@ -58,9 +58,9 @@ export default function useQuestionListener({ chimeId, folderId }) {
         });
       })
       .listen("EndSession", function onEchoEndSession(event) {
-        console.log("End Session");
+        console.log("End Session", { event });
         const question = questions.value.find(
-          (q) => q.id === event.session.question.id
+          (q) => q.id === event.session.question_id
         );
 
         if (!question) return;
@@ -72,7 +72,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
     Echo.private(`session-response.${chimeId}`).listen(
       "SubmitResponse",
       function onEchoSubmitResponse(event) {
-        console.log("Submit Response");
+        console.log("Submit Response", { event });
         const question = questions.value.find(
           (q) => q.id === event.session.question.id
         );
