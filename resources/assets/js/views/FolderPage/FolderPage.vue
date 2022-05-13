@@ -177,23 +177,24 @@
           >
             <i class="material-icons pointer">add</i> Add Question
           </button>
-          <!-- <Draggable
+          <Draggable
             v-model="questions"
+            itemKey="id"
             data-cy="question-list"
             class="question-list"
             handle=".handle"
-            ghost-class="ghost"
+            ghostClass="ghost"
             @end="swap_question"
-          > -->
-          <QuestionCard
-            v-for="q in questions"
-            :key="q.id"
-            :folder="folder"
-            :question="q"
-            :showMoveIcon="questions.length > 1"
-            @change="load_questions"
-          />
-          <!-- </Draggable> -->
+          >
+            <template #item="{ element }">
+              <QuestionCard
+                :folder="folder"
+                :question="element"
+                :showMoveIcon="questions.length > 1"
+                @change="load_questions"
+              />
+            </template>
+          </Draggable>
         </div>
       </div>
     </div>
@@ -219,31 +220,24 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import orderBy from "lodash/orderBy";
-// import Draggable from "vuedraggable";
+import Draggable from "vuedraggable";
 import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import QuestionCard from "./QuestionCard.vue";
-// import Chip from "../../components/Chip.vue";
-// import {
-//   selectIsCanvasChime,
-//   selectCanvasCourseUrl,
-// } from "../../helpers/chimeSelectors";
 import Spinner from "../../components/Spinner.vue";
+// import Chip from "../../components/Chip.vue";
 import pluralize from "../../common/pluralize.js";
-// import QuestionForm from "../QuestionForm/QuestionForm.vue";
-import { defineAsyncComponent } from "vue";
-
-// const QuestionForm = () =>
-//   import(
-//     /* webpackChunkName: "QuestionForm" */
-//     "../QuestionForm/QuestionForm.vue"
-//   );
+// import {
+//   selectCanvasCourseUrl,
+//   selectIsCanvasChime,
+// } from "../../helpers/chimeSelectors";
 
 export default {
   components: {
-    // Draggable,
+    Draggable,
     ErrorDialog,
     NavBar,
     QuestionCard,
@@ -257,7 +251,11 @@ export default {
     Spinner,
   },
   mixins: [questionsListener],
-  props: ["folderId", "chimeId", "user"],
+  props: {
+    folderId: { type: Number, required: true },
+    chimeId: { type: Number, required: true },
+    user: { type: Object, required: true },
+  },
   data() {
     return {
       folder: {

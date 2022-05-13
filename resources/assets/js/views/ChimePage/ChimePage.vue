@@ -69,24 +69,27 @@
             @newfolder="create_folder"
           />
 
-          <!-- <Draggable
+          <Draggable
             v-if="ordered_folders.length"
             v-model="ordered_folders"
+            itemKey="id"
             class="chime__ordered-folders"
             handle=".handle"
             :animation="200"
             :disabled="false"
             ghostClass="ghost"
-          > -->
-          <FolderCard
-            v-for="folder in ordered_folders"
-            :key="folder.id"
-            :chime="chime"
-            :folder="folder"
-            :showMoveIcon="ordered_folders.length > 1"
-            @change="loadChime"
-          />
-          <!-- </Draggable> -->
+          >
+            <template #item="{ element }">
+              <div>
+                <FolderCard
+                  :chime="chime"
+                  :folder="element"
+                  :showMoveIcon="ordered_folders.length > 1"
+                  @change="loadChime"
+                />
+              </div>
+            </template>
+          </Draggable>
         </div>
       </div>
     </div>
@@ -94,7 +97,7 @@
 </template>
 
 <script>
-// import Draggable from "vuedraggable";
+import Draggable from "vuedraggable";
 import orderBy from "lodash/orderBy";
 import NavBar from "../../components/NavBar.vue";
 import NewFolder from "./NewFolder.vue";
@@ -111,7 +114,7 @@ import {
 
 export default {
   components: {
-    // Draggable,
+    Draggable,
     NavBar,
     NewFolder,
     Spinner,
