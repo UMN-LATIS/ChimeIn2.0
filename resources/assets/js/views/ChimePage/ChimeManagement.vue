@@ -68,7 +68,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(u, key) in sorted_users" :key="key">
+              <tr v-for="(u, index) in sorted_users" :key="index">
                 <td>{{ u.name }}</td>
                 <td>{{ u.email }}</td>
                 <td data-cy="select-user-permissions-in-chime">
@@ -99,7 +99,7 @@
                   <button
                     data-cy="remove-user-from-chime-button"
                     class="btn btn-sm btn-danger"
-                    @click="deleteUser(key)"
+                    @click="deleteUser(index)"
                   >
                     Remove User
                   </button>
@@ -207,9 +207,9 @@ export default {
           console.error(err);
         });
     },
-    deleteUser: function (key) {
+    deleteUser(index) {
       if (confirm("Are you sure you want to remove this user?")) {
-        this.$delete(this.users, key);
+        this.users.splice(index, 1);
         this.saveUsers();
       }
     },
