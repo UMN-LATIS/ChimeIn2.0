@@ -1,5 +1,4 @@
-import { onMounted, onUnmounted, reactive, toRef, computed } from "vue";
-import axios from "axios";
+import { onMounted, onUnmounted, ref, computed } from "vue";
 
 function getFolderWithQuestions({ chimeId, folderId }) {
   return axios
@@ -15,106 +14,99 @@ function getFolderWithQuestions({ chimeId, folderId }) {
 }
 
 export default function useQuestionListener({ chimeId, folderId }) {
-  const state = reactive({
-    chimeId,
-    folderId,
-    folder: null,
-    questions: computed(() => state.folder?.questions ?? []),
-    usersCount: 0,
-    errorHandlers: [],
-    updateHandlers: [],
+  const usersCount = ref(0);
+  const folder = ref(null);
+  const questions = computed({
+    get() {
+      return folder.value?.questions ?? [];
+    },
+    set(questions) {
+      folder.value = {
+        ...folder.value,
+        questions,
+      };
+    },
   });
 
-  function onError(fn) {
-    state.errorHandlers.push(fn);
-
-    const removeHandler = () =>
-      (state.errorHandlers = state.errorHandlers.filter((f) => f !== fn));
-
-    return removeHandler;
-  }
-
-  function onUpdate(fn) {
-    state.updateHandlers.push(fn);
-
-    const removeHandler = () =>
-      (state.updateHandlers = state.updateHandlers.filter((f) => f !== fn));
-
-    return removeHandler;
-  }
-
-  function onEchoStartSession(event) {
-    const question = state.questions.find(
-      (q) => q.id === event.session.question.id
-    );
-
-    if (!question) return;
-
-    // flag the question as part of the current session
-    question.current_session_id = event.session.id;
-    question.sessions.push({
-      ...event.session,
-      responses: [],
-    });
-  }
-
-  function onEchoEndSession(event) {
-    const question = state.questions.find(
-      (q) => q.id === event.session.question.id
-    );
-
-    if (!question) return;
-
-    // flag the question as not part of the current session
-    question.current_session_id = null;
-  }
-
-  function onEchoSubmitResponse(event) {
-    const question = state.questions.find(
-      (q) => q.id === event.session.question.id
-    );
-
-    if (!question) return;
-
-    const sessionToUpdate = question.sessions.find(
-      (s) => s.id === event.session.id
-    );
-
-    if (!sessionToUpdate) return;
-
-    const responseToUpdate = toRef(
-      sessionToUpdate.responses.find((r) => r.id === event.response.id)
-    );
-
-    // if the response is not found, add it to the session responses
-    if (!responseToUpdate.value) {
-      sessionToUpdate.responses.push(event.response);
-      return;
-    }
-    // otherwise, update the response
-    responseToUpdate.value = event.response;
-  }
-
   async function refresh() {
-    state.folder = await getFolderWithQuestions({
-      chimeId: state.chimeId,
-      folderId: state.folder,
+    folder.value = await getFolderWithQuestions({
+      chimeId,
+      folderId,
     });
   }
 
   onMounted(async () => {
-    state.folder = await getFolderWithQuestions({ chimeId, folderId });
+    folder.value = await getFolderWithQuestions({ chimeId, folderId });
 
     Echo.join(`session-status.${chimeId}`)
-      .here((users) => (state.usersCount = users.length))
-      .joining(() => (state.usersCount += 1))
-      .leaving(() => (state.usersCount -= 1))
-      .listen("StartSession", onEchoStartSession)
-      .listen("EndSession", onEchoEndSession);
+      .here((users) => (usersCount.value = users.length))
+      .joining(() => (usersCount.value += 1))
+      .leaving(() => (usersCount.value -= 1))
+      .listen("StartSession", function onEchoStartSession(event) {
+        console.log("Start Session");
+        const question = questions.value.find(
+          (q) => q.id === event.session.question.id
+        );
+
+        if (!question) return;
+
+        // flag the question as part of the current session
+        question.current_session_id = event.session.id;
+        question.sessions.push({
+          ...event.session,
+          responses: [],
+        });
+      })
+      .listen("EndSession", function onEchoEndSession(event) {
+        console.log("End Session");
+        const question = questions.value.find(
+          (q) => q.id === event.session.question.id
+        );
+
+        if (!question) return;
+
+        // flag the question as not part of the current session
+        question.current_session_id = null;
+      });
 
     Echo.private(`session-response.${chimeId}`).listen(
       "SubmitResponse",
-      onEchoSubmitResponse
+      function onEchoSubmitResponse(event) {
+        console.log("Submit Response");
+        const question = questions.value.find(
+          (q) => q.id === event.session.question.id
+        );
+
+        if (!question) {
+          console.error(
+            `Could not find question with id ${event.session.question.id}`
+          );
+          return;
+        }
+
+        const session = question.sessions.find(
+          (s) => s.id === event.session.id
+        );
+
+        if (!session) {
+          console.error(
+            `Could not find session ${event.session.id} for question ${event.session.question.id}`
+          );
+          return;
+        }
+
+        const responseIndexToUpdate = session.responses.findIndex(
+          (r) => r.id === event.response.id
+        );
+
+        // if the response is not found, add it to the session responses
+        if (responseIndexToUpdate === -1) {
+          session.responses.push(event.response);
+          return;
+        }
+        // otherwise, update the response
+        session.responses[responseIndexToUpdate] = event.response;
+      }
     );
   });
 
@@ -124,9 +116,8 @@ export default function useQuestionListener({ chimeId, folderId }) {
   });
 
   return {
-    questions: state.questions,
-    onError,
-    onUpdate,
+    folder,
+    questions,
     refresh,
   };
 }
