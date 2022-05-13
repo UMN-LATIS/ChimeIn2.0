@@ -10,7 +10,7 @@
     <ErrorDialog />
 
     <Spinner v-if="!folder" />
-    <div v-if="chime" class="container-fluid present-container">
+    <div v-if="folder && chime" class="container-fluid present-container">
       <Fullscreen ref="fullscreenRef" @change="isFullscreen = !isFullscreen">
         <PresentQuestion
           v-if="currentQuestion"
@@ -64,6 +64,7 @@ const props = defineProps({
 const {
   folder,
   questions,
+  usersCount,
   refresh: refreshQuestions,
 } = useQuestionListener({
   chimeId: props.chimeId,
@@ -80,7 +81,7 @@ const currentQuestion = computed(() => {
     );
     return null;
   }
-  return questions[props.questionIndex];
+  return questions.value[props.questionIndex];
 });
 
 const host = computed(() =>
@@ -95,9 +96,12 @@ const host = computed(() =>
 const router = useRouter();
 
 function nextQuestion() {
-  const nextQuestionIndex = mathMod(props.questionindex + 1, questions.length);
+  const nextQuestionIndex = mathMod(
+    props.questionIndex + 1,
+    questions.value.length
+  );
 
-  router.replace({
+  router.push({
     name: "present",
     params: {
       chimeId: props.chimeId,
@@ -108,9 +112,12 @@ function nextQuestion() {
 }
 
 function previousQuestion() {
-  const prevQuestionIndex = mathMod(props.questionIndex - 1, questions.length);
+  const prevQuestionIndex = mathMod(
+    props.questionIndex - 1,
+    questions.value.length
+  );
 
-  router.replace({
+  router.push({
     name: "present",
     params: {
       chimeId: props.chimeId,
