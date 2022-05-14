@@ -40,20 +40,20 @@ export default {
   components: {
     slider_response_statistics: defineAsyncComponent(() =>
       import(
-        /* webpackChunkName: "multiplechoicestatistics" */
+        /* webpackChunkName: "SliderResponseStatistics" */
         "./SliderStatistics.vue"
       )
     ),
     multiple_choice_statistics: defineAsyncComponent(() =>
       import(
-        /* webpackChunkName: "multiplechoicestatistics" */
+        /* webpackChunkName: "MultipleChoiceStatistics" */
         "./MultipleChoiceStatistics.vue"
       )
     ),
     image_response_statistics: defineAsyncComponent(() =>
       import(
-        /* webpackChunkName: "FreeResponseStatistics" */
-        "./FreeResponseStatistics.vue"
+        /* webpackChunkName: "ImageResponseStatistics" */
+        "./ImageResponseStatistics.vue"
       )
     ),
     free_response_statistics: defineAsyncComponent(() =>
@@ -64,7 +64,7 @@ export default {
     ),
     text_heatmap_response_statistics: defineAsyncComponent(() =>
       import(
-        /* webpackChunkName: "FreeResponseStatistics" */
+        /* webpackChunkName: "TextHeatmapresponseStatistics" */
         "./TextHeatmapResponseStatistics.vue"
       )
     ),
@@ -76,7 +76,7 @@ export default {
     ),
     heatmap_response_statistics: defineAsyncComponent(() =>
       import(
-        /* webpackChunkName: "ImageResponseStatistics" */
+        /* webpackChunkName: "HeatmapResponseStatistics" */
         "./HeatmapResponseStatistics.vue"
       )
     ),
