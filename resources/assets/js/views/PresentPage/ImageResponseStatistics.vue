@@ -11,14 +11,14 @@
           Manage Images
         </button>
         <div data-cy="image-responses">
-          <lightbox
+          <Lightbox
             v-if="!filterImages"
             :id="'lightbox' + question.id"
             :images="images"
             image_class="img-responsive img-rounded"
             :options="options"
           >
-          </lightbox>
+          </Lightbox>
         </div>
 
         <table v-if="filterImages" class="table" data-cy="responses-table">
@@ -60,8 +60,6 @@
   </div>
 </template>
 
-<style></style>
-
 <script>
 import Lightbox from "vue-simple-lightbox";
 
@@ -69,7 +67,11 @@ export default {
   components: {
     Lightbox,
   },
-  props: ["responses", "question", "chimeId"],
+  props: {
+    responses: { type: Array, required: true },
+    question: { type: Object, required: true },
+    chimeId: { type: Number, required: true },
+  },
   data: function () {
     return {
       visible_responses: [],
@@ -98,3 +100,5 @@ export default {
   },
 };
 </script>
+
+<style></style>
