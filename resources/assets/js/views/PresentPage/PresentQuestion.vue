@@ -114,7 +114,7 @@ export default {
     folder: { type: Object, required: true },
     usersCount: { type: Number, required: true },
   },
-  emits: ["nextQuestion", "previousQuestion"],
+  emits: ["nextQuestion", "previousQuestion", "toggle", "reload"],
   data() {
     return {
       show_results: false,
