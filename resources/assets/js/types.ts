@@ -110,4 +110,4 @@ export interface Chime {
 }
 
 export type RemovableRef<T> = Ref<T | null | undefined>;
-export type SuccessOrErrorMessage = string;
+export type ResponseMessage = string;
