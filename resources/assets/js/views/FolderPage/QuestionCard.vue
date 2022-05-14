@@ -191,8 +191,8 @@ export default {
       this.$emit("change");
       this.showEdit = false;
     },
-    handleToggleOpenQuestion($event) {
-      const shouldOpen = $event.target.checked;
+    handleToggleOpenQuestion(event) {
+      const shouldOpen = event.target.checked;
       const chimeId = this.folder.chime_id;
       const folderId = this.folder.id;
       const questionId = this.question.id;
