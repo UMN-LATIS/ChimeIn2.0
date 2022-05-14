@@ -10,15 +10,22 @@
         >
           Manage Images
         </button>
-        <div data-cy="image-responses">
-          <Lightbox
+        <div
+          v-if="!filterImages"
+          data-cy="image-responses"
+          class="response-list"
+        >
+          <div v-for="(image, index) of images" :key="index">
+            <img class="response-image" :src="image.src" :alt="image.alt" />
+          </div>
+          <!-- <Lightbox
             v-if="!filterImages"
             :id="'lightbox' + question.id"
             :images="images"
             image_class="img-responsive img-rounded"
             :options="options"
           >
-          </Lightbox>
+          </Lightbox> -->
         </div>
 
         <table v-if="filterImages" class="table" data-cy="responses-table">
@@ -61,17 +68,18 @@
 </template>
 
 <script>
-import Lightbox from "vue-simple-lightbox";
+// import Lightbox from "vue-simple-lightbox";
 
 export default {
-  components: {
-    Lightbox,
-  },
+  // components: {
+  //   Lightbox,
+  // },
   props: {
     responses: { type: Array, required: true },
     question: { type: Object, required: true },
     chimeId: { type: Number, required: true },
   },
+  emits: ["removeResponse"],
   data: function () {
     return {
       visible_responses: [],
@@ -101,4 +109,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.response-list {
+  margin: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.response-image {
+  width: 20rem;
+  max-width: 100%;
+  border-radius: 0.25rem;
+}
+</style>
