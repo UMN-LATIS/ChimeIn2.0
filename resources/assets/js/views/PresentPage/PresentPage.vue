@@ -32,9 +32,7 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { component as Fullscreen } from "vue-fullscreen";
-// import { questionsListener } from "../../mixins/questionsListener";
 import useQuestionListener from "../../hooks/useQuestionListener.js";
-// import toHyphenatedCode from "../../helpers/toHyphenatedCode.js";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import PresentQuestion from "./PresentQuestion.vue";
