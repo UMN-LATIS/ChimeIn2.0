@@ -9,8 +9,8 @@
           :alt="response.response_info.image_alt"
         />
         <figcaption
-          class="response__figcaption"
           v-if="response.response_info.image_alt"
+          class="response__figcaption"
         >
           {{ response.response_info.image_alt }}
         </figcaption>
@@ -20,8 +20,8 @@
     <div v-if="isOpenQuestion">
       <div class="dropbox-group">
         <ImageUploadDropbox
-          class="dropbox-group__uploader"
           v-if="chime"
+          class="dropbox-group__uploader"
           :imageSrc="tempImagePath"
           :uploadTo="`/api/chime/${chime.id}/image`"
           @imageUploaded="handleImageUploaded"
@@ -31,17 +31,17 @@
         </ImageUploadDropbox>
         <TextAreaInput
           v-if="isOpenQuestion"
+          v-model="imageAlt"
           class="dropbox-group__alt-input"
           label="Alt Text"
           name="alt-text"
-          v-model="imageAlt"
           placeholder="Describe your image"
           visuallyHideLabel
           data-cy="alt-text-input"
         />
       </div>
     </div>
-    <footer class="image-response__footer" v-if="isOpenQuestion">
+    <footer v-if="isOpenQuestion" class="image-response__footer">
       <button
         class="btn btn-outline-primary"
         :disabled="!hasTempImage"
@@ -54,8 +54,8 @@
       <button
         v-if="question.allow_multiple"
         class="btn btn-link"
-        @click="handleUpdatePreviousResponse"
         :disabled="!hasTempImage"
+        @click="handleUpdatePreviousResponse"
       >
         Update Previous
       </button>
@@ -70,7 +70,13 @@ import { get } from "lodash";
 
 export default {
   components: { ImageUploadDropbox, TextAreaInput },
-  props: ["question", "response", "disabled", "chime"],
+  props: {
+    chime: { type: Object, required: true },
+    question: { type: Object, required: true },
+    response: { type: Object, required: true },
+    disabled: { type: Boolean, default: false },
+  },
+  emits: ["recordresponse"],
   data() {
     return {
       isSaving: false,

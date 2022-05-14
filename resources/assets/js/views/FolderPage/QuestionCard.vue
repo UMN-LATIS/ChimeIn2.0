@@ -20,6 +20,7 @@
     <router-link
       :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
     >
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="flow-text question_list_text" v-html="question.text" />
 
       <component
