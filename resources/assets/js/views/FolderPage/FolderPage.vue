@@ -18,8 +18,8 @@
         >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
       >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
     </div>
-    <Spinner v-if="!ready" />
-    <div v-if="ready" class="container">
+    <Spinner v-if="!isPageReady" />
+    <div v-if="isPageReady && !isParticipantView" class="container">
       <div class="row mt-4">
         <div class="col-4 align-items-center d-flex">
           <h1 class="h4">{{ folder.name }}</h1>
@@ -154,11 +154,11 @@
                 >
                   <option disabled>Select a Folder</option>
                   <option
-                    v-for="folder in existing_folders"
-                    :key="folder.id"
-                    :value="folder.id"
+                    v-for="f in existing_folders"
+                    :key="f.id"
+                    :value="f.id"
                   >
-                    {{ folder.name }}
+                    {{ f.name }}
                   </option>
                 </select>
               </div>
@@ -191,7 +191,7 @@
                 :folder="folder"
                 :question="element"
                 :showMoveIcon="questions.length > 1"
-                @change="load_questions"
+                @change="refreshFolder"
               />
             </template>
           </Draggable>
@@ -213,332 +213,229 @@
       controlType="create"
       @close="
         showModal = false;
-        load_questions();
+        refreshFolder();
       "
     />
   </div>
 </template>
 
-<script>
-import { defineAsyncComponent } from "vue";
-import orderBy from "lodash/orderBy";
+<script setup>
+import { defineAsyncComponent, ref, computed, watch, onMounted } from "vue";
 import Draggable from "vuedraggable";
-import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import QuestionCard from "./QuestionCard.vue";
 import Spinner from "../../components/Spinner.vue";
-// import Chip from "../../components/Chip.vue";
 import pluralize from "../../common/pluralize.js";
-// import {
-//   selectCanvasCourseUrl,
-//   selectIsCanvasChime,
-// } from "../../helpers/chimeSelectors";
+import useQuestionListener from "../../hooks/useQuestionListener";
+import { useStore } from "vuex";
+import {
+  getChimes,
+  getOpenSessionsWithinChime,
+  removeResponsesForQuestion,
+  updateFolder,
+  updateQuestionOrderInFolder,
+  openAllQuestionsInFolder,
+  closeAllQuestionsInFolder,
+  closeQuestion,
+  deleteFolder,
+  importFolder,
+  forceSyncGradesWithLMS,
+} from "../../common/api";
+import { useRouter } from "vue-router";
+const QuestionForm = defineAsyncComponent(() =>
+  import(
+    /* webpackChunkName: "QuestionForm" */
+    "../QuestionForm/QuestionForm.vue"
+  )
+);
 
-export default {
-  components: {
-    Draggable,
-    ErrorDialog,
-    NavBar,
-    QuestionCard,
-    QuestionForm: defineAsyncComponent(() =>
-      import(
-        /* webpackChunkName: "QuestionForm" */
-        "../QuestionForm/QuestionForm.vue"
-      )
-    ),
-    // Chip,
-    Spinner,
-  },
-  mixins: [questionsListener],
-  props: {
-    folderId: { type: Number, required: true },
-    chimeId: { type: Number, required: true },
-    user: { type: Object, required: true },
-  },
-  data() {
-    return {
-      folder: {
-        name: "",
-      },
-      showModal: false,
-      content: "present",
-      questions: [],
-      show_edit_folder: false,
-      show_questions: false,
-      new_folder_name: "",
-      allSessions: null,
-      hideOpenAlert: false,
-      existing_chimes: [],
-      existing_folders: [],
-      selected_chime: null,
-      selected_folder: null,
-      synced: false,
-      ready: false,
-    };
-  },
-  computed: {
-    otherFolderSessions: function () {
-      if (this.allSessions && this.folder.id) {
-        return this.allSessions.filter(
-          (e) => e.question.folder_id != this.folder.id
-        );
-      }
-      return [];
-    },
-    // isCanvasChime() {
-    //   return selectIsCanvasChime(this.chime);
-    // },
-    // canvasUrl() {
-    //   const fullCanvasUrlString =
-    //     selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
-    //   return new URL(fullCanvasUrlString);
-    // },
-  },
-  watch: {
-    show_edit_folder: function (newValue) {
-      if (newValue) {
-        this.loadExistingChimes();
-      }
-    },
-  },
-  created() {
-    Promise.all([this.load_folder(), this.load_questions()]).then(() => {
-      const isParticipantView = this.folder.student_view;
-      if (isParticipantView) {
-        this.$store.commit(
-          "message",
-          "Unauthorized: Only presenters may edit chimes."
-        );
-        console.error(
-          `User ${JSON.stringify(this.user)} is not a presenter for this chime.`
-        );
+const props = defineProps({
+  folderId: { type: Number, required: true },
+  chimeId: { type: Number, required: true },
+  user: { type: Object, required: true },
+});
+const showModal = ref(false);
+const show_edit_folder = ref(false);
+const allSessions = ref(null);
+const hideOpenAlert = ref(false);
+const existing_chimes = ref([]);
+const existing_folders = ref([]);
+const selected_chime = ref(null);
+const selected_folder = ref(null);
+const synced = ref(false);
+const folder_name = ref("");
 
-        // hide questions from users
-        this.questions = [];
-      }
-      this.ready = true;
-    });
-  },
-  methods: {
-    pluralize,
-    reset: function () {
-      if (
-        confirm(
-          "Are you sure you want to wipe all the responses to questions in this folder?"
-        )
-      ) {
-        var promises = [];
-        for (var question of this.questions) {
-          const url =
-            "/api/chime/" +
-            this.folder.chime_id +
-            "/folder/" +
-            this.folder.id +
-            "/question/" +
-            question.id +
-            "/responses";
-          promises.push(axios.delete(url));
-        }
-        Promise.all(promises).then(() => {
-          this.load_questions();
-        });
-      }
-    },
-    swap_question() {
-      const newOrder = Array.from(this.questions.entries()).map((e) => {
-        return {
-          order: e[0] + 1,
-          id: e[1].id,
-        };
-      });
+const store = useStore();
+const router = useRouter();
+const {
+  folder,
+  questions,
+  refresh: refreshFolder,
+} = useQuestionListener({
+  chimeId: props.chimeId,
+  folderId: props.folderId,
+});
 
-      const url =
-        "/api/chime/" +
-        this.folder.chime_id +
-        "/folder/" +
-        this.folder.id +
-        "/save_order";
+const otherFolderSessions = computed(() => {
+  if (allSessions.value && folder.value) {
+    return allSessions.value.filter(
+      (session) => session.question.folder_id !== folder.value.id
+    );
+  }
+  return [];
+});
 
-      axios
-        .put(url, {
-          question_order: newOrder,
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+// each time we open the edit folder
+// load the existing chimes so that the user
+// can import questions from another chime
+// if they wish
+watch(show_edit_folder, function (newValue) {
+  if (newValue) {
+    loadExistingChimes();
+  }
+});
 
-      this.load_questions();
-    },
-    delete_question(questionId) {
-      if (confirm("Are you sure you want to remove this question?")) {
-        const url =
-          "/api/chime/" +
-          this.folder.chime_id +
-          "/folder/" +
-          this.folder.id +
-          "/question/" +
-          questionId;
-        const self = this;
+const isPageReady = computed(() => !!folder.value);
+const isParticipantView = computed(() => folder.value?.student_view ?? false);
+onMounted(async () => {
+  if (isParticipantView.value) {
+    store.commit("message", "Unauthorized: Only presenters may edit chimes.");
+    console.error(
+      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
+    );
+    return;
+  }
 
-        axios
-          .delete(url)
-          .then(() => {
-            const question_index = self.questions.findIndex(
-              (e) => e.id === questionId
-            );
-            self.questions.splice(question_index, 1);
-            this.$nextTick(function () {
-              this.$refs.slideup.layout();
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
-    },
-    edit_folder: function () {
-      axios
-        .put("/api/chime/" + this.chimeId + "/folder/" + this.folderId, {
-          folder_name: this.folder.name,
-        })
-        .then(() => {
-          this.show_edit_folder = false;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    delete_folder: function () {
-      const confirm = window.confirm("Delete Folder " + this.folder.name + "?");
+  allSessions.value = await getOpenSessionsWithinChime(props.chimeId);
+});
 
-      if (confirm) {
-        const url = "/api/chime/" + this.chimeId + /folder/ + this.folderId;
+function reset() {
+  if (
+    confirm(
+      "Are you sure you want to wipe all the responses to questions in this folder?"
+    )
+  ) {
+    const promises = questions.value.map((question) =>
+      removeResponsesForQuestion({
+        chimeId: props.chimeId,
+        folderId: props.folderId,
+        questionId: question.id,
+      })
+    );
+    Promise.all(promises)
+      .then(() => refreshFolder())
+      .catch(console.error);
+  }
+}
+async function swap_question() {
+  const updatedOrder = questions.value.map((question, index) => ({
+    order: index + 1,
+    id: question.id,
+  }));
+  await updateQuestionOrderInFolder(
+    {
+      chimeId: props.chimeId,
+      folderId: props.folderId,
+    },
+    updatedOrder
+  );
 
-        axios
-          .delete(url)
-          .then(() => {
-            this.$router.push({
-              name: "chime",
-              params: {
-                chimeId: this.chimeId,
-              },
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
-    },
-    load_folder() {
-      return axios
-        .get("/api/chime/" + this.chimeId + "/openQuestions")
-        .then((res) => {
-          this.allSessions = res.data.sessions;
-        })
-        .catch((err) =>
-          console.error(`Error loading folder: ${err.message}`, err.response)
-        );
-    },
+  refreshFolder();
+}
 
-    openAll: function () {
-      const url =
-        "/api/chime/" +
-        this.folder.chime_id +
-        "/folder/" +
-        this.folder.id +
-        "/question/startAll";
+async function loadExistingChimes() {
+  existing_chimes.value = await getChimes();
+}
 
-      axios.post(url, {}).catch(console.error);
-    },
-    closeAll: function () {
-      const url =
-        "/api/chime/" +
-        this.folder.chime_id +
-        "/folder/" +
-        this.folder.id +
-        "/question/stopAll";
+async function edit_folder() {
+  await updateFolder(
+    { chimeId: props.chimeId, folderId: props.folderId },
+    {
+      folder_name: folder_name.value,
+    }
+  );
+  show_edit_folder.value = false;
+}
 
-      axios.put(url, {}).catch(console.error);
-    },
-    closeOthers: function () {
-      for (var openSession of this.otherFolderSessions) {
-        const url =
-          "/api/chime/" +
-          this.folder.chime_id +
-          "/folder/" +
-          openSession.question.folder_id +
-          "/question/" +
-          openSession.question.id +
-          "/stopSession/";
+async function delete_folder() {
+  if (!confirm("Delete Folder " + folder.value.name + "?")) return;
 
-        axios.put(url, {}).catch(console.error);
-      }
-      this.hideOpenAlert = true;
+  await deleteFolder({ chimeId: props.chimeId, folderId: props.folderId });
+  router.push({
+    name: "chime",
+    params: {
+      chimeId: props.chimeId,
     },
-    loadExistingChimes: function () {
-      axios
-        .get("/api/chime")
-        .then((res) => {
-          this.existing_chimes = orderBy(res.data, "created_at", ["desc"]);
-        })
-        .catch((err) => {
-          console.error("error", "Error in get chimes:", err.response);
-        });
-    },
-    update_folders: function () {
-      axios
-        .get("/api/chime/" + this.selected_chime)
-        .then((res) => {
-          this.existing_folders = orderBy(
-            res.data.folders.filter((f) => f.id != this.folderId),
-            "created_at",
-            ["desc"]
-          );
-        })
-        .catch((err) => {
-          console.error("error", "Error in get chimes:", err.response);
-        });
-    },
-    do_import: function () {
-      if (!this.selected_chime || !this.selected_folder) {
-        return;
-      }
-      axios
-        .post(
-          "/api/chime/" + this.chimeId + "/folder/" + this.folderId + "/import",
-          {
-            folder_id: this.selected_folder,
-          }
-        )
-        .then(() => {
-          this.load_folder();
-          this.load_questions();
-        })
-        .catch((err) => {
-          console.error("error", "Error with import:", err.response);
-        });
-    },
-    sync: function () {
-      axios
-        .post(
-          "/api/chime/" + this.chimeId + "/folder/" + this.folderId + "/sync"
-        )
-        .then((res) => {
-          if (res.data.success) {
-            this.synced = true;
-          }
-        })
-        .catch((err) => {
-          this.$store.commit(
-            "message",
-            "Could not sync Chime. Please contact support at latistecharch@umn.edu."
-          );
-          console.error(err);
-        });
-    },
-  },
-};
+  });
+}
+
+function openAll() {
+  return openAllQuestionsInFolder({
+    chimeId: props.chimeId,
+    folderId: props.folderId,
+  });
+}
+
+function closeAll() {
+  return closeAllQuestionsInFolder({
+    chimeId: props.chimeId,
+    folderId: props.folderId,
+  });
+}
+
+function closeOthers() {
+  hideOpenAlert.value = true;
+  const promises = otherFolderSessions.value.map((openSession) =>
+    closeQuestion({
+      chimeId: props.chimeId,
+      folderId: openSession.question.folder_id,
+      questionId: openSession.question.id,
+    })
+  );
+  Promise.all(promises).catch((err) => {
+    hideOpenAlert.value = true;
+    console.error(err);
+  });
+}
+
+// function update_folders() {
+//   axios
+//     .get("/api/chime/" + selected_chime.value)
+//     .then((res) => {
+//       existing_folders.value = orderBy(
+//         res.data.folders.filter((f) => f.id != this.folderId),
+//         "created_at",
+//         ["desc"]
+//       );
+//     })
+//     .catch((err) => {
+//       console.error("error", "Error in get chimes:", err.response);
+//     });
+// }
+
+function do_import() {
+  if (!selected_chime.value || !selected_folder.value) return;
+  importFolder({
+    destinationChimeId: props.chimeId,
+    destinationFolderId: props.folderId,
+    sourceFolderId: selected_chime.value,
+  });
+}
+
+async function sync() {
+  const isSyncSuccessful = await forceSyncGradesWithLMS({
+    chimeId: props.chimeId,
+    folderId: props.folderId,
+  });
+
+  if (!isSyncSuccessful) {
+    store.commit(
+      "message",
+      "Could not sync Chime. Please contact support at latistecharch@umn.edu."
+    );
+  }
+}
 </script>
 
 <style>
