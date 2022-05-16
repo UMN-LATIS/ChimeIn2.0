@@ -13,6 +13,7 @@ use Intervention\Image\Facades\Image;
 use Validator;
 use Auth;
 use App\Events\EndSession;
+use \App\Library\LTI13Processor;
 
 class ChimeController extends Controller
 {
@@ -516,7 +517,7 @@ class ChimeController extends Controller
                 continue;
             }
             $folder->load('questions', 'questions.sessions', 'questions.sessions.responses');
-            $folderArray[$folder->id] = ["name"=>$folder->name, "questions"=>$folder->questions->count(), "folder"=>$folder];
+            $folderArray[$folder->id] = ["name"=>$folder->name, "questions"=>LTI13Processor::getQuestionsWithResponsesCount($folder->questions), "folder"=>$folder];
             foreach($folder->questions()->orderBy("order")->get() as $question) {
                 if($exportType == "question_sessions") {
                     foreach($question->sessions as $session) {

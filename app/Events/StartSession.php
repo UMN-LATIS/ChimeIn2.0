@@ -34,7 +34,7 @@ class StartSession implements ShouldBroadcast
      */
     public function broadcastWith()
     {
-        return ['chime' => $this->chime, 'session'=>$this->session->load("question")];
+        return ['chime' => $this->chime, 'session'=>$this->session->load("question", "question.folder")];
     }
 
     /**

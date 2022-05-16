@@ -28,29 +28,29 @@ class LTITest extends TestCase
 
         $globalUsers = [];
         $chime->only_correct_answers_lti = 0;
-        LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
+        $globalUsers = LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
         $this->assertEquals(1, $globalUsers["student-one"]["points"]);
         $this->assertEquals(1, $globalUsers["student-two"]["points"]);
-        LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
+        $globalUsers = LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
         $this->assertEquals(2, $globalUsers["student-one"]["points"]);
         $this->assertEquals(2, $globalUsers["student-two"]["points"]);
 
         $globalUsers = [];
         $chime->only_correct_answers_lti = 1;
-        LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
+        $globalUsers = LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
         $this->assertEquals(1, $globalUsers["student-one"]["points"]);
         $this->assertArrayNotHasKey("student-two", $globalUsers);
-        LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
+        $globalUsers = LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
         $this->assertEquals(2, $globalUsers["student-one"]["points"]);
         $this->assertEquals(1, $globalUsers["student-two"]["points"]);
 
 
         $globalUsers = [];
         $chime->only_correct_answers_lti = 2;
-        LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
+        $globalUsers = LTI13Processor::getPointsForQuestion($question1, $chime, $globalUsers);
         $this->assertEquals(1, $globalUsers["student-one"]["points"]);
         $this->assertEquals(0.5, $globalUsers["student-two"]["points"]);
-        LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
+        $globalUsers = LTI13Processor::getPointsForQuestion($question2, $chime, $globalUsers);
         $this->assertEquals(2, $globalUsers["student-one"]["points"]);
         $this->assertEquals(1.5, $globalUsers["student-two"]["points"]);
     }
