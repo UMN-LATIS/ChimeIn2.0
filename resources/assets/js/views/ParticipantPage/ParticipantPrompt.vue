@@ -67,7 +67,20 @@ export default {
     slider_response: SliderResponse,
     heatmap_response: ImageHeatmapResponse,
   },
-  props: ["session", "chime", "responses"],
+  props: {
+    session: {
+      type: Object,
+      required: true,
+    },
+    chime: {
+      type: Object,
+      required: true,
+    },
+    responses: {
+      type: Array,
+      required: true,
+    },
+  },
   emits: ["updateResponse"],
   data: function () {
     return {

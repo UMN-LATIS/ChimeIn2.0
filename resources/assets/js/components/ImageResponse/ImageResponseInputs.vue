@@ -2,6 +2,7 @@
   <div class="image-response-input">
     <section v-if="hasResponse" class="response">
       <figure class="response__figure">
+        {{ response.response_info }}
         <img
           data-cy="image-response-thumbnail"
           class="responsive-img imageContainer"
@@ -154,6 +155,8 @@ export default {
         image_name: this.tempImageName,
         image_alt: this.imageAlt,
       };
+
+      console.log({ response });
 
       this.$emit("recordresponse", response, this.shouldAddNewResponse);
       this.resetForm();
