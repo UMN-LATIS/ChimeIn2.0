@@ -16,16 +16,29 @@
           class="response-list"
         >
           <div v-for="(image, index) of images" :key="index">
-            <img class="response-image" :src="image.src" :alt="image.alt" />
+            <button
+              class="response-image__button"
+              @click="
+                activeImageIndex = index;
+                isLightboxOpen = true;
+              "
+            >
+              <img
+                class="response-image__img"
+                :src="image.src"
+                :alt="image.alt"
+              />
+            </button>
           </div>
-          <!-- <Lightbox
+          <VueEasyLightbox
             v-if="!filterImages"
-            :id="'lightbox' + question.id"
-            :images="images"
+            :visible="isLightboxOpen"
+            :imgs="images"
+            :index="activeImageIndex"
             image_class="img-responsive img-rounded"
-            :options="options"
+            @hide="isLightboxOpen = false"
           >
-          </Lightbox> -->
+          </VueEasyLightbox>
         </div>
 
         <table v-if="filterImages" class="table" data-cy="responses-table">
@@ -69,11 +82,12 @@
 
 <script>
 // import Lightbox from "vue-simple-lightbox";
+import VueEasyLightbox from "vue-easy-lightbox";
 
 export default {
-  // components: {
-  //   Lightbox,
-  // },
+  components: {
+    VueEasyLightbox,
+  },
   props: {
     responses: { type: Array, required: true },
     question: { type: Object, required: true },
@@ -84,10 +98,9 @@ export default {
     return {
       visible_responses: [],
       response_search: "",
-      options: {
-        closeText: "X",
-      },
       filterImages: false,
+      isLightboxOpen: false,
+      activeImageIndex: 0,
     };
   },
   computed: {
@@ -117,9 +130,23 @@ export default {
   gap: 1rem;
 }
 
-.response-image {
-  width: 20rem;
-  max-width: 100%;
+.response-image__button {
+  transition: transform 0.3s;
+  background: none;
+  border: 1px solid #ccc;
   border-radius: 0.25rem;
+  width: 10rem;
+  height: 10rem;
+  padding: 0;
+  overflow: hidden;
+}
+.response-image__button:hover {
+  transform: scale3d(1.1, 1.1, 1);
+}
+
+.response-image__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
