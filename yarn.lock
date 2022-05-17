@@ -6119,7 +6119,7 @@ jest@^28.1.0:
     import-local "^3.0.2"
     jest-cli "^28.1.0"
 
-jquery@>=1.7.0, jquery@^3.2.1, jquery@^3.6.0:
+jquery@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
   integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
@@ -8352,13 +8352,6 @@ simpleheat@^0.4.0:
   resolved "https://registry.yarnpkg.com/simpleheat/-/simpleheat-0.4.0.tgz#e2de8d4548fcf1a6960b636bfa939d05bcd49a7b"
   integrity sha1-4t6NRUj88aaWC2Nr+pOdBbzUmns=
 
-simplelightbox@^1.10.7:
-  version "1.17.3"
-  resolved "https://registry.yarnpkg.com/simplelightbox/-/simplelightbox-1.17.3.tgz#f886cc789c90568699ef92923a87a64ffc14f740"
-  integrity sha512-PMQteGjJAgcRuxaOLtmc9RHIIyoyLQUoT0PprzeRwJSmV6SqwsKKYE4yA6O9um5bJw7suf5BMos52C5HBEg5Eg==
-  dependencies:
-    jquery ">=1.7.0"
-
 sirv@^1.0.7:
   version "1.0.19"
   resolved "https://registry.yarnpkg.com/sirv/-/sirv-1.0.19.tgz#1d73979b38c7fe91fcba49c85280daa9c2363b49"
@@ -9255,14 +9248,6 @@ vue-select@^4.0.0-beta.3:
   resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-4.0.0-beta.3.tgz#12096cdc5701af94bac66a60e7bbe560d5ef1d54"
   integrity sha512-sXufbTDluz26a39UUZE9jeh9Hojnn8zr9qDDUlVEBc7E0F+h3+Nzy8YzyFHuVNrrYLmK0zrPkb7hWFulAEW41Q==
 
-"vue-simple-lightbox@https://github.com/cmcfadden/vue-simple-lightbox.git":
-  version "0.0.5"
-  resolved "https://github.com/cmcfadden/vue-simple-lightbox.git#376991626b261813773de059355561f9118c9096"
-  dependencies:
-    jquery "^3.2.1"
-    simplelightbox "^1.10.7"
-    vue "^2.0.0"
-
 vue-style-loader@^4.1.3:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.3.tgz#6d55863a51fa757ab24e89d9371465072aa7bc35"
@@ -9295,7 +9280,7 @@ vue-tsc@^0.34.13:
     vue "^2.3.3"
     vue-resize-directive "^1.0.0"
 
-vue@^2.0.0, vue@^2.3.3, vue@^2.5.17:
+vue@^2.3.3, vue@^2.5.17:
   version "2.6.14"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
   integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
