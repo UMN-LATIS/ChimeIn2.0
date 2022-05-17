@@ -927,7 +927,7 @@ describe("question", () => {
             $img.css("filter", "grayscale(1)");
           });
 
-          cy.get(".overlayContainer").matchImageSnapshot(
+          cy.get(".overlay-container").matchImageSnapshot(
             `image-heatmap-present-view_1920x1080`
           );
         });
