@@ -10,13 +10,7 @@
       <input
         :checked="correct"
         type="checkbox"
-        @update="
-          (updated) =>
-            $emit('update', {
-              correct: updated,
-              text,
-            })
-        "
+        @change="handleUpdate({ correct: $event.target.checked })"
       />
       <label class="visually-hidden">Correct?</label>
     </div>
@@ -27,7 +21,7 @@
         class="response-choice-item__text"
         :modelValue="text"
         @update:modelValue="
-          (updated) => $emit('update', { correct, text: updated })
+          (updatedText) => handleUpdate({ text: updatedText })
         "
         @ready="(q) => (quill = q)"
       />
@@ -46,7 +40,7 @@
 import { ref } from "vue";
 import VEditor from "../../components/VEditor.vue";
 
-defineProps({
+const props = defineProps({
   text: {
     type: String,
     default: "",
@@ -56,6 +50,13 @@ defineProps({
     default: false,
   },
 });
+
+function handleUpdate(update) {
+  return emit("update", {
+    ...props,
+    ...update,
+  });
+}
 
 const emit = defineEmits(["update", "enter", "remove"]);
 const quill = ref(null);
@@ -77,7 +78,7 @@ const options = {
 };
 </script>
 <style scoped>
-response-choice-item {
+.response-choice-item {
   display: flex;
   margin: 0.5rem 0;
   align-items: center;
