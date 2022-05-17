@@ -436,7 +436,8 @@ describe("question", () => {
               // click the equation button
               cy.get(`#response-choice-item-${i}`)
                 .find(
-                  ".response-choice-item__contents > .quillWrapper > .ql-toolbar > .ql-formats > .ql-formula"
+                  // ".response-choice-item__contents > .quillWrapper > .ql-toolbar > .ql-formats > .ql-formula"
+                  ".response-choice-item__contents > .ql-toolbar > .ql-formats > .ql-formula"
                 )
                 .click()
                 .type(`${eq}{enter}`);
