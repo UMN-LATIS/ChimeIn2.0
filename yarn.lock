@@ -9183,6 +9183,11 @@ vue-chartjs@^4.1.0:
   resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-4.1.0.tgz#314474d33eb3bb9d0bafe7f075bb03e21e865602"
   integrity sha512-lHOs5vjb9dDdXz/0TbQWjJuL1/KOLT1tlvo+6b1M+JyyIQjeAf8K9IVsUhx8fdSIR4QD9CBELN/cYgYwKdiJ7g==
 
+vue-easy-lightbox@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/vue-easy-lightbox/-/vue-easy-lightbox-1.4.1.tgz#5983cd947d88de0cac78911cd13ec597fce4e5bb"
+  integrity sha512-bZHepAokLwiy77qLx45n3WxnLRg4M2gcffpu2Q/H71C7UgSxxXgAmbJdIrtOFni0VwA1rFxkfBBP1Ajn9FY2OA==
+
 vue-eslint-parser@^8.0.1:
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-8.3.0.tgz#5d31129a1b3dd89c0069ca0a1c88f970c360bd0d"
