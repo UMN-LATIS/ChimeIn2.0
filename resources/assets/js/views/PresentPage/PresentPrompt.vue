@@ -31,7 +31,7 @@ export default {
   },
   props: {
     question: { type: Object, required: true },
-    session: { type: Object, required: true },
+    session: { type: Object, default: null },
   },
   computed: {
     questionType() {
