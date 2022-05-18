@@ -101,6 +101,7 @@
 import PresentPrompt from "./PresentPrompt.vue";
 import PresentResults from "./PresentResults.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
+import { openQuestion, closeQuestion } from "../../common/api";
 
 export default {
   components: {
@@ -128,7 +129,7 @@ export default {
         );
         return session;
       } else {
-        return false;
+        return null;
       }
     },
     total_responses: function () {
@@ -149,31 +150,18 @@ export default {
     toggle() {
       this.$emit("toggle");
     },
-    start_session: function () {
-      const url =
-        "/api/chime/" +
-        this.chime.id +
-        "/folder/" +
-        this.folder.id +
-        "/question/" +
-        this.question.id;
-
-      axios.post(url, {}).catch((err) => {
-        console.error(err.response);
+    start_session() {
+      openQuestion({
+        chimeId: this.chime.id,
+        folderId: this.folder.id,
+        questionId: this.question.id,
       });
     },
-    stop_session: function () {
-      const url =
-        "/api/chime/" +
-        this.chime.id +
-        "/folder/" +
-        this.folder.id +
-        "/question/" +
-        this.question.id +
-        "/stopSession/";
-
-      axios.put(url, {}).catch((err) => {
-        console.error(err.response);
+    stop_session() {
+      closeQuestion({
+        chimeId: this.chime.id,
+        folderId: this.folder.id,
+        questionId: this.question.id,
       });
     },
     showJoinInstructions() {

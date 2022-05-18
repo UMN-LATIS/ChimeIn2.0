@@ -1,12 +1,15 @@
 <template>
   <div>
     <div v-if="responses.length > 0">
-      <div v-if="!word_groups" class="d-flex justify-content-center">
+      <!-- <div v-if="!word_groups" class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
           <span class="sr-only">Loading...</span>
         </div>
-      </div>
-      <word-cloud
+      </div> -->
+
+      <VWordCloud :text="concatenatedResponses" />
+
+      <!-- <word-cloud
         v-if="
           !question.question_info.question_responses.hideWordcloud &&
           word_groups
@@ -21,8 +24,8 @@
         :font-size="fontSize"
         :word-click="wordClicked"
         data-cy="word-cloud"
-      />
-      <div
+      /> -->
+      <!-- <div
         v-if="!question.question_info.question_responses.hideWordcloud"
         class="form-check form-check-inline"
       >
@@ -41,8 +44,8 @@
             >help</span
           >
         </label>
-      </div>
-      <div v-if="filterWords.length > 0">
+      </div> -->
+      <!-- <div v-if="filterWords.length > 0">
         <h2 class="smallHeader">Filtered Words</h2>
         <ul class="filterList">
           <li
@@ -54,12 +57,12 @@
             {{ word }} <i class="material-icons md-18 md-dark">close</i>
           </li>
         </ul>
-      </div>
+      </div> -->
       <h2 class="smallHeader">Responses</h2>
       <ul>
-        <transition-group name="fade">
+        <TransitionGroup name="fade">
           <li
-            v-for="r in responses.slice().reverse()"
+            v-for="r in responsesByMostRecent"
             :key="r.id"
             class="userResponse"
           >
@@ -70,25 +73,51 @@
             </p>
             <p>{{ r.response_info.text }}</p>
           </li>
-        </transition-group>
+        </TransitionGroup>
       </ul>
     </div>
 
-    <div v-else>No Responses Yet!</div>
+    <!-- <div v-else>No Responses Yet!</div> -->
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, watch } from "vue";
+import VWordCloud from "./VWordCloud.vue";
+import type { Question, Response } from "../../types";
+
+interface Props {
+  responses: Response[];
+  question: Question;
+}
+
+const props = defineProps<Props>();
+const responsesByMostRecent = computed(() => [...props.responses].reverse());
+const concatenatedResponses = computed(() =>
+  props.responses.map((r) => r.response_info.text).join("\n")
+);
+
+watch(
+  () => props.responses,
+  () => {
+    console.log(props.responses);
+  }
+);
+</script>
+
+<!-- <script>
 import throttle from "lodash/throttle";
 import wordcloud from "vue-wordcloud/src/components/WordCloud";
 import nlp from "compromise";
 import { stemmer } from "stemmer";
 import difflib from "difflib";
-import sw from "stopword";
+import { removeStopwords } from "stopword";
+import VWordCloud from "./VWordCloud.vue";
 
 export default {
   components: {
     "word-cloud": wordcloud,
+    VWordCloud,
   },
   props: ["responses", "question"],
   data: function () {
@@ -113,6 +142,11 @@ export default {
       textProcessing: false,
       buildtime: null,
     };
+  },
+  computed: {
+    concatenatedResponses() {
+      return this.responses.map((r) => r.response_info.text).join("\n");
+    },
   },
   methods: {
     similarity: function (x, y) {
@@ -150,7 +184,7 @@ export default {
         return;
       }
 
-      var wordsWithoutStops = sw.removeStopwords(
+      var wordsWithoutStops = removeStopwords(
         filteredWords.match(/"(.*?)"|\w+/g)
       );
 
@@ -180,6 +214,7 @@ export default {
 
       var end = performance.now();
       this.buildtime = end - start;
+      console.log({ buildtime: end - start });
       var sortedArray = groups.sort((a, b) => {
         return b.value - a.value;
       });
@@ -188,24 +223,24 @@ export default {
     }, 1000),
   },
   watch: {
-    responses: function () {
-      setTimeout(() => this.buildWords(), 100);
-    },
-    filterWords: function () {
-      setTimeout(() => this.buildWords(), 100);
-    },
-    textProcessing: function () {
-      setTimeout(() => this.buildWords(), 100);
-    },
+    // responses: function () {
+    //   setTimeout(() => this.buildWords(), 100);
+    // },
+    // filterWords: function () {
+    //   setTimeout(() => this.buildWords(), 100);
+    // },
+    // textProcessing: function () {
+    //   setTimeout(() => this.buildWords(), 100);
+    // },
   },
   mounted: function () {
     // run this in a time to not block initial render
     setTimeout(() => this.buildWords(), 100);
   },
 };
-</script>
+</script> -->
 
-<style scoped>
+<!-- <style scoped>
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.25s;
@@ -261,4 +296,4 @@ export default {
 .wordCloud * .text {
   cursor: pointer;
 }
-</style>
+</style> -->
