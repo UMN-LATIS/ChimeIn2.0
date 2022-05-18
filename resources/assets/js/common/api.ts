@@ -167,11 +167,11 @@ export function openQuestion({
   questionId: number;
 }): Promise<ResponseMessage> {
   return axios
-    .put(
-      `/api/chime/${chimeId}/folder/${folderId}/question/${questionId}/startSession`,
-      {}
-    )
-    .then((res) => res.data)
+    .post(`/api/chime/${chimeId}/folder/${folderId}/question/${questionId}`, {})
+    .then((res) => {
+      console.log(res);
+      return res.data;
+    })
     .catch(console.error);
 }
 
