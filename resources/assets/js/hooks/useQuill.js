@@ -44,7 +44,9 @@ export default function useQuill({
       // blotFormatter: {},
       imageUploader: {
         upload: (file) => {
-          imageHandlers.value.forEach((handler) => handler(file));
+          return Promise.all(
+            imageHandlers.value.map((handler) => handler(file))
+          );
         },
       },
     },
