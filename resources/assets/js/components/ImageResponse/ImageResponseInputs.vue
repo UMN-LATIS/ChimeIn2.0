@@ -155,8 +155,6 @@ export default {
         image_alt: this.imageAlt,
       };
 
-      console.log({ response });
-
       this.$emit("recordresponse", response, this.shouldAddNewResponse);
       this.resetForm();
     },

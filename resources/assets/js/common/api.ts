@@ -18,7 +18,6 @@ export function getFolderWithQuestions({
   return axios
     .get(`/api/chime/${chimeId}/folder/${folderId}?include_questions=true`)
     .then((res) => {
-      console.log({ res });
       return {
         ...res.data,
         // sort the questions within the folder by their order
@@ -169,7 +168,6 @@ export function openQuestion({
   return axios
     .post(`/api/chime/${chimeId}/folder/${folderId}/question/${questionId}`, {})
     .then((res) => {
-      console.log(res);
       return res.data;
     })
     .catch(console.error);

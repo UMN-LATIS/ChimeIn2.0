@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, ref } from "vue";
+import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import type { Question, Response } from "../../types";
 import nlp from "compromise";
@@ -101,15 +101,7 @@ const filteredWords = ref<string[]>([]);
 
 function handleWordClick(word) {
   filteredWords.value.push(word);
-  console.log({ filteredWords: filteredWords.value });
 }
-
-watch(
-  () => props.responses,
-  () => {
-    console.log(props.responses);
-  }
-);
 </script>
 
 <style scope>

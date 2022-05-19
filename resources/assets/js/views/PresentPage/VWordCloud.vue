@@ -53,7 +53,6 @@ function normalizeWordlist(words: string): string[] {
   const filteredWordlist = wordlistWithoutStopwords.filter(
     (word) => !props.filteredWords.includes(word)
   );
-  console.log({ filteredWordlist });
   return filteredWordlist;
 }
 
@@ -122,10 +121,8 @@ function renderWordcloud() {
   return chart;
 }
 
-watchEffect(() => {
-  console.log({ props });
-  renderWordcloud();
-});
+watchEffect(() => renderWordcloud());
+
 onMounted(renderWordcloud);
 </script>
 <style>
