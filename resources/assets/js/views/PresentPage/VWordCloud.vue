@@ -8,31 +8,53 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import { removeStopwords } from "stopword";
-import { Chart, LinearScale } from "chart.js";
-import { WordCloudController, WordElement } from "chartjs-chart-wordcloud";
+import { Chart, ChartEvent, LinearScale } from "chart.js";
+
+import {
+  IWordElementProps,
+  WordCloudController,
+  WordElement,
+} from "chartjs-chart-wordcloud";
 import type { Ref } from "vue";
+type WordFrequenceLookup = {
+  [word: string]: number;
+};
 
 Chart.register(WordCloudController, WordElement, LinearScale);
 
 interface Props {
   text: string;
+  filteredWords: string[];
 }
+const props = withDefaults(defineProps<Props>(), {
+  filteredWords: () => [],
+});
 
-const props = defineProps<Props>();
+interface Emits {
+  (e: "click:word", word: string): void;
+}
+const emit = defineEmits<Emits>();
 
 const canvasRoot = ref<HTMLElement | null>(null);
-
-type WordFrequenceLookup = {
-  [word: string]: number;
-};
+const wordColors = [
+  "#693EA6",
+  "#8B3DAF",
+  "#AF40AC",
+  "#D34A9C",
+  "#EE626F",
+  "#F18E44",
+];
 
 function normalizeWordlist(words: string): string[] {
   const wordlist: string[] = words.toLowerCase().split(/\W+/gm);
   const wordlistWithoutStopwords = removeStopwords(wordlist);
-  // return wordlistWithoutStopwords.map(stemmer);
-  return wordlistWithoutStopwords;
+  const filteredWordlist = wordlistWithoutStopwords.filter(
+    (word) => !props.filteredWords.includes(word)
+  );
+  console.log({ filteredWordlist });
+  return filteredWordlist;
 }
 
 function toWordFrequency(words: string): WordFrequenceLookup {
@@ -51,13 +73,15 @@ function renderWordcloud() {
 
   // create a new Canvas element and attach to root
   const canvas = document.createElement("canvas");
+  canvas.setAttribute("aria-label", "wordcloud");
+  canvas.setAttribute("role", "img");
   canvasRoot.value.replaceChildren(canvas);
 
   const text = props.text;
   const wordFreqLookup = toWordFrequency(text);
   const words = Object.keys(wordFreqLookup);
   const wordFrequencies = Object.values(wordFreqLookup).map(
-    (freq) => 10 + freq * 10
+    (freq) => 16 + freq * 16
   );
 
   new Chart(canvas, {
@@ -68,26 +92,40 @@ function renderWordcloud() {
         {
           label: "",
           data: wordFrequencies,
+          family: "Arial Black",
+          color(ctx) {
+            return wordColors[ctx.dataIndex % wordColors.length];
+          },
         },
       ],
     },
-    // options: {
-    //   animation: {
-    //     onProgress(animation: AnimationEvent) {
-    //       if (stopRequested.value) {
-    //         animation.stop();
-    //       }
-    //     }),
-    //     onComplete() {
-    //       isUpdating.value = false;
-    //     },
-    //   },
-    // },
+    options: {
+      interaction: {
+        mode: "point",
+      },
+      onClick(event: ChartEvent & { chart: Chart }) {
+        const points = event.chart.getElementsAtEventForMode(
+          event.native as Event,
+          "nearest",
+          { intersect: true },
+          true
+        );
+
+        if (!points.length) return;
+
+        const wordElement = points[0].element as WordElement &
+          IWordElementProps;
+        emit("click:word", wordElement.text);
+      },
+    },
   });
   return chart;
 }
 
-watch(() => props.text, renderWordcloud);
+watchEffect(() => {
+  console.log({ props });
+  renderWordcloud();
+});
 onMounted(renderWordcloud);
 </script>
 <style>
