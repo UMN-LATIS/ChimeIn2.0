@@ -7,7 +7,7 @@
         :filteredWords="filteredWords"
         @click:word="handleWordClick"
       />
-      <p>
+      <!-- <p>
         <label>
           <input
             type="checkbox"
@@ -18,7 +18,7 @@
           <strong>Experimental</strong>
           Filter for just names, places, and organizations.
         </label>
-      </p>
+      </p> -->
       <p>Click a word within the wordcloud to ignore it.</p>
 
       <div v-if="filteredWords.length > 0" class="page-section">
@@ -75,7 +75,7 @@
 import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import type { Question, Response } from "../../types";
-import nlp from "compromise";
+// import nlp from "compromise";
 
 interface Props {
   responses: Response[];
@@ -91,9 +91,10 @@ const concatenatedResponses = computed(() =>
   props.responses.map((r) => r.response_info.text).join("\n")
 );
 const topics = computed(() => {
-  const doc = nlp(concatenatedResponses.value);
+  // const doc = nlp(concatenatedResponses.value);
 
-  return doc.topics().out("array").join("\n");
+  // return doc.topics().out("array").join("\n");
+  return "";
 });
 
 const processWithNLP = ref(false);
