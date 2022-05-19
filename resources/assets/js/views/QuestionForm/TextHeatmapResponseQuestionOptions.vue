@@ -1,17 +1,14 @@
 <template>
-  <div class="row">
-    <div class="col">
-      <hr />
-      <p>Heatmap Text:</p>
-      <VEditor
-        v-model="heatmap_text"
-        data-cy="heatmap-text-editor"
-        placeholder="Heatmap Text"
-        :toolbar="toolbar"
-        :options="editorOptions"
-        @input="emitChanges"
-      />
-    </div>
+  <div class="text-heatmap-response-question-options">
+    <label>Heatmap Text</label>
+    <VEditor
+      v-model="heatmap_text"
+      data-cy="heatmap-text-editor"
+      placeholder="Heatmap Text"
+      :toolbar="toolbar"
+      :options="editorOptions"
+      @input="emitChanges"
+    />
   </div>
 </template>
 
@@ -73,3 +70,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.text-heatmap-response-question-options {
+  margin: 1rem 0;
+  padding: 1rem 0;
+}
+</style>
