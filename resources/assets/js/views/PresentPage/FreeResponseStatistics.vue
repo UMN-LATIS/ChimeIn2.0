@@ -93,7 +93,6 @@ const topics = computed(() => {
   const doc = nlp(concatenatedResponses.value);
 
   return doc.topics().out("array").join("\n");
-  // return "";
 });
 
 const processWithNLP = ref(false);
