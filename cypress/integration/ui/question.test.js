@@ -599,7 +599,7 @@ describe("question", () => {
   });
 
   describe("free response question", () => {
-    it("creates a free response question and shows wordcloud of responses", () => {
+    it.only("creates a free response question and shows wordcloud of responses", () => {
       let testChime;
       let testFolder;
       api
@@ -646,10 +646,12 @@ describe("question", () => {
           cy.get("[data-cy=present-question-button]").click();
           cy.get("[data-cy=show-results-button]").click();
 
-          // "Guest" and "response" should be in the SVG word cloud
-          cy.get("[data-cy=word-cloud]")
-            .contains("svg", "Guest")
-            .contains("svg", "response");
+          cy.get("[data-cy=word-cloud]").matchImageSnapshot(
+            "ui-free-response-question-word-cloud"
+          );
+          cy.get("[data-cy=word-cloud] canvas")
+            .invoke("attr", "aria-label")
+            .should("eq", "guest: 1, response: 1");
         });
     });
 
@@ -657,7 +659,7 @@ describe("question", () => {
   });
 
   describe("text heatmap", () => {
-    it.only("creates a text heatmap question and lets partipants select parts", () => {
+    it("creates a text heatmap question and lets partipants select parts", () => {
       let testChime;
       let testFolder;
       api

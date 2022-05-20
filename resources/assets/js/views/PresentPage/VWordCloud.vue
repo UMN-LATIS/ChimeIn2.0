@@ -1,5 +1,5 @@
 <template>
-  <div class="wordcloud">
+  <div class="wordcloud" data-cy="word-cloud">
     <div class="position-relative wordcloud-wrap">
       <button class="wordcloud__refresh-btn btn" @click="renderWordcloud">
         <i class="material-icons">refresh</i>

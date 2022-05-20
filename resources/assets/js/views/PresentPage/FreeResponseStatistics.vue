@@ -3,7 +3,6 @@
     <div v-if="responses.length > 0">
       <VWordCloud
         v-if="!hideWordcloud"
-        data-cy="word-cloud"
         :text="processWithNLP ? topics : concatenatedResponses"
         :filteredWords="filteredWords"
         @click:word="handleWordClick"
