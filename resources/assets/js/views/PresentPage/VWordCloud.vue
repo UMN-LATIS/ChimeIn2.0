@@ -78,7 +78,7 @@ function normalizeWordlist(words: string): string[] {
     .toLowerCase()
     .replace(/['"“”‘’„”«»]/g, "")
     .split(/[^&\w]+/gm);
-  console.log({ wordlist });
+
   const wordlistWithoutStopwords = removeStopwords(wordlist);
   const filteredWordlist = wordlistWithoutStopwords.filter(
     (word) => !props.filteredWords.includes(word)
@@ -113,7 +113,6 @@ function renderWordcloud() {
     canvasRoot: canvasRoot.value,
     wordFreqLookup: wordFreqLookup.value,
   });
-  console.log(baseFontSize);
   const wordFontSizes = Object.values(wordFreqLookup.value).map(
     (freq) => freq * baseFontSize
   );
