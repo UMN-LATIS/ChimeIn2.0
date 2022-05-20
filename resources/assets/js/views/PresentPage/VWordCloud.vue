@@ -74,7 +74,11 @@ const wordColors = [
 ];
 
 function normalizeWordlist(words: string): string[] {
-  const wordlist: string[] = words.toLowerCase().split(/\W+/gm);
+  const wordlist: string[] = words
+    .toLowerCase()
+    .replace(/['"“”‘’„”«»]/g, "")
+    .split(/[^&\w]+/gm);
+  console.log({ wordlist });
   const wordlistWithoutStopwords = removeStopwords(wordlist);
   const filteredWordlist = wordlistWithoutStopwords.filter(
     (word) => !props.filteredWords.includes(word)
@@ -138,6 +142,9 @@ function renderWordcloud() {
           color(ctx) {
             return wordColors[ctx.dataIndex % wordColors.length];
           },
+          rotate: 0,
+          minRotation: 0,
+          maxRotation: 0,
         },
       ],
     },
