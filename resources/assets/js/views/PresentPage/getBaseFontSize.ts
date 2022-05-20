@@ -30,7 +30,11 @@ import type { WordFrequencyLookup } from "../../types";
  */
 
 // tuning parameter to allow for more white space
-const whitespaceTuning = 2;
+// if it seems we can't fit everything on the page
+// this is inversely proportional to the base font size
+// so increasing above 1 will decrease the base fontsize
+// allowing for more whitespace per character
+const whitespaceTuning = 1;
 
 const getWordSize = ([word, freq]: [string, number]): number =>
   whitespaceTuning * word.length * freq ** 2;
