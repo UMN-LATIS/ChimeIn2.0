@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/attribute-hyphenation -->
   <div class="chartContainer" data-cy="chart-container">
     <GChart
       type="ColumnChart"
@@ -9,16 +10,6 @@
     />
   </div>
 </template>
-
-<style>
-.chartContainer {
-  height: 600px;
-}
-
-.googleChart {
-  height: 100%;
-}
-</style>
 
 <script>
 import { GChart } from "vue-google-charts";
@@ -238,3 +229,13 @@ const consHistObjWithBins =
     return consHistObj(arr, bins)(key);
   };
 </script>
+
+<style>
+.chartContainer {
+  height: 600px;
+}
+
+.googleChart {
+  height: 100%;
+}
+</style>
