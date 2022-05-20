@@ -3,10 +3,13 @@
     <div v-if="responses.length > 0">
       <VWordCloud
         v-if="!hideWordcloud"
+        data-cy="word-cloud"
         :text="processWithNLP ? topics : concatenatedResponses"
         :filteredWords="filteredWords"
         @click:word="handleWordClick"
-      />
+      >
+        <p class="m-0">Click a word within the wordcloud to ignore it.</p>
+      </VWordCloud>
       <!-- <p>
         <label>
           <input
@@ -19,7 +22,6 @@
           Filter for just names, places, and organizations.
         </label>
       </p> -->
-      <p>Click a word within the wordcloud to ignore it.</p>
 
       <div v-if="filteredWords.length > 0" class="page-section">
         <h2 class="filter-list__title">Words ignored in Wordcloud</h2>
@@ -67,7 +69,7 @@
       </section>
     </div>
 
-    <div v-else>No Responses Yet!</div>
+    <div v-else>No responses yet</div>
   </div>
 </template>
 
