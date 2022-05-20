@@ -8,7 +8,7 @@
         :filteredWords="filteredWords"
         @click:word="handleWordClick"
       >
-        <p class="m-0">Click a word within the wordcloud to ignore it.</p>
+        <small class="m-0"> Click a word to filter it out. </small>
       </VWordCloud>
       <!-- <p>
         <label>
@@ -23,24 +23,22 @@
         </label>
       </p> -->
 
-      <div v-if="filteredWords.length > 0" class="page-section">
-        <h2 class="filter-list__title">Words ignored in Wordcloud</h2>
-        <ul class="filter-list">
-          <li
-            v-for="(word, index) in filteredWords"
-            :key="index"
-            class="filter-list__item"
+      <div v-if="filteredWords.length > 0" class="filter-list">
+        <h2 class="filter-list__title">Filtered Words</h2>
+        <div
+          v-for="(word, index) in filteredWords"
+          :key="index"
+          class="filter-list__item"
+        >
+          {{ word }}
+          <button
+            class="filter-list__remove-btn"
+            @click="filteredWords.splice(index, 1)"
           >
-            {{ word }}
-            <button
-              class="filter-list__remove-btn"
-              @click="filteredWords.splice(index, 1)"
-            >
-              <i class="material-icons md-18 md-dark">close</i>
-              <span class="sr-only">remove word from filter</span>
-            </button>
-          </li>
-        </ul>
+            <i class="material-icons md-18 md-dark">close</i>
+            <span class="sr-only">remove word from filter</span>
+          </button>
+        </div>
       </div>
 
       <section class="page-section">
@@ -111,26 +109,26 @@ function handleWordClick(word) {
 .page-section {
   margin: 2rem 0;
 }
-.filter-list__title {
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 5%;
-  font-weight: bold;
-}
-
 .filter-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  margin: 1rem 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
+  align-content: center;
 }
+.filter-list__title {
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+}
+
 .filter-list__item {
   display: inline-flex;
   border-radius: 2rem;
-  padding: 0.5rem;
-  padding-left: 1rem;
+  padding: 0.25rem;
+  padding-left: 0.75rem;
   cursor: pointer;
   background-color: #ddd;
   align-items: center;
@@ -142,7 +140,7 @@ function handleWordClick(word) {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.5);
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;

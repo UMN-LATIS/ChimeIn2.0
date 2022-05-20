@@ -9,19 +9,24 @@ import type { WordFrequencyLookup } from "../../types";
  * - there are n words to fit on the canvas
  * - a given word (word_i) has character length len_i and
  *   a frequency of freq_i
- * So, a given character for a word will be b * freq_i^2
- * pixels. And the full word will need b * freq_i^2 * len_i
+ * - and we want to find the base font size b such that
+ *   we can fit all the words
+ * - A normal character will use b^2 pixel (roughly)
+ * - And if the character is scaled if the word is use more
+ *   frequently, a given character for a word will need:
+ *     $ b^2 * freq_i^2 $
+ *   pixels.
+ * - So the full word will need b^2 * freq_i^2 * len_i
  * pixels.
  *
  * Then we have:
  * $$\Sum{i=0}^{n} b^2 *{f_i}^2 * l_i  = W * H$$
  *
- * Factoring out b:
+ * Factoring out b^2:
  * $$ b^2 * \Sum{i=0}^{n} {f_i}^2 * l_i  = W * H $$
  *
  * Solving for b:
- * $$ b^2 = \frac{W * H}{{f_i}^2 * l_i } $$
- *
+ * $$ b = \sqrt{\frac{W * H}{\Sum{i=0}^{n} {f_i}^2 * l_i } $$
  */
 
 // tuning parameter to allow for more white space

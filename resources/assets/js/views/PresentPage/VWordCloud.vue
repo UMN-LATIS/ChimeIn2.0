@@ -10,8 +10,9 @@
         <slot></slot>
       </div>
     </div>
-
-    <table class="table sr-only">
+    <table
+      class="table table-small table-hover word-freq-section__table sr-only"
+    >
       <caption>
         Words within WordCloud ranked by frequency
       </caption>
@@ -141,9 +142,6 @@ function renderWordcloud() {
       ],
     },
     options: {
-      interaction: {
-        mode: "point",
-      },
       onClick(event: ChartEvent & { chart: Chart }) {
         const points = event.chart.getElementsAtEventForMode(
           event.native as Event,
@@ -163,11 +161,13 @@ function renderWordcloud() {
   return chart;
 }
 
-watchEffect(() => renderWordcloud());
-
+watchEffect(renderWordcloud);
 onMounted(renderWordcloud);
 </script>
 <style>
+.wordcloud {
+  border: 1px solid #ddd;
+}
 .wordcloud-wrap {
   width: 100%;
   height: 500px;
@@ -181,7 +181,6 @@ onMounted(renderWordcloud);
   z-index: 1;
 }
 .canvas-container {
-  border: 1px solid #ccc;
   position: absolute;
   top: 0;
   left: 0;
@@ -194,5 +193,13 @@ onMounted(renderWordcloud);
   left: 0;
   width: 100%;
   padding: 0.5rem;
+}
+
+.word-freq-section__table {
+  max-width: 20rem;
+}
+
+.word-freq-section {
+  margin: 2rem 0;
 }
 </style>
