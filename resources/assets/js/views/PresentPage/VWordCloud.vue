@@ -1,28 +1,55 @@
 <template>
   <div class="wordcloud">
-    <button class="wordcloud__refresh-btn btn" @click="renderWordcloud">
-      <i class="material-icons">refresh</i>
-      <span class="sr-only">Refresh</span>
-    </button>
-    <div ref="canvasRoot" class="canvas-container"></div>
+    <div class="position-relative wordcloud-wrap">
+      <button class="wordcloud__refresh-btn btn" @click="renderWordcloud">
+        <i class="material-icons">refresh</i>
+        <span class="sr-only">Refresh</span>
+      </button>
+      <div ref="canvasRoot" class="canvas-container"></div>
+      <div class="slot-wrap">
+        <slot></slot>
+      </div>
+    </div>
+
+    <table class="table sr-only">
+      <caption>
+        Words within WordCloud ranked by frequency
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Rank</th>
+          <th scope="col">Word</th>
+          <th scope="col">Frequency</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="([word, freq], index) in orderedWordList" :key="word">
+          <th scope="row">
+            {{ index + 1 }}
+          </th>
+          <td>{{ word }}</td>
+          <td>{{ freq }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect, computed } from "vue";
 import { removeStopwords } from "stopword";
 import { Chart, ChartEvent, LinearScale } from "chart.js";
-
 import {
   IWordElementProps,
   WordCloudController,
   WordElement,
 } from "chartjs-chart-wordcloud";
 import type { Ref } from "vue";
+
+Chart.register(WordCloudController, WordElement, LinearScale);
+
 type WordFrequenceLookup = {
   [word: string]: number;
 };
-
-Chart.register(WordCloudController, WordElement, LinearScale);
 
 interface Props {
   text: string;
@@ -56,8 +83,8 @@ function normalizeWordlist(words: string): string[] {
   return filteredWordlist;
 }
 
-function toWordFrequency(words: string): WordFrequenceLookup {
-  return normalizeWordlist(words).reduce((acc, word) => {
+function toWordFrequency(wordlist: string[]): WordFrequenceLookup {
+  return wordlist.reduce((acc, word) => {
     const prevWordCount = acc[word] || 0;
     return {
       ...acc,
@@ -67,20 +94,32 @@ function toWordFrequency(words: string): WordFrequenceLookup {
 }
 
 const chart: Ref<Chart<"wordCloud", number[], string> | null> = ref(null);
+const filteredWordlist = computed(() => normalizeWordlist(props.text));
+const wordFreqLookup = computed(() => toWordFrequency(filteredWordlist.value));
+const orderedWordList = computed(() =>
+  Object.entries(wordFreqLookup.value)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .sort(([word1, freq1], [word2, freq2]) => freq1 - freq2)
+);
+
 function renderWordcloud() {
   if (!canvasRoot.value) return;
 
+  const words = Object.keys(wordFreqLookup.value);
+  const wordFrequencies = Object.values(wordFreqLookup.value).map(
+    (freq) => 16 + freq * 16
+  );
+
   // create a new Canvas element and attach to root
   const canvas = document.createElement("canvas");
-  canvas.setAttribute("aria-label", "wordcloud");
   canvas.setAttribute("role", "img");
   canvasRoot.value.replaceChildren(canvas);
 
-  const text = props.text;
-  const wordFreqLookup = toWordFrequency(text);
-  const words = Object.keys(wordFreqLookup);
-  const wordFrequencies = Object.values(wordFreqLookup).map(
-    (freq) => 16 + freq * 16
+  canvas.setAttribute(
+    "aria-label",
+    // add an ordered wordlist to the alt text for the canvas to help
+    // with accessibility
+    orderedWordList.value.map(([word, freq]) => `${word}: ${freq}`).join(", ")
   );
 
   new Chart(canvas, {
@@ -126,7 +165,7 @@ watchEffect(() => renderWordcloud());
 onMounted(renderWordcloud);
 </script>
 <style>
-.wordcloud {
+.wordcloud-wrap {
   width: 100%;
   height: 500px;
   max-height: 70vh;
@@ -145,5 +184,12 @@ onMounted(renderWordcloud);
   left: 0;
   width: 100%;
   height: 100%;
+}
+.slot-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem;
 }
 </style>
