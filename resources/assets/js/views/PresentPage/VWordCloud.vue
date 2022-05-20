@@ -43,13 +43,11 @@ import {
   WordCloudController,
   WordElement,
 } from "chartjs-chart-wordcloud";
+import getBaseFontSize from "./getBaseFontSize";
 import type { Ref } from "vue";
+import type { WordFrequencyLookup } from "../../types";
 
 Chart.register(WordCloudController, WordElement, LinearScale);
-
-type WordFrequenceLookup = {
-  [word: string]: number;
-};
 
 interface Props {
   text: string;
@@ -83,7 +81,7 @@ function normalizeWordlist(words: string): string[] {
   return filteredWordlist;
 }
 
-function toWordFrequency(wordlist: string[]): WordFrequenceLookup {
+function toWordFrequency(wordlist: string[]): WordFrequencyLookup {
   return wordlist.reduce((acc, word) => {
     const prevWordCount = acc[word] || 0;
     return {
@@ -99,15 +97,20 @@ const wordFreqLookup = computed(() => toWordFrequency(filteredWordlist.value));
 const orderedWordList = computed(() =>
   Object.entries(wordFreqLookup.value)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    .sort(([word1, freq1], [word2, freq2]) => freq1 - freq2)
+    .sort(([word1, freq1], [word2, freq2]) => freq2 - freq1)
 );
 
 function renderWordcloud() {
   if (!canvasRoot.value) return;
 
   const words = Object.keys(wordFreqLookup.value);
-  const wordFrequencies = Object.values(wordFreqLookup.value).map(
-    (freq) => 16 + freq * 16
+  const baseFontSize = getBaseFontSize({
+    canvasRoot: canvasRoot.value,
+    wordFreqLookup: wordFreqLookup.value,
+  });
+  console.log(baseFontSize);
+  const wordFontSizes = Object.values(wordFreqLookup.value).map(
+    (freq) => freq * baseFontSize
   );
 
   // create a new Canvas element and attach to root
@@ -129,8 +132,8 @@ function renderWordcloud() {
       datasets: [
         {
           label: "",
-          data: wordFrequencies,
-          family: "Arial Black",
+          data: wordFontSizes,
+          family: "Impact",
           color(ctx) {
             return wordColors[ctx.dataIndex % wordColors.length];
           },

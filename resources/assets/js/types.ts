@@ -111,3 +111,7 @@ export interface Chime {
 
 export type RemovableRef<T> = Ref<T | null | undefined>;
 export type ResponseMessage = string;
+
+export type WordFrequencyLookup = {
+  [word: string]: number;
+};
