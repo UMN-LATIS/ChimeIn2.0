@@ -9,7 +9,7 @@
       >
         <small class="m-0"> Click a word to filter it out. </small>
       </VWordCloud>
-      <!-- <p>
+      <p>
         <label>
           <input
             type="checkbox"
@@ -20,7 +20,7 @@
           <strong>Experimental</strong>
           Filter for just names, places, and organizations.
         </label>
-      </p> -->
+      </p>
 
       <div v-if="filteredWords.length > 0" class="filter-list">
         <h2 class="filter-list__title">Filtered Words</h2>
@@ -73,8 +73,8 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
+import * as nlp from "compromise";
 import type { Question, Response } from "../../types";
-// import nlp from "compromise";
 
 interface Props {
   responses: Response[];
@@ -90,10 +90,10 @@ const concatenatedResponses = computed(() =>
   props.responses.map((r) => r.response_info.text).join("\n")
 );
 const topics = computed(() => {
-  // const doc = nlp(concatenatedResponses.value);
+  const doc = nlp(concatenatedResponses.value);
 
-  // return doc.topics().out("array").join("\n");
-  return "";
+  return doc.topics().out("array").join("\n");
+  // return "";
 });
 
 const processWithNLP = ref(false);
