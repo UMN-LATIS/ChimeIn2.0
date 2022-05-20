@@ -14,17 +14,18 @@ import type { WordFrequencyLookup } from "../../types";
  * pixels.
  *
  * Then we have:
- * $$\Sum{i=0}^{n} b *{f_i}^2 * l_i  = W * H$$
+ * $$\Sum{i=0}^{n} b^2 *{f_i}^2 * l_i  = W * H$$
  *
  * Factoring out b:
- * $$ b * \Sum{i=0}^{n} {f_i}^2 * l_i  = W * H $$
+ * $$ b^2 * \Sum{i=0}^{n} {f_i}^2 * l_i  = W * H $$
  *
  * Solving for b:
- * $$ b = \frac{W * H}{{f_i}^2 * l_i } $$
+ * $$ b^2 = \frac{W * H}{{f_i}^2 * l_i } $$
+ *
  */
 
 // tuning parameter to allow for more white space
-const whitespaceTuning = 6;
+const whitespaceTuning = 2;
 
 const getWordSize = ([word, freq]: [string, number]): number =>
   whitespaceTuning * word.length * freq ** 2;
@@ -39,5 +40,7 @@ export default function getBaseFontSize({
   const sumOfWordSizes = Object.entries(wordFreqLookup)
     .map(getWordSize)
     .reduce((acc, size) => acc + size, 0);
-  return (canvasRoot.clientWidth * canvasRoot.clientHeight) / sumOfWordSizes;
+  const bSquared =
+    (canvasRoot.clientWidth * canvasRoot.clientHeight) / sumOfWordSizes;
+  return Math.floor(Math.sqrt(bSquared));
 }
