@@ -36,26 +36,6 @@
   </div>
 </template>
 
-<style scoped>
-.max-height-image {
-  max-height: 70vh;
-}
-
-.image-heatmap-response__image-container {
-  position: relative;
-}
-
-.clickPointer {
-  margin-top: -1.5em;
-  margin-left: -0.5em;
-  padding: 1em;
-  border: solid 0.5em #c00;
-  border-radius: 50%;
-  position: absolute;
-  pointer-events: none;
-}
-</style>
-
 <script>
 import get from "lodash/get";
 
@@ -76,7 +56,7 @@ export default {
   created() {
     window.addEventListener("resize", this.updateScaledCoordinates);
   },
-  destroyed() {
+  unmounted() {
     window.removeEventListener("resize", this.updateScaledCoordinates);
   },
 
@@ -150,3 +130,23 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.max-height-image {
+  max-height: 70vh;
+}
+
+.image-heatmap-response__image-container {
+  position: relative;
+}
+
+.clickPointer {
+  margin-top: -1.5em;
+  margin-left: -0.5em;
+  padding: 1em;
+  border: solid 0.5em #c00;
+  border-radius: 50%;
+  position: absolute;
+  pointer-events: none;
+}
+</style>

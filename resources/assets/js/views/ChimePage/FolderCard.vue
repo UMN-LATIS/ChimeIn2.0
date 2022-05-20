@@ -4,7 +4,7 @@
     class="folder-card"
     data-cy="folder-card"
     :icon="showMoveIcon ? 'drag_handle' : ''"
-    icon-class="handle"
+    iconClass="handle"
   >
     <router-link :to="to">
       <div class="folder-card__contents">
