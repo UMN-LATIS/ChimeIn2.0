@@ -27,27 +27,5 @@ if (mix.inProduction()) {
         chunkFilename: "js/[name].[chunkhash].js",
         publicPath: "/",
       },
-
-      // Vue 2 to 3 compatibility. Can be removed after vue3 update complete
-      resolve: {
-        alias: {
-          vue: "@vue/compat",
-        },
-      },
-      module: {
-        rules: [
-          {
-            test: /\.vue$/,
-            loader: "vue-loader",
-            options: {
-              compilerOptions: {
-                compatConfig: {
-                  MODE: 2,
-                },
-              },
-            },
-          },
-        ],
-      },
     });
 }

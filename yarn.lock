@@ -1933,11 +1933,6 @@
   resolved "https://registry.yarnpkg.com/@vue-a11y/announcer/-/announcer-3.1.5.tgz#aab9e8bb7faddac69f6e8e68ab3017fb2621fd46"
   integrity sha512-eBL5b2cAjvXNGPvakrpNIj1navG1nA3jFF7z5DXrQLLYyWFjtcjdO2w8AHn7WEafU68jRNYEubP7Mv0h0WhgUQ==
 
-"@vue/compat@^3.2.33":
-  version "3.2.33"
-  resolved "https://registry.yarnpkg.com/@vue/compat/-/compat-3.2.33.tgz#d7080bf24247e730fe9c33e9782ae4fba66ec347"
-  integrity sha512-8g2W2Na+vEKq9dhj/OkfesgSdr8kXx7ehC1tPCngGq1MD/Q6Q0ydnpcD0sNaGFP4R/8Zccp0LIpMSnj8qKGXBQ==
-
 "@vue/compiler-core@3.2.33", "@vue/compiler-core@^3.2.31":
   version "3.2.33"
   resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.2.33.tgz#e915d59cce85898f5c5cfebe4c09e539278c3d59"
