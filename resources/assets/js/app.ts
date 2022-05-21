@@ -7,14 +7,12 @@ import ltilaunch from "./components/lti/ltiLaunch.vue";
 import registerAxios from "./common/axios.js";
 import registerEcho from "./common/echo.js";
 import registerSocketIOClient from "./common/socketioClient.js";
-import registerDevTools from "./common/devtools.js";
 import router from "./router.js";
 import store from "./store.js";
 
 registerSocketIOClient();
 registerAxios();
 registerEcho();
-registerDevTools();
 
 const app = createApp({});
 
