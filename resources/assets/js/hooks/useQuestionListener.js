@@ -1,5 +1,6 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
 import { getFolderWithQuestions } from "../common/api.ts";
+import echoClient from "../common/echoClient.js";
 
 export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
@@ -26,7 +27,8 @@ export default function useQuestionListener({ chimeId, folderId }) {
   onMounted(async () => {
     folder.value = await getFolderWithQuestions({ chimeId, folderId });
 
-    Echo.join(`session-status.${chimeId}`)
+    echoClient
+      .join(`session-status.${chimeId}`)
       .here((users) => (usersCount.value = users.length))
       .joining(() => (usersCount.value += 1))
       .leaving(() => (usersCount.value -= 1))
@@ -57,9 +59,9 @@ export default function useQuestionListener({ chimeId, folderId }) {
         question.current_session_id = null;
       });
 
-    Echo.private(`session-response.${chimeId}`).listen(
-      "SubmitResponse",
-      function onEchoSubmitResponse(event) {
+    echoClient
+      .private(`session-response.${chimeId}`)
+      .listen("SubmitResponse", function onEchoSubmitResponse(event) {
         console.log("Submit Response", { event });
         const question = questions.value.find(
           (q) => q.id === event.session.question.id
@@ -94,13 +96,12 @@ export default function useQuestionListener({ chimeId, folderId }) {
         }
         // otherwise, update the response
         session.responses[responseIndexToUpdate] = event.response;
-      }
-    );
+      });
   });
 
   onUnmounted(() => {
-    Echo.leave(`session-status.${chimeId}`);
-    Echo.leave(`session-response.${chimeId}`);
+    echoClient.leave(`session-status.${chimeId}`);
+    echoClient.leave(`session-response.${chimeId}`);
   });
 
   return {

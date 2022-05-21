@@ -1,4 +1,5 @@
 import Echo from "laravel-echo";
+import socketioClient from "socket.io-client";
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -8,6 +9,7 @@ import Echo from "laravel-echo";
 const echoClient = new Echo({
   broadcaster: "socket.io",
   host: `${window.location.hostname}:6001`,
+  client: socketioClient,
 });
 
 export default echoClient;

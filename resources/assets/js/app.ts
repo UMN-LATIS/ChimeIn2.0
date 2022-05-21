@@ -7,20 +7,18 @@ import ltilaunch from "./components/lti/ltiLaunch.vue";
 import router from "./router.js";
 import store from "./store.js";
 import axiosClient from "./common/axiosClient";
-import socketIOClient from "./common/socketioClient";
+// import socketIOClient from "./common/socketioClient";
 import echoClient from "./common/echoClient";
 
 declare global {
   interface Window {
     axios: typeof axiosClient;
-    io: typeof socketIOClient;
-    echo: typeof echoClient;
+    Echo: typeof echoClient;
   }
 }
 
 window.axios = axiosClient;
-window.io = socketIOClient;
-window.echo = echoClient;
+// window.Echo = echoClient;
 
 const app = createApp({});
 
