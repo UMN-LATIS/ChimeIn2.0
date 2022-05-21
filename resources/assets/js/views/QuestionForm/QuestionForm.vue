@@ -76,11 +76,11 @@
         :chime_id="folder.chime_id"
       ></component>
     </div>
-    <div class="modal-footer">
-      <div class="mr-auto">
+    <footer class="question-form__footer">
+      <div class="question-form__footer-col">
         <button class="btn btn-danger" @click="reset">Reset Question</button>
       </div>
-      <div class="">
+      <div class="question-form__footer-col">
         <button class="btn btn-secondary" @click="close">Cancel</button>
         <button
           class="btn btn-primary"
@@ -90,7 +90,7 @@
           Save
         </button>
       </div>
-    </div>
+    </footer>
   </Modal>
 </template>
 
@@ -300,5 +300,19 @@ export default {
 .choiceRow {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.question-form__footer {
+  margin-top: 2rem;
+  border-top: 1px solid #ccc;
+  padding-top: 1.25rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.question-form__footer-col {
+  display: flex;
+  gap: 0.5rem;
 }
 </style>
