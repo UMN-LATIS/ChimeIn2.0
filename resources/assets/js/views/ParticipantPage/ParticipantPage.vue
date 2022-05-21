@@ -117,6 +117,7 @@
 </template>
 
 <script setup>
+import echoClient from "../../common/echoClient";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import get from "lodash/get";
 import updateList from "ramda/es/update.js";
@@ -236,7 +237,8 @@ function loadChime() {
 onMounted(() => {
   loadChime();
   loadTime.value = new Date();
-  Echo.join(`session-status.${props.chimeId}`)
+  echoClient
+    .join(`session-status.${props.chimeId}`)
     .listen("StartSession", (event) => {
       console.log("StartSession: participant", { event });
       sessions.value.unshift(event.session);
@@ -260,15 +262,15 @@ onMounted(() => {
       );
     });
 
-  Echo.connector.socket.on("reconnect", (event) => {
+  echoClient.connector.socket.on("reconnect", (event) => {
     console.log("reconnect: participant", { event });
 
     if (timeout.value) clearTimeout(timeout.value);
 
     const hoursSinceLoad = (new Date() - loadTime.value) / 1000 / 60 / 60;
     if (hoursSinceLoad >= 8) {
-      Echo.leave(`session-status.${props.chimeId}`);
-      Echo.connector.socket.off("reconnect");
+      echoClient.leave(`session-status.${props.chimeId}`);
+      echoClient.connector.socket.off("reconnect");
       error.value = "Your session has expired.  Please refresh the page.";
       sessions.value = [];
       announcer.polite("Your session has expired. Please refresh the page.");
@@ -282,8 +284,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  Echo.leave(`session-status.props.${props.chimeId}`);
-  Echo.connector.socket.off("reconnect");
+  echoClient.leave(`session-status.props.${props.chimeId}`);
+  echoClient.connector.socket.off("reconnect");
 });
 </script>
 <style scoped>
