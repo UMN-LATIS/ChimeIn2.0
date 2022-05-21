@@ -119,7 +119,6 @@
 <script setup>
 import echoClient from "../../common/echoClient";
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import get from "lodash/get";
 import updateList from "ramda/es/update.js";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
@@ -133,6 +132,7 @@ import {
 } from "../../helpers/chimeSelectors.js";
 import { useStore } from "vuex";
 import { useAnnouncer } from "@vue-a11y/announcer";
+import { useRoute } from "vue-router";
 
 const props = defineProps({
   user: {
@@ -158,12 +158,14 @@ const loadTime = ref(null);
 const forceLoad = ref(false);
 const store = useStore();
 const announcer = useAnnouncer();
+const route = useRoute();
 
 const canvasCourseUrl = computed(() => selectCanvasCourseUrl(chime.value));
 const joinUrl = computed(() => selectJoinUrl(chime.value));
 const isCanvasChime = computed(() => selectIsCanvasChime(chime.value));
 const inParticipantView = computed(() => {
-  const viewMode = get(this, "$route.query.viewMode", null);
+  // const viewMode = get(this, "$route.query.viewMode", null);
+  const viewMode = route?.query?.viewMode ?? false;
   if (!viewMode) return false;
 
   return viewMode.toLowerCase() === "participant";
