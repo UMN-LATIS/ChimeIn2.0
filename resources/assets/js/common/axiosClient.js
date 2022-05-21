@@ -14,6 +14,4 @@ if (token) {
   );
 }
 
-export default function registerAxiosServiceGlobally() {
-  window.axios = axiosClient;
-}
+export default axiosClient;

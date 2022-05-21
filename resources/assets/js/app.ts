@@ -4,15 +4,23 @@ import "@vue-a11y/announcer/dist/style.css";
 import $ from "jquery";
 import "bootstrap";
 import ltilaunch from "./components/lti/ltiLaunch.vue";
-import registerAxios from "./common/axios.js";
-import registerEcho from "./common/echo.js";
-import registerSocketIOClient from "./common/socketioClient.js";
 import router from "./router.js";
 import store from "./store.js";
+import axiosClient from "./common/axiosClient";
+import socketIOClient from "./common/socketioClient";
+import echoClient from "./common/echoClient";
 
-registerSocketIOClient();
-registerAxios();
-registerEcho();
+declare global {
+  interface Window {
+    axios: typeof axiosClient;
+    io: typeof socketIOClient;
+    echo: typeof echoClient;
+  }
+}
+
+window.axios = axiosClient;
+window.io = socketIOClient;
+window.echo = echoClient;
 
 const app = createApp({});
 

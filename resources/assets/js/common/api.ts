@@ -1,4 +1,4 @@
-import { axiosClient as axios } from "../common/axios";
+import axios from "../common/axiosClient";
 import orderBy from "lodash/orderBy";
 import type {
   FolderWithQuestions,
