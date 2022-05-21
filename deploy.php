@@ -35,7 +35,7 @@ host('prod')
     ->set('hostname', "cla-chimein-prd.oit.umn.edu")
     ->set('remote_user','swadm')
     ->set('labels', ['stage' => 'production'])
-    ->set('bin/php', '/opt/rh/rh-php73/root/usr/bin/php')
+    ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
 task('assets:generate', function() {
