@@ -2,12 +2,12 @@
   <div class="text-heatmap-response-question-options">
     <label>Heatmap Text</label>
     <VEditor
-      v-model="heatmap_text"
+      :modelValue="question_responses.heatmap_text"
       data-cy="heatmap-text-editor"
       placeholder="Heatmap Text"
       :toolbar="toolbar"
       :options="editorOptions"
-      @input="emitChanges"
+      @update:modelValue="emitChanges"
     />
   </div>
 </template>
@@ -24,7 +24,6 @@ export default {
   emits: ["update:question_responses"],
   data: function () {
     return {
-      heatmap_text: this.question_responses.heatmap_text,
       toolbar: [
         ["bold", "italic", "underline", "align"],
         [
@@ -62,9 +61,9 @@ export default {
     };
   },
   methods: {
-    emitChanges: function () {
+    emitChanges(updatedContents) {
       this.$emit("update:question_responses", {
-        heatmap_text: this.heatmap_text,
+        heatmap_text: updatedContents,
       });
     },
   },
