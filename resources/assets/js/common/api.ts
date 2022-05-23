@@ -6,6 +6,8 @@ import type {
   Chime,
   Folder,
   Session,
+  ChimeOptions,
+  User,
 } from "../types";
 
 export function getFolderWithQuestions({
@@ -90,6 +92,13 @@ export function getChimes(): Promise<Chime[]> {
     .get("/api/chime")
     .then((res) => orderBy(res.data, "created_at", ["desc"]))
     .catch(console.error);
+}
+
+export function updateChimeOptions(
+  chimeId: number,
+  update: ChimeOptions & { name: string }
+): Promise<Chime> {
+  return axios.patch(`/api/chime/${chimeId}`, update);
 }
 
 export function updateFolder(
@@ -213,13 +222,49 @@ export function forceSyncGradesWithLMS({
   folderId,
 }: {
   chimeId: number;
-  folderId: number;
+  folderId?: number;
 }): Promise<boolean> {
+  const syncUrl = folderId
+    ? `/api/chime/${chimeId}/folder/${folderId}/sync`
+    : `/api/chime/${chimeId}/sync`;
   return axios
-    .post(`/api/chime/${chimeId}/folder/${folderId}/sync`)
+    .post(syncUrl)
     .then((res) => res.status === 200)
     .catch((err) => {
       console.error(err);
       return false;
     });
+}
+
+export function getChimeUsers(chimeId: number): Promise<User[]> {
+  return axios
+    .get(`/api/chime/${chimeId}/users`)
+    .then((res) => res.data)
+    .catch(console.error);
+}
+
+export function updateChimeUsers(
+  chimeId: number,
+  users: User[]
+): Promise<MessageEvent> {
+  return axios.put(`/api/chime/${chimeId}/users`, users);
+}
+
+export function getChime(chimeId: number): Promise<Chime> {
+  return (
+    axios
+      .get(`/api/chime/${chimeId}`)
+      .then((res) => res.data)
+      // cast some chime options as booleans
+      // rather than ints returned from server
+      .then((chime) => ({
+        ...chime,
+        require_login: Boolean(chime.require_login),
+        students_can_view: Boolean(chime.students_can_view),
+        join_instructions: Boolean(chime.join_instructions),
+        show_folder_title_to_participants: Boolean(
+          chime.show_folder_title_to_participants
+        ),
+      }))
+  );
 }

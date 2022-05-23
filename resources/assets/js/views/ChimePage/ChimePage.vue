@@ -51,7 +51,11 @@
             'chime__settings-panel--isOpen': showSettings || exportPanel,
           }"
         >
-          <ChimeManagement v-if="showSettings" v-model:chime="chime" />
+          <ChimeManagement
+            v-if="showSettings"
+            :chime="chime"
+            @update:chime="handleChimeUpdate"
+          />
           <ChimeExport v-if="exportPanel" :chime="chime" />
         </div>
       </header>
@@ -111,6 +115,7 @@ import {
   selectIsCanvasChime,
   selectCanvasCourseUrl,
 } from "../../helpers/chimeSelectors";
+import * as api from "../../common/api";
 
 export default {
   components: {
@@ -180,6 +185,12 @@ export default {
         this[key] = true;
       });
     },
+    handleChimeUpdate(updatedChime) {
+      // optimistically update chime
+      this.chime = updatedChime;
+      // but load the chime from the server for realsies.
+      this.loadChime();
+    },
     create_folder: function (folder_name) {
       if (folder_name.length == 0) {
         alert("You must enter a name for this folder.");
@@ -206,20 +217,17 @@ export default {
           console.error(err);
         });
     },
-    loadChime() {
-      return axios
-        .get("/api/chime/" + this.chimeId)
-        .then((res) => {
-          this.chime = res.data;
-          document.title = this.chime.name;
-        })
-        .catch((err) => {
-          this.$store.commit(
-            "message",
-            "Could not load Chime. You may not have permission to view this page. "
-          );
-          console.error(err);
-        });
+    async loadChime() {
+      try {
+        this.chime = await api.getChime(this.chimeId);
+        document.title = this.chime.name;
+      } catch (err) {
+        this.$store.commit(
+          "message",
+          "Could not load Chime. You may not have permission to view this page. "
+        );
+        console.error(err);
+      }
     },
   },
 };

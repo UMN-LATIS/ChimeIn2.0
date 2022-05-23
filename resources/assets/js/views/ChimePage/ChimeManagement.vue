@@ -9,7 +9,7 @@
         <div class="input-group">
           <input
             id="chimeName"
-            v-model="chime_name"
+            v-model="chimeName"
             type="text"
             class="form-control"
             data-cy="chime-name-input"
@@ -18,7 +18,7 @@
             <button
               class="btn btn-outline-primary align-items-center d-flex btn-sm"
               data-cy="save-chime-name-button"
-              @click="saveChime"
+              @click="saveChime()"
             >
               <span class="material-icons pointer md-18">save</span> Update
               Chime Name
@@ -35,21 +35,24 @@
             :includeFullUrl="true"
           />
           <ChimeManagementOptions
-            v-model:require_login="require_login"
-            v-model:students_can_view="students_can_view"
-            v-model:join_instructions="join_instructions"
-            v-model:only_correct_answers_lti="only_correct_answers_lti"
-            v-model:show_folder_title_to_participants="
-              show_folder_title_to_participants
+            :require_login="chime.require_login"
+            :students_can_view="chime.students_can_view"
+            :join_instructions="chime.join_instructions"
+            :only_correct_answers_lti="chime.only_correct_answers_lti"
+            :show_folder_title_to_participants="
+              chime.show_folder_title_to_participants
             "
+            @update="(updates) => saveChime(updates)"
           />
           <button
             v-if="chime.resource_link_pk"
             class="btn btn-outline-success btn-sm align-items-center d-flex"
-            @click="sync"
+            @click="forceSyncGrades"
           >
             Force Sync with Canvas
-            <span v-if="synced" class="material-icons md-18">check_circle</span>
+            <span v-if="isForceSyncSuccessful" class="material-icons md-18"
+              >check_circle</span
+            >
           </button>
         </div>
       </div>
@@ -68,7 +71,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(u, index) in sorted_users" :key="index">
+              <tr v-for="(u, index) in sortedUsers" :key="index">
                 <td>{{ u.name }}</td>
                 <td>{{ u.email }}</td>
                 <td data-cy="select-user-permissions-in-chime">
@@ -113,149 +116,256 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import * as api from "../../common/api";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
+import type { Chime, ChimeOptions, User } from "../../types";
+import { useStore } from "vuex";
 
-export default {
-  components: {
-    ChimeManagementOptions,
-    JoinPanel,
-  },
-  props: ["chime"],
-  emits: ["update:chime"],
-  data: function () {
-    return {
-      users: [],
-      chime_name: this.chime.name,
-      join_instructions: this.chime.join_instructions,
-      students_can_view: this.chime.students_can_view,
-      require_login: this.chime.require_login,
-      only_correct_answers_lti: this.chime.only_correct_answers_lti,
-      show_folder_title_to_participants:
-        this.chime.show_folder_title_to_participants,
-      synced: false,
-    };
-  },
-  computed: {
-    join_url: function () {
-      return (
-        window.location.protocol +
-        "//" +
-        window.location.host +
-        "/join/" +
-        this.chime.access_code
-      );
-    },
-    sorted_users: function () {
-      return [...this.users].sort((a, b) => {
-        var n = b.permission_number - a.permission_number;
-        if (n !== 0) {
-          return n;
-        }
-        if (a.email < b.email) {
-          return -1;
-        }
-        if (a.email > b.email) {
-          return 1;
-        }
-        return 0;
-      });
-    },
-    hyphenatedCode: function () {
-      return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
-    },
-  },
-  watch: {
-    join_instructions() {
-      this.saveChime();
-    },
-    students_can_view() {
-      this.saveChime();
-    },
-    require_login() {
-      this.saveChime();
-    },
-    only_correct_answers_lti() {
-      this.saveChime();
-    },
-    show_folder_title_to_participants() {
-      this.saveChime();
-    },
-  },
-  mounted() {
-    this.loadUsers();
-  },
-  methods: {
-    saveChime: function () {
-      var localChime = {
-        ...this.chime,
-      };
-      localChime.join_instructions = this.join_instructions;
-      localChime.students_can_view = this.students_can_view;
-      localChime.require_login = this.require_login;
-      localChime.only_correct_answers_lti = this.only_correct_answers_lti;
-      localChime.show_folder_title_to_participants =
-        this.show_folder_title_to_participants;
-      localChime.name = this.chime_name;
-      axios
-        .patch("/api/chime/" + this.chime.id, localChime)
-        .then(() => {
-          this.$emit("update:chime", localChime);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    deleteUser(index) {
-      if (confirm("Are you sure you want to remove this user?")) {
-        this.users.splice(index, 1);
-        this.saveUsers();
-      }
-    },
-    saveUsers: function () {
-      const url = "/api/chime/" + this.chime.id + "/users";
+interface Props {
+  chime: Chime;
+}
 
-      axios
-        .put(url, {
-          users: this.users,
-        })
-        .then(() => {
-          this.loadUsers();
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    loadUsers: function () {
-      const url = "/api/chime/" + this.chime.id + "/users";
-      axios
-        .get(url)
-        .then((res) => {
-          this.users = res.data;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    sync: function () {
-      axios
-        .post("/api/chime/" + this.chime.id + "/sync")
-        .then((res) => {
-          if (res.data.success) {
-            this.synced = true;
-          }
-        })
-        .catch((err) => {
-          this.$store.commit(
-            "message",
-            "Could not sync Chime. Please contact support at latistecharch@umn.edu."
-          );
-          console.error(err);
-        });
-    },
-  },
-};
+const props = defineProps<Props>();
+
+interface Emits {
+  (event: "update:chime", chime: Chime);
+}
+
+const emit = defineEmits<Emits>();
+
+const users = ref<User[]>([]);
+const chimeName = ref<string>(props.chime.name);
+const store = useStore();
+
+// successful force sync
+const isForceSyncSuccessful = ref<boolean>(false);
+
+const sortedUsers = computed(() =>
+  [...users.value].sort((a, b) => {
+    // first sort by permission
+    const n = b.permission_number - a.permission_number;
+    if (n !== 0) {
+      return n;
+    }
+
+    // then sort by email
+    if (a.email < b.email) {
+      return -1;
+    }
+    if (a.email > b.email) {
+      return 1;
+    }
+
+    return 0;
+  })
+);
+
+async function saveChime(
+  updates: Partial<ChimeOptions & { name: string }> = {}
+) {
+  const {
+    require_login,
+    students_can_view,
+    join_instructions,
+    only_correct_answers_lti,
+    show_folder_title_to_participants,
+  } = props.chime;
+
+  try {
+    const updatedChime = await api.updateChimeOptions(props.chime.id, {
+      name: chimeName.value,
+      require_login,
+      students_can_view,
+      join_instructions,
+      only_correct_answers_lti,
+      show_folder_title_to_participants,
+      ...updates,
+    });
+    emit("update:chime", updatedChime);
+  } catch (err) {
+    store.commit("message", "Could not save Chime.");
+    console.error(err);
+  }
+}
+
+async function saveUsers() {
+  try {
+    await api.updateChimeUsers(props.chime.id, users.value);
+    users.value = await api.getChimeUsers(props.chime.id);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function deleteUser(index) {
+  if (!confirm("Are you sure you want to remove this user?")) return;
+  users.value.splice(index, 1);
+  saveUsers();
+}
+
+async function forceSyncGrades() {
+  try {
+    isForceSyncSuccessful.value = await api.forceSyncGradesWithLMS({
+      chimeId: props.chime.id,
+    });
+  } catch (err) {
+    store.commit(
+      "message",
+      "Could not sync Chime. Please contact support at latistecharch@umn.edu."
+    );
+    console.error(err);
+  }
+}
+
+onMounted(async () => {
+  users.value = await api.getChimeUsers(props.chime.id);
+});
+
+// // export default {
+//   // components: {
+//   //   ChimeManagementOptions,
+//   //   JoinPanel,
+//   // },
+//   // props: ["chime"],
+//   // emits: ["update:chime"],
+//   // data: function () {
+//   //   return {
+//   //     users: [],
+//   //     chime_name: this.chime.name,
+//   //     join_instructions: this.chime.join_instructions,
+//   //     students_can_view: this.chime.students_can_view,
+//   //     require_login: this.chime.require_login,
+//   //     only_correct_answers_lti: this.chime.only_correct_answers_lti,
+//   //     show_folder_title_to_participants:
+//   //       this.chime.show_folder_title_to_participants,
+//   //     synced: false,
+//   //   };
+//   // },
+//   computed: {
+//     // join_url: function () {
+//     //   return (
+//     //     window.location.protocol +
+//     //     "//" +
+//     //     window.location.host +
+//     //     "/join/" +
+//     //     this.chime.access_code
+//     //   );
+//     // },
+//     // sorted_users: function () {
+//     //   return [...this.users].sort((a, b) => {
+//     //     var n = b.permission_number - a.permission_number;
+//     //     if (n !== 0) {
+//     //       return n;
+//     //     }
+//     //     if (a.email < b.email) {
+//     //       return -1;
+//     //     }
+//     //     if (a.email > b.email) {
+//     //       return 1;
+//     //     }
+//     //     return 0;
+//     //   });
+//     // },
+//     // hyphenatedCode: function () {
+//     //   return this.chime.access_code.replace(/(\d{3})(\d{3})/, "$1-$2");
+//     // },
+//   // },
+//   // watch: {
+//   //   join_instructions() {
+//   //     this.saveChime();
+//   //   },
+//   //   students_can_view() {
+//   //     this.saveChime();
+//   //   },
+//   //   require_login() {
+//   //     this.saveChime();
+//   //   },
+//   //   only_correct_answers_lti() {
+//   //     this.saveChime();
+//   //   },
+//   //   show_folder_title_to_participants() {
+//   //     this.saveChime();
+//   //   },
+//   // },
+//   // mounted() {
+//   //   this.loadUsers();
+//   // },
+//   methods: {
+//     // handleUpdateChimeOptions(updatedOptions) {
+//     //   api.updateChime(chime.id)
+//     // },
+//     // saveChime: function () {
+//     //   var localChime = {
+//     //     ...this.chime,
+//     //   };
+//     //   localChime.join_instructions = this.join_instructions;
+//     //   localChime.students_can_view = this.students_can_view;
+//     //   localChime.require_login = this.require_login;
+//     //   localChime.only_correct_answers_lti = this.only_correct_answers_lti;
+//     //   localChime.show_folder_title_to_participants =
+//     //     this.show_folder_title_to_participants;
+//     //   localChime.name = this.chime_name;
+//     //   axios
+//     //     .patch("/api/chime/" + this.chime.id, localChime)
+//     //     .then(() => {
+//     //       this.$emit("update:chime", localChime);
+//     //     })
+//     //     .catch((err) => {
+//     //       console.error(err);
+//     //     });
+//     // },
+//     // deleteUser(index) {
+//     //   if (confirm("Are you sure you want to remove this user?")) {
+//     //     this.users.splice(index, 1);
+//     //     this.saveUsers();
+//     //   }
+//     // },
+//     // saveUsers: function () {
+//     //   const url = "/api/chime/" + this.chime.id + "/users";
+
+//     //   axios
+//     //     .put(url, {
+//     //       users: this.users,
+//     //     })
+//     //     .then(() => {
+//     //       this.loadUsers();
+//     //     })
+//     //     .catch((err) => {
+//     //       console.error(err);
+//     //     });
+//     // },
+//     // loadUsers: function () {
+//     //   const url = "/api/chime/" + this.chime.id + "/users";
+//     //   axios
+//     //     .get(url)
+//     //     .then((res) => {
+//     //       this.users = res.data;
+//     //     })
+//     //     .catch((err) => {
+//     //       console.error(err);
+//     //     });
+//     // },
+
+//       axios
+//         .post("/api/chime/" + this.chime.id + "/sync")
+//         .then((res) => {
+//           if (res.data.success) {
+//             this.synced = true;
+//           }
+//         })
+//         .catch((err) => {
+//           this.$store.commit(
+//             "message",
+//             "Could not sync Chime. Please contact support at latistecharch@umn.edu."
+//           );
+//           console.error(err);
+//         });
+//     },
+//   },
+// };
 </script>
 
 <style scoped>

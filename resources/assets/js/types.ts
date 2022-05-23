@@ -77,7 +77,23 @@ export interface FolderWithQuestions extends Folder {
   questions: Question[];
 }
 
-export interface Chime {
+export enum LTIGradeOptions {
+  FULL_CREDIT_FOR_PARITICIPATION = 0,
+  ONLY_POINTS_FOR_CORRECT = 1,
+  HALF_CREDIT_FOR_PARTICIPATION = 2,
+}
+
+export interface ChimeOptions {
+  require_login: boolean;
+  /** students can view response results */
+  students_can_view: boolean;
+  /** show join instructions */
+  join_instructions: boolean;
+  only_correct_answers_lti: LTIGradeOptions;
+  show_folder_title_to_participants: boolean;
+}
+
+export interface Chime extends ChimeOptions {
   id: number;
   access_code: string;
   created_at: string;
@@ -87,17 +103,10 @@ export interface Chime {
   lti_return_url: string | null;
   lti_course_title: string | null;
   lti_course_id: any;
-  require_login: boolean;
-  /** students can view response results */
-  students_can_view: boolean;
-  /** show join instructions */
-  join_instructions: boolean;
-  only_correct_answers_lti: boolean;
   lti_setup_complete: boolean;
   resource_link_pk: string | null;
   lti13_resource_link_id: string | null;
   lti_grade_mode: string | null;
-  show_folder_title_to_participants: boolean;
   pivot: {
     /** current user */
     user_id: number;
@@ -114,4 +123,8 @@ export type ResponseMessage = string;
 
 export type WordFrequencyLookup = {
   [word: string]: number;
+};
+
+export type Partial<T> = {
+  [P in keyof T]?: T[P];
 };
