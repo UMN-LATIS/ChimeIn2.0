@@ -3,8 +3,7 @@
     <div v-if="responses.length > 0">
       <VWordCloud
         v-if="!hideWordcloud"
-        :text="processWithNLP ? topics : concatenatedResponses"
-        :filteredWords="filteredWords"
+        :wordFreqLookup="wordFreqLookup"
         @click:word="handleWordClick"
       >
         <small class="m-0"> Click a word to filter it out. </small>
@@ -74,7 +73,9 @@
 import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import * as nlp from "compromise";
-import type { Question, Response } from "../../types";
+import toWordFrequencyLookup from "./toWordFrequencyLookup";
+
+import type { Question, Response, WordFrequencyLookup } from "../../types";
 
 interface Props {
   responses: Response[];
@@ -82,21 +83,26 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const filteredWords = ref<string[]>([]);
 const hideWordcloud = computed(
   () => props.question.question_info.question_responses.hideWordcloud
 );
 const responsesByMostRecent = computed(() => [...props.responses].reverse());
-const concatenatedResponses = computed(() =>
-  props.responses.map((r) => r.response_info.text).join("\n")
-);
-const topics = computed(() => {
-  const doc = nlp(concatenatedResponses.value);
-
-  return doc.topics().out("array").join("\n");
-});
 
 const processWithNLP = ref(false);
-const filteredWords = ref<string[]>([]);
+const responseTexts = computed(() =>
+  props.responses.map((r) => r.response_info.text)
+);
+
+const topics = computed(() =>
+  nlp(responseTexts.value.join("\n")).topics().out("array")
+);
+
+const wordFreqLookup = computed<WordFrequencyLookup>(() =>
+  processWithNLP.value
+    ? toWordFrequencyLookup(topics.value, filteredWords.value)
+    : toWordFrequencyLookup(responseTexts.value, filteredWords.value)
+);
 
 function handleWordClick(word) {
   filteredWords.value.push(word);

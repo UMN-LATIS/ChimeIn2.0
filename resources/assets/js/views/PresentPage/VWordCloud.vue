@@ -37,7 +37,6 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted, watchEffect, computed } from "vue";
-import { removeStopwords } from "stopword";
 import { Chart, ChartEvent, LinearScale } from "chart.js";
 import {
   IWordElementProps,
@@ -51,12 +50,9 @@ import type { WordFrequencyLookup } from "../../types";
 Chart.register(WordCloudController, WordElement, LinearScale);
 
 interface Props {
-  text: string;
-  filteredWords: string[];
+  wordFreqLookup: WordFrequencyLookup;
 }
-const props = withDefaults(defineProps<Props>(), {
-  filteredWords: () => [],
-});
+const props = defineProps<Props>();
 
 interface Emits {
   (e: "click:word", word: string): void;
@@ -73,34 +69,10 @@ const wordColors = [
   "#F18E44",
 ];
 
-function normalizeWordlist(words: string): string[] {
-  const wordlist: string[] = words
-    .toLowerCase()
-    .replace(/['"“”‘’„”«»]/g, "")
-    .split(/[^&\w]+/gm);
-
-  const wordlistWithoutStopwords = removeStopwords(wordlist);
-  const filteredWordlist = wordlistWithoutStopwords.filter(
-    (word) => !props.filteredWords.includes(word)
-  );
-  return filteredWordlist;
-}
-
-function toWordFrequency(wordlist: string[]): WordFrequencyLookup {
-  return wordlist.reduce((acc, word) => {
-    const prevWordCount = acc[word] || 0;
-    return {
-      ...acc,
-      [word]: prevWordCount + 1,
-    };
-  }, {});
-}
-
 const chart: Ref<Chart<"wordCloud", number[], string> | null> = ref(null);
-const filteredWordlist = computed(() => normalizeWordlist(props.text));
-const wordFreqLookup = computed(() => toWordFrequency(filteredWordlist.value));
+
 const orderedWordList = computed(() =>
-  Object.entries(wordFreqLookup.value)
+  Object.entries(props.wordFreqLookup)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .sort(([word1, freq1], [word2, freq2]) => freq2 - freq1)
 );
@@ -108,12 +80,13 @@ const orderedWordList = computed(() =>
 function renderWordcloud() {
   if (!canvasRoot.value) return;
 
-  const words = Object.keys(wordFreqLookup.value);
+  const words = Object.keys(props.wordFreqLookup);
+
   const baseFontSize = getBaseFontSize({
     canvasRoot: canvasRoot.value,
-    wordFreqLookup: wordFreqLookup.value,
+    wordFreqLookup: props.wordFreqLookup,
   });
-  const wordFontSizes = Object.values(wordFreqLookup.value).map(
+  const wordFontSizes = Object.values(props.wordFreqLookup).map(
     (freq) => freq * baseFontSize
   );
 
