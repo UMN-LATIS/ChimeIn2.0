@@ -1,5 +1,5 @@
 <template>
-  <Modal :show="show" @close="close">
+  <Modal :show="show" class="v-editor" @close="close">
     <div class="modal-header" data-cy="add-question-form">
       <h3>Add a Question</h3>
     </div>
@@ -67,6 +67,7 @@
         data-cy="question-editor"
         placeholder="Question Text"
         :imageUploadUrl="`/api/chime/${folder.chime_id}/image`"
+        :options="editorOptions"
       />
 
       <component
