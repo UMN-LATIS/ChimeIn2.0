@@ -89,8 +89,8 @@ export interface ChimeOptions {
   students_can_view: boolean;
   /** show join instructions */
   join_instructions: boolean;
-  only_correct_answers_lti: LTIGradeOptions;
   show_folder_title_to_participants: boolean;
+  only_correct_answers_lti?: LTIGradeOptions;
 }
 
 export interface Chime extends ChimeOptions {

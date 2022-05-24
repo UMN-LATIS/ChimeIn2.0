@@ -106,17 +106,24 @@
 import { LTIGradeOptions, Partial, ChimeOptions } from "../types";
 
 interface Props {
-  new_chime?: boolean;
   require_login: boolean;
   /** students can view response results */
   students_can_view: boolean;
   /** show join instructions */
   join_instructions: boolean;
-  only_correct_answers_lti: LTIGradeOptions;
   show_folder_title_to_participants: boolean;
+  only_correct_answers_lti?: LTIGradeOptions;
+  new_chime?: boolean;
 }
 
-defineProps<Props>();
+withDefaults(defineProps<Props>(), {
+  new_chime: false,
+  only_correct_answers_lti: LTIGradeOptions.FULL_CREDIT_FOR_PARITICIPATION,
+  require_login: false,
+  students_can_view: false,
+  join_instructions: true,
+  show_folder_title_to_participants: false,
+});
 
 interface Emits {
   (event: "update", payload: Partial<ChimeOptions>);
