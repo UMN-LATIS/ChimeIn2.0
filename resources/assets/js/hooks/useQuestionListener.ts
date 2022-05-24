@@ -1,19 +1,22 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
-import { getFolderWithQuestions } from "../common/api.ts";
+import { getFolderWithQuestions } from "../common/api";
 import echoClient from "../common/echoClient.js";
+import type { Folder, Maybe, Question } from "../types";
 
 export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
-  const folder = ref(null);
-  const questions = computed({
+  const folder = ref<Maybe<Folder>>(null);
+  const questions = computed<Question[]>({
     get() {
       return folder.value?.questions ?? [];
     },
-    set(questions) {
-      folder.value = {
-        ...folder.value,
-        questions,
-      };
+    set(questions: Question[]) {
+      if (!folder.value) {
+        throw new Error(
+          "cannot set questions on folder when folder ref is null"
+        );
+      }
+      folder.value.questions = questions;
     },
   });
 
