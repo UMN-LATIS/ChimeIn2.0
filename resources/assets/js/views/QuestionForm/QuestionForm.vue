@@ -121,7 +121,7 @@ export default {
     Modal,
   },
   props: ["question", "show", "folder", "controlType"],
-  emits: ["close"],
+  emits: ["close", "edited"],
   data: function () {
     return {
       folders: null,
@@ -269,25 +269,6 @@ export default {
           });
       }
     },
-    // handleImageAdded(file) {
-    //   const form = new FormData();
-    //   form.append("image", file);
-
-    //   return axios
-    //     .post(`/api/chime/${this.folder.chime_id}/image`, form)
-    //     .then((res) => {
-    //       return `/storage/${res.data.image}`;
-    //     })
-    //     .catch((err) => {
-    //       this.$store.commit(
-    //         "message",
-    //         "Could not store this image. Please contact support at latistecharch@umn.edu. The full error was: " +
-    //           err.response
-    //       );
-    //       console.error(err);
-    //       throw err;
-    //     });
-    // },
   },
 };
 </script>
