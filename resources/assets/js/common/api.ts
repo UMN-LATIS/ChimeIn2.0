@@ -142,7 +142,7 @@ export function closeAllQuestionsInFolder({
   folderId: number;
 }): Promise<ResponseMessage> {
   return axios
-    .post(`/api/chime/${chimeId}/folder/${folderId}/question/stopAll`, {})
+    .put(`/api/chime/${chimeId}/folder/${folderId}/question/stopAll`, {})
     .then((res) => res.data)
     .catch(console.error);
 }
