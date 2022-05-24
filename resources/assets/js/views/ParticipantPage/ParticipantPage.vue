@@ -164,7 +164,6 @@ const canvasCourseUrl = computed(() => selectCanvasCourseUrl(chime.value));
 const joinUrl = computed(() => selectJoinUrl(chime.value));
 const isCanvasChime = computed(() => selectIsCanvasChime(chime.value));
 const inParticipantView = computed(() => {
-  // const viewMode = get(this, "$route.query.viewMode", null);
   const viewMode = route?.query?.viewMode ?? false;
   if (!viewMode) return false;
 
