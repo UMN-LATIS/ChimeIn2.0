@@ -247,7 +247,9 @@ export function updateChimeUsers(
   chimeId: number,
   users: User[]
 ): Promise<MessageEvent> {
-  return axios.put(`/api/chime/${chimeId}/users`, users);
+  return axios.put(`/api/chime/${chimeId}/users`, { users }).then((res) => {
+    return res.data;
+  });
 }
 
 export function getChime(chimeId: number): Promise<Chime> {
