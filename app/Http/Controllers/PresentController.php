@@ -48,7 +48,7 @@ class PresentController extends Controller
             ->where('chime_id', $chime->id)
             ->first());
         if ($chime == null || $chime->pivot->permission_number < 300) { 
-            return response('Invalid Permissions to Start Sessions', 403);
+            return response('Invalid Permissions to Stop Sessions', 403);
         }
 
         foreach($folder->questions as $question) {
@@ -61,7 +61,7 @@ class PresentController extends Controller
             }
             
         }
-        return response('Sessions Started');
+        return response('Sessions Stopped');
 
     }
 
