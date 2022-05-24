@@ -79,11 +79,16 @@
           </div>
         </div>
       </div>
-      <div v-if="show_edit_folder" class="ml-4 mt-2">
+      <div v-if="show_edit_folder && folder" class="ml-4 mt-2">
         <div class="row">
           <div class="col-12">
             <div class="input-group mb-3">
-              <input v-model="folder.name" type="text" class="form-control" />
+              <input
+                :value="folder.name"
+                type="text"
+                class="form-control"
+                @input="handleFolderNameInput"
+              />
 
               <div class="input-group-append">
                 <button
@@ -264,7 +269,6 @@ const existing_folders = ref([]);
 const selected_chime = ref(null);
 const selected_folder = ref(null);
 const synced = ref(false);
-const folder_name = ref("");
 
 const store = useStore();
 const router = useRouter();
@@ -349,10 +353,11 @@ async function loadExistingChimes() {
 }
 
 async function edit_folder() {
+  if (!folder.value) return;
   await updateFolder(
     { chimeId: props.chimeId, folderId: props.folderId },
     {
-      folder_name: folder_name.value,
+      folder_name: folder.value.name,
     }
   );
   show_edit_folder.value = false;
@@ -399,20 +404,9 @@ function closeOthers() {
   });
 }
 
-// function update_folders() {
-//   axios
-//     .get("/api/chime/" + selected_chime.value)
-//     .then((res) => {
-//       existing_folders.value = orderBy(
-//         res.data.folders.filter((f) => f.id != this.folderId),
-//         "created_at",
-//         ["desc"]
-//       );
-//     })
-//     .catch((err) => {
-//       console.error("error", "Error in get chimes:", err.response);
-//     });
-// }
+function handleFolderNameInput(event) {
+  folder.value.name = event.target.value;
+}
 
 function do_import() {
   if (!selected_chime.value || !selected_folder.value) return;

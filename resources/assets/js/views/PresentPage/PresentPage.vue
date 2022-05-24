@@ -32,7 +32,7 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { component as Fullscreen } from "vue-fullscreen";
-import useQuestionListener from "../../hooks/useQuestionListener.js";
+import useQuestionListener from "../../hooks/useQuestionListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import PresentQuestion from "./PresentQuestion.vue";
@@ -85,11 +85,6 @@ const currentQuestion = computed(() => {
 const host = computed(() =>
   chime.value && chime.value.join_instructions ? window.location.host : null
 );
-// const hyphenatedCode = computed(() =>
-//   chime.value && chime.value.join_instructions
-//     ? toHyphenatedCode(chime.value.access_code)
-//     : ""
-// );
 
 const router = useRouter();
 
