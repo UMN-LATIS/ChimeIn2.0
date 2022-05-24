@@ -225,6 +225,7 @@
 </template>
 
 <script setup>
+import orderBy from "lodash/orderBy";
 import { defineAsyncComponent, ref, computed, watch, onMounted } from "vue";
 import Draggable from "vuedraggable";
 import ErrorDialog from "../../components/ErrorDialog.vue";
@@ -408,13 +409,31 @@ function handleFolderNameInput(event) {
   folder.value.name = event.target.value;
 }
 
-function do_import() {
+async function do_import() {
   if (!selected_chime.value || !selected_folder.value) return;
-  importFolder({
+  await importFolder({
     destinationChimeId: props.chimeId,
     destinationFolderId: props.folderId,
-    sourceFolderId: selected_chime.value,
+    sourceFolderId: selected_folder.value,
   });
+  refreshFolder();
+}
+
+function update_folders() {
+  axios
+    .get("/api/chime/" + selected_chime.value)
+    .then((res) => {
+      const foldersWithoutCurrentOne = res.data.folders.filter(
+        (f) => f.id !== props.folderId
+      );
+
+      existing_folders.value = orderBy(foldersWithoutCurrentOne, "created_at", [
+        "desc",
+      ]);
+    })
+    .catch((err) => {
+      console.error("error", "Error in get chimes:", err.response);
+    });
 }
 
 async function sync() {

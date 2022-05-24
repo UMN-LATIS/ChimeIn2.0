@@ -62,6 +62,7 @@ const emit = defineEmits(["update", "enter", "remove"]);
 const quill = ref(null);
 
 const options = {
+  bounds: ".modal-body",
   modules: {
     toolbar: ["formula"],
     keyboard: {
