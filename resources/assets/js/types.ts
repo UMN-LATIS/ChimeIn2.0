@@ -71,6 +71,7 @@ export interface Folder {
   lti_lineitem: any;
   questions_count: number;
   questions?: Question[];
+  student_view?: boolean;
 }
 
 export interface FolderWithQuestions extends Folder {
@@ -128,3 +129,9 @@ export type WordFrequencyLookup = {
 export type Partial<T> = {
   [P in keyof T]?: T[P];
 };
+
+export type Maybe<T> = T | null;
+
+export interface FormInputEvent extends Event {
+  target: HTMLInputElement;
+}
