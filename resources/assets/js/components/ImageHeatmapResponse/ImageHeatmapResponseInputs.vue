@@ -40,7 +40,9 @@
 import get from "lodash/get";
 
 export default {
+  // eslint-disable-next-line vue/require-prop-types
   props: ["question", "response", "disabled"],
+  emits: ["recordresponse"],
   data() {
     return {
       targetImageLoaded: false,
@@ -59,7 +61,6 @@ export default {
   unmounted() {
     window.removeEventListener("resize", this.updateScaledCoordinates);
   },
-
   methods: {
     handleTargetImageLoaded() {
       this.targetImageLoaded = true;
@@ -118,15 +119,6 @@ export default {
       this.$emit("recordresponse", response, this.create_new_response);
       this.create_new_response = false;
     },
-    // record_response: function() {
-    //     const response = {
-    //         question_type: 'heatmap_response',
-    //         image_coordinates: this.image_coordinates
-    //     }
-
-    //     this.$emit('recordresponse', response, false);
-
-    // }
   },
 };
 </script>

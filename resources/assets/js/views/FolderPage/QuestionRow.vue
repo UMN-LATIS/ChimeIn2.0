@@ -74,7 +74,9 @@ export default {
     QuestionForm,
     PrettyCheck,
   },
+  // eslint-disable-next-line vue/require-prop-types
   props: ["folder", "question"],
+  emits: ["editquestion", "deletequestion"],
   data: function () {
     return {
       show_edit: false,

@@ -39,53 +39,12 @@
     </div>
   </div>
 </template>
-<style scoped>
-.range-wrap {
-  position: relative;
-  margin: 0 auto 0.3rem;
-}
-
-.range {
-  width: 100%;
-}
-
-.bubble {
-  font-size: 2em;
-}
-.value-slider {
-  font-size: 1.3em;
-}
-
-.bubble {
-  display: inline;
-  border: 1px solid #7a0019;
-  border-radius: 4px;
-  color: black;
-  padding: 7px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 23px;
-  /* transform: translateX(-60%); */
-  background-color: white;
-  z-index: 100;
-}
-
-.bubble::after {
-  content: "";
-  position: absolute;
-  width: 2px;
-  height: 3px;
-  background: #7a0019;
-  top: -3px;
-  left: 50%;
-}
-</style>
-
 <script>
 import get from "lodash/get";
 export default {
+  // eslint-disable-next-line vue/require-prop-types
   props: ["question", "response", "disabled"],
+  emits: ["recordresponse"],
   data() {
     return {
       create_new_response: false,
@@ -156,3 +115,46 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.range-wrap {
+  position: relative;
+  margin: 0 auto 0.3rem;
+}
+
+.range {
+  width: 100%;
+}
+
+.bubble {
+  font-size: 2em;
+}
+.value-slider {
+  font-size: 1.3em;
+}
+
+.bubble {
+  display: inline;
+  border: 1px solid #7a0019;
+  border-radius: 4px;
+  color: black;
+  padding: 7px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 23px;
+  /* transform: translateX(-60%); */
+  background-color: white;
+  z-index: 100;
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 3px;
+  background: #7a0019;
+  top: -3px;
+  left: 50%;
+}
+</style>

@@ -1,15 +1,15 @@
 <template>
-  <transition name="modal">
+  <Transition name="modal">
     <div v-show="show" class="modal-mask" @mousedown="close">
       <div class="modal-container" @mousedown.stop>
-        <button v-if="closeable" @click="close" class="modal__close-button">
+        <button v-if="closeable" class="modal__close-button" @click="close">
           <i class="material-icons">close</i>
           <span class="sr-only">Close</span>
         </button>
         <slot></slot>
       </div>
     </div>
-  </transition>
+  </Transition>
 </template>
 
 <script>
@@ -24,6 +24,7 @@ export default {
       default: true,
     },
   },
+  emits: ["close"],
   mounted: function () {
     document.addEventListener("keydown", (e) => {
       if (this.show && e.keyCode == 27) {
