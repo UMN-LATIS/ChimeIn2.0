@@ -51,5 +51,8 @@ export default function getBaseFontSize({
     .reduce((acc, size) => acc + size, 0);
   const bSquared =
     (canvasRoot.clientWidth * canvasRoot.clientHeight) / sumOfWordSizes;
-  return Math.floor(Math.sqrt(bSquared));
+  const baseFontSize = Math.floor(Math.sqrt(bSquared));
+
+  // cap the base font size
+  return Math.min(baseFontSize, 64);
 }
