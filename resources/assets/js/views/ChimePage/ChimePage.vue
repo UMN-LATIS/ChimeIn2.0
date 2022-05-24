@@ -185,9 +185,13 @@ export default {
         this[key] = true;
       });
     },
-    handleChimeUpdate(updatedChime) {
+    handleChimeUpdate(chimeUpdates) {
       // optimistically update chime
-      this.chime = updatedChime;
+      this.chime = {
+        ...this.chime,
+        ...chimeUpdates,
+      };
+
       // but load the chime from the server for realsies.
       this.loadChime();
     },

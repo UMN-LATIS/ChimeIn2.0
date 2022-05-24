@@ -42,7 +42,7 @@
             :show_folder_title_to_participants="
               chime.show_folder_title_to_participants
             "
-            @update="(updates) => saveChime(updates)"
+            @update="handleUpdateChimeOptions"
           />
           <button
             v-if="chime.resource_link_pk"
@@ -121,8 +121,8 @@ import { computed, onMounted, ref } from "vue";
 import * as api from "../../common/api";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
-import type { Chime, ChimeOptions, User } from "../../types";
 import { useStore } from "vuex";
+import type { Chime, ChimeOptions, User, Partial } from "../../types";
 
 interface Props {
   chime: Chime;
@@ -131,7 +131,7 @@ interface Props {
 const props = defineProps<Props>();
 
 interface Emits {
-  (event: "update:chime", chime: Chime);
+  (event: "update:chime", chimeUpdates: Partial<Chime>);
 }
 
 const emit = defineEmits<Emits>();
@@ -163,6 +163,10 @@ const sortedUsers = computed(() =>
   })
 );
 
+function handleUpdateChimeOptions(updatedOption: Partial<ChimeOptions>) {
+  saveChime(updatedOption);
+}
+
 async function saveChime(
   updates: Partial<ChimeOptions & { name: string }> = {}
 ) {
@@ -175,7 +179,7 @@ async function saveChime(
   } = props.chime;
 
   try {
-    const updatedChime = await api.updateChimeOptions(props.chime.id, {
+    const updatedChime = {
       name: chimeName.value,
       require_login,
       students_can_view,
@@ -183,7 +187,8 @@ async function saveChime(
       only_correct_answers_lti,
       show_folder_title_to_participants,
       ...updates,
-    });
+    };
+    await api.updateChimeOptions(props.chime.id, updatedChime);
     emit("update:chime", updatedChime);
   } catch (err) {
     store.commit("message", "Could not save Chime.");

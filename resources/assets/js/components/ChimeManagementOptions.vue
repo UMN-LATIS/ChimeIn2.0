@@ -87,9 +87,11 @@
               type="radio"
               class="form-check-input"
               name="onlyCorrectAnswersLti"
-              value="gradeOption.value"
-              @change="handleChange('only_correct_answers_lti', 
-            ($event.target as HTMLInputElement).value)"
+              :value="gradeOption.value"
+              :checked="gradeOption.value === only_correct_answers_lti"
+              @change="handleChange(
+                'only_correct_answers_lti', 
+                Number.parseInt(($event.target as HTMLInputElement).value))"
             />
             {{ gradeOption.description }}
           </label>

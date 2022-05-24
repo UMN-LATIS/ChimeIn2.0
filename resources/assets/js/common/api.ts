@@ -97,8 +97,8 @@ export function getChimes(): Promise<Chime[]> {
 export function updateChimeOptions(
   chimeId: number,
   update: ChimeOptions & { name: string }
-): Promise<Chime> {
-  return axios.patch(`/api/chime/${chimeId}`, update);
+): Promise<ResponseMessage> {
+  return axios.patch(`/api/chime/${chimeId}`, update).then((res) => res.data);
 }
 
 export function updateFolder(
