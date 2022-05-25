@@ -75,7 +75,7 @@
     "popper.js": "^1.16.1",
     "pug-beautify": "^0.1.1",
     "pusher-js": "^4.4.0",
-    "query-string": "^5.1.1",
+    "query-string": "^7.1.1",
     "set-clustering": "^1.1.0",
     "simpleheat": "^0.4.0",
     "socket.io-client": "^2.4.0",
