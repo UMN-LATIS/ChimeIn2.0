@@ -7,7 +7,7 @@
           :show="show_edit"
           :question="question"
           :folder="folder"
-          control-type="edit"
+          controlType="edit"
           @edited="edit_question"
           @close="show_edit = false"
         />
@@ -34,7 +34,7 @@
               params: {
                 chimeId: folder.chime_id,
                 folderId: folder.id,
-                questionId: question.order - 1,
+                questionIndex: question.order - 1,
               },
             }"
             class="text-dark"
@@ -74,7 +74,9 @@ export default {
     QuestionForm,
     PrettyCheck,
   },
+  // eslint-disable-next-line vue/require-prop-types
   props: ["folder", "question"],
+  emits: ["editquestion", "deletequestion"],
   data: function () {
     return {
       show_edit: false,

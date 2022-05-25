@@ -1,5 +1,5 @@
 <template>
-  <Card class="chime-card" v-if="showCard">
+  <Card v-if="showCard" class="chime-card">
     <router-link :to="to">
       <header class="chime-card__header">
         <h1 class="chime-card__title align-bottom">
@@ -38,11 +38,11 @@
       />
     </template>
 
-    <Portal>
+    <Teleport to="body">
       <Modal
         :show="isRemoveConfirmModalOpen"
-        @close="toggleRemoveConfirmModal"
         class="chime-card__modal"
+        @close="toggleRemoveConfirmModal"
       >
         <div v-if="canRemoveSelf">
           <h2>Leave Chime?</h2>
@@ -63,8 +63,8 @@
           <button
             v-if="canRemoveSelf"
             class="btn btn-danger modal__button"
-            @click="handleRemoveSelf"
             data-cy="modal__remove-self-button"
+            @click="handleRemoveSelf"
           >
             <i class="material-icons modal__button-icon">person_remove</i>
             Leave Chime
@@ -76,19 +76,18 @@
               'btn-danger': isDeletePrimaryModalAction,
               'btn-outline-danger': !isDeletePrimaryModalAction,
             }"
-            @click="handleDeleteChime"
             data-cy="modal__delete-chime-button"
+            @click="handleDeleteChime"
           >
             <i class="material-icons modal__button-icon">delete</i>
             Delete Chime
           </button>
         </div>
       </Modal>
-    </Portal>
+    </Teleport>
   </Card>
 </template>
 <script>
-import { Portal } from "@linusborg/vue-simple-portal";
 import toHyphenatedCode from "../../helpers/toHyphenatedCode";
 import Card from "../../components/Card.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
@@ -111,7 +110,6 @@ export default {
     Chip,
     DetailsItem,
     Modal,
-    Portal,
   },
   props: {
     chime: {
@@ -177,7 +175,9 @@ export default {
 
       axios
         .delete(`/api/chime/${this.chime.id}`, { timeout: 2000 })
-        .then(() => this.$emit("change"))
+        .then(() => {
+          this.$emit("change");
+        })
         .catch((err) => {
           this.showCard = true;
           console.error("Error in removeChime request.", err);

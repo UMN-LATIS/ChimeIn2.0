@@ -84,5 +84,11 @@ yarn run cypress
 | `prod`          | <https://chimein.umn.edu>             |
 
 ```sh
-./vendor/bin/dep deploy <environment name>
+./vendor/bin/dep deploy <environment name> --branch <branch to deploy>
+```
+
+For example:
+
+```sh
+./vendor/bin/dep deploy dev --branch feature/my-feature
 ```

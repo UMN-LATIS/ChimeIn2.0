@@ -37,7 +37,7 @@ export default {
   mounted() {
     document.body.classList.add("page--viewmode-participant");
   },
-  destroyed() {
+  unmounted() {
     document.body.classList.remove("page--viewmode-participant");
   },
 };

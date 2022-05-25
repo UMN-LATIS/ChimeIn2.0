@@ -227,8 +227,12 @@ describe("question", () => {
           .type("4{enter}");
 
         // mark 2 and 3 as correct
-        cy.get(":nth-child(2) > .response-choice-item__correct-toggle").click();
-        cy.get(":nth-child(3) > .response-choice-item__correct-toggle").click();
+        cy.get(
+          "#response-choice-item-1 > .response-choice-item__correct-toggle"
+        ).click();
+        cy.get(
+          "#response-choice-item-2 > .response-choice-item__correct-toggle"
+        ).click();
 
         cy.contains("Save").click();
         cy.wait("@apiCreateQuestion");
@@ -280,11 +284,11 @@ describe("question", () => {
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=edit-question-button]").click();
           cy.get(
-            ":nth-child(3) > .response-choice-item__correct-toggle"
+            "#response-choice-item-2 > .response-choice-item__correct-toggle"
           ).click();
 
           // except input background color to be green
-          cy.get(".response-choice-item:nth-child(3)").should(
+          cy.get("#response-choice-item-2").should(
             "have.class",
             "response-choice-item--is-correct"
           );
@@ -430,9 +434,10 @@ describe("question", () => {
               cy.get("[data-cy=add-choice-button]").click();
 
               // click the equation button
-              cy.get(`.response-choice-item:nth-child(${i + 1})`)
+              cy.get(`#response-choice-item-${i}`)
                 .find(
-                  ".response-choice-item__contents > .quillWrapper > .ql-toolbar > .ql-formats > .ql-formula"
+                  // ".response-choice-item__contents > .quillWrapper > .ql-toolbar > .ql-formats > .ql-formula"
+                  ".response-choice-item__contents > .ql-toolbar > .ql-formats > .ql-formula"
                 )
                 .click()
                 .type(`${eq}{enter}`);
@@ -641,10 +646,13 @@ describe("question", () => {
           cy.get("[data-cy=present-question-button]").click();
           cy.get("[data-cy=show-results-button]").click();
 
-          // "Guest" and "response" should be in the SVG word cloud
-          cy.get("[data-cy=word-cloud]")
-            .contains("svg", "Guest")
-            .contains("svg", "response");
+          // FIXME: different snapshot between local and CI
+          // cy.get("[data-cy=word-cloud]").matchImageSnapshot(
+          //   "ui-free-response-question-word-cloud"
+          // );
+          cy.get("[data-cy=word-cloud] canvas")
+            .invoke("attr", "aria-label")
+            .should("eq", "guest: 1, response: 1");
         });
     });
 
@@ -922,7 +930,7 @@ describe("question", () => {
             $img.css("filter", "grayscale(1)");
           });
 
-          cy.get(".overlayContainer").matchImageSnapshot(
+          cy.get(".overlay-container").matchImageSnapshot(
             `image-heatmap-present-view_1920x1080`
           );
         });

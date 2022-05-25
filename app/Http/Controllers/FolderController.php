@@ -7,10 +7,13 @@ use App\Events\EndSession;
 class FolderController extends Controller
 {
 
-    public function show(Request $req, $chime, $folder, $includeQuestions=false) {
+    public function show(Request $req, $chime, $folder, $includeQuestions = false) {
         $user = $req->user();
         $chime = $user->chimes()->where('chime_id', $chime->id)->first();
         
+        // allow `?includeQuestions=true` to be passed as a query string
+        $includeQuestions = $includeQuestions || $req->query('include_questions');
+
         if ($chime != null && ($chime->pivot->permission_number >= 300 || $chime->students_can_view)) {
             if($includeQuestions) {
                 // this is spendy!

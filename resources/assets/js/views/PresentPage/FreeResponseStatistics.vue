@@ -1,264 +1,160 @@
 <template>
   <div>
     <div v-if="responses.length > 0">
-      <div v-if="!word_groups" class="d-flex justify-content-center">
-        <div class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
+      <VWordCloud
+        v-if="!hideWordcloud"
+        :wordFreqLookup="wordFreqLookup"
+        @click:word="handleWordClick"
+      >
+        <small class="m-0"> Click a word to filter it out. </small>
+      </VWordCloud>
+      <p>
+        <label>
+          <input
+            type="checkbox"
+            :checked="processWithNLP"
+            @click="processWithNLP = !processWithNLP"
+          />
+
+          <strong>Experimental</strong>
+          Filter for just names, places, and organizations.
+        </label>
+      </p>
+
+      <div v-if="filteredWords.length > 0" class="filter-list">
+        <h2 class="filter-list__title">Filtered Words</h2>
+        <div
+          v-for="(word, index) in filteredWords"
+          :key="index"
+          class="filter-list__item"
+        >
+          {{ word }}
+          <button
+            class="filter-list__remove-btn"
+            @click="filteredWords.splice(index, 1)"
+          >
+            <i class="material-icons md-18 md-dark">close</i>
+            <span class="sr-only">remove word from filter</span>
+          </button>
         </div>
       </div>
-      <word-cloud
-        v-if="
-          !question.question_info.question_responses.hideWordcloud &&
-          word_groups
-        "
-        :data="word_groups"
-        :name-key="'name'"
-        :value-key="'value'"
-        :rotate="rotation"
-        :margin="margin"
-        :word-padding="1"
-        style="width: 100%; height: 600px"
-        :font-size="fontSize"
-        :word-click="wordClicked"
-        data-cy="word-cloud"
-      />
-      <div
-        v-if="!question.question_info.question_responses.hideWordcloud"
-        class="form-check form-check-inline"
-      >
-        <label class="form-check-label align-items-center d-flex">
-          <input
-            v-model="textProcessing"
-            class="form-check-input"
-            type="checkbox"
-          />
-          Natural Language Processing
-          <span
-            v-tooltip:top="
-              'Attempt to detect names, places and organizations. This may slow down word cloud processing.'
-            "
-            class="ml-1 material-icons md-18"
-            >help</span
-          >
-        </label>
-      </div>
-      <div v-if="filterWords.length > 0">
-        <h2 class="smallHeader">Filtered Words</h2>
-        <ul class="filterList">
-          <li
-            v-for="(word, index) in filterWords"
-            :key="index"
-            class="align-items-center d-flex filterListItem"
-            @click="filterWords.splice(index, 1)"
-          >
-            {{ word }} <i class="material-icons md-18 md-dark">close</i>
-          </li>
-        </ul>
-      </div>
-      <h2 class="smallHeader">Responses</h2>
-      <ul>
-        <transition-group name="fade">
-          <li
-            v-for="r in responses.slice().reverse()"
-            :key="r.id"
-            class="userResponse"
-          >
-            <p>
-              <strong>{{
-                question.anonymous ? "Anonymous" : r.user.name
-              }}</strong>
-            </p>
-            <p>{{ r.response_info.text }}</p>
-          </li>
-        </transition-group>
-      </ul>
+
+      <section class="page-section">
+        <h2 class="section-header">Responses</h2>
+
+        <table class="table table-striped response-table">
+          <thead>
+            <tr>
+              <th scope="col">User</th>
+              <th scope="col">Response</th>
+            </tr>
+          </thead>
+          <tbody>
+            <TransitionGroup name="fade">
+              <tr v-for="response in responsesByMostRecent" :key="response.id">
+                <th scope="row">
+                  {{ question.anonymous ? "Anonymous" : response.user.name }}
+                </th>
+                <td>
+                  <p>{{ response.response_info.text }}</p>
+                </td>
+              </tr>
+            </TransitionGroup>
+          </tbody>
+        </table>
+      </section>
     </div>
 
-    <div v-else>No Responses Yet!</div>
+    <div v-else>No responses yet</div>
   </div>
 </template>
 
-<script>
-import throttle from "lodash/throttle";
-import wordcloud from "vue-wordcloud/src/components/WordCloud";
-import nlp from "compromise";
-import stemmer from "stemmer";
-import difflib from "difflib";
-import sw from "stopword";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import VWordCloud from "./VWordCloud.vue";
+import * as nlp from "compromise";
+import toWordFrequencyLookup from "./toWordFrequencyLookup";
 
-export default {
-  components: {
-    "word-cloud": wordcloud,
-  },
-  props: ["responses", "question"],
-  data: function () {
-    return {
-      fontSize: [20, 120],
-      visible_responses: [],
-      response_search: "",
-      rotation: {
-        from: 0,
-        to: 0,
-        numOfOrientation: 1,
-      },
-      margin: {
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-      },
-      filterWords: [],
-      word_groups: null,
-      debounced: null,
-      textProcessing: false,
-      buildtime: null,
-    };
-  },
-  methods: {
-    similarity: function (x, y) {
-      return new difflib.SequenceMatcher(null, x, y).ratio();
-    },
-    wordClicked: function (word) {
-      this.filterWords.push(word);
-    },
-    buildWords: throttle(function () {
-      var start = performance.now();
-      const words = this.responses.map((r) => r.response_info.text).join("\n ");
-      let filteredWords = words;
-      let topics = [];
+import type { Question, Response, WordFrequencyLookup } from "../../types";
 
-      if (this.textProcessing) {
-        const doc = nlp(words);
+interface Props {
+  responses: Response[];
+  question: Question;
+}
 
-        topics = doc.topics().out("array");
+const props = defineProps<Props>();
+const filteredWords = ref<string[]>([]);
+const hideWordcloud = computed(
+  () => props.question.question_info.question_responses.hideWordcloud
+);
+const responsesByMostRecent = computed(() => [...props.responses].reverse());
 
-        filteredWords = words;
+const processWithNLP = ref(false);
+const responseTexts = computed(() =>
+  props.responses.map((r) => r.response_info.text)
+);
 
-        for (let i = 0; i < topics.length; i++) {
-          // remove topics words from our filtered words
-          filteredWords = filteredWords.replace(
-            new RegExp(
-              "\\b" + topics[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b",
-              "gi"
-            ),
-            ""
-          );
-        }
-      }
+const topics = computed(() =>
+  nlp(responseTexts.value.join("\n")).topics().out("array")
+);
 
-      if (filteredWords.length == 0) {
-        return;
-      }
+const wordFreqLookup = computed<WordFrequencyLookup>(() =>
+  processWithNLP.value
+    ? toWordFrequencyLookup(topics.value, filteredWords.value)
+    : toWordFrequencyLookup(responseTexts.value, filteredWords.value)
+);
 
-      var wordsWithoutStops = sw.removeStopwords(
-        filteredWords.match(/"(.*?)"|\w+/g)
-      );
-
-      var finalizedWords = wordsWithoutStops
-        .concat(topics)
-        .filter((w) => !this.filterWords.includes(w));
-
-      const groups = finalizedWords.reduce((acc, w) => {
-        if (w.length < 2 || !isNaN(w)) {
-          return acc;
-        }
-        var stem = stemmer(w.toLowerCase().replace(/"/g, ""));
-        const i = acc.findIndex((e) => e.stem === stem);
-
-        if (i > -1) {
-          acc[i].value += 1;
-        } else {
-          acc.push({
-            name: w.replace(/"/g, ""),
-            value: 1,
-            stem: stem,
-          });
-        }
-
-        return acc;
-      }, []);
-
-      var end = performance.now();
-      this.buildtime = end - start;
-      var sortedArray = groups.sort((a, b) => {
-        return b.value - a.value;
-      });
-
-      this.word_groups = sortedArray.slice(0, 200);
-    }, 1000),
-  },
-  watch: {
-    responses: function () {
-      setTimeout(() => this.buildWords(), 100);
-    },
-    filterWords: function () {
-      setTimeout(() => this.buildWords(), 100);
-    },
-    textProcessing: function () {
-      setTimeout(() => this.buildWords(), 100);
-    },
-  },
-  mounted: function () {
-    // run this in a time to not block initial render
-    setTimeout(() => this.buildWords(), 100);
-  },
-};
+function handleWordClick(word) {
+  filteredWords.value.push(word);
+}
 </script>
 
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.25s;
+<style scope>
+.page-section {
+  margin: 2rem 0;
+}
+.filter-list {
+  margin: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-content: center;
+}
+.filter-list__title {
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
 }
 
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-move {
-  transition: transform 1s;
-}
-
-.userResponse {
-  list-style: none;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.userResponse p {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.smallHeader {
-  font-size: 1.2em;
-}
-
-.filterList {
-  list-style: none;
-  margin-left: 0;
-  padding-left: 10px;
-}
-.filterListItem {
-  display: inline-flex !important;
-  border-radius: 10px;
-  padding: 3px 8px;
-  margin-left: 1px;
-  margin-right: 1px;
+.filter-list__item {
+  display: inline-flex;
+  border-radius: 2rem;
+  padding: 0.25rem;
+  padding-left: 0.75rem;
   cursor: pointer;
-  background-color: lightblue;
+  background-color: #ddd;
+  align-items: center;
+  gap: 0.5rem;
+}
+.filter-list__remove-btn {
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
 }
 
-.material-icons.md-18 {
-  font-size: 18px;
+.response-table {
+  max-width: 40rem;
 }
-.material-icons.md-dark {
-  color: rgba(0, 0, 0, 0.54);
-}
-</style>
-<style>
-.wordCloud * .text {
-  cursor: pointer;
+
+input[type="checkbox"] {
+  margin-right: 0.5rem;
 }
 </style>

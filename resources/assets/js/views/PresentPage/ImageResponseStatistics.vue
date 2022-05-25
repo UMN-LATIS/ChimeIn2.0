@@ -10,15 +10,35 @@
         >
           Manage Images
         </button>
-        <div data-cy="image-responses">
-          <lightbox
+        <div
+          v-if="!filterImages"
+          data-cy="image-responses"
+          class="response-list"
+        >
+          <div v-for="(image, index) of images" :key="index">
+            <button
+              class="response-image__button"
+              @click="
+                activeImageIndex = index;
+                isLightboxOpen = true;
+              "
+            >
+              <img
+                class="response-image__img"
+                :src="image.src"
+                :alt="image.alt"
+              />
+            </button>
+          </div>
+          <VueEasyLightbox
             v-if="!filterImages"
-            :id="'lightbox' + question.id"
-            :images="images"
+            :visible="isLightboxOpen"
+            :imgs="images"
+            :index="activeImageIndex"
             image_class="img-responsive img-rounded"
-            :options="options"
+            @hide="isLightboxOpen = false"
           >
-          </lightbox>
+          </VueEasyLightbox>
         </div>
 
         <table v-if="filterImages" class="table" data-cy="responses-table">
@@ -60,24 +80,27 @@
   </div>
 </template>
 
-<style></style>
-
 <script>
-import Lightbox from "vue-simple-lightbox";
+// import Lightbox from "vue-simple-lightbox";
+import VueEasyLightbox from "vue-easy-lightbox";
 
 export default {
   components: {
-    Lightbox,
+    VueEasyLightbox,
   },
-  props: ["responses", "question", "chimeId"],
+  props: {
+    responses: { type: Array, required: true },
+    question: { type: Object, required: true },
+    chimeId: { type: Number, required: true },
+  },
+  emits: ["removeResponse"],
   data: function () {
     return {
       visible_responses: [],
       response_search: "",
-      options: {
-        closeText: "X",
-      },
       filterImages: false,
+      isLightboxOpen: false,
+      activeImageIndex: 0,
     };
   },
   computed: {
@@ -98,3 +121,32 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.response-list {
+  margin: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.response-image__button {
+  transition: transform 0.3s;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  width: 10rem;
+  height: 10rem;
+  padding: 0;
+  overflow: hidden;
+}
+.response-image__button:hover {
+  transform: scale3d(1.1, 1.1, 1);
+}
+
+.response-image__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>

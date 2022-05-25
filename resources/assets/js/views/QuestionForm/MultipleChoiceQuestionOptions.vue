@@ -7,45 +7,40 @@
       <p class="text-muted">Check to mark choice correct.</p>
     </header>
 
-    <ol class="response-choice-list" data-cy="response-choice-list">
-      <draggable :list="question_responses">
-        <li
-          v-for="(response, i) in question_responses"
-          :key="i"
-          class="is-draggable response-choice-item"
-          :class="{ 'response-choice-item--is-correct': response.correct }"
-        >
-          <div
-            class="response-choice-item__correct-toggle"
-            title="Mark Response Correct"
+    <ol
+      v-if="Array.isArray(question_responses) && question_responses.length"
+      class="response-choice-list"
+      data-cy="response-choice-list"
+    >
+      <!-- question responses don't have an unique id, 
+       we so force component update after reordering with :key prop-->
+      <Draggable
+        :key="draggableKey"
+        :modelValue="question_responses"
+        itemKey="id"
+        ghostClass="ghost"
+        :disabled="false"
+        @change="handleResponseOrderChange"
+        @start="dragging = true"
+        @end="dragging = false"
+      >
+        <template #item="{ element, index }">
+          <li
+            ref="responseChoiceItemRefs"
+            class="is-draggable response-choice-item"
+            :class="{ 'response-choice-item--is-correct': element.correct }"
           >
-            <input v-model="response.correct" type="checkbox" />
-            <label class="visually-hidden">Correct?</label>
-          </div>
-          <div class="response-choice-item__contents">
-            <label :for="`response-text-${i}`" class="visually-hidden"
-              >Response Text</label
-            >
-            <VueEditor
-              :id="`response-text-${i}`"
-              ref="responseInput"
-              v-model="response.text"
-              class="response-choice-item__text"
-              :name="`response-text-${i}`"
-              :editor-toolbar="choiceEditorToolbar"
-              :editor-options="choiceEditorOptions"
+            <ResponseChoiceItem
+              :id="`response-choice-item-${index}`"
+              :text="element.text"
+              :correct="element.correct"
+              @update="(updatedChoice) => handleUpdate(index, updatedChoice)"
+              @remove="handleRemove(index)"
+              @enter="addChoice"
             />
-
-            <button
-              class="response-choice-item__remove"
-              data-cy="remove-response-button"
-              @click="remove(i)"
-            >
-              <i class="material-icons inline-icon">clear</i>
-            </button>
-          </div>
-        </li>
-      </draggable>
+          </li>
+        </template>
+      </Draggable>
     </ol>
     <button
       class="btn btn-outline-primary add-choice-button"
@@ -57,6 +52,78 @@
   </section>
 </template>
 
+<script setup>
+import { move } from "ramda";
+import { onMounted, ref, nextTick } from "vue";
+import ResponseChoiceItem from "./ResponseChoiceItem.vue";
+import Draggable from "vuedraggable";
+
+const props = defineProps({
+  // eslint-disable-next-line vue/prop-name-casing
+  question_responses: {
+    type: Array,
+    default: () => [],
+  },
+});
+
+const dragging = ref(false);
+const emit = defineEmits(["update:question_responses"]);
+const responseChoiceItemRefs = ref([]);
+
+function handleUpdate(index, updatedChoice) {
+  const updatedResponses = [
+    ...props.question_responses.slice(0, index),
+    updatedChoice,
+    ...props.question_responses.slice(index + 1),
+  ];
+  emit("update:question_responses", updatedResponses);
+}
+
+function handleRemove(responseIndex) {
+  const updatedResponses = props.question_responses.filter(
+    (_, index) => index !== responseIndex
+  );
+  emit("update:question_responses", updatedResponses);
+}
+
+function addChoice() {
+  const updatedResponses = props.question_responses
+    .filter((r) => r.text !== "")
+    .concat([
+      {
+        text: "",
+        correct: false,
+      },
+    ]);
+
+  emit("update:question_responses", updatedResponses);
+
+  nextTick(() => {
+    const newChoiceIndex = updatedResponses.length - 1;
+    const lastItem = document
+      .getElementById(`response-choice-item-${newChoiceIndex}`)
+      .querySelector(".ql-editor");
+
+    lastItem.focus();
+  });
+}
+
+//increment when we want to force rerendering
+const draggableKey = ref(0);
+function handleResponseOrderChange(event) {
+  if (!event.moved) return;
+  const { oldIndex, newIndex } = event.moved;
+  const updatedResponses = move(oldIndex, newIndex, props.question_responses);
+  emit("update:question_responses", updatedResponses);
+  nextTick(() => (draggableKey.value += 1));
+}
+
+onMounted(() => {
+  if (!props.question_responses) {
+    emit("update:question_responses", []);
+  }
+});
+</script>
 <style scoped>
 label {
   margin: 0;
@@ -75,7 +142,6 @@ label {
   padding: 0;
 }
 .response-choice-item {
-  display: flex;
   margin: 0.5rem 0;
   align-items: center;
 }
@@ -84,7 +150,7 @@ label {
   align-items: center;
   border: 1px solid #ddd;
   border-radius: 0.25rem;
-  flex-grow: 1;
+  flex: 1;
 }
 
 .response-choice-item--is-correct .response-choice-item__contents,
@@ -141,121 +207,3 @@ label {
   margin-top: 1rem;
 }
 </style>
-<style>
-/**
-* override default quill editor styles
-* extra classes are to increase specificity
-**/
-.response-choice-item .response-choice-item__text {
-  display: flex;
-  align-items: baseline;
-  flex-direction: row-reverse;
-}
-.response-choice-item .response-choice-item__text .ql-container {
-  border: 0;
-  flex-grow: 1;
-}
-.response-choice-item .response-choice-item__text .ql-toolbar {
-  border: 0;
-}
-.response-choice-item .ql-editor {
-  min-height: auto;
-}
-
-.response-choice-item .quillWrapper .ql-snow.ql-toolbar .ql-formats {
-  margin: 0;
-}
-.response-choice-item .ql-snow .ql-toolbar button,
-.response-choice-item .ql-snow.ql-toolbar button {
-  padding: 0;
-}
-.response-choice-item--is-correct .ql-snow .ql-fill,
-.response-choice-item--is-correct .ql-snow .ql-stroke.ql-fill {
-  fill: #fff;
-}
-</style>
-
-<script>
-import { VueEditor } from "vue2-editor";
-import draggable from "vuedraggable";
-
-export default {
-  components: {
-    draggable,
-    VueEditor,
-  },
-  props: {
-    question_responses: Array,
-  },
-  computed: {
-    // note: don't use arrow functions so that `this` is bound properly
-    choiceEditorOptions(thisComponent) {
-      return {
-        bounds: ".response-choice-item__contents",
-        modules: {
-          formula: true,
-          keyboard: {
-            bindings: {
-              13: {
-                key: 13,
-                handler() {
-                  thisComponent.addChoice();
-                },
-              },
-            },
-          },
-        },
-      };
-    },
-    choiceEditorToolbar: () => ["formula"],
-  },
-  mounted() {
-    // if question responses is empty, initialize with blank array
-    // perhaps this should be the parents job?
-    if (!this.question_responses) {
-      this.$emit("update:question_responses", []);
-    }
-  },
-  methods: {
-    remove(responseIndex) {
-      const updatedResponses = this.question_responses.filter(
-        (_, i) => i !== responseIndex
-      );
-      this.$emit("update:question_responses", updatedResponses);
-    },
-    focusEditor(responseIndex) {
-      // use last index by default
-      if (typeof responseIndex === "undefined") {
-        responseIndex = this.question_responses.length - 1;
-      }
-      this.$refs.responseInput[responseIndex].quill.focus();
-    },
-    addChoice() {
-      // remove any empty responses and then add a new responses
-      const updatedResponses = this.question_responses
-        .filter((r) => r.text !== "")
-        .concat([
-          {
-            text: "",
-            correct: false,
-          },
-        ]);
-
-      this.$emit("update:question_responses", updatedResponses);
-
-      // focus new choice on next tick
-      this.$nextTick(function () {
-        this.focusEditor();
-      });
-    },
-    createTrueFalseQuestion: function () {
-      const updatedResponses = [
-        { text: "True", correct: false },
-        { text: "False", correct: false },
-      ];
-
-      this.$emit("update:question_responses", updatedResponses);
-    },
-  },
-};
-</script>

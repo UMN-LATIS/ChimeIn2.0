@@ -7,6 +7,7 @@
         :question="response.session.question"
         :disabled="true"
         :response="response"
+        :chime="chime"
       >
       </component>
       <a
@@ -50,6 +51,15 @@ export default {
     slider_response: SliderResponse,
     heatmap_response: ImageHeatmapResponse,
   },
-  props: ["response", "chime"],
+  props: {
+    response: {
+      type: Object,
+      required: true,
+    },
+    chime: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 </script>

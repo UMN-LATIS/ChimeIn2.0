@@ -1,12 +1,9 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-  state: {
+const store = createStore({
+  state: () => ({
     message: null,
-  },
+  }),
   mutations: {
     message(state, message) {
       state.message = message;
@@ -19,3 +16,5 @@ export default new Vuex.Store({
     message: (state) => state.message,
   },
 });
+
+export default store;

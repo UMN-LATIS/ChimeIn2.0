@@ -10,7 +10,7 @@
       <PresentResults
         v-if="show_results"
         :question="question"
-        :chime-id="chime.id"
+        :chimeId="chime.id"
         @reload="$emit('reload')"
       />
       <PresentPrompt
@@ -101,6 +101,7 @@
 import PresentPrompt from "./PresentPrompt.vue";
 import PresentResults from "./PresentResults.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
+import { openQuestion, closeQuestion } from "../../common/api";
 
 export default {
   components: {
@@ -108,7 +109,13 @@ export default {
     PresentResults,
     JoinPanel,
   },
-  props: ["question", "chime", "folder", "usersCount"],
+  props: {
+    question: { type: Object, required: true },
+    chime: { type: Object, required: true },
+    folder: { type: Object, required: true },
+    usersCount: { type: Number, required: true },
+  },
+  emits: ["nextQuestion", "previousQuestion", "toggle", "reload"],
   data() {
     return {
       show_results: false,
@@ -122,7 +129,7 @@ export default {
         );
         return session;
       } else {
-        return false;
+        return null;
       }
     },
     total_responses: function () {
@@ -143,31 +150,18 @@ export default {
     toggle() {
       this.$emit("toggle");
     },
-    start_session: function () {
-      const url =
-        "/api/chime/" +
-        this.chime.id +
-        "/folder/" +
-        this.folder.id +
-        "/question/" +
-        this.question.id;
-
-      axios.post(url, {}).catch((err) => {
-        console.error(err.response);
+    start_session() {
+      openQuestion({
+        chimeId: this.chime.id,
+        folderId: this.folder.id,
+        questionId: this.question.id,
       });
     },
-    stop_session: function () {
-      const url =
-        "/api/chime/" +
-        this.chime.id +
-        "/folder/" +
-        this.folder.id +
-        "/question/" +
-        this.question.id +
-        "/stopSession/";
-
-      axios.put(url, {}).catch((err) => {
-        console.error(err.response);
+    stop_session() {
+      closeQuestion({
+        chimeId: this.chime.id,
+        folderId: this.folder.id,
+        questionId: this.question.id,
       });
     },
     showJoinInstructions() {

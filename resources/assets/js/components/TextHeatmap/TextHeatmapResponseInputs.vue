@@ -62,6 +62,7 @@
 <script>
 export default {
   props: ["question", "response", "disabled"],
+  emits: ["recordresponse"],
   data() {
     return {
       create_new_response: false,
@@ -136,7 +137,7 @@ export default {
     window.addEventListener("mouseup", this.testForHighlight);
     window.addEventListener("touchend", this.testForHighlight);
   },
-  destroyed: function () {
+  unmounted: function () {
     window.removeEventListener("mouseup", this.testForHighlight);
     window.removeEventListener("touchend", this.testForHighlight);
   },

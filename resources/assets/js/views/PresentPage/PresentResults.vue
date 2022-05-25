@@ -6,11 +6,11 @@
       <template v-if="question.sessions.length > 0">
         <select v-model="selected" class="mb-3 form-control col-6">
           <option
-            :value="question.value"
             v-for="question in question.sessions
               .map((el) => ({ value: el.id, text: el.created_at }))
               .concat({ value: 0, text: 'All' })"
             :key="question.id"
+            :value="question.value"
           >
             {{ question.text }}
           </option>
@@ -21,7 +21,7 @@
           v-if="selected_session"
           :responses="selected_session.responses"
           :question="question"
-          :chime-id="chimeId"
+          :chimeId="chimeId"
           @removeResponse="removeResponse($event)"
         >
         </component>
@@ -34,49 +34,55 @@
 </template>
 
 <script>
-const sliderstatistics = () =>
-  import(
-    /* webpackChunkName: "multiplechoicestatistics" */
-    "./SliderStatistics.vue"
-  );
-
-const multiplechoicestatistics = () =>
-  import(
-    /* webpackChunkName: "multiplechoicestatistics" */
-    "./MultipleChoiceStatistics.vue"
-  );
-const FreeResponseStatistics = () =>
-  import(
-    /* webpackChunkName: "FreeResponseStatistics" */
-    "./FreeResponseStatistics.vue"
-  );
-const TextHeatmapResponseStatistics = () =>
-  import(
-    /* webpackChunkName: "FreeResponseStatistics" */
-    "./TextHeatmapResponseStatistics.vue"
-  );
-const ImageResponseStatistics = () =>
-  import(
-    /* webpackChunkName: "ImageResponseStatistics" */
-    "./ImageResponseStatistics.vue"
-  );
-const HeatmapResponseStatistics = () =>
-  import(
-    /* webpackChunkName: "ImageResponseStatistics" */
-    "./HeatmapResponseStatistics.vue"
-  );
+import { defineAsyncComponent } from "vue";
 
 export default {
   components: {
-    slider_response_statistics: sliderstatistics,
-    multiple_choice_statistics: multiplechoicestatistics,
-    image_response_statistics: ImageResponseStatistics,
-    free_response_statistics: FreeResponseStatistics,
-    text_heatmap_response_statistics: TextHeatmapResponseStatistics,
-    no_response_statistics: FreeResponseStatistics,
-    heatmap_response_statistics: HeatmapResponseStatistics,
+    slider_response_statistics: defineAsyncComponent(() =>
+      import(
+        /* webpackChunkName: "SliderResponseStatistics" */
+        "./SliderStatistics.vue"
+      )
+    ),
+    multiple_choice_statistics: defineAsyncComponent(() =>
+      import(
+        /* webpackChunkName: "MultipleChoiceStatistics" */
+        "./MultipleChoiceStatistics.vue"
+      )
+    ),
+    image_response_statistics: defineAsyncComponent(() =>
+      import(
+        /* webpackChunkName: "ImageResponseStatistics" */
+        "./ImageResponseStatistics.vue"
+      )
+    ),
+    free_response_statistics: defineAsyncComponent(() =>
+      import(
+        /* webpackChunkName: "FreeResponseStatistics" */
+        "./FreeResponseStatistics.vue"
+      )
+    ),
+    text_heatmap_response_statistics: defineAsyncComponent(() =>
+      import(
+        /* webpackChunkName: "TextHeatmapresponseStatistics" */
+        "./TextHeatmapResponseStatistics.vue"
+      )
+    ),
+    no_response_statistics: defineAsyncComponent(() =>
+      import(
+        /* webpackChunkName: "FreeResponseStatistics" */
+        "./FreeResponseStatistics.vue"
+      )
+    ),
+    heatmap_response_statistics: defineAsyncComponent(() =>
+      import(
+        /* webpackChunkName: "HeatmapResponseStatistics" */
+        "./HeatmapResponseStatistics.vue"
+      )
+    ),
   },
   props: ["sessions", "session", "question", "chimeId"],
+  emits: ["reload"],
   data: function () {
     return {
       selected: null,
@@ -121,7 +127,7 @@ export default {
           this.$emit("reload");
         })
         .catch((err) => {
-          console.log(err.response);
+          console.error(err);
         });
     },
   },

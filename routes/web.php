@@ -82,9 +82,9 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::post('/api/chime/{chime}/folder/{folder}/question/startAll', 'PresentController@startAllQuestions');
     Route::put('/api/chime/{chime}/folder/{folder}/question/stopAll', 'PresentController@stopAllQuestions');
 
-
-        // Folder Routes (chime page subroutes)
-        
+    // Folder Routes (chime page subroutes)
+    // TODO: Change `includeQuestions to a query string param 
+    // `include_questions=true`
     Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
     Route::post('/api/chime/{chime}/folder/{folder}/import', 'FolderController@importQuestions');
