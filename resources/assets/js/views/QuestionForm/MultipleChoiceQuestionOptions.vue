@@ -7,23 +7,40 @@
       <p class="text-muted">Check to mark choice correct.</p>
     </header>
 
-    <ol class="response-choice-list" data-cy="response-choice-list">
-      <!-- <draggable :list="question_responses"> -->
-      <li
-        v-for="(response, i) in question_responses"
-        :key="i"
-        ref="responseChoiceItemRefs"
+    <ol
+      v-if="Array.isArray(question_responses) && question_responses.length"
+      class="response-choice-list"
+      data-cy="response-choice-list"
+    >
+      <!-- question responses don't have an unique id, 
+       we so force component update after reordering with :key prop-->
+      <Draggable
+        :key="JSON.stringify(question_responses)"
+        :modelValue="question_responses"
+        itemKey="id"
+        ghostClass="ghost"
+        :disabled="false"
+        @change="handleResponseOrderChange"
+        @start="dragging = true"
+        @end="dragging = false"
       >
-        <ResponseChoiceItem
-          :id="`response-choice-item-${i}`"
-          :text="response.text"
-          :correct="response.correct"
-          @update="(updatedChoice) => handleUpdate(i, updatedChoice)"
-          @remove="handleRemove(i)"
-          @enter="addChoice"
-        />
-      </li>
-      <!-- </draggable> -->
+        <template #item="{ element, index }">
+          <li
+            ref="responseChoiceItemRefs"
+            class="is-draggable response-choice-item"
+            :class="{ 'response-choice-item--is-correct': element.correct }"
+          >
+            <ResponseChoiceItem
+              :id="`response-choice-item-${index}`"
+              :text="element.text"
+              :correct="element.correct"
+              @update="(updatedChoice) => handleUpdate(index, updatedChoice)"
+              @remove="handleRemove(index)"
+              @enter="addChoice"
+            />
+          </li>
+        </template>
+      </Draggable>
     </ol>
     <button
       class="btn btn-outline-primary add-choice-button"
@@ -36,31 +53,36 @@
 </template>
 
 <script setup>
+import { move } from "ramda";
 import { onMounted, ref, nextTick } from "vue";
 import ResponseChoiceItem from "./ResponseChoiceItem.vue";
-// import draggable from "vuedraggable";
+import Draggable from "vuedraggable";
 
 const props = defineProps({
+  // eslint-disable-next-line vue/prop-name-casing
   question_responses: {
     type: Array,
     default: () => [],
   },
 });
 
+const dragging = ref(false);
+
 const emit = defineEmits(["update:question_responses"]);
 const responseChoiceItemRefs = ref([]);
 
 function handleUpdate(index, updatedChoice) {
-  emit("update:question_responses", [
+  const updatedResponses = [
     ...props.question_responses.slice(0, index),
     updatedChoice,
     ...props.question_responses.slice(index + 1),
-  ]);
+  ];
+  emit("update:question_responses", updatedResponses);
 }
 
 function handleRemove(responseIndex) {
   const updatedResponses = props.question_responses.filter(
-    (_, i) => i !== responseIndex
+    (_, index) => index !== responseIndex
   );
   emit("update:question_responses", updatedResponses);
 }
@@ -87,6 +109,17 @@ function addChoice() {
   });
 }
 
+function handleResponseOrderChange(event) {
+  if (!event.moved) return;
+  const { oldIndex, newIndex } = event.moved;
+  const updatedResponses = move(oldIndex, newIndex, props.question_responses);
+  console.log({
+    updatedResponses,
+    question_responses: props.question_responses,
+  });
+  emit("update:question_responses", updatedResponses);
+}
+
 onMounted(() => {
   if (!props.question_responses) {
     emit("update:question_responses", []);
@@ -111,7 +144,6 @@ label {
   padding: 0;
 }
 .response-choice-item {
-  display: flex;
   margin: 0.5rem 0;
   align-items: center;
 }
