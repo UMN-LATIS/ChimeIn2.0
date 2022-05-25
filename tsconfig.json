@@ -7,6 +7,8 @@
     "jsx": "preserve",
     "moduleResolution": "node",
     "noImplicitAny": false,
-    "allowJs": true
+    "allowJs": true,
+    // temp fix to let the nlp 'compromise' library compile
+    "strictPropertyInitialization": false
   }
 }
