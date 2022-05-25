@@ -12,18 +12,18 @@
       role="alert"
     >
       You have {{ otherFolderSessions.length }}
-      {{ "question" | pluralize(otherFolderSessions.length) }} open outside this
+      {{ pluralize("question", otherFolderSessions.length) }} open outside this
       folder. Would you like to
       <a class="pointer" href="" @click.prevent="closeOthers"
         >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
       >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
     </div>
-    <Spinner v-if="!ready" />
-    <div v-if="ready" class="container">
+    <Spinner v-if="!isPageReady" />
+    <div v-if="isPageReady && !isParticipantView" class="container">
       <div class="row mt-4">
         <div class="col-4 align-items-center d-flex">
           <h1 class="h4">{{ folder.name }}</h1>
-          <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip>
+          <!-- <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip> -->
         </div>
         <div class="col-md-8 col-sm-12">
           <div
@@ -79,11 +79,16 @@
           </div>
         </div>
       </div>
-      <div v-if="show_edit_folder" class="ml-4 mt-2">
+      <div v-if="show_edit_folder && folder" class="ml-4 mt-2">
         <div class="row">
           <div class="col-12">
             <div class="input-group mb-3">
-              <input v-model="folder.name" type="text" class="form-control" />
+              <input
+                :value="folder.name"
+                type="text"
+                class="form-control"
+                @input="handleFolderNameInput"
+              />
 
               <div class="input-group-append">
                 <button
@@ -154,11 +159,11 @@
                 >
                   <option disabled>Select a Folder</option>
                   <option
-                    v-for="folder in existing_folders"
-                    :key="folder.id"
-                    :value="folder.id"
+                    v-for="f in existing_folders"
+                    :key="f.id"
+                    :value="f.id"
                   >
-                    {{ folder.name }}
+                    {{ f.name }}
                   </option>
                 </select>
               </div>
@@ -179,20 +184,21 @@
           </button>
           <Draggable
             v-model="questions"
+            itemKey="id"
             data-cy="question-list"
             class="question-list"
             handle=".handle"
             ghostClass="ghost"
             @end="swap_question"
           >
-            <QuestionCard
-              v-for="q in questions"
-              :key="q.id"
-              :folder="folder"
-              :question="q"
-              :showMoveIcon="questions.length > 1"
-              @change="load_questions"
-            />
+            <template #item="{ element }">
+              <QuestionCard
+                :folder="folder"
+                :question="element"
+                :showMoveIcon="questions.length > 1"
+                @change="refreshFolder"
+              />
+            </template>
           </Draggable>
         </div>
       </div>
@@ -208,335 +214,241 @@
         },
       }"
       :folder="folder"
-      :chime-id="chimeId"
-      control-type="create"
+      :chimeId="chimeId"
+      controlType="create"
       @close="
         showModal = false;
-        load_questions();
+        refreshFolder();
       "
     />
   </div>
 </template>
 
-<script>
+<script setup>
 import orderBy from "lodash/orderBy";
+import { defineAsyncComponent, ref, computed, watch, onMounted } from "vue";
 import Draggable from "vuedraggable";
-import { questionsListener } from "../../mixins/questionsListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import QuestionCard from "./QuestionCard.vue";
-import Chip from "../../components/Chip.vue";
-import {
-  selectIsCanvasChime,
-  selectCanvasCourseUrl,
-} from "../../helpers/chimeSelectors";
 import Spinner from "../../components/Spinner.vue";
-
-const QuestionForm = () =>
+import pluralize from "../../common/pluralize.js";
+import useQuestionListener from "../../hooks/useQuestionListener";
+import { useStore } from "vuex";
+import {
+  getChimes,
+  getOpenSessionsWithinChime,
+  removeResponsesForQuestion,
+  updateFolder,
+  updateQuestionOrderInFolder,
+  openAllQuestionsInFolder,
+  closeAllQuestionsInFolder,
+  closeQuestion,
+  deleteFolder,
+  importFolder,
+  forceSyncGradesWithLMS,
+} from "../../common/api";
+import { useRouter } from "vue-router";
+const QuestionForm = defineAsyncComponent(() =>
   import(
     /* webpackChunkName: "QuestionForm" */
     "../QuestionForm/QuestionForm.vue"
+  )
+);
+
+const props = defineProps({
+  folderId: { type: Number, required: true },
+  chimeId: { type: Number, required: true },
+  user: { type: Object, required: true },
+});
+const showModal = ref(false);
+const show_edit_folder = ref(false);
+const allSessions = ref(null);
+const hideOpenAlert = ref(false);
+const existing_chimes = ref([]);
+const existing_folders = ref([]);
+const selected_chime = ref(null);
+const selected_folder = ref(null);
+const synced = ref(false);
+
+const store = useStore();
+const router = useRouter();
+const {
+  folder,
+  questions,
+  refresh: refreshFolder,
+} = useQuestionListener({
+  chimeId: props.chimeId,
+  folderId: props.folderId,
+});
+
+const otherFolderSessions = computed(() => {
+  if (allSessions.value && folder.value) {
+    return allSessions.value.filter(
+      (session) => session.question.folder_id !== folder.value.id
+    );
+  }
+  return [];
+});
+
+// each time we open the edit folder
+// load the existing chimes so that the user
+// can import questions from another chime
+// if they wish
+watch(show_edit_folder, function (newValue) {
+  if (newValue) {
+    loadExistingChimes();
+  }
+});
+
+const isPageReady = computed(() => !!folder.value);
+const isParticipantView = computed(() => folder.value?.student_view ?? false);
+onMounted(async () => {
+  if (isParticipantView.value) {
+    store.commit("message", "Unauthorized: Only presenters may edit chimes.");
+    console.error(
+      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
+    );
+    return;
+  }
+
+  allSessions.value = await getOpenSessionsWithinChime(props.chimeId);
+});
+
+function reset() {
+  if (
+    confirm(
+      "Are you sure you want to wipe all the responses to questions in this folder?"
+    )
+  ) {
+    const promises = questions.value.map((question) =>
+      removeResponsesForQuestion({
+        chimeId: props.chimeId,
+        folderId: props.folderId,
+        questionId: question.id,
+      })
+    );
+    Promise.all(promises)
+      .then(() => refreshFolder())
+      .catch(console.error);
+  }
+}
+async function swap_question() {
+  const updatedOrder = questions.value.map((question, index) => ({
+    order: index + 1,
+    id: question.id,
+  }));
+  await updateQuestionOrderInFolder(
+    {
+      chimeId: props.chimeId,
+      folderId: props.folderId,
+    },
+    updatedOrder
   );
 
-export default {
-  components: {
-    Draggable,
-    QuestionForm,
-    ErrorDialog,
-    NavBar,
-    QuestionCard,
-    Chip,
-    Spinner,
-  },
-  mixins: [questionsListener],
-  props: ["folderId", "chimeId", "user"],
-  data() {
-    return {
-      folder: {
-        name: "",
-      },
-      showModal: false,
-      content: "present",
-      questions: [],
-      show_edit_folder: false,
-      show_questions: false,
-      new_folder_name: "",
-      allSessions: null,
-      hideOpenAlert: false,
-      existing_chimes: [],
-      existing_folders: [],
-      selected_chime: null,
-      selected_folder: null,
-      synced: false,
-      ready: false,
-    };
-  },
-  computed: {
-    otherFolderSessions: function () {
-      if (this.allSessions && this.folder.id) {
-        return this.allSessions.filter(
-          (e) => e.question.folder_id != this.folder.id
-        );
-      }
-      return [];
-    },
-    isCanvasChime() {
-      return selectIsCanvasChime(this.chime);
-    },
-    canvasUrl() {
-      const fullCanvasUrlString =
-        selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
-      return new URL(fullCanvasUrlString);
-    },
-  },
-  watch: {
-    show_edit_folder: function (newValue) {
-      if (newValue) {
-        this.loadExistingChimes();
-      }
-    },
-  },
-  created() {
-    Promise.all([this.load_folder(), this.load_questions()]).then(() => {
-      const isParticipantView = this.folder.student_view;
-      if (isParticipantView) {
-        this.$store.commit(
-          "message",
-          "Unauthorized: Only presenters may edit chimes."
-        );
-        console.error(
-          `User ${JSON.stringify(this.user)} is not a presenter for this chime.`
-        );
+  refreshFolder();
+}
 
-        // hide questions from users
-        this.questions = [];
-      }
-      this.ready = true;
+async function loadExistingChimes() {
+  existing_chimes.value = await getChimes();
+}
+
+async function edit_folder() {
+  if (!folder.value) return;
+  await updateFolder(
+    { chimeId: props.chimeId, folderId: props.folderId },
+    {
+      folder_name: folder.value.name,
+    }
+  );
+  show_edit_folder.value = false;
+}
+
+async function delete_folder() {
+  if (!confirm("Delete Folder " + folder.value.name + "?")) return;
+
+  await deleteFolder({ chimeId: props.chimeId, folderId: props.folderId });
+  router.push({
+    name: "chime",
+    params: {
+      chimeId: props.chimeId,
+    },
+  });
+}
+
+function openAll() {
+  return openAllQuestionsInFolder({
+    chimeId: props.chimeId,
+    folderId: props.folderId,
+  });
+}
+
+function closeAll() {
+  return closeAllQuestionsInFolder({
+    chimeId: props.chimeId,
+    folderId: props.folderId,
+  });
+}
+
+function closeOthers() {
+  hideOpenAlert.value = true;
+  const promises = otherFolderSessions.value.map((openSession) =>
+    closeQuestion({
+      chimeId: props.chimeId,
+      folderId: openSession.question.folder_id,
+      questionId: openSession.question.id,
+    })
+  );
+  Promise.all(promises).catch((err) => {
+    hideOpenAlert.value = true;
+    console.error(err);
+  });
+}
+
+function handleFolderNameInput(event) {
+  folder.value.name = event.target.value;
+}
+
+async function do_import() {
+  if (!selected_chime.value || !selected_folder.value) return;
+  await importFolder({
+    destinationChimeId: props.chimeId,
+    destinationFolderId: props.folderId,
+    sourceFolderId: selected_folder.value,
+  });
+  refreshFolder();
+}
+
+function update_folders() {
+  axios
+    .get("/api/chime/" + selected_chime.value)
+    .then((res) => {
+      const foldersWithoutCurrentOne = res.data.folders.filter(
+        (f) => f.id !== props.folderId
+      );
+
+      existing_folders.value = orderBy(foldersWithoutCurrentOne, "created_at", [
+        "desc",
+      ]);
+    })
+    .catch((err) => {
+      console.error("error", "Error in get chimes:", err.response);
     });
-  },
-  methods: {
-    reset: function () {
-      if (
-        confirm(
-          "Are you sure you want to wipe all the responses to questions in this folder?"
-        )
-      ) {
-        var promises = [];
-        for (var question of this.questions) {
-          const url =
-            "/api/chime/" +
-            this.folder.chime_id +
-            "/folder/" +
-            this.folder.id +
-            "/question/" +
-            question.id +
-            "/responses";
-          promises.push(axios.delete(url));
-        }
-        Promise.all(promises).then(() => {
-          this.load_questions();
-        });
-      }
-    },
-    swap_question() {
-      const newOrder = Array.from(this.questions.entries()).map((e) => {
-        return {
-          order: e[0] + 1,
-          id: e[1].id,
-        };
-      });
+}
 
-      console.log(newOrder);
-      const url =
-        "/api/chime/" +
-        this.folder.chime_id +
-        "/folder/" +
-        this.folder.id +
-        "/save_order";
+async function sync() {
+  const isSyncSuccessful = await forceSyncGradesWithLMS({
+    chimeId: props.chimeId,
+    folderId: props.folderId,
+  });
 
-      axios
-        .put(url, {
-          question_order: newOrder,
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
-
-      this.load_questions();
-    },
-    delete_question(questionId) {
-      if (confirm("Are you sure you want to remove this question?")) {
-        const url =
-          "/api/chime/" +
-          this.folder.chime_id +
-          "/folder/" +
-          this.folder.id +
-          "/question/" +
-          questionId;
-        const self = this;
-
-        axios
-          .delete(url)
-          .then((res) => {
-            console.log(res);
-            const question_index = self.questions.findIndex(
-              (e) => e.id === questionId
-            );
-            self.questions.splice(question_index, 1);
-            this.$nextTick(function () {
-              this.$refs.slideup.layout();
-            });
-          })
-          .catch((err) => {
-            console.log(err.response);
-          });
-      }
-    },
-    edit_folder: function () {
-      axios
-        .put("/api/chime/" + this.chimeId + "/folder/" + this.folderId, {
-          folder_name: this.folder.name,
-        })
-        .then(() => {
-          this.show_edit_folder = false;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    delete_folder: function () {
-      const confirm = window.confirm("Delete Folder " + this.folder.name + "?");
-
-      if (confirm) {
-        const url = "/api/chime/" + this.chimeId + /folder/ + this.folderId;
-
-        axios
-          .delete(url)
-          .then(() => {
-            this.$router.push({
-              name: "chime",
-              params: {
-                chimeId: this.chimeId,
-              },
-            });
-          })
-          .catch((err) => {
-            console.log(err.response);
-          });
-      }
-    },
-    load_folder() {
-      return axios
-        .get("/api/chime/" + this.chimeId + "/openQuestions")
-        .then((res) => {
-          this.allSessions = res.data.sessions;
-        })
-        .catch((err) =>
-          console.error(`Error loading folder: ${err.message}`, err.response)
-        );
-    },
-
-    openAll: function () {
-      const url =
-        "/api/chime/" +
-        this.folder.chime_id +
-        "/folder/" +
-        this.folder.id +
-        "/question/startAll";
-
-      axios.post(url, {}).catch(console.error);
-    },
-    closeAll: function () {
-      const url =
-        "/api/chime/" +
-        this.folder.chime_id +
-        "/folder/" +
-        this.folder.id +
-        "/question/stopAll";
-
-      axios.put(url, {}).catch(console.error);
-    },
-    closeOthers: function () {
-      for (var openSession of this.otherFolderSessions) {
-        const url =
-          "/api/chime/" +
-          this.folder.chime_id +
-          "/folder/" +
-          openSession.question.folder_id +
-          "/question/" +
-          openSession.question.id +
-          "/stopSession/";
-
-        axios.put(url, {}).catch(console.error);
-      }
-      this.hideOpenAlert = true;
-    },
-    loadExistingChimes: function () {
-      axios
-        .get("/api/chime")
-        .then((res) => {
-          this.existing_chimes = orderBy(res.data, "created_at", ["desc"]);
-        })
-        .catch((err) => {
-          console.error("error", "Error in get chimes:", err.response);
-        });
-    },
-    update_folders: function () {
-      axios
-        .get("/api/chime/" + this.selected_chime)
-        .then((res) => {
-          this.existing_folders = orderBy(
-            res.data.folders.filter((f) => f.id != this.folderId),
-            "created_at",
-            ["desc"]
-          );
-        })
-        .catch((err) => {
-          console.error("error", "Error in get chimes:", err.response);
-        });
-    },
-    do_import: function () {
-      if (!this.selected_chime || !this.selected_folder) {
-        return;
-      }
-      axios
-        .post(
-          "/api/chime/" + this.chimeId + "/folder/" + this.folderId + "/import",
-          {
-            folder_id: this.selected_folder,
-          }
-        )
-        .then(() => {
-          this.load_folder();
-          this.load_questions();
-        })
-        .catch((err) => {
-          console.error("error", "Error with import:", err.response);
-        });
-    },
-    sync: function () {
-      axios
-        .post(
-          "/api/chime/" + this.chimeId + "/folder/" + this.folderId + "/sync"
-        )
-        .then((res) => {
-          if (res.data.success) {
-            this.synced = true;
-          }
-        })
-        .catch((err) => {
-          this.$store.commit(
-            "message",
-            "Could not sync Chime. Please contact support at latistecharch@umn.edu."
-          );
-          console.log(err);
-        });
-    },
-  },
-};
+  if (!isSyncSuccessful) {
+    store.commit(
+      "message",
+      "Could not sync Chime. Please contact support at latistecharch@umn.edu."
+    );
+  }
+}
 </script>
 
 <style>

@@ -15,7 +15,7 @@
     </div>
     <div class="image-upload__dropbox">
       <h3 v-if="hasImage" class="image-upload__dropbox-heading">Preview</h3>
-      <div class="preview" v-if="hasImage">
+      <div v-if="hasImage" class="preview">
         <img
           class="preview__img"
           :src="imageSrc"
@@ -23,20 +23,20 @@
           data-cy="image-preview"
         />
         <button
-          @click="$emit('removePreviewImage')"
           class="preview__remove-img-button"
+          @click="$emit('removePreviewImage')"
         >
           <span class="material-icons">cancel</span>
         </button>
       </div>
 
       <input
+        id="image-upload-file"
         type="file"
         class="image-upload__input"
-        @change="onFileChange"
-        id="image-upload-file"
         accept="image/gif, image/png, image/jpeg, image/webp"
         data-cy="image-dropzone"
+        @change="onFileChange"
       />
 
       <div class="image-upload__status">
@@ -92,7 +92,6 @@ export default {
       axios
         .post(this.uploadTo, formData)
         .then((response) => {
-          console.log({ response });
           this.isUploading = false;
           this.$emit("imageUploaded", {
             src: response.data.image,

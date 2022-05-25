@@ -50,7 +50,9 @@
 
 <script>
 export default {
+  // eslint-disable-next-line vue/prop-name-casing, vue/require-prop-types
   props: ["question_responses"],
+  emits: ["update:question_responses"],
   data: function () {
     return {
       left_choice_text: this.question_responses.left_choice_text,

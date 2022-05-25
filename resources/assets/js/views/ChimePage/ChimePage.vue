@@ -26,12 +26,7 @@
             }"
           >
             <button
-              class="
-                chime__control-button
-                btn btn-outline-secondary
-                align-items-center
-                d-flex
-              "
+              class="chime__control-button btn btn-outline-secondary align-items-center d-flex"
               :class="{ 'btn--is-active': showSettings }"
               data-cy="toggle-chime-settings-panel"
               @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
@@ -40,12 +35,7 @@
             </button>
 
             <button
-              class="
-                chime__control-button
-                btn btn-outline-secondary
-                align-items-center
-                d-flex
-              "
+              class="chime__control-button btn btn-outline-secondary align-items-center d-flex"
               :class="{ 'btn--is-active': exportPanel }"
               data-cy="toggle-chime-export-panel"
               @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
@@ -61,7 +51,11 @@
             'chime__settings-panel--isOpen': showSettings || exportPanel,
           }"
         >
-          <ChimeManagement v-if="showSettings" :chime.sync="chime" />
+          <ChimeManagement
+            v-if="showSettings"
+            :chime="chime"
+            @update:chime="handleChimeUpdate"
+          />
           <ChimeExport v-if="exportPanel" :chime="chime" />
         </div>
       </header>
@@ -82,20 +76,23 @@
           <Draggable
             v-if="ordered_folders.length"
             v-model="ordered_folders"
+            itemKey="id"
             class="chime__ordered-folders"
             handle=".handle"
             :animation="200"
             :disabled="false"
             ghostClass="ghost"
           >
-            <FolderCard
-              v-for="folder in ordered_folders"
-              :key="folder.id"
-              :chime="chime"
-              :folder="folder"
-              :showMoveIcon="ordered_folders.length > 1"
-              @change="loadChime"
-            />
+            <template #item="{ element }">
+              <div>
+                <FolderCard
+                  :chime="chime"
+                  :folder="element"
+                  :showMoveIcon="ordered_folders.length > 1"
+                  @change="loadChime"
+                />
+              </div>
+            </template>
           </Draggable>
         </div>
       </div>
@@ -118,6 +115,7 @@ import {
   selectIsCanvasChime,
   selectCanvasCourseUrl,
 } from "../../helpers/chimeSelectors";
+import * as api from "../../common/api";
 
 export default {
   components: {
@@ -149,7 +147,6 @@ export default {
         return orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
       },
       set(value) {
-        console.log(value);
         value.map((f, index) => (f.order = index + 1));
         const url = "/api/chime/" + this.chime.id;
         axios
@@ -160,7 +157,7 @@ export default {
             this.chime.folders = value;
           })
           .catch((err) => {
-            console.log(err.response);
+            console.error(err);
           });
       },
     },
@@ -188,6 +185,16 @@ export default {
         this[key] = true;
       });
     },
+    handleChimeUpdate(chimeUpdates) {
+      // optimistically update chime
+      this.chime = {
+        ...this.chime,
+        ...chimeUpdates,
+      };
+
+      // but load the chime from the server for realsies.
+      this.loadChime();
+    },
     create_folder: function (folder_name) {
       if (folder_name.length == 0) {
         alert("You must enter a name for this folder.");
@@ -208,27 +215,23 @@ export default {
           folder_name: folder_name,
         })
         .then((res) => {
-          console.log(res);
           this.chime.folders.push(res.data);
         })
         .catch((err) => {
           console.error(err);
         });
     },
-    loadChime() {
-      return axios
-        .get("/api/chime/" + this.chimeId)
-        .then((res) => {
-          this.chime = res.data;
-          document.title = this.chime.name;
-        })
-        .catch((err) => {
-          this.$store.commit(
-            "message",
-            "Could not load Chime. You may not have permission to view this page. "
-          );
-          console.error(err);
-        });
+    async loadChime() {
+      try {
+        this.chime = await api.getChime(this.chimeId);
+        document.title = this.chime.name;
+      } catch (err) {
+        this.$store.commit(
+          "message",
+          "Could not load Chime. You may not have permission to view this page. "
+        );
+        console.error(err);
+      }
     },
   },
 };

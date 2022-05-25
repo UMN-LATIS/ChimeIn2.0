@@ -8,18 +8,13 @@
       class="form-control new-folder__input"
       name="createFolder"
       placeholder="Folder Name"
-      @keyup.enter="new_folder"
       data-cy="new-folder-input"
+      @keyup.enter="new_folder"
     />
     <button
       data-cy="create-folder-button"
       type="button"
-      class="
-        new-folder__button
-        btn btn-outline-primary
-        align-items-center
-        d-flex
-      "
+      class="new-folder__button btn btn-outline-primary align-items-center d-flex"
       @click="new_folder"
     >
       <i class="material-icons">add</i>
@@ -40,6 +35,26 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  // eslint-disable-next-line vue/require-prop-types
+  props: ["chime"],
+  emits: ["newfolder"],
+  data: function () {
+    return {
+      folder_name: "",
+    };
+  },
+  methods: {
+    new_folder: function () {
+      this.$emit("newfolder", this.folder_name);
+      this.folder_name = "";
+      document.activeElement.blur();
+    },
+  },
+};
+</script>
+
 <style scoped>
 .new-folder {
   display: flex;
@@ -53,25 +68,3 @@
   flex-shrink: 0;
 }
 </style>
-
-<script>
-export default {
-  props: ["chime"],
-  data: function () {
-    return {
-      folder_name: "",
-    };
-  },
-  methods: {
-    filter_folder: function () {
-      // NOTE Filter folder mechanic muted
-      // this.$emit('filterfolder', this.folder_name);
-    },
-    new_folder: function () {
-      this.$emit("newfolder", this.folder_name);
-      this.folder_name = "";
-      document.activeElement.blur();
-    },
-  },
-};
-</script>

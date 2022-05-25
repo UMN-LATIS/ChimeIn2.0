@@ -1,12 +1,12 @@
 <template>
   <div class="toggle">
     <input
+      :id="name"
       class="toggle__input visually-hidden"
       type="checkbox"
       :checked="checked"
       :name="name"
-      :value="value"
-      :id="name"
+      v-bind="$props"
       @change="handleInputChange($event)"
     />
     <label class="toggle__label" :for="name">
@@ -28,14 +28,12 @@ export default {
       type: String,
       required: true,
     },
-    value: {
-      type: String,
-    },
     color: {
       type: String,
+      default: "green",
     },
   },
-  events: ["change"],
+  emits: ["change"],
   methods: {
     handleInputChange($event) {
       this.$emit("change", $event);

@@ -16,11 +16,6 @@
   </Modal>
 </template>
 
-<style scoped>
-.alert {
-  z-index: 15000;
-}
-</style>
 <script>
 import Modal from "./Modal.vue";
 
@@ -30,3 +25,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.alert {
+  z-index: 15000;
+}
+</style>

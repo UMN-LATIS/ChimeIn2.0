@@ -10,7 +10,7 @@
     <div v-if="error" class="alert alert-warning" role="alert">
       {{ error }}
     </div>
-    <vue-announcer />
+    <VueAnnouncer />
     <main class="participant-page__main container">
       <div class="card">
         <!-- nav tabs -->
@@ -71,7 +71,7 @@
               >
                 <h1>No Open Questions</h1>
               </div>
-              <transition-group v-if="filteredSession.length > 0" name="fade">
+              <TransitionGroup v-if="filteredSession.length > 0" name="fade">
                 <ParticipantPrompt
                   v-for="s in filteredSession"
                   :key="s.id"
@@ -80,7 +80,7 @@
                   :responses="responses"
                   @updateResponse="updateResponse"
                 />
-              </transition-group>
+              </TransitionGroup>
             </template>
           </div>
 
@@ -90,14 +90,14 @@
               <h1>No Answered Questions</h1>
             </div>
             <Response
-              v-else
               v-for="(response, i) in sortedResponses"
+              v-else
               :key="i"
               :chime="chime"
               :response="response"
             />
           </div>
-          <p class="text-center m-0" v-if="!ltiLaunchWarning">
+          <p v-if="!ltiLaunchWarning" class="text-center m-0">
             <small v-if="chime.lti_course_title" class="text-muted"
               >Not seeing the prompts you're looking for? Make sure you've
               followed the correct assignment link from Canvas.
@@ -116,8 +116,10 @@
   </div>
 </template>
 
-<script>
-import get from "lodash/get";
+<script setup>
+import echoClient from "../../common/echoClient";
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import updateList from "ramda/es/update.js";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import NavBar from "../../components/NavBar.vue";
 import ParticipantPrompt from "./ParticipantPrompt.vue";
@@ -128,171 +130,164 @@ import {
   selectJoinUrl,
   selectIsCanvasChime,
 } from "../../helpers/chimeSelectors.js";
+import { useStore } from "vuex";
+import { useAnnouncer } from "@vue-a11y/announcer";
+import { useRoute } from "vue-router";
 
-export default {
-  components: {
-    ErrorDialog,
-    NavBar,
-    ParticipantPrompt,
-    Response,
-    ViewModeNotice,
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true,
   },
-  props: ["user", "chimeId", "folderId"],
-  data() {
-    return {
-      chime: {},
-      sessions: [],
-      responses: [],
-      error: null,
-      timeout: null,
-      loadTime: null,
-      forceLoad: false,
-    };
+  chimeId: {
+    type: Number,
+    required: true,
   },
-  computed: {
-    canvasCourseUrl() {
-      return selectCanvasCourseUrl(this.chime);
-    },
-    joinUrl() {
-      return selectJoinUrl(this.chime);
-    },
-    isCanvasChime() {
-      return selectIsCanvasChime(this.chime);
-    },
-    inParticipantView() {
-      const viewMode = get(this, "$route.query.viewMode", null);
-      if (!viewMode) return false;
+  folderId: {
+    type: Number,
+    required: true,
+  },
+});
 
-      return viewMode.toLowerCase() === "participant";
-    },
-    filteredSession: function () {
-      if (this.folderId) {
-        return this.sessions.filter(
-          (e) => e.question.folder_id == this.folderId
-        );
-      } else {
-        return this.sessions;
-      }
-    },
-    sortedResponses: function () {
-      function compare(a, b) {
-        if (a.updated_at > b.updated_at) return -1;
-        if (a.updated_at < b.updated_at) return 1;
-        return 0;
-      }
+const chime = ref({});
+const sessions = ref([]);
+const responses = ref([]);
+const error = ref(null);
+const timeout = ref(null);
+const loadTime = ref(null);
+const forceLoad = ref(false);
+const store = useStore();
+const announcer = useAnnouncer();
+const route = useRoute();
 
-      return [...this.responses].sort(compare);
-    },
-    ltiLaunchWarning: function () {
-      if (
-        !this.forceLoad &&
-        !this.inParticipantView &&
-        !window.lti_launch &&
-        this.isCanvasChime
-      ) {
-        return true;
-      }
-      return false;
-    },
-  },
-  mounted: function () {
-    this.loadChime();
-    this.loadTime = new Date();
-    Echo.join("session-status." + this.chimeId)
-      .listen("StartSession", (m) => {
-        console.log("debug", "message:", m);
-        this.sessions.unshift(m.session);
-        this.$announcer.set(
-          "A new question has been open.  There are " +
-            this.sessions.length +
-            " questions open"
-        );
-      })
-      .listen("EndSession", (m) => {
-        var removeIndex = this.sessions.findIndex(
-          (session) => session.id == m.session.id
-        );
-        this.sessions.splice(removeIndex, 1);
-        this.$announcer.set(
-          "A question has been closed.  There are " +
-            this.sessions.length +
-            " questions open"
-        );
-      });
+const canvasCourseUrl = computed(() => selectCanvasCourseUrl(chime.value));
+const joinUrl = computed(() => selectJoinUrl(chime.value));
+const isCanvasChime = computed(() => selectIsCanvasChime(chime.value));
+const inParticipantView = computed(() => {
+  const viewMode = route?.query?.viewMode ?? false;
+  if (!viewMode) return false;
 
-    window.Echo.connector.socket.on("reconnect", () => {
-      console.log("reconnecting and reloading");
-      if (this.timeout) clearTimeout(this.timeout);
+  return viewMode.toLowerCase() === "participant";
+});
+const filteredSession = computed(() => {
+  return props.folderId
+    ? sessions.value.filter((s) => s.question.folder_id === props.folderId)
+    : sessions.value;
+});
 
-      const hoursSinceLoad = (new Date() - this.loadTime) / 1000 / 60 / 60;
-      if (hoursSinceLoad >= 8) {
-        Echo.leave("session-status." + this.chimeId);
-        window.Echo.connector.socket.off("reconnect");
-        this.error = "Your session has expired.  Please refresh the page.";
-        this.sessions = [];
-        this.$announcer.set(
-          "Your session has expired. Please refresh the page."
-        );
-        return;
-      }
-
-      this.timeout = setTimeout(() => {
-        this.loadChime();
-      }, 500);
-    });
-  },
-  beforeDestroy: function () {
-    Echo.leave("session-status." + this.chimeId);
-    window.Echo.connector.socket.off("reconnect");
-  },
-  methods: {
-    updateResponse: function (newResponse) {
-      var updateInPlace = false;
-      this.responses.forEach((response, index) => {
-        if (response.id == newResponse.id) {
-          updateInPlace = true;
-          this.$set(this.responses, index, newResponse);
-        }
-      });
-      if (!updateInPlace) {
-        this.responses.push(newResponse);
-      }
-    },
-    loadChime: function () {
-      axios
-        .get("/api/chime/" + this.chimeId + "/openQuestions")
-        .then((res) => {
-          console.log("debug", "chime:", res);
-          this.chime = res.data.chime;
-          document.title = this.chime.name;
-          this.sessions = res.data.sessions.reverse();
-        })
-        .catch((err) => {
-          if (err.response.data.status == "AttemptAuth") {
-            window.location =
-              "/loginAndRedirect?target=" + window.location.pathname;
-          } else {
-            if (err.response.data.message) {
-              this.error = err.response.data.message;
-            }
-            this.$store.commit(
-              "message",
-              "Could not load Chime. You may not have permission to view this page. "
-            );
-            console.log("error getting chime:", err.response);
-          }
-        })
-        .then(() => {
-          return axios
-            .get("/api/chime/" + this.chimeId + "/responses")
-            .then((res) => {
-              console.log("debug", "Response:", res);
-              this.responses = res.data;
-            });
-        });
-    },
-  },
+const compareBy = (prop) => (a, b) => {
+  if (a[prop] > b[prop]) return -1;
+  if (a[prop] < b[prop]) return 1;
+  return 0;
 };
+const sortedResponses = computed(() =>
+  [...responses.value].sort(compareBy("updated_at"))
+);
+
+const ltiLaunchWarning = computed(
+  () =>
+    !forceLoad.value &&
+    !inParticipantView.value &&
+    !window.lti_launch &&
+    isCanvasChime.value
+);
+
+function updateResponse(updatedResponse) {
+  const responseIndex = responses.value.findIndex(
+    (response) => response.id === updatedResponse.id
+  );
+
+  const isNewResponse = responseIndex === -1;
+
+  responses.value = isNewResponse
+    ? responses.value.concat(updatedResponse)
+    : updateList(responseIndex, updatedResponse, responses.value);
+}
+
+function loadChime() {
+  axios
+    .get(`/api/chime/${props.chimeId}/openQuestions`)
+    .then((res) => {
+      chime.value = res.data.chime;
+      document.title = chime.value.name;
+      sessions.value = res.data.sessions.reverse();
+    })
+    .catch((err) => {
+      if (err.response.data.status == "AttemptAuth") {
+        window.location =
+          "/loginAndRedirect?target=" + window.location.pathname;
+      } else {
+        if (err.response.data.message) {
+          error.value = err.response.data.message;
+        }
+        store.commit(
+          "message",
+          "Could not load Chime. You may not have permission to view this page. "
+        );
+        console.error("error getting chime:", err);
+      }
+    })
+    .then(() => {
+      // hmmm... why not load responses in parallel with chime?
+      return axios.get(`/api/chime/${props.chimeId}/responses`).then((res) => {
+        responses.value = res.data;
+      });
+    });
+}
+
+onMounted(() => {
+  loadChime();
+  loadTime.value = new Date();
+  echoClient
+    .join(`session-status.${props.chimeId}`)
+    .listen("StartSession", (event) => {
+      console.log("StartSession: participant", { event });
+      sessions.value.unshift(event.session);
+      announcer.polite(
+        "A new question has been open.  There are " +
+          sessions.value.length +
+          " questions open"
+      );
+    })
+    .listen("EndSession", (event) => {
+      console.log("EndSession: participant", { event });
+
+      const removeIndex = sessions.value.findIndex(
+        (s) => s.id == event.session.id
+      );
+      sessions.value.splice(removeIndex, 1);
+      announcer.polite(
+        "A question has been closed.  There are " +
+          sessions.value.length +
+          " questions open"
+      );
+    });
+
+  echoClient.connector.socket.on("reconnect", (event) => {
+    console.log("reconnect: participant", { event });
+
+    if (timeout.value) clearTimeout(timeout.value);
+
+    const hoursSinceLoad = (new Date() - loadTime.value) / 1000 / 60 / 60;
+    if (hoursSinceLoad >= 8) {
+      echoClient.leave(`session-status.${props.chimeId}`);
+      echoClient.connector.socket.off("reconnect");
+      error.value = "Your session has expired.  Please refresh the page.";
+      sessions.value = [];
+      announcer.polite("Your session has expired. Please refresh the page.");
+      return;
+    }
+
+    timeout.value = setTimeout(() => {
+      loadChime();
+    }, 500);
+  });
+});
+
+onUnmounted(() => {
+  echoClient.leave(`session-status.props.${props.chimeId}`);
+  echoClient.connector.socket.off("reconnect");
+});
 </script>
 <style scoped>
 @media (max-width: 30rem) {

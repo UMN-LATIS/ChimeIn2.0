@@ -36,31 +36,13 @@
   </div>
 </template>
 
-<style scoped>
-.max-height-image {
-  max-height: 70vh;
-}
-
-.image-heatmap-response__image-container {
-  position: relative;
-}
-
-.clickPointer {
-  margin-top: -1.5em;
-  margin-left: -0.5em;
-  padding: 1em;
-  border: solid 0.5em #c00;
-  border-radius: 50%;
-  position: absolute;
-  pointer-events: none;
-}
-</style>
-
 <script>
 import get from "lodash/get";
 
 export default {
+  // eslint-disable-next-line vue/require-prop-types
   props: ["question", "response", "disabled"],
+  emits: ["recordresponse"],
   data() {
     return {
       targetImageLoaded: false,
@@ -76,10 +58,9 @@ export default {
   created() {
     window.addEventListener("resize", this.updateScaledCoordinates);
   },
-  destroyed() {
+  unmounted() {
     window.removeEventListener("resize", this.updateScaledCoordinates);
   },
-
   methods: {
     handleTargetImageLoaded() {
       this.targetImageLoaded = true;
@@ -138,15 +119,26 @@ export default {
       this.$emit("recordresponse", response, this.create_new_response);
       this.create_new_response = false;
     },
-    // record_response: function() {
-    //     const response = {
-    //         question_type: 'heatmap_response',
-    //         image_coordinates: this.image_coordinates
-    //     }
-
-    //     this.$emit('recordresponse', response, false);
-
-    // }
   },
 };
 </script>
+
+<style scoped>
+.max-height-image {
+  max-height: 70vh;
+}
+
+.image-heatmap-response__image-container {
+  position: relative;
+}
+
+.clickPointer {
+  margin-top: -1.5em;
+  margin-left: -0.5em;
+  padding: 1em;
+  border: solid 0.5em #c00;
+  border-radius: 50%;
+  position: absolute;
+  pointer-events: none;
+}
+</style>

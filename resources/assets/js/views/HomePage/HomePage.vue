@@ -23,7 +23,11 @@
               and we can arrange a personal introduction.
             </div>
 
-            <ChimePanel :user="user" />
+            <ChimePanel
+              :user="user"
+              :chimes="chimes"
+              @update:chimes="handleUpdateChimes"
+            />
           </div>
 
           <div class="col-12 col-md-3">
@@ -77,7 +81,6 @@
 </template>
 
 <script>
-import { EventBus } from "../../EventBus.js";
 import NavBar from "../../components/NavBar.vue";
 import ChimePanel from "./ChimePanel.vue";
 
@@ -89,6 +92,7 @@ export default {
   props: ["user"],
   data() {
     return {
+      chimes: [],
       access_code: "",
       requires_login: false,
       chime_not_found: false,
@@ -110,16 +114,31 @@ export default {
       ];
     },
   },
+  mounted() {
+    this.get_chimes();
+  },
   methods: {
+    get_chimes() {
+      axios
+        .get("/api/chime")
+        .then((res) => {
+          this.chimes = res.data;
+        })
+        .catch((err) => {
+          console.error("error", "Error in get chimes:", err.response);
+        });
+    },
+    handleUpdateChimes() {
+      this.get_chimes();
+    },
     join_chime() {
-      console.log(this.access_code);
       this.requires_login = false;
       this.chime_not_found = false;
       axios
         .post("/join/" + this.access_code)
         .then((res) => {
           this.access_code = "";
-          EventBus.$emit("chimesChanged");
+          this.get_chimes();
           this.$router.push({
             name: "chimeStudent",
             params: { chimeId: res.data.id },

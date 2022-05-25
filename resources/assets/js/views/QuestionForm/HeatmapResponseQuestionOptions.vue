@@ -28,6 +28,44 @@
   </div>
 </template>
 
+<script>
+export default {
+  // eslint-disable-next-line vue/prop-name-casing, vue/require-prop-types
+  props: ["question_responses", "chime_id"],
+  emits: ["update:question_responses"],
+  data() {
+    return {
+      isInitial: this.question_responses ? false : true,
+      isSaving: false,
+    };
+  },
+  methods: {
+    attachFile: function (event, fileList) {
+      this.isSaving = true;
+      this.isInitial = false;
+      let formData = new FormData();
+      Array.from(Array(fileList.length).keys()).map((x) => {
+        formData.append("image", fileList[x], fileList[x].name);
+      });
+
+      axios
+        .post("/api/chime/" + this.chime_id + "/image", formData)
+        .then((res) => {
+          const response = {
+            image: res.data.image,
+            image_name: fileList[0].name,
+          };
+          this.isSaving = false;
+          // this.isInitial= true;
+          this.$emit("update:question_responses", response);
+
+          this.create_new_response = false;
+        });
+    },
+  },
+};
+</script>
+
 <style>
 .imageContainer {
   max-width: 400px;
@@ -63,39 +101,3 @@
   padding: 50px 0;
 }
 </style>
-
-<script>
-export default {
-  props: ["question_responses", "chime_id"],
-  data() {
-    return {
-      isInitial: this.question_responses ? false : true,
-      isSaving: false,
-    };
-  },
-  methods: {
-    attachFile: function (event, fileList) {
-      this.isSaving = true;
-      this.isInitial = false;
-      let formData = new FormData();
-      Array.from(Array(fileList.length).keys()).map((x) => {
-        formData.append("image", fileList[x], fileList[x].name);
-      });
-
-      axios
-        .post("/api/chime/" + this.chime_id + "/image", formData)
-        .then((res) => {
-          const response = {
-            image: res.data.image,
-            image_name: fileList[0].name,
-          };
-          this.isSaving = false;
-          // this.isInitial= true;
-          this.$emit("update:question_responses", response);
-
-          this.create_new_response = false;
-        });
-    },
-  },
-};
-</script>

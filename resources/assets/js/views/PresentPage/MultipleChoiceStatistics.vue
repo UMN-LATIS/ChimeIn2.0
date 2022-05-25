@@ -3,7 +3,7 @@
     <GChart
       ref="googleChart"
       type="ColumnChart"
-      :resize-debounce="100"
+      :resizeDebounce="100"
       :data="chartData"
       :options="options"
       class="googleChart"
@@ -11,21 +11,6 @@
     />
   </div>
 </template>
-
-<style>
-.chartContainer {
-  height: 600px;
-}
-
-.googleChart {
-  height: 100%;
-}
-
-/* for HTML chart labels */
-.chartContainer foreignObject p {
-  text-align: center;
-}
-</style>
 
 <script>
 import { GChart } from "vue-google-charts";
@@ -70,6 +55,50 @@ export default {
         },
       },
     };
+  },
+  computed: {
+    myStyles() {
+      return {
+        position: "relative",
+      };
+    },
+    chartData: function () {
+      var questionArray = this.question.question_info.question_responses.map(
+        (q) => {
+          const choiceHtml = isObject(q) ? q.text : q;
+          const totalResponsesForQuestion = this.responses.length;
+
+          // number of users making this choice
+          const totalResponsesForChoice = this.responses.filter((r) =>
+            Array.isArray(r.response_info.choice)
+              ? r.response_info.choice.includes(choiceHtml)
+              : r.response_info.choice == choiceHtml
+          ).length;
+
+          return [
+            choiceHtml,
+            totalResponsesForChoice / totalResponsesForQuestion,
+            "color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2",
+            "Number of Responses:  " +
+              totalResponsesForChoice +
+              "\n" +
+              "Percentage: " +
+              Math.round(
+                (totalResponsesForChoice / totalResponsesForQuestion) * 10000
+              ) /
+                100 +
+              "%",
+          ];
+        }
+      );
+      questionArray.unshift([
+        "Answer",
+        "Number of Responses",
+        { role: "style" },
+        { type: "string", role: "tooltip", p: { html: false } },
+      ]);
+      return questionArray;
+    },
   },
   methods: {
     handleHtmlChartLabels() {
@@ -122,49 +151,20 @@ export default {
       window.requestAnimationFrame(updateLabels);
     },
   },
-  computed: {
-    myStyles() {
-      return {
-        position: "relative",
-      };
-    },
-    chartData: function () {
-      var questionArray = this.question.question_info.question_responses.map(
-        (q) => {
-          const choiceHtml = isObject(q) ? q.text : q;
-          const totalResponsesForQuestion = this.responses.length;
-
-          // number of users making this choice
-          const totalResponsesForChoice = this.responses.filter((r) =>
-            Array.isArray(r.response_info.choice)
-              ? r.response_info.choice.includes(choiceHtml)
-              : r.response_info.choice == choiceHtml
-          ).length;
-
-          return [
-            choiceHtml,
-            totalResponsesForChoice / totalResponsesForQuestion,
-            "color: rgb(54, 162, 235); opacity: 0.4; stroke-opacity: 0.9; stroke-width: 2",
-            "Number of Responses:  " +
-              totalResponsesForChoice +
-              "\n" +
-              "Percentage: " +
-              Math.round(
-                (totalResponsesForChoice / totalResponsesForQuestion) * 10000
-              ) /
-                100 +
-              "%",
-          ];
-        }
-      );
-      questionArray.unshift([
-        "Answer",
-        "Number of Responses",
-        { role: "style" },
-        { type: "string", role: "tooltip", p: { html: false } },
-      ]);
-      return questionArray;
-    },
-  },
 };
 </script>
+
+<style>
+.chartContainer {
+  height: 600px;
+}
+
+.googleChart {
+  height: 100%;
+}
+
+/* for HTML chart labels */
+.chartContainer foreignObject p {
+  text-align: center;
+}
+</style>

@@ -20,11 +20,14 @@ export default {
     },
     to: {
       type: String,
+      default: null,
     },
     href: {
       type: String,
+      default: null,
     },
   },
+  emits: ["click"],
   computed: {
     type() {
       if (this.to) return "router-link";
