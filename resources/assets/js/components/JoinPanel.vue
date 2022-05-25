@@ -90,9 +90,6 @@ export default {
       require: false,
     },
   },
-  methods: {
-    toHyphenatedCode,
-  },
   computed: {
     isCanvasChime() {
       return selectIsCanvasChime(this.chime);
@@ -107,6 +104,9 @@ export default {
     location() {
       return window.location;
     },
+  },
+  methods: {
+    toHyphenatedCode,
   },
 };
 </script>

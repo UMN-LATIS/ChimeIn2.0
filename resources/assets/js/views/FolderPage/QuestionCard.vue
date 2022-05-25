@@ -13,19 +13,20 @@
         </router-link>
       </h2>
       <Chip :color="totalResponses ? 'primary' : 'muted'" :solid="true"
-        >{{ totalResponses }} {{ "Response" | pluralize(totalResponses) }}</Chip
+        >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
       >
     </header>
 
     <router-link
       :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
     >
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="flow-text question_list_text" v-html="question.text" />
 
       <component
+        :is="`${questionType}_display`"
         v-if="hasSpecializedQuestionDisplay(questionType)"
         class="question-card__choice-display"
-        :is="`${questionType}_display`"
         :question="question"
       />
     </router-link>
@@ -35,7 +36,7 @@
       :show="showEdit"
       :question="question"
       :folder="folder"
-      control-type="edit"
+      controlType="edit"
       @edited="handleQuestionEdited"
       @close="showEdit = false"
     />
@@ -108,6 +109,7 @@ import MultipleChoiceDisplay from "../../components/MultipleChoice/MultipleChoic
 import HeatmapResponseDisplay from "../../components/ImageHeatmapResponse/ImageHeatmapResponseDisplay.vue";
 import hasSpecializedQuestionDisplay from "../../helpers/hasSpecializedQuestionDisplay";
 import TextHeatmapResponseDisplay from "../../components/TextHeatmap/TextHeatmapResponseDisplay.vue";
+import pluralize from "../../common/pluralize";
 
 export default {
   components: {
@@ -135,6 +137,7 @@ export default {
     },
   },
   events: ["change"],
+  emits: ["change"],
   data: function () {
     return {
       showEdit: false,
@@ -166,6 +169,7 @@ export default {
     },
   },
   methods: {
+    pluralize,
     hasSpecializedQuestionDisplay,
     handleEditClick() {
       this.showEdit = true;
@@ -181,15 +185,15 @@ export default {
         axios
           .delete(url)
           .then(() => this.$emit("change"))
-          .catch((err) => console.log(err.response));
+          .catch((err) => console.error(err));
       }
     },
     handleQuestionEdited() {
       this.$emit("change");
       this.showEdit = false;
     },
-    handleToggleOpenQuestion($event) {
-      const shouldOpen = $event.target.checked;
+    handleToggleOpenQuestion(event) {
+      const shouldOpen = event.target.checked;
       const chimeId = this.folder.chime_id;
       const folderId = this.folder.id;
       const questionId = this.question.id;

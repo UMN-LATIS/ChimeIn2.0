@@ -15,7 +15,9 @@
 
 <script>
 export default {
+  // eslint-disable-next-line vue/prop-name-casing, vue/require-prop-types
   props: ["question_responses"],
+  emits: ["update:question_responses"],
   data: function () {
     return {
       hideWordcloud: this.question_responses.hideWordcloud,

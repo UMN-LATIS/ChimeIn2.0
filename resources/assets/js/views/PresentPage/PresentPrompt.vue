@@ -1,10 +1,11 @@
 <template>
   <div class="present-prompt questionContent row">
     <div v-if="question" class="col">
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <h1 v-html="question.text"></h1>
       <component
-        v-if="hasSpecializedQuestionDisplay(questionType)"
         :is="`${questionType}_display`"
+        v-if="hasSpecializedQuestionDisplay(questionType)"
         :question="question"
       />
     </div>
@@ -28,7 +29,10 @@ export default {
     heatmap_response_display: HeatmapResponseDisplay,
     text_heatmap_response_display: TextHeatmapResponseDisplay,
   },
-  props: ["question", "session"],
+  props: {
+    question: { type: Object, required: true },
+    session: { type: Object, default: null },
+  },
   computed: {
     questionType() {
       return this.question.question_info.question_type;

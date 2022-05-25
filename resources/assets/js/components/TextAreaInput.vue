@@ -12,8 +12,8 @@
       :id="name"
       v-bind="$attrs"
       class="form-control"
-      :value="value"
-      @input="$emit('input', $event.target.value)"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
     />
   </div>
 </template>
@@ -22,9 +22,10 @@ export default {
   props: {
     name: { type: String, required: true },
     label: { type: String, required: true },
-    value: { type: String, default: "" },
+    modelValue: { type: String, default: "" },
     visuallyHideLabel: { type: Boolean, default: false },
   },
+  emits: ["update:modelValue"],
 };
 </script>
 

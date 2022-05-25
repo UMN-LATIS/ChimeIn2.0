@@ -50,7 +50,9 @@
 import get from "lodash/get";
 
 export default {
+  // eslint-disable-next-line vue/require-prop-types
   props: ["question", "response", "disabled"],
+  emits: ["recordresponse"],
   data() {
     return {
       response_text: "",

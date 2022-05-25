@@ -8,6 +8,7 @@ export default {
   props: {
     color: {
       type: String,
+      default: "secondary",
     },
     solid: {
       type: Boolean,

@@ -17,6 +17,39 @@
   </label>
 </template>
 
+<script>
+export default {
+  name: "JumboRadio",
+  props: {
+    img: {
+      type: Object,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    value: {
+      type: String,
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: ["change"],
+};
+</script>
+
 <style lang="scss">
 .jumbo-radio {
   padding: 2rem;
@@ -60,21 +93,3 @@
   margin: 0;
 }
 </style>
-
-<script>
-export default {
-  name: "JumboRadio",
-  props: {
-    img: Object,
-    title: String,
-    description: String,
-    name: {
-      type: String,
-      required: true,
-    },
-    value: String,
-    isActive: Boolean,
-  },
-  event: "change",
-};
-</script>

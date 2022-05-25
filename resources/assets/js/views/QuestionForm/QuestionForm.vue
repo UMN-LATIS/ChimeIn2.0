@@ -1,5 +1,5 @@
 <template>
-  <Modal :show="show" @close="close">
+  <Modal :show="show" class="v-editor" @close="close">
     <div class="modal-header" data-cy="add-question-form">
       <h3>Add a Question</h3>
     </div>
@@ -10,13 +10,13 @@
         </div>
         <div class="col-sm-9">
           <div v-if="folders" class="form-group">
-            <v-select
+            <VSelect
               v-model="folder_id"
               :options="folders"
               label="name"
               :reduce="(folder) => folder.id"
               :clearable="false"
-            ></v-select>
+            ></VSelect>
           </div>
         </div>
         <div class="col-sm-3">
@@ -24,13 +24,13 @@
         </div>
         <div class="col-sm-9">
           <div class="form-group">
-            <v-select
+            <VSelect
               v-model="question_type"
               data-cy="question-type"
               :options="question_types"
               :reduce="(question_type) => question_type.id"
               :clearable="false"
-            ></v-select>
+            ></VSelect>
           </div>
         </div>
       </div>
@@ -62,62 +62,43 @@
         </div>
       </div>
       <hr />
-      <div class="row">
-        <div class="col">
-          <vue-editor
-            v-model="question_text"
-            data-cy="question-editor"
-            placeholder="Question Text"
-            :editor-toolbar="toolbar"
-            :editor-options="editorOptions"
-            :use-custom-image-handler="true"
-            @image-added="handle_image_added"
-          >
-          </vue-editor>
-        </div>
-      </div>
+      <VEditor
+        v-model="question_text"
+        data-cy="question-editor"
+        placeholder="Question Text"
+        :imageUploadUrl="`/api/chime/${folder.chime_id}/image`"
+        :options="editorOptions"
+      />
 
       <component
-        v-if="question_type !== 'image_response'"
         :is="question_type + '_response'"
-        :question_responses.sync="question_responses"
+        v-if="question_type !== 'image_response'"
+        v-model:question_responses="question_responses"
         :chime_id="folder.chime_id"
       ></component>
     </div>
-    <div class="modal-footer">
-      <div class="mr-auto">
+    <footer class="question-form__footer">
+      <div class="question-form__footer-col">
         <button class="btn btn-danger" @click="reset">Reset Question</button>
       </div>
-      <div class="">
+      <div class="question-form__footer-col">
         <button class="btn btn-secondary" @click="close">Cancel</button>
         <button
           class="btn btn-primary"
-          @click="savePost"
           :disabled="!question_text.length"
+          @click="savePost"
         >
           Save
         </button>
       </div>
-    </div>
+    </footer>
   </Modal>
 </template>
-
-<style scoped>
-.deleteIcon {
-  vertical-align: middle !important;
-}
-
-.choiceRow {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-</style>
 
 <script>
 import katex from "katex";
 window.katex = katex;
 
-import { VueEditor, Quill } from "vue2-editor";
 import MultipleChoiceQuestionOptions from "./MultipleChoiceQuestionOptions.vue";
 import SliderResponseQuestionOptions from "./SliderResponseQuestionOptions.vue";
 import FreeResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
@@ -125,44 +106,23 @@ import TextHeatmapResponseQuestionOptions from "./TextHeatmapResponseQuestionOpt
 import HeatmapResponseQuestionOptions from "./HeatmapResponseQuestionOptions.vue";
 import NoResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
 import Modal from "../../components/Modal.vue";
-
-import VueSelect from "vue-select";
-
-const Embed = Quill.import("blots/embed");
-
-class ImageBlot extends Embed {
-  static create(value) {
-    let node = super.create();
-    node.setAttribute("src", value.url);
-    node.setAttribute("class", "img-fluid");
-    return node;
-  }
-
-  static value(node) {
-    return {
-      url: node.getAttribute("url"),
-    };
-  }
-}
-
-ImageBlot.blotName = "image";
-ImageBlot.tagName = "img";
-
-Quill.register(ImageBlot);
+import VSelect from "../../components/VSelect.vue";
+import VEditor from "../../components/VEditor.vue";
 
 export default {
   components: {
-    VueEditor,
+    VEditor,
+    VSelect,
     multiple_choice_response: MultipleChoiceQuestionOptions,
     slider_response_response: SliderResponseQuestionOptions,
     free_response_response: FreeResponseQuestionOptions,
     text_heatmap_response_response: TextHeatmapResponseQuestionOptions,
     heatmap_response_response: HeatmapResponseQuestionOptions,
     no_response_response: NoResponseQuestionOptions,
-    "v-select": VueSelect,
     Modal,
   },
   props: ["question", "show", "folder", "controlType"],
+  emits: ["close", "edited"],
   data: function () {
     return {
       folders: null,
@@ -202,27 +162,6 @@ export default {
           id: "no_response",
           label: "No Response (placeholder)",
         },
-      ],
-      toolbar: [
-        ["bold", "italic", "underline", "align"],
-        [
-          {
-            list: "ordered",
-          },
-          {
-            list: "bullet",
-          },
-        ],
-        [
-          {
-            script: "sub",
-          },
-          {
-            script: "super",
-          },
-          "formula",
-        ],
-        ["link", "image"],
       ],
       editorOptions: {
         bounds: ".modal-body",
@@ -319,8 +258,7 @@ export default {
       } else {
         axios
           .post(url, responseBlock)
-          .then((res) => {
-            console.log(res);
+          .then(() => {
             this.close();
           })
           .catch((err) => {
@@ -332,27 +270,31 @@ export default {
           });
       }
     },
-    handle_image_added: function (file, editor, cursor, reset) {
-      console.log("file:", file);
-      let form_data = new FormData();
-      form_data.append("image", file);
-
-      axios
-        .post("/api/chime/" + this.folder.chime_id + "/image", form_data)
-        .then((res) => {
-          editor.insertEmbed(cursor, "image", {
-            url: "/storage/" + res.data.image,
-          });
-          reset();
-        })
-        .catch((err) => {
-          this.$store.commit(
-            "message",
-            "Could not store this image. Please contact support at latistecharch@umn.edu. The full error was: " +
-              err.response
-          );
-        });
-    },
   },
 };
 </script>
+
+<style scoped>
+.deleteIcon {
+  vertical-align: middle !important;
+}
+
+.choiceRow {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.question-form__footer {
+  margin-top: 2rem;
+  border-top: 1px solid #ccc;
+  padding-top: 1.25rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.question-form__footer-col {
+  display: flex;
+  gap: 0.5rem;
+}
+</style>
