@@ -3374,12 +3374,14 @@ compression@^1.7.4:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-compromise@^11.14.3:
-  version "11.14.3"
-  resolved "https://registry.yarnpkg.com/compromise/-/compromise-11.14.3.tgz#71c8dbf096dff3d4e8046cd54ff73ee1bc249fc9"
-  integrity sha512-d+DA2l/M6l/Af9a2xXh3QBVQUqZvwPk2JamaCKJwPxO8VI3HvSeYK1ICAXI72FgXbx12mAkTucauhxol07k0/A==
+compromise@^14.1.2:
+  version "14.1.2"
+  resolved "https://registry.yarnpkg.com/compromise/-/compromise-14.1.2.tgz#d03287ae637756976a5b9ab628ce43262a10319b"
+  integrity sha512-GGoe+dUqnTfVvvY+UMI6cfdT/kAbX+HNcJlNYSY5tO/dxVUlJFdWYTiIDbxVu5AFOdP6NhQ1xo21xubgwllo4g==
   dependencies:
-    efrt-unpack "2.2.0"
+    efrt "2.6.0"
+    grad-school "0.0.4"
+    suffix-thumb "4.0.2"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -4096,10 +4098,10 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
-efrt-unpack@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/efrt-unpack/-/efrt-unpack-2.2.0.tgz#b05dbec0fb8cb346a27840e00c969df9c72fee52"
-  integrity sha512-9xUSSj7qcUxz+0r4X3+bwUNttEfGfK5AH+LVa1aTpqdAfrN5VhROYCfcF+up4hp5OL7IUKcZJJrzAGipQRDoiQ==
+efrt@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/efrt/-/efrt-2.6.0.tgz#27854df4b0f596bf7b4444b594a1a58cfad421ca"
+  integrity sha512-uVeV82e9c/n/8/QyWVbbt4jvvbVOvgYwnKE59KpwJ1DD7AGXWytU9v32v5SuvxKNl9V9JaudsMPtztJNY+Batg==
 
 electron-to-chromium@^1.4.118:
   version "1.4.131"
@@ -5071,6 +5073,11 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2, 
   version "4.2.9"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.9.tgz#041b05df45755e587a24942279b9d113146e1c96"
   integrity sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==
+
+grad-school@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/grad-school/-/grad-school-0.0.4.tgz#c0d478f2fbfc5601b5061a4859c054cb6a8aaa04"
+  integrity sha512-wIaLSmqqMNiNJGMUq45jokvb+pTW0xe52k1+iY5aQgGNVM9xf1OpWuIDqHxxSqlRf/nqt0D/NIpj61+2z87q+g==
 
 growly@^1.3.0:
   version "1.3.0"
@@ -8723,6 +8730,11 @@ stylehacks@^5.1.0:
   dependencies:
     browserslist "^4.16.6"
     postcss-selector-parser "^6.0.4"
+
+suffix-thumb@4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/suffix-thumb/-/suffix-thumb-4.0.2.tgz#9303c1be8252bf79d9c57e5737d7d849d1f6abc9"
+  integrity sha512-CCvCAr7JyeQoO+/lyq3P2foZI/xJz5kpG3L6kg2CaOf9K2/gaM9ixy/JTuRwjEK38l306zE7vl3JoOZYmLQLlA==
 
 supports-color@^2.0.0:
   version "2.0.0"

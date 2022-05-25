@@ -78,7 +78,7 @@
     "chart.js": "^3.7.1",
     "chartjs-chart-wordcloud": "^3.7.1",
     "color": "^4.2.3",
-    "compromise": "^11.14.3",
+    "compromise": "^14.1.2",
     "difflib": "^0.2.4",
     "dotenv": "^16.0.1",
     "font-awesome": "^4.7.0",
