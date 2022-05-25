@@ -54,5 +54,5 @@ export default function getBaseFontSize({
   const baseFontSize = Math.floor(Math.sqrt(bSquared));
 
   // cap the base font size
-  return Math.min(baseFontSize, 64);
+  return Math.min(baseFontSize, 32);
 }
