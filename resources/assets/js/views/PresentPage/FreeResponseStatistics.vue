@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
-import * as nlp from "compromise";
+import nlp from "compromise";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
 
 import type { Question, Response, WordFrequencyLookup } from "../../types";
