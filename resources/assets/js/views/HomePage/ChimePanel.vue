@@ -27,7 +27,7 @@
               <div class="col-sm-8">
                 <input
                   id="chime_name_input"
-                  v-model="chime_name"
+                  v-model="newChime.name"
                   class="form-control"
                   type="text"
                 />
@@ -35,13 +35,14 @@
             </div>
             <div class="row">
               <ChimeManagementOptions
-                v-model:require_login="requireLogin"
-                v-model:students_can_view="studentsCanView"
-                v-model:join_instructions="joinInstructions"
-                v-model:show_folder_title_to_participants="
-                  showFolderTitleToParticipants
+                :require_login="newChime.requireLogin"
+                :students_can_view="newChime.studentsCanView"
+                :join_instructions="newChime.joinInstructions"
+                :show_folder_title_to_participants="
+                  newChime.showFolderTitleToParticipants
                 "
                 :new_chime="true"
+                @update="handleNewChimeOptionsUpdate"
               />
             </div>
             <div class="row">
@@ -87,6 +88,14 @@ import ChimeCard from "./ChimeCard.vue";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 import pluralize from "../../common/pluralize.js";
 
+const newChimeDefaults = {
+  name: "",
+  require_login: false,
+  students_can_view: false,
+  join_instructions: true,
+  show_folder_title_to_participants: false,
+};
+
 export default {
   components: {
     ChimeCard,
@@ -96,12 +105,8 @@ export default {
   emits: ["update:chimes"],
   data() {
     return {
-      requireLogin: false,
-      studentsCanView: false,
-      joinInstructions: true,
-      showFolderTitleToParticipants: false,
+      newChime: { ...newChimeDefaults },
       showAdd: false,
-      chime_name: "",
       modalChime: null,
       isRemoveConfirmOpen: false,
     };
@@ -113,6 +118,12 @@ export default {
   },
   methods: {
     pluralize,
+    handleNewChimeOptionsUpdate(updates) {
+      this.newChime = {
+        ...this.newChime,
+        ...updates,
+      };
+    },
     handleChimeCardChange(payload) {
       this.$emit("update:chimes", payload);
     },
@@ -125,20 +136,16 @@ export default {
         : `/chimeParticipant/${chime.id}`;
     },
     create_chime() {
-      if (this.chime_name.length == 0) {
+      if (this.newChime.name.length == 0) {
         alert("You must enter a name for the Chime");
         return;
       }
+
       axios
-        .post("/api/chime", {
-          name: this.chime_name,
-          require_login: this.requireLogin,
-          students_can_view: this.studentsCanView,
-          join_instructions: this.joinInstructions,
-          show_folder_title_to_participants: this.showFolderTitleToParticipants,
-        })
+        .post("/api/chime", this.newChime)
         .then((res) => {
           this.showAdd = false;
+          this.newChime = { ...newChimeDefaults };
           this.$emit("update:chimes", res.data);
           this.$router.push({
             name: "chime",
