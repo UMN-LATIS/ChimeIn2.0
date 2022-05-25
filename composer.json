@@ -60,7 +60,7 @@
     "deployer/deployer": "^7.0",
     "filp/whoops": "~2.0",
     "fakerphp/faker": "^1.19",
-    "laracasts/cypress": "^1.4",
+    "laracasts/cypress": "^2.2",
     "laravel/sail": "^1.10",
     "mockery/mockery": "~1.0",
     "nunomaduro/collision": "^6.1",
