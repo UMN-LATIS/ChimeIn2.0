@@ -15,7 +15,7 @@
       <!-- question responses don't have an unique id, 
        we so force component update after reordering with :key prop-->
       <Draggable
-        :key="JSON.stringify(question_responses)"
+        :key="draggableKey"
         :modelValue="question_responses"
         itemKey="id"
         ghostClass="ghost"
@@ -67,7 +67,6 @@ const props = defineProps({
 });
 
 const dragging = ref(false);
-
 const emit = defineEmits(["update:question_responses"]);
 const responseChoiceItemRefs = ref([]);
 
@@ -109,15 +108,14 @@ function addChoice() {
   });
 }
 
+//increment when we want to force rerendering
+const draggableKey = ref(0);
 function handleResponseOrderChange(event) {
   if (!event.moved) return;
   const { oldIndex, newIndex } = event.moved;
   const updatedResponses = move(oldIndex, newIndex, props.question_responses);
-  console.log({
-    updatedResponses,
-    question_responses: props.question_responses,
-  });
   emit("update:question_responses", updatedResponses);
+  nextTick(() => (draggableKey.value += 1));
 }
 
 onMounted(() => {
