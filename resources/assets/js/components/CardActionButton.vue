@@ -20,9 +20,11 @@ export default {
     },
     to: {
       type: String,
+      default: null,
     },
     href: {
       type: String,
+      default: null,
     },
   },
   emits: ["click"],
