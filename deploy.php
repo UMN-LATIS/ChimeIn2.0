@@ -11,6 +11,8 @@ set('ssh_multiplexing', true);
 
 set('repository', 'https://github.com/UMN-LATIS/ChimeIn2.0.git');
 
+set('keep_releases', 5);
+
 add('shared_files', []);
 add('shared_dirs', []);
 add('writable_dirs', []);
