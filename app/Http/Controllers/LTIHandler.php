@@ -146,7 +146,7 @@ class LTIHandler extends Controller
 
 
 
-                    return view("ltiSelectionPrompt", ["lti_resource_title"=>$resource_link_title, "resource_link_pk"=>$resource_link_pk, "ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime]);
+                    return view("ltiSelectionPrompt", ["lti_resource_title"=>$resource_link_title, "resource_link_pk"=>$resource_link_pk, "ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime, "saveTarget"=>'ltisettings.update']);
                 }                
             }
         }
