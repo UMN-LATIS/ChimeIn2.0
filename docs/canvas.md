@@ -2,21 +2,11 @@
 
 ChimeIn has direct Canvas integration, which makes it easy to create and manage Chimes. In addition, ChimeIn can share completion data back to the Canvas gradebook, allowing ChimeIn responses to be used to track attendance or participation.
 
-We have two screencasts embedded in this help page - we recommend watching both (about 10 minutes total) to get prepared for using ChimeIn with Canvas.
+We have a screencast embedded in this help page, if you'd prefer to follow along that way.
 
-## Enabling ChimeIn in your Canvas Course (One Time Setup)
-
-ChimeIn needs to be enabled in your Canvas course. This needs to be done once per course. Go to the "settings" link in your Canvas course and select "apps", then click the ChimeIn icon.
-
-![Enabling ChimeIn](./addCanvas.png)
-
-Some instructions will be presented. **You'll need to copy and paste two values** - the "consumer key" and "secret key". It might be helpful to copy these to a temporary text document. Once it's been enabled, you can begin adding ChimeIn assignments.
-
-**Important**: it can take a few minutes for new apps to show up within the Canvas "External Tools" list. **Do not try to add ChimeIn a second time.**
-
-This screencast shows the process.
-
-<iframe width="100%" height="420" src="https://www.youtube.com/embed/3sAjHC3onFM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+::: tip Changes for Summer/Fall 2022
+If you've used ChimeIn with Canvas in the past, you might remember going through a step of adding ChimeIn to your course in your Canvas settings. That's no longer necessary - you can start using ChimeIn immediately.
+:::
 
 ## Adding a ChimeIn Assignment in Canvas
 
