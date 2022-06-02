@@ -186,9 +186,7 @@ class LTI13Handler extends Controller
                 $chime->save();
                 $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
 ;       
-                $explodedName = explode(" ", $chime->name);
-                $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
-                $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+                $similarChimes = $this->getSimilarChimes($chime);
 
                 // return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
                 return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime , "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
