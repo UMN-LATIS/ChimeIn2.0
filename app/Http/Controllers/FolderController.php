@@ -233,16 +233,10 @@ class FolderController extends Controller
             if(\App\Library\LTIProcessor::syncFolder($folder)) {
                 return response()->json(["success"=>"success"]);
             }
-            else {
-                return response('Failed to sync', 403);
-            }
         }
         else if($folder->lti_lineitem) {
             if(\App\Library\LTI13Processor::syncFolder($folder)) {
                 return response()->json(["success"=>"success"]);
-            }
-            else {
-                return response('Failed to sync', 403);
             }
         }
         return response('Failed to sync', 403);
