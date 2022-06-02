@@ -45,7 +45,9 @@
             @update="handleUpdateChimeOptions"
           />
           <button
-            v-if="chime.resource_link_pk"
+            v-if="
+              chime.resource_link_pk > 0 || chime.lti13_resource_link_id > 0
+            "
             class="btn btn-outline-success btn-sm align-items-center d-flex"
             @click="forceSyncGrades"
           >

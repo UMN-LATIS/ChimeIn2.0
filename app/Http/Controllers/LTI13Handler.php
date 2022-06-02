@@ -71,15 +71,17 @@ class LTI13Handler extends Controller
             <p>' . $e->getMessage() . "</p>";
             return;
         }
-
+        session(['lti_launch' => true]);
         $launchData = $launch->getLaunchData();
-        
+
         $lisData = $launchData["https://purl.imsglobal.org/spec/lti/claim/lis"];
         $rolesData = $launchData["https://purl.imsglobal.org/spec/lti/claim/roles"];
         $contextData = $launchData["https://purl.imsglobal.org/spec/lti/claim/context"];
         $endpointData = $launchData["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
         $resourceData = $launchData["https://purl.imsglobal.org/spec/lti/claim/resource_link"];
+        $presentationData = $launchData["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"];
 
+        $returnURL = explode("external_content", $presentationData["return_url"])[0];
         $resourceLinks = LTI13ResourceLink::where("resource_link", $resourceData["id"])->get();    
         if($resourceLinks->count() > 0) {
             $resourceLink = $resourceLinks->first();
@@ -133,6 +135,7 @@ class LTI13Handler extends Controller
             if($chime && $chime->lti_setup_complete) {
                 // update our resourceLink in case this is a migrated lti1.1
                 $chime->lti13_resource_link_id = $resourceLink->id;
+                $chime->lti_return_url = $returnURL;
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 $chime->save();
 
@@ -177,6 +180,7 @@ class LTI13Handler extends Controller
                 $chime = new \App\Chime;
                 $chime->lti_course_title = $contextData["title"];
                 $chime->lti_course_id = $contextData["id"];
+                $chime->lti_return_url = $returnURL;
                 $chime->lti13_resource_link_id = $resourceLink->id;
                 $chime->name = $contextData["title"];
                 $chime->require_login = true;

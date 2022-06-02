@@ -102,7 +102,7 @@
           </div>
           <div class="ml-auto col-12 btn-toolbar justify-content-end">
             <button
-              v-if="folder.resource_link_pk > 0"
+              v-if="folder.resource_link_pk > 0 || folder.lti_lineitem"
               class="mr-2 btn btn-success btn-sm align-items-center d-flex"
               @click="sync"
             >

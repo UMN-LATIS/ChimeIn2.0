@@ -229,11 +229,23 @@ class FolderController extends Controller
     }
 
     public function forceSync(Request $req, $chime, $folder) {
-        if(\App\Library\LTIProcessor::syncFolder($folder)) {
-            return response()->json(["success"=>"success"]);
+        if($folder->resource_link_pk > 0) {
+            if(\App\Library\LTIProcessor::syncFolder($folder)) {
+                return response()->json(["success"=>"success"]);
+            }
+            else {
+                return response('Failed to sync', 403);
+            }
         }
-        else {
-            return response('Failed to sync', 403);
+        else if($folder->lti_lineitem) {
+            if(\App\Library\LTI13Processor::syncFolder($folder)) {
+                return response()->json(["success"=>"success"]);
+            }
+            else {
+                return response('Failed to sync', 403);
+            }
         }
+        return response('Failed to sync', 403);
+        
     }
 }
