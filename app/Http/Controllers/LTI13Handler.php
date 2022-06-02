@@ -243,15 +243,48 @@ class LTI13Handler extends Controller
         $chime->lti_setup_complete = true;
         $chime->save();
         $resourceLink = $chime->lti13_resource_link;
-        
-        if($chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
-            $folder = new \App\Folder;
-            $folder->chime()->associate($chime);
-            $folder->name = $req->get("lti_resource_title");
-            $folder->lti_lineitem = $resourceLink->endpoint["lineitem"];
-            $folder->save();
-            return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+        $resource_link_title  = $req->get("lti_resource_title");
+        $lineitem = $resourceLink->endpoint["lineitem"];
+        if($req->get("import_chime") && is_numeric($req->get("import_chime"))) {
+            $oldChime = \App\Chime::find($req->get("import_chime"));
+            $chime->lti_grade_mode = $oldChime->lti_grade_mode;
+            $chime->students_can_view = $oldChime->students_can_view;
+            $chime->join_instructions= $oldChime->join_instructions;
+            $chime->only_correct_answers_lti= $oldChime->only_correct_answers_lti;
+ 
+            foreach($oldChime->folders as $sourceFolder) {
+                $folder = new \App\Folder;
+                $folder->chime()->associate($chime);
+                $folder->name = $sourceFolder->name;
+                $folder->order = $sourceFolder->order;
+                if($folder->name == $resource_link_title && $chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
+                    $folder->lti_lineitem = $lineitem;
+                    $targetFolder = $folder;
+                }
+                
+                $folder->save();
+                foreach($sourceFolder->questions as $question) {
+                    $newQuestion = $question->replicate();
+                    $newQuestion->folder()->associate($folder);
+                    $newQuestion->current_session_id = null;
+                    $newQuestion->save();
+                }
+
+            }
+            $chime->save();
+
         }
+        else {
+            if($chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
+                $folder = new \App\Folder;
+                $folder->chime()->associate($chime);
+                $folder->name = $req->get("lti_resource_title");
+                $folder->lti_lineitem = $resourceLink->endpoint["lineitem"];
+                $folder->save();
+                return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
+            }
+        }
+       
 
         return \Redirect::to("/chime/" . $chime->id);
         
