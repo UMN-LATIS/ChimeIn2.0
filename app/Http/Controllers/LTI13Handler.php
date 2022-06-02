@@ -177,7 +177,7 @@ class LTI13Handler extends Controller
                 $similarChimes = $this->getSimilarChimes($chime);
 
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
-                return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"], "saveTarget"=>'ltisettings.update']);
+                return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"], "saveTarget"=>'lti13settings.update']);
             }
             else {
                 $chime = new \App\Chime;
