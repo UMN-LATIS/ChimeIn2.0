@@ -71,7 +71,7 @@ class LTI13Handler extends Controller
             <p>' . $e->getMessage() . "</p>";
             return;
         }
-
+        session(['lti_launch' => true]);
         $launchData = $launch->getLaunchData();
 
         $lisData = $launchData["https://purl.imsglobal.org/spec/lti/claim/lis"];

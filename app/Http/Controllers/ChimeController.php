@@ -710,11 +710,22 @@ class ChimeController extends Controller
     }
 
     public function forceSync(Request $req, $chime) {
-        if(\App\Library\LTIProcessor::syncChime($chime)) {
-            return response()->json(["success"=>"success"]);
+        if($chime->resource_link_pk > 0) {
+            if(\App\Library\LTIProcessor::syncChime($chime)) {
+                return response()->json(["success"=>"success"]);
+            }
+            else {
+                return response('Failed to sync', 500);
+            }
         }
-        else {
-            return response('Failed to sync', 500);
+        else if($chime->lti13_resource_link_id > 0) {
+            if(\App\Library\LTIProcessor::syncChime($chime)) {
+             return response()->json(["success"=>"success"]);
+            }
+            else {
+                return response('Failed to sync', 500);
+            }
         }
+        return response('Failed to sync', 500);
     }
 }
