@@ -82,6 +82,11 @@ class LTI13Handler extends Controller
         $presentationData = $launchData["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"];
 
         $returnURL = explode("external_content", $presentationData["return_url"])[0];
+        // LTI1.3 always passes us "instructure.com" domained urls. We don't really want that because it 
+        // creates cookie issues potentially if users access ChimeIn in an iframe from a umn.instructure url.
+        // This isn't a great universal fix obviously - the real fix is a change in the U's Canvas config
+        $returnURL = str_replace("umn.instructure.com", "canvas.umn.edu", $returnURL);
+
         $resourceLinks = LTI13ResourceLink::where("resource_link", $resourceData["id"])->get();    
         if($resourceLinks->count() > 0) {
             $resourceLink = $resourceLinks->first();
