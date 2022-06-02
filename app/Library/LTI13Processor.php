@@ -72,7 +72,8 @@ class LTI13Processor {
 		->havingRaw("max(`responses`.`created_at`) > ?", [$oldestResponse])
 		->havingRaw("max(`responses`.`created_at`) < ?", [$newestResponse])->get()->unique()->pluck("id");
 		$folders = \App\Folder::find($folderIds);
-        foreach($folders as $folder) {
+        echo "Syncing LTI 1.3 folder\n";
+		foreach($folders as $folder) {
             \App\Library\LTI13Processor::syncFolder($folder);
         }
 
@@ -91,6 +92,7 @@ class LTI13Processor {
 		->havingRaw("max(`responses`.`created_at`) < ?", [$newestResponse])->get()->unique()->pluck("id");
 		
 		$chimes = \App\Chime::find($chimeIds);
+		echo "Syncing LTI 1.3 Chime\n";
         foreach($chimes as $chime) {
             \App\Library\LTI13Processor::syncChime($chime);
         }

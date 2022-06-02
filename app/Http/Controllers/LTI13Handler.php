@@ -71,14 +71,21 @@ class LTI13Handler extends Controller
             <p>' . $e->getMessage() . "</p>";
             return;
         }
-
+        session(['lti_launch' => true]);
         $launchData = $launch->getLaunchData();
-        
+
         $lisData = $launchData["https://purl.imsglobal.org/spec/lti/claim/lis"];
         $rolesData = $launchData["https://purl.imsglobal.org/spec/lti/claim/roles"];
         $contextData = $launchData["https://purl.imsglobal.org/spec/lti/claim/context"];
         $endpointData = $launchData["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
         $resourceData = $launchData["https://purl.imsglobal.org/spec/lti/claim/resource_link"];
+        $presentationData = $launchData["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"];
+
+        $returnURL = explode("external_content", $presentationData["return_url"])[0];
+        // LTI1.3 always passes us "instructure.com" domained urls. We don't really want that because it 
+        // creates cookie issues potentially if users access ChimeIn in an iframe from a umn.instructure url.
+        // This isn't a great universal fix obviously - the real fix is a change in the U's Canvas config
+        $returnURL = str_replace("umn.instructure.com", "canvas.umn.edu", $returnURL);
 
         $resourceLinks = LTI13ResourceLink::where("resource_link", $resourceData["id"])->get();    
         if($resourceLinks->count() > 0) {
@@ -133,6 +140,7 @@ class LTI13Handler extends Controller
             if($chime && $chime->lti_setup_complete) {
                 // update our resourceLink in case this is a migrated lti1.1
                 $chime->lti13_resource_link_id = $resourceLink->id;
+                $chime->lti_return_url = $returnURL;
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 $chime->save();
 
@@ -166,9 +174,7 @@ class LTI13Handler extends Controller
                 $chime->lti13_resource_link_id = $resourceLink->id;
                 $chime->save();
 
-                $explodedName = explode(" ", $chime->name);
-                $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
-                $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+                $similarChimes = $this->getSimilarChimes($chime);
 
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
@@ -177,6 +183,7 @@ class LTI13Handler extends Controller
                 $chime = new \App\Chime;
                 $chime->lti_course_title = $contextData["title"];
                 $chime->lti_course_id = $contextData["id"];
+                $chime->lti_return_url = $returnURL;
                 $chime->lti13_resource_link_id = $resourceLink->id;
                 $chime->name = $contextData["title"];
                 $chime->require_login = true;
@@ -184,9 +191,7 @@ class LTI13Handler extends Controller
                 $chime->save();
                 $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
 ;       
-                $explodedName = explode(" ", $chime->name);
-                $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
-                $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+                $similarChimes = $this->getSimilarChimes($chime);
 
                 // return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
                 return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime , "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
@@ -219,7 +224,7 @@ class LTI13Handler extends Controller
                     }
                 }
                 $response = \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
-                if(isset($endpointData["lineitem"]) && !$folder && !$courseHasNonLTIFolders) {
+                if(isset($endpointData["lineitem"]) && !$folder && !$courseHasNonLTIFolders && $chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
                     $response = $response->with('lti_error', "There are no questions created for this assignment, so we're showing you all of the open questions for this course. This could be because your instructor hasn't added any questions yet. Check with them if you're not sure.");
                 }
                 return $response;
@@ -351,5 +356,15 @@ class LTI13Handler extends Controller
             $lisData["person_sourcedid"] = 1111112;
         }
         return $lisData;
+    }
+
+    private function getSimilarChimes($chime) {
+        $explodedName = explode(" ", $chime->name);
+        $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
+        $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->where("chimes.id", "!=", $chime->id)->get();
+        if($similarChimes->count() == 0) {
+            return false;
+        }
+        return $similarChimes;
     }
 }
