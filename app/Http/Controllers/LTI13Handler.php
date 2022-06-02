@@ -219,7 +219,7 @@ class LTI13Handler extends Controller
                     }
                 }
                 $response = \Redirect::to("/chimeParticipant/" . $chime->id . "/" . $folderId);
-                if(isset($endpointData["lineitem"]) && !$folder && !$courseHasNonLTIFolders) {
+                if(isset($endpointData["lineitem"]) && !$folder && !$courseHasNonLTIFolders && $chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
                     $response = $response->with('lti_error', "There are no questions created for this assignment, so we're showing you all of the open questions for this course. This could be because your instructor hasn't added any questions yet. Check with them if you're not sure.");
                 }
                 return $response;
