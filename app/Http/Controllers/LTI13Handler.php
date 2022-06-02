@@ -169,9 +169,7 @@ class LTI13Handler extends Controller
                 $chime->lti13_resource_link_id = $resourceLink->id;
                 $chime->save();
 
-                $explodedName = explode(" ", $chime->name);
-                $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
-                $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->get();
+                $similarChimes = $this->getSimilarChimes($chime);
 
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"]]);
@@ -355,5 +353,15 @@ class LTI13Handler extends Controller
             $lisData["person_sourcedid"] = 1111112;
         }
         return $lisData;
+    }
+
+    private function getSimilarChimes($chime) {
+        $explodedName = explode(" ", $chime->name);
+        $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
+        $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->where("chimes.id", "!=", $chime->id)->get();
+        if($similarChimes->count() == 0) {
+            return false;
+        }
+        return $similarChimes;
     }
 }
