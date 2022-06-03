@@ -159,7 +159,7 @@ class LTI13Processor {
 			
 			foreach($questions as $question) {
 			
-				$globalUsers = LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers);
+				$globalUsers = LTI13Processor::getPointsForQuestion($question, $chime, $globalUsers, "1.3");
 			}
 		
 		}
