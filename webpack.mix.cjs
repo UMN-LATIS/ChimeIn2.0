@@ -13,7 +13,13 @@ const mix = require("laravel-mix");
 
 mix
   .ts("resources/assets/js/app.ts", "public/js")
-  .vue()
+  .vue({
+    options: {
+      compilerOptions: {
+        whitespace: "preserve",
+      },
+    },
+  })
   .sass("resources/assets/sass/app.scss", "public/css")
   .sourceMaps(true, "source-map");
 
