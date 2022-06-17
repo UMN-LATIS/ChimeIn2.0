@@ -488,7 +488,7 @@ class ChimeController extends Controller
 
     public function exportChime(Chime $chime, Request $req) {
         $user = $req->user();
-
+        ini_set('max_execution_time', 300);
         $loadedChime = (
             $user
             ->chimes()

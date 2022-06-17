@@ -17,9 +17,9 @@ use \App\Library\LTI13Processor;
 class LTI13Handler extends Controller
 {
 
-    private $staffRoles = ["http://purl.imsglobal.org/vocab/lis/v2/institution/person#Faculty",
-    "http://purl.imsglobal.org/vocab/lis/v2/institution/person#Staff",
-    "http://purl.imsglobal.org/vocab/lis/v2/institution/person#Instructor"];
+    private $staffRoles = [
+    "http://purl.imsglobal.org/vocab/lis/v2/membership#ContentDeveloper",
+    "http://purl.imsglobal.org/vocab/lis/v2/membership#Instructor"];
 
     public function __construct() {
         if(app()->getProvider('debugbar')) {
@@ -86,7 +86,7 @@ class LTI13Handler extends Controller
         // creates cookie issues potentially if users access ChimeIn in an iframe from a umn.instructure url.
         // This isn't a great universal fix obviously - the real fix is a change in the U's Canvas config
         $returnURL = str_replace("umn.instructure.com", "canvas.umn.edu", $returnURL);
-
+        
         $resourceLinks = LTI13ResourceLink::where("resource_link", $resourceData["id"])->get();    
         if($resourceLinks->count() > 0) {
             $resourceLink = $resourceLinks->first();
@@ -203,6 +203,9 @@ class LTI13Handler extends Controller
                     Auth::user()->chimes()->attach($chime, [
                         'permission_number' => 100
                     ]);
+                }
+                else {
+                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 100]]);
                 }
 
                 $folderId = null;
