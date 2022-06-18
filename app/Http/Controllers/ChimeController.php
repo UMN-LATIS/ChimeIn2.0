@@ -716,7 +716,7 @@ class ChimeController extends Controller
             }
         }
         else if($chime->lti13_resource_link_id > 0) {
-            if(\App\Library\LTIProcessor::syncChime($chime)) {
+            if(\App\Library\LTI13Processor::syncChime($chime)) {
              return response()->json(["success"=>"success"]);
             }
         }
