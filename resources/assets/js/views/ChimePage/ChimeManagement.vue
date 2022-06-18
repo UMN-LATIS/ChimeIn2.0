@@ -214,16 +214,14 @@ function deleteUser(index) {
 }
 
 async function forceSyncGrades() {
-  try {
-    isForceSyncSuccessful.value = await api.forceSyncGradesWithLMS({
-      chimeId: props.chime.id,
-    });
-  } catch (err) {
+  isForceSyncSuccessful.value = await api.forceSyncGradesWithLMS({
+    chimeId: props.chime.id,
+  });
+  if (!isForceSyncSuccessful.value) {
     store.commit(
       "message",
       "Could not sync Chime. Please contact support at latistecharch@umn.edu."
     );
-    console.error(err);
   }
 }
 
