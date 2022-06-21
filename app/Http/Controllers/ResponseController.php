@@ -64,7 +64,7 @@ class ResponseController extends Controller
         
         event(new SubmitResponse($chime, $session, $response, $isEdit=true));
 
-        return response()->json($response->load("session.question"));
+        return response()->json($response->load("session.question", "session.question.folder"));
     }
 
     public function deleteResponse(Chime $chime, Folder $folder, Response $response, Request $request) {
