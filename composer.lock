@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b50acf0d432f7c0d2bcedea8e4201b71",
+    "content-hash": "f275dc17fa084d4f9442d1a8b136afb2",
     "packages": [
         {
             "name": "brick/math",
@@ -8453,16 +8453,16 @@
         },
         {
             "name": "laracasts/cypress",
-            "version": "2.2.1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laracasts/cypress.git",
-                "reference": "21e438be4896d7f70c58d177c6fb81e7661daf0f"
+                "reference": "9a9e5d25a51d2cbb410393e6a0d9883aa3304bf5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laracasts/cypress/zipball/21e438be4896d7f70c58d177c6fb81e7661daf0f",
-                "reference": "21e438be4896d7f70c58d177c6fb81e7661daf0f",
+                "url": "https://api.github.com/repos/laracasts/cypress/zipball/9a9e5d25a51d2cbb410393e6a0d9883aa3304bf5",
+                "reference": "9a9e5d25a51d2cbb410393e6a0d9883aa3304bf5",
                 "shasum": ""
             },
             "require": {
@@ -8506,9 +8506,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laracasts/cypress/issues",
-                "source": "https://github.com/laracasts/cypress/tree/2.2.1"
+                "source": "https://github.com/laracasts/cypress/tree/3.0.0"
             },
-            "time": "2022-02-15T17:52:17+00:00"
+            "time": "2022-06-27T13:49:35+00:00"
         },
         {
             "name": "laravel/sail",
