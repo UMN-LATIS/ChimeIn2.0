@@ -105,7 +105,7 @@
     "stopword": "^2.0.2",
     "vue": "^3.2.33",
     "vue-carousel": "^0.18.0",
-    "vue-chartjs": "^4.1.0",
+    "vue-chartjs": "^4.1.1",
     "vue-easy-lightbox": "^1.4.1",
     "vue-fullscreen": "^3.1.1",
     "vue-google-charts": "^0.4.0",
