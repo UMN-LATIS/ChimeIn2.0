@@ -10,6 +10,9 @@
 @import "variables";
 @import "footer";
 
+// UMN Header styles
+@import "../assets/cla-vue-template/src/index.css";
+
 .fade-enter-active,
 .fade-leave-active {
   transition: all 1s;

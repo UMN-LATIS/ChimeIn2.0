@@ -125,5 +125,8 @@
   "browserslist": [
     "defaults",
     "not IE 11"
-  ]
+  ],
+  "peerDependencies": {
+    "vue-demi": "^0.13.2"
+  }
 }

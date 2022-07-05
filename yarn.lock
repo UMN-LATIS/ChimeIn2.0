@@ -9086,6 +9086,11 @@ vue-chartjs@^4.1.1:
   resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-4.1.1.tgz#b1ffc2845e09d14cb5255305b11bd3e8df8058ab"
   integrity sha512-rKIQ3jPrjhwxjKdNJppnYxRuBSrx4QeM3nNHsfIxEqjX6QS4Jq6e6vnZBxh2MDpURDC2uvuI2N0eIt1cWXbBVA==
 
+vue-demi@^0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.13.2.tgz#f6081c2feb5b698549729a81683ce029b8da289e"
+  integrity sha512-41ukrclEbMddAyP7PvxMSYqnOSzPV6r7GNnyTSKSCNTaz19GehxmTiXyP9kwHSUv2+Dr6hHqiUiF7L1VAw2KdQ==
+
 vue-easy-lightbox@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/vue-easy-lightbox/-/vue-easy-lightbox-1.4.1.tgz#5983cd947d88de0cac78911cd13ec597fce4e5bb"
