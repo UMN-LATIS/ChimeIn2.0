@@ -21,21 +21,16 @@ use App\Http\Controllers\UsersController;
 |
 */
 
-// Home Page Routes
-// 
-// 
-
-// this might be wrong
 Route::impersonate();
 
-Route::get("/ltiSelectionPromptDemo", function() {
+Route::get("/ltiSelectionPromptDemo", function () {
     $chime = \App\Chime::first();
     $chimes = \App\Chime::all();
-    return view("ltiSelectionPrompt", ["saveTarget"=>"", "ltiLaunch"=>["similar_chimes"=>$chimes], "lti_resource_title"=>"test course", "resource_link_pk"=>"1111", "chime"=>$chime]);
+    return view("ltiSelectionPrompt", ["saveTarget" => "", "ltiLaunch" => ["similar_chimes" => $chimes], "lti_resource_title" => "test course", "resource_link_pk" => "1111", "chime" => $chime]);
 });
 
 Route::group(['middleware' => ['shibinjection']], function () {
-    
+
     Route::resource('admin/users', 'Admin\UsersController');
 
     Route::get('/api/users/self', 'UsersController@getCurrentUser');
@@ -70,7 +65,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
 
     Route::patch('/api/chime/{chime}', 'ChimeController@update');
     Route::put('/api/chime/{chime}', 'ChimeController@updateFolders');
-    
+
 
     Route::post('/api/chime/{chime}/export/', 'ChimeController@exportChime');
 
@@ -83,8 +78,6 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::put('/api/chime/{chime}/folder/{folder}/question/stopAll', 'PresentController@stopAllQuestions');
 
     // Folder Routes (chime page subroutes)
-    // TODO: Change `includeQuestions to a query string param 
-    // `include_questions=true`
     Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
     Route::post('/api/chime/{chime}/folder/{folder}/import', 'FolderController@importQuestions');
@@ -93,7 +86,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
     Route::delete('/api/chime/{chime}/folder/{folder}/question/{question}/responses', 'FolderController@resetQuestion');
-    
+
     Route::delete('/api/chime/{chime}/folder/{folder}/response/{response}', 'ResponseController@deleteResponse');
 
     // Presentation Routes
@@ -102,14 +95,12 @@ Route::group(['middleware' => ['shibinjection']], function () {
 
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
-    
-    
 });
-    // Auth::routes();
+// Auth::routes();
 
 
 
-if (config('shibboleth.emulate_idp') ) {
+if (config('shibboleth.emulate_idp')) {
     Route::name('login')->get("login", '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@emulateLogin');
     Route::group(['middleware' => 'web'], function () {
         Route::get('emulated/idp', 'StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@emulateIdp');
@@ -133,4 +124,4 @@ Route::post('lti13/login', 'LTI13Handler@login');
 Route::post('lti13/launch', 'LTI13Handler@launch');
 Route::get('lti13/config', 'LTI13Handler@config');
 Route::put('lti13/saveLTISettings/{chime}', 'LTI13Handler@saveLTISettings')->name("ltisettings13.update");
-Route::any('{all}','HomeController@index')->where(['all' => '.*']);
+Route::any('{all}', 'HomeController@index')->where(['all' => '.*']);
