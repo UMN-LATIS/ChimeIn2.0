@@ -5,7 +5,9 @@
         <router-link to="/">ChimeIn</router-link>
       </template>
       <template #navbar-links>
-        <NavbarItem class="active"><a href="/">Home</a></NavbarItem>
+        <slot name="navbar-links">
+          <NavbarItem class="active"><a href="/">Home</a></NavbarItem>
+        </slot>
       </template>
       <template #navbar-links-right>
         <NavbarItem v-if="!user">
@@ -37,6 +39,6 @@ defineProps<{
 </script>
 <style scoped>
 .default-layout__main {
-  padding-bottom: 2rem;
+  padding-bottom: 4rem;
 }
 </style>
