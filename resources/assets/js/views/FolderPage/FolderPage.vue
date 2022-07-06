@@ -1,7 +1,10 @@
 <template>
   <DefaultLayout :user="user">
-    <div>
-      <ErrorDialog />
+    <template #navbar-left>
+      <Back :to="`/chime/${chimeId}`">Back to Chime</Back>
+    </template>
+    <ErrorDialog />
+    <div class="container-fluid">
       <div
         v-if="!hideOpenAlert && otherFolderSessions.length > 0"
         class="alert alert-warning"
@@ -15,9 +18,9 @@
         >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
       </div>
       <Spinner v-if="!isPageReady" />
-      <div v-if="isPageReady && !isParticipantView" class="container">
+      <div v-if="isPageReady && !isParticipantView">
         <div class="row mt-4">
-          <div class="col-4 align-items-center d-flex">
+          <div class="col-md-4 align-items-center d-flex">
             <h1 class="h4">{{ folder.name }}</h1>
             <!-- <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip> -->
           </div>
@@ -229,6 +232,7 @@ import { defineAsyncComponent, ref, computed, watch, onMounted } from "vue";
 import Draggable from "vuedraggable";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import QuestionCard from "./QuestionCard.vue";
+import Back from "../../components/Back.vue";
 import Spinner from "../../components/Spinner.vue";
 import pluralize from "../../common/pluralize.js";
 import useQuestionListener from "../../hooks/useQuestionListener";

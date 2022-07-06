@@ -146,3 +146,12 @@ img {
   margin: auto;
   padding: 0 1rem;
 }
+
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  min-height: 100%;
+}

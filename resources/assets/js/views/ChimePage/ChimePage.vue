@@ -1,8 +1,11 @@
 <template>
-  <DefaultLayout :user="user">
-    <div class="chime">
+  <DefaultLayout :user="user" backTo="/" backLabel="Back to Home">
+    <template #navbar-left>
+      <Back :to="`/`">Back to Home</Back>
+    </template>
+    <div class="chime container-fluid mt-4">
       <ErrorDialog />
-      <div class="container">
+      <div>
         <header class="chime__header">
           <Chip
             v-if="isCanvasChime"
@@ -118,6 +121,7 @@ import {
 } from "../../helpers/chimeSelectors";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import * as api from "../../common/api";
+import Back from "../../components/Back.vue";
 
 export default {
   components: {
@@ -130,8 +134,19 @@ export default {
     FolderCard,
     Chip,
     DefaultLayout,
+    Back,
   },
-  props: ["user", "chimeId"],
+  props: {
+    user: {
+      type: Object,
+      required: false,
+      default: null,
+    },
+    chimeId: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       isReady: false,
@@ -251,7 +266,7 @@ export default {
   margin: 0 0 0.25rem 0;
 }
 .chime__header {
-  margin: 2rem 0 2rem;
+  margin-bottom: 2rem;
 }
 .chime-header__canvas-chip {
   margin-bottom: 0.5rem;

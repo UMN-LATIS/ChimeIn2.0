@@ -1,8 +1,8 @@
 <template>
   <DefaultLayout>
-    <div class="container">
-      <div class="col-sm-12">
-        <h1 class="user-greeting my-3">
+    <div class="container-fluid pt-4">
+      <div>
+        <h1 class="user-greeting my-4">
           {{ welcome }}, {{ user.guest_user ? "Guest User" : user.name }}
         </h1>
 
@@ -88,6 +88,7 @@ export default {
     ChimePanel,
     DefaultLayout,
   },
+  // eslint-disable-next-line vue/require-prop-types
   props: ["user"],
   data() {
     return {

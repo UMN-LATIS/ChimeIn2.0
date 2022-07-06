@@ -1,13 +1,11 @@
 <template>
-  <div class="default-layout">
+  <div class="default-layout d-flex flex-column">
     <AppHeader>
       <template #app-link>
         <router-link to="/">ChimeIn</router-link>
       </template>
       <template #navbar-links>
-        <slot name="navbar-links">
-          <NavbarItem class="active"><a href="/">Home</a></NavbarItem>
-        </slot>
+        <slot name="navbar-left" />
       </template>
       <template #navbar-links-right>
         <NavbarItem v-if="!user">
@@ -21,7 +19,7 @@
         </NavbarItem>
       </template>
     </AppHeader>
-    <main class="default-layout__main">
+    <main class="default-layout__main flex-grow-1">
       <slot> Sorry. Nothing to see here. </slot>
     </main>
     <AppFooter />
@@ -33,11 +31,23 @@ import AppFooter from "../../cla-vue-template/src/components/AppFooter.vue";
 import NavbarItem from "../../cla-vue-template/src/components/NavbarItem.vue";
 import type { User } from "../types";
 
-defineProps<{
-  user?: User;
-}>();
+withDefaults(
+  defineProps<{
+    user?: User | null;
+    backTo?: string;
+    backLabel?: string;
+  }>(),
+  {
+    user: null,
+    backTo: "/",
+    backLabel: "Home",
+  }
+);
 </script>
 <style scoped>
+.default-layout {
+  min-height: 100%;
+}
 .default-layout__main {
   padding-bottom: 4rem;
 }

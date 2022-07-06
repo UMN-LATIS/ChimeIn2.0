@@ -1,32 +1,30 @@
 <template>
-  <div class="present-page">
-    <NavBar
-      v-if="!folder?.student_view"
-      title="Back to Folder"
-      :user="user"
-      :host="host"
-      :link="{ name: 'folder', params: { chimeId, folderId } }"
-    />
-    <ErrorDialog />
+  <DefaultLayout :user="user">
+    <template #navbar-left>
+      <Back :to="`/chime/${chimeId}/folder/${folderId}`">Back to Folder</Back>
+    </template>
+    <div class="present-page">
+      <ErrorDialog />
 
-    <Spinner v-if="!folder" />
-    <div v-if="folder && chime" class="container-fluid present-container">
-      <Fullscreen ref="fullscreenRef" @change="isFullscreen = !isFullscreen">
-        <PresentQuestion
-          v-if="currentQuestion"
-          :usersCount="usersCount"
-          :question="currentQuestion"
-          :chime="chime"
-          :folder="folder"
-          @nextQuestion="nextQuestion"
-          @previousQuestion="previousQuestion"
-          @sessionUpdated="refreshQuestions"
-          @toggle="() => fullscreenRef.toggle()"
-          @reload="refreshQuestions"
-        />
-      </Fullscreen>
+      <Spinner v-if="!folder" />
+      <div v-if="folder && chime" class="container-fluid present-container">
+        <Fullscreen ref="fullscreenRef" @change="isFullscreen = !isFullscreen">
+          <PresentQuestion
+            v-if="currentQuestion"
+            :usersCount="usersCount"
+            :question="currentQuestion"
+            :chime="chime"
+            :folder="folder"
+            @nextQuestion="nextQuestion"
+            @previousQuestion="previousQuestion"
+            @sessionUpdated="refreshQuestions"
+            @toggle="() => fullscreenRef.toggle()"
+            @reload="refreshQuestions"
+          />
+        </Fullscreen>
+      </div>
     </div>
-  </div>
+  </DefaultLayout>
 </template>
 
 <script setup>
@@ -34,11 +32,12 @@ import { onMounted, ref, computed } from "vue";
 import { component as Fullscreen } from "vue-fullscreen";
 import useQuestionListener from "../../hooks/useQuestionListener";
 import ErrorDialog from "../../components/ErrorDialog.vue";
-import NavBar from "../../components/NavBar.vue";
+import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import PresentQuestion from "./PresentQuestion.vue";
 import Spinner from "../../components/Spinner.vue";
 import { useRouter } from "vue-router";
 import { mathMod } from "ramda";
+import Back from "../../components/Back.vue";
 
 const props = defineProps({
   user: {
@@ -60,6 +59,7 @@ const props = defineProps({
 });
 
 const {
+  chime,
   folder,
   questions,
   usersCount,
@@ -68,7 +68,7 @@ const {
   chimeId: props.chimeId,
   folderId: props.folderId,
 });
-const chime = ref(null);
+
 const isFullscreen = ref(false);
 const fullscreenRef = ref(null);
 
@@ -81,10 +81,6 @@ const currentQuestion = computed(() => {
   }
   return questions.value[props.questionIndex];
 });
-
-const host = computed(() =>
-  chime.value && chime.value.join_instructions ? window.location.host : null
-);
 
 const router = useRouter();
 
