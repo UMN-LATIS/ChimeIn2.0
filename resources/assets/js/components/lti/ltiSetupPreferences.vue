@@ -19,8 +19,8 @@
         <div class="jumbo-radio-group">
           <JumboRadio
             v-for="choice in gradePassbackChoices"
-            name="lti_grade_mode"
             :key="choice.id"
+            name="lti_grade_mode"
             :img="choice.img"
             :title="choice.title"
             :description="choice.description"
@@ -51,7 +51,7 @@
     </ol>
 
     <div class="form-actions">
-      <button @click.prevent="cancelForm" class="btn btn-outline-secondary">
+      <button class="btn btn-outline-secondary" @click.prevent="cancelForm">
         Cancel
       </button>
       <button
@@ -64,6 +64,111 @@
     </div>
   </div>
 </template>
+<script>
+import JumboRadio from "../JumboRadio.vue";
+
+const PASSBACK = {
+  NONE: "no_grades",
+  ONE: "one_grade",
+  MULTIPLE: "multiple_grades",
+};
+
+const PARTICIPATION_CREDIT = {
+  FULL: "0",
+  NONE: "1",
+  PARTIAL: "2",
+};
+
+export default {
+  components: {
+    JumboRadio,
+  },
+  data() {
+    return {
+      gradePassbackChoice: null,
+      gradeCalcChoice: null,
+    };
+  },
+  computed: {
+    isSubmitDisabled() {
+      return [this.gradePassbackChoice, this.gradeCalcChoice].some(
+        (val) => val === null
+      );
+    },
+    gradePassbackChoices: () => [
+      {
+        id: PASSBACK.NONE,
+        title: "No Grades",
+        description: "No participation grade will be recorded in Canvas.",
+        img: {
+          src: "/images/passback-none.svg",
+          alt: "illustration that no participation will be recorded in Canvas. From left to right: Three check marks, then an arrow pointing right with an X over the arrow, then nothing to the right of the arrow.",
+        },
+      },
+      {
+        id: PASSBACK.ONE,
+        title: "One Grade",
+        description:
+          "One grade column for all ChimeIn assignments in Canvas, totalling all participation.",
+        img: {
+          src: "/images/passback-one.svg",
+          alt: "Illustration that all assignment scores will be aggregated into one grade in Canvas. From left to right: Three checkmarks, then an arrow pointing right, then a single large star.",
+        },
+      },
+      {
+        id: PASSBACK.MULTIPLE,
+        title: "Multiple Grades",
+        description:
+          "Separate grade column for each ChimeIn assignment in Canvas",
+        img: {
+          src: "/images/passback-many.svg",
+          alt: "Illustration that each Chime In Assignment will have its own grade column. From left to right: Three checkmarks, then an arrow pointing right, then 3 stars the same size as the checkmarks.",
+        },
+      },
+    ],
+    gradeCalcChoices: () => [
+      {
+        id: PARTICIPATION_CREDIT.FULL,
+        title: "Any Participation",
+        description:
+          "Full credit for participation. No credit for no response.",
+        img: {
+          src: "/images/participation-credit-full.svg",
+          alt: "Full credit for participation. Illustration shows a checkmark worth 100%, an X worth 100%, and a blank worth 0%.",
+        },
+      },
+      {
+        id: PARTICIPATION_CREDIT.PARTIAL,
+        title: "Partial Credit",
+        description:
+          "Full credit for correct answers. Half credit for participation. No credit for no response.",
+        img: {
+          src: "/images/participation-credit-partial.svg",
+          alt: "Partial credit for participation. Illustration shows a checkmark worth 100%, an X worth 50%, and a blank worth 0%.",
+        },
+      },
+      {
+        id: PARTICIPATION_CREDIT.NONE,
+        title: "Correct Answers Only",
+        description:
+          "Full credit for correct answers. Incorrect or non-responses are earn no credit.",
+        img: {
+          src: "/images/participation-credit-none.svg",
+          alt: "No credit for participation, only correct answer. Illustration shows a checkmark worth 100%, an X worth 0%, and a blank worth 0%.",
+        },
+      },
+    ],
+  },
+  methods: {
+    cancelForm() {
+      this.gradePassbackChoice = null;
+      this.gradeCalcChoice = null;
+      // window.history.go(-1);
+    },
+  },
+};
+</script>
+
 <style scoped>
 .setup-list {
   margin: 4rem 0;
@@ -117,108 +222,3 @@
   text-align: right;
 }
 </style>
-
-<script>
-import JumboRadio from "../JumboRadio.vue";
-
-const PASSBACK = {
-  NONE: "no_grades",
-  ONE: "one_grade",
-  MULTIPLE: "multiple_grades",
-};
-
-const PARTICIPATION_CREDIT = {
-  FULL: "0",
-  NONE: "1",
-  PARTIAL: "2",
-};
-
-export default {
-  components: {
-    JumboRadio,
-  },
-  data() {
-    return {
-      gradePassbackChoice: null,
-      gradeCalcChoice: null,
-    };
-  },
-  computed: {
-    isSubmitDisabled() {
-      return [this.gradePassbackChoice, this.gradeCalcChoice].some(
-        (val) => val === null
-      );
-    },
-    gradePassbackChoices: () => [
-      {
-        id: PASSBACK.NONE,
-        title: "No Grades",
-        description: "No participation grade will be recorded in Canvas.",
-        img: {
-          src: "/img/passback-none.svg",
-          alt: "illustration that no participation will be recorded in Canvas. From left to right: Three check marks, then an arrow pointing right with an X over the arrow, then nothing to the right of the arrow.",
-        },
-      },
-      {
-        id: PASSBACK.ONE,
-        title: "One Grade",
-        description:
-          "One grade column for all ChimeIn assignments in Canvas, totalling all participation.",
-        img: {
-          src: "/img/passback-one.svg",
-          alt: "Illustration that all assignment scores will be aggregated into one grade in Canvas. From left to right: Three checkmarks, then an arrow pointing right, then a single large star.",
-        },
-      },
-      {
-        id: PASSBACK.MULTIPLE,
-        title: "Multiple Grades",
-        description:
-          "Separate grade column for each ChimeIn assignment in Canvas",
-        img: {
-          src: "/img/passback-many.svg",
-          alt: "Illustration that each Chime In Assignment will have its own grade column. From left to right: Three checkmarks, then an arrow pointing right, then 3 stars the same size as the checkmarks.",
-        },
-      },
-    ],
-    gradeCalcChoices: () => [
-      {
-        id: PARTICIPATION_CREDIT.FULL,
-        title: "Any Participation",
-        description:
-          "Full credit for participation. No credit for no response.",
-        img: {
-          src: "/img/participation-credit-full.svg",
-          alt: "Full credit for participation. Illustration shows a checkmark worth 100%, an X worth 100%, and a blank worth 0%.",
-        },
-      },
-      {
-        id: PARTICIPATION_CREDIT.PARTIAL,
-        title: "Partial Credit",
-        description:
-          "Full credit for correct answers. Half credit for participation. No credit for no response.",
-        img: {
-          src: "/img/participation-credit-partial.svg",
-          alt: "Partial credit for participation. Illustration shows a checkmark worth 100%, an X worth 50%, and a blank worth 0%.",
-        },
-      },
-      {
-        id: PARTICIPATION_CREDIT.NONE,
-        title: "Correct Answers Only",
-        description:
-          "Full credit for correct answers. Incorrect or non-responses are earn no credit.",
-        img: {
-          src: "/img/participation-credit-none.svg",
-          alt: "No credit for participation, only correct answer. Illustration shows a checkmark worth 100%, an X worth 0%, and a blank worth 0%.",
-        },
-      },
-    ],
-  },
-  methods: {
-    cancelForm() {
-      this.gradePassbackChoice = null;
-      this.gradeCalcChoice = null;
-      // window.history.go(-1);
-    },
-  },
-};
-</script>

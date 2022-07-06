@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <DefaultLayout>
     <NavBar title="" :user="user" :link="'/'" />
     <div class="container">
       <div class="col-sm-12">
@@ -77,17 +77,19 @@
         </div>
       </div>
     </div>
-  </div>
+  </DefaultLayout>
 </template>
 
 <script>
 import NavBar from "../../components/NavBar.vue";
 import ChimePanel from "./ChimePanel.vue";
+import DefaultLayout from "../../layouts/DefaultLayout.vue";
 
 export default {
   components: {
     NavBar,
     ChimePanel,
+    DefaultLayout,
   },
   props: ["user"],
   data() {
