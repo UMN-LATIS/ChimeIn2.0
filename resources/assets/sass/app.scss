@@ -140,3 +140,9 @@ img {
   height: 1px;
   word-wrap: normal;
 }
+
+.container-fluid {
+  max-width: 90em;
+  margin: auto;
+  padding: 0 1rem;
+}
