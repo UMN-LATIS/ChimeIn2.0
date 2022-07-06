@@ -1,7 +1,6 @@
 <template>
   <DefaultLayout :user="user">
     <div class="chime">
-      <NavBar title="Back to Home" :user="user" :link="'/'" />
       <ErrorDialog />
       <div class="container">
         <header class="chime__header">
@@ -106,7 +105,6 @@
 <script>
 import Draggable from "vuedraggable";
 import orderBy from "lodash/orderBy";
-import NavBar from "../../components/NavBar.vue";
 import NewFolder from "./NewFolder.vue";
 import Spinner from "../../components/Spinner.vue";
 import ErrorDialog from "../../components/ErrorDialog.vue";
@@ -124,7 +122,6 @@ import * as api from "../../common/api";
 export default {
   components: {
     Draggable,
-    NavBar,
     NewFolder,
     Spinner,
     ErrorDialog,

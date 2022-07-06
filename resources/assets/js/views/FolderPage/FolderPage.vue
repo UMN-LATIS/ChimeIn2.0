@@ -1,11 +1,6 @@
 <template>
   <DefaultLayout :user="user">
     <div>
-      <NavBar
-        title="Back to Chime"
-        :user="user"
-        :link="{ name: 'chime', params: { chimeId } }"
-      />
       <ErrorDialog />
       <div
         v-if="!hideOpenAlert && otherFolderSessions.length > 0"
@@ -233,7 +228,6 @@ import orderBy from "lodash/orderBy";
 import { defineAsyncComponent, ref, computed, watch, onMounted } from "vue";
 import Draggable from "vuedraggable";
 import ErrorDialog from "../../components/ErrorDialog.vue";
-import NavBar from "../../components/NavBar.vue";
 import QuestionCard from "./QuestionCard.vue";
 import Spinner from "../../components/Spinner.vue";
 import pluralize from "../../common/pluralize.js";

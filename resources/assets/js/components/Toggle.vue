@@ -2,7 +2,7 @@
   <div class="toggle">
     <input
       :id="name"
-      class="toggle__input visually-hidden"
+      class="toggle__input sr-only"
       type="checkbox"
       :checked="checked"
       :name="name"

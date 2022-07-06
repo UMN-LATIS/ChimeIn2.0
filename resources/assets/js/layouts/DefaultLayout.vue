@@ -19,7 +19,9 @@
         </NavbarItem>
       </template>
     </AppHeader>
-    <slot> Sorry. Nothing to see here. </slot>
+    <main class="default-layout__main">
+      <slot> Sorry. Nothing to see here. </slot>
+    </main>
     <AppFooter />
   </div>
 </template>
@@ -33,3 +35,8 @@ defineProps<{
   user?: User;
 }>();
 </script>
+<style scoped>
+.default-layout__main {
+  padding-bottom: 2rem;
+}
+</style>
