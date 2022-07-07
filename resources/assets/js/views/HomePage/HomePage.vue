@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayout>
+  <DefaultLayout :user="user">
     <div class="container-fluid pt-4">
       <div>
         <h1 class="user-greeting my-4">

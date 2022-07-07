@@ -1,5 +1,5 @@
 <template>
-  <PostItLayout :user="user">
+  <DefaultLayout :user="user">
     <template #navbar-left>
       <Back :to="`/chime/${chimeId}`">Back to Chime</Back>
     </template>
@@ -22,7 +22,6 @@
         <div class="row mt-4">
           <div class="col-md-4 align-items-center d-flex">
             <h1 class="h4">{{ folder.name }}</h1>
-            <!-- <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip> -->
           </div>
           <div class="col-md-8 col-sm-12">
             <div
@@ -140,11 +139,11 @@
                   >
                     <option disabled>Select a Chime</option>
                     <option
-                      v-for="chime in existing_chimes"
-                      :key="chime.id"
-                      :value="chime.id"
+                      v-for="c in existing_chimes"
+                      :key="c.id"
+                      :value="c.id"
                     >
-                      {{ chime.name }}
+                      {{ c.name }}
                     </option>
                   </select>
                 </div>
@@ -174,8 +173,8 @@
           </fieldset>
         </div>
 
-        <div class="row border-top mt-3 pt-3">
-          <div class="col-sm-12">
+        <div class="border-top mt-3 pt-3 folder-page__main">
+          <div>
             <button
               data-cy="new-question-button"
               class="btn btn-outline-primary align-items-center d-flex"
@@ -183,24 +182,27 @@
             >
               <i class="material-icons pointer">add</i> Add Question
             </button>
-            <Draggable
-              v-model="questions"
-              itemKey="id"
-              data-cy="question-list"
-              class="question-list"
-              handle=".handle"
-              ghostClass="ghost"
-              @end="swap_question"
-            >
-              <template #item="{ element }">
-                <QuestionCard
-                  :folder="folder"
-                  :question="element"
-                  :showMoveIcon="questions.length > 1"
-                  @change="refreshFolder"
-                />
-              </template>
-            </Draggable>
+            <div class="grid-cols-2">
+              <Draggable
+                v-model="questions"
+                itemKey="id"
+                data-cy="question-list"
+                class="question-list"
+                handle=".handle"
+                ghostClass="ghost"
+                @end="swap_question"
+              >
+                <template #item="{ element }">
+                  <QuestionCard
+                    :folder="folder"
+                    :question="element"
+                    :showMoveIcon="questions.length > 1"
+                    @change="refreshFolder"
+                  />
+                </template>
+              </Draggable>
+              <JoinPanel :chime="chime" :includeFullUrl="true" />
+            </div>
           </div>
         </div>
       </div>
@@ -223,7 +225,7 @@
         "
       />
     </div>
-  </PostItLayout>
+  </DefaultLayout>
 </template>
 
 <script setup>
@@ -237,7 +239,8 @@ import Spinner from "../../components/Spinner.vue";
 import pluralize from "../../common/pluralize.js";
 import useQuestionListener from "../../hooks/useQuestionListener";
 import { useStore } from "vuex";
-import PostItLayout from "../../layouts/PostItLayout.vue";
+import DefaultLayout from "../../layouts/DefaultLayout.vue";
+import JoinPanel from "../../components/JoinPanel.vue";
 import {
   getChimes,
   getOpenSessionsWithinChime,
@@ -277,6 +280,7 @@ const synced = ref(false);
 const store = useStore();
 const router = useRouter();
 const {
+  chime,
   folder,
   questions,
   refresh: refreshFolder,
@@ -464,15 +468,20 @@ ul li {
   list-style: none;
 }
 
-.question-list {
-  margin: 1rem 0;
-}
-
 .align-items-center h4 {
   margin-bottom: 0;
 }
 .material-icons {
   font-size: 1.25rem;
   margin-right: 0.25rem;
+}
+
+@media (min-width: 50rem) {
+  .grid-cols-2 {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
 }
 </style>

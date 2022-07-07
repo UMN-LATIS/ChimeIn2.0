@@ -44,7 +44,7 @@ export default {
   align-items: flex-start;
   line-height: 1;
   transition: all 0.1s ease-out;
-  margin: 0.5rem 0;
+  margin-bottom: 0.5rem;
 
   a {
     color: var(--black);

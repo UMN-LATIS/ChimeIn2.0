@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayout :user="user">
+  <DefaultLayout :user="user" class="bg-white">
     <template #navbar-left>
       <Back :to="`/chime/${chimeId}/folder/${folderId}`">Back to Folder</Back>
     </template>

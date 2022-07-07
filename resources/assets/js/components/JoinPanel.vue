@@ -28,9 +28,9 @@
             <a data-cy="chime-host" :href="joinUrl">{{ joinUrl }}</a>
           </li>
           <li>
-            Alternatively, visit
+            Or: visit
             <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
-            enter code:
+            enter:
             <b class="join-panel__access-code" data-cy="access-code">{{
               toHyphenatedCode(chime.access_code)
             }}</b>
@@ -46,9 +46,9 @@
           <a data-cy="chime-host" :href="joinUrl">{{ joinUrl }}</a>
         </li>
         <li>
-          Alternatively, visit
+          Or: visit
           <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
-          enter code:
+          enter
           <b class="join-panel__access-code" data-cy="access-code">{{
             toHyphenatedCode(chime.access_code)
           }}</b>

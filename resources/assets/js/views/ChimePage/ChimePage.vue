@@ -1,5 +1,5 @@
 <template>
-  <PostItLayout :user="user">
+  <DefaultLayout :user="user" backTo="/" backLabel="Back to Home">
     <template #navbar-left>
       <Back :to="`/`">Back to Home</Back>
     </template>
@@ -63,6 +63,7 @@
             <ChimeExport v-if="exportPanel" :chime="chime" />
           </div>
         </header>
+
         <Spinner v-if="!isReady" />
 
         <div v-if="isReady" class="chime__folder-wrapper">
@@ -76,32 +77,35 @@
               @newfolder="create_folder"
             />
 
-            <Draggable
-              v-if="ordered_folders.length"
-              v-model="ordered_folders"
-              itemKey="id"
-              class="chime__ordered-folders"
-              handle=".handle"
-              :animation="200"
-              :disabled="false"
-              ghostClass="ghost"
-            >
-              <template #item="{ element }">
-                <div>
-                  <FolderCard
-                    :chime="chime"
-                    :folder="element"
-                    :showMoveIcon="ordered_folders.length > 1"
-                    @change="loadChime"
-                  />
-                </div>
-              </template>
-            </Draggable>
+            <div class="grid-cols-2">
+              <Draggable
+                v-if="ordered_folders.length"
+                v-model="ordered_folders"
+                itemKey="id"
+                class="chime__ordered-folders"
+                handle=".handle"
+                :animation="200"
+                :disabled="false"
+                ghostClass="ghost"
+              >
+                <template #item="{ element }">
+                  <div>
+                    <FolderCard
+                      :chime="chime"
+                      :folder="element"
+                      :showMoveIcon="ordered_folders.length > 1"
+                      @change="loadChime"
+                    />
+                  </div>
+                </template>
+              </Draggable>
+              <JoinPanel :chime="chime" :includeFullUrl="true" />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </PostItLayout>
+  </DefaultLayout>
 </template>
 
 <script>
@@ -114,11 +118,12 @@ import ChimeManagement from "./ChimeManagement.vue";
 import ChimeExport from "./ChimeExport.vue";
 import FolderCard from "./FolderCard.vue";
 import Chip from "../../components/Chip.vue";
+import JoinPanel from "../../components/JoinPanel.vue";
 import {
   selectIsCanvasChime,
   selectCanvasCourseUrl,
 } from "../../helpers/chimeSelectors";
-import PostItLayout from "../../layouts/PostItLayout.vue";
+import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import * as api from "../../common/api";
 import Back from "../../components/Back.vue";
 
@@ -132,8 +137,9 @@ export default {
     ChimeExport,
     FolderCard,
     Chip,
-    PostItLayout,
+    DefaultLayout,
     Back,
+    JoinPanel,
   },
   props: {
     user: {

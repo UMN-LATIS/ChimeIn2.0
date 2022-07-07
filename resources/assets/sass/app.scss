@@ -155,3 +155,13 @@ body {
 #app {
   min-height: 100%;
 }
+
+@media (min-width: 50rem) {
+  .grid-cols-2 {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 1rem;
+    align-items: flex-start;
+    margin: 1rem 0;
+  }
+}

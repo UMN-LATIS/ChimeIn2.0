@@ -19,7 +19,7 @@
         </NavbarItem>
       </template>
     </AppHeader>
-    <main class="default-layout__main flex-grow-1">
+    <main class="default-layout__main flex-grow-1" v-bind="$attrs">
       <slot> Sorry. Nothing to see here. </slot>
     </main>
     <AppFooter />
@@ -40,6 +40,13 @@ withDefaults(
   }
 );
 </script>
+<script lang="ts">
+// have attrs like `class` applied to the `<main>` element
+export default {
+  inheritAttrs: false,
+};
+</script>
+
 <style scoped>
 .default-layout {
   min-height: 100%;
