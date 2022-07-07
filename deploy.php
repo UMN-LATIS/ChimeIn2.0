@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 require 'recipe/laravel.php';
@@ -20,35 +21,42 @@ add('writable_dirs', []);
 // Servers
 
 host('dev')
-    ->set('hostname',"cla-chimein-dev.oit.umn.edu")
+    ->set('hostname', "cla-chimein-dev.oit.umn.edu")
     ->set('remote_user', 'swadm')
     ->set('labels', ['stage' => 'development'])
     ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
 host('stage')
-    ->set('hostname',"cla-chimein-tst.oit.umn.edu")
-    ->set('remote_user','swadm')
+    ->set('hostname', "cla-chimein-tst.oit.umn.edu")
+    ->set('remote_user', 'swadm')
     ->set('labels', ['stage' => 'stage'])
     ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
 host('prod')
     ->set('hostname', "cla-chimein-prd.oit.umn.edu")
-    ->set('remote_user','swadm')
+    ->set('remote_user', 'swadm')
     ->set('labels', ['stage' => 'production'])
     ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
     ->set('deploy_path', '/swadm/var/www/html/');
 
-task('assets:generate', function() {
-  cd('{{release_path}}');
-  run('yarn run production');
+task('assets:generate', function () {
+    cd('{{release_path}}');
+    run('yarn run production');
 })->desc('Assets generation');
 
-task('deploy:makecache', function() {
-  cd('{{release_path}}');
-  run('mkdir -p bootstrap/cache');
+task('deploy:makecache', function () {
+    cd('{{release_path}}');
+    run('mkdir -p bootstrap/cache');
 })->desc('Make Cache');
+
+task('deploy:git:submodules', function () {
+    $git = get('bin/git');
+
+    cd('{{release_path}}');
+    run("$git submodule update --init");
+});
 
 
 // task('fix_storage_perms', function () {
@@ -65,7 +73,8 @@ after('deploy:failed', 'deploy:unlock');
 
 // Migrate database before symlink new release.
 before('deploy:symlink', 'artisan:migrate');
-after('deploy:update_code', 'yarn:install');
+after('deploy:update_code', 'deploy:git:submodules');
+after('deploy:git:submodules', 'yarn:install');
 after('yarn:install', 'assets:generate');
 after('yarn:install', 'deploy:makecache');
 // after('artisan:queue:restart', 'fix_storage_perms');
