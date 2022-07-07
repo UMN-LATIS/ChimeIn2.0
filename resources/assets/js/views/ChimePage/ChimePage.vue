@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayout :user="user" backTo="/" backLabel="Back to Home">
+  <PostItLayout :user="user">
     <template #navbar-left>
       <Back :to="`/`">Back to Home</Back>
     </template>
@@ -63,7 +63,6 @@
             <ChimeExport v-if="exportPanel" :chime="chime" />
           </div>
         </header>
-
         <Spinner v-if="!isReady" />
 
         <div v-if="isReady" class="chime__folder-wrapper">
@@ -102,7 +101,7 @@
         </div>
       </div>
     </div>
-  </DefaultLayout>
+  </PostItLayout>
 </template>
 
 <script>
@@ -119,7 +118,7 @@ import {
   selectIsCanvasChime,
   selectCanvasCourseUrl,
 } from "../../helpers/chimeSelectors";
-import DefaultLayout from "../../layouts/DefaultLayout.vue";
+import PostItLayout from "../../layouts/PostItLayout.vue";
 import * as api from "../../common/api";
 import Back from "../../components/Back.vue";
 
@@ -133,7 +132,7 @@ export default {
     ChimeExport,
     FolderCard,
     Chip,
-    DefaultLayout,
+    PostItLayout,
     Back,
   },
   props: {

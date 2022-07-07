@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayout :user="user">
+  <PostItLayout :user="user">
     <template #navbar-left>
       <Back :to="`/chime/${chimeId}`">Back to Chime</Back>
     </template>
@@ -223,7 +223,7 @@
         "
       />
     </div>
-  </DefaultLayout>
+  </PostItLayout>
 </template>
 
 <script setup>
@@ -237,7 +237,7 @@ import Spinner from "../../components/Spinner.vue";
 import pluralize from "../../common/pluralize.js";
 import useQuestionListener from "../../hooks/useQuestionListener";
 import { useStore } from "vuex";
-import DefaultLayout from "../../layouts/DefaultLayout.vue";
+import PostItLayout from "../../layouts/PostItLayout.vue";
 import {
   getChimes,
   getOpenSessionsWithinChime,
