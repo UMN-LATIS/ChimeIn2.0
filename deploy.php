@@ -9,7 +9,7 @@ require 'contrib/yarn.php';
 
 set('ssh_type', 'native');
 set('ssh_multiplexing', true);
-
+set('update_code_strategy', 'clone');
 set('repository', 'https://github.com/UMN-LATIS/ChimeIn2.0.git');
 
 set('keep_releases', 5);
