@@ -14,7 +14,7 @@
     <button
       data-cy="create-folder-button"
       type="button"
-      class="new-folder__button btn btn-primary align-items-center d-flex"
+      class="new-folder__button btn btn-outline-primary align-items-center d-flex"
       @click="new_folder"
     >
       <i class="material-icons">add</i>
