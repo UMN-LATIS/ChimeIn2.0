@@ -1,99 +1,101 @@
 <template>
   <div
-    class="present-question row"
+    class="container-fluid present-question"
     :class="{
       in_progress: current_session,
       not_in_progress: !current_session,
     }"
   >
-    <div class="col-sm-12 col-md-8 col-lg-9 present-question__inner">
-      <PresentResults
-        v-if="show_results"
-        :question="question"
-        :chimeId="chime.id"
-        @reload="$emit('reload')"
-      />
-      <PresentPrompt
-        v-if="!show_results"
-        :session="current_session"
-        :question="question"
-      />
-    </div>
-    <div
-      v-if="!folder.student_view"
-      class="col-sm-12 col-md-4 col-lg-3 presentationControls"
-    >
-      <JoinPanel
-        v-if="showJoinInstructions"
-        :chime="chime"
-        :includeFullUrl="false"
-        class="present-page__join-panel mb-2"
-      />
-
-      <div class="card">
-        <div class="card-body">
-          <button
-            v-if="!current_session"
-            class="btn btn-outline-primary align-items-center d-flex"
-            @click="start_session"
-          >
-            <i class="material-icons left">play_arrow</i>
-            Open Question
-          </button>
-          <button
-            v-else
-            :class="{ openSession: current_session }"
-            class="btn btn-outline-primary align-items-center d-flex"
-            @click="stop_session"
-          >
-            <i class="material-icons left">stop</i>
-            Close Question
-          </button>
-          <button
-            data-cy="show-results-button"
-            class="btn btn-outline-primary align-items-center d-flex"
-            @click="show_results = !show_results"
-          >
-            <i class="material-icons left">zoom_in</i>
-            <span v-if="show_results"> Hide Results </span>
-            <span v-else> View Results </span>
-          </button>
-          <button
-            v-if="folder.questions.length > 1"
-            class="btn btn-outline-primary align-items-center d-flex"
-            @click="$emit('nextQuestion')"
-          >
-            <i class="material-icons left">arrow_right</i>
-            Next Question
-          </button>
-          <button
-            v-if="folder.questions.length > 1"
-            class="btn btn-outline-primary align-items-center d-flex"
-            @click="$emit('previousQuestion')"
-          >
-            <i class="material-icons left">arrow_left</i>
-            Previous Question
-          </button>
-          <button
-            class="btn btn-outline-primary align-items-center d-flex"
-            @click="toggle"
-          >
-            <i class="material-icons left">fullscreen</i>
-            Fullscreen
-          </button>
-          <ul class="sessionStatus">
-            <li v-if="current_session">
-              Session Responses:
-              {{ current_session ? current_session.responses.length : 0 }}
-            </li>
-            <li>Total Responses: {{ total_responses }}</li>
-            <li>Connected Participants: {{ usersCount - 1 }}</li>
-          </ul>
-        </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-8 col-lg-9 present-question__inner">
+        <PresentResults
+          v-if="show_results"
+          :question="question"
+          :chimeId="chime.id"
+          @reload="$emit('reload')"
+        />
+        <PresentPrompt
+          v-if="!show_results"
+          :session="current_session"
+          :question="question"
+        />
       </div>
-      <!-- card -->
+      <div
+        v-if="!folder.student_view"
+        class="col-sm-12 col-md-4 col-lg-3 presentationControls"
+      >
+        <JoinPanel
+          v-if="showJoinInstructions"
+          :chime="chime"
+          :includeFullUrl="false"
+          class="present-page__join-panel mb-2"
+        />
+
+        <div class="card">
+          <div class="card-body">
+            <button
+              v-if="!current_session"
+              class="btn btn-outline-primary align-items-center d-flex"
+              @click="start_session"
+            >
+              <i class="material-icons left">play_arrow</i>
+              Open Question
+            </button>
+            <button
+              v-else
+              :class="{ openSession: current_session }"
+              class="btn btn-outline-primary align-items-center d-flex"
+              @click="stop_session"
+            >
+              <i class="material-icons left">stop</i>
+              Close Question
+            </button>
+            <button
+              data-cy="show-results-button"
+              class="btn btn-outline-primary align-items-center d-flex"
+              @click="show_results = !show_results"
+            >
+              <i class="material-icons left">zoom_in</i>
+              <span v-if="show_results"> Hide Results </span>
+              <span v-else> View Results </span>
+            </button>
+            <button
+              v-if="folder.questions.length > 1"
+              class="btn btn-outline-primary align-items-center d-flex"
+              @click="$emit('nextQuestion')"
+            >
+              <i class="material-icons left">arrow_right</i>
+              Next Question
+            </button>
+            <button
+              v-if="folder.questions.length > 1"
+              class="btn btn-outline-primary align-items-center d-flex"
+              @click="$emit('previousQuestion')"
+            >
+              <i class="material-icons left">arrow_left</i>
+              Previous Question
+            </button>
+            <button
+              class="btn btn-outline-primary align-items-center d-flex"
+              @click="toggle"
+            >
+              <i class="material-icons left">fullscreen</i>
+              Fullscreen
+            </button>
+            <ul class="sessionStatus">
+              <li v-if="current_session">
+                Session Responses:
+                {{ current_session ? current_session.responses.length : 0 }}
+              </li>
+              <li>Total Responses: {{ total_responses }}</li>
+              <li>Connected Participants: {{ usersCount - 1 }}</li>
+            </ul>
+          </div>
+        </div>
+        <!-- card -->
+      </div>
+      <!-- presentationControls (sidebar) -->
     </div>
-    <!-- presentationControls (sidebar) -->
   </div>
 </template>
 

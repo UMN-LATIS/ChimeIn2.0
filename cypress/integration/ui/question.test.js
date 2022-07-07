@@ -488,14 +488,7 @@ describe("question", () => {
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
           cy.get("[data-cy=present-question-button]").click();
           cy.get("[data-cy=show-results-button]").click();
-
-          // wait for equations to render
-          cy.get(".katex-html");
-
-          // wait for animation to complete
-          // eslint-disable-next-line cypress/no-unnecessary-waiting
-          cy.wait(1500);
-          cy.get("#app").matchImageSnapshot("results-of-equation-choices");
+          cy.get("#app").should("contain.text", "e=mc");
         });
     });
 
@@ -864,8 +857,7 @@ describe("question", () => {
           // This is brittle. Maybe rename "Heatmap" as "Image Heatmap" once
           // tests are working.
           cy.get("[data-cy=question-type]")
-            .type("Heatmap")
-            .type("{downarrow}")
+            .type("Image Heatmap")
             .type("{enter}");
           cy.get("[data-cy=question-editor]").type("Image heatmap question?");
 

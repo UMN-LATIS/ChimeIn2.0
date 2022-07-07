@@ -7,7 +7,7 @@
       <ErrorDialog />
 
       <Spinner v-if="!folder" />
-      <div v-if="folder && chime" class="container-fluid present-container">
+      <div v-if="folder && chime" class="present-container">
         <Fullscreen ref="fullscreenRef" @change="isFullscreen = !isFullscreen">
           <PresentQuestion
             v-if="currentQuestion"
