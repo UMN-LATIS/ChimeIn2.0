@@ -34,13 +34,9 @@ import type { User } from "../types";
 withDefaults(
   defineProps<{
     user?: User | null;
-    backTo?: string;
-    backLabel?: string;
   }>(),
   {
     user: null,
-    backTo: "/",
-    backLabel: "Home",
   }
 );
 </script>
