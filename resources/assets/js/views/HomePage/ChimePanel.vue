@@ -7,7 +7,7 @@
     <button
       v-if="!user.guest_user"
       dusk="add-chime-button"
-      class="btn btn-outline-primary align-items-center d-flex"
+      class="btn btn-primary align-items-center d-flex"
       @click="showAdd = !showAdd"
     >
       <i class="material-icons">add</i> Add Chime
