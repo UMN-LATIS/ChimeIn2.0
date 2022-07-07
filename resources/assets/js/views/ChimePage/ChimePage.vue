@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayout :user="user" backTo="/" backLabel="Back to Home">
+  <DefaultLayout :user="user">
     <template #navbar-left>
       <Back :to="`/`">Back to Home</Back>
     </template>

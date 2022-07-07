@@ -8,10 +8,10 @@
         <slot name="navbar-left" />
       </template>
       <template #navbar-links-right>
-        <NavbarItem v-if="!user">
+        <NavbarItem v-if="!isLoggedIn">
           <a href="/login">Login</a>
         </NavbarItem>
-        <NavbarItem v-if="user">
+        <NavbarItem v-if="isLoggedIn">
           <a href="/shibboleth-logout">Logout</a>
         </NavbarItem>
         <NavbarItem>
@@ -29,9 +29,10 @@
 import AppHeader from "../../cla-vue-template/src/components/AppHeader.vue";
 import AppFooter from "../../cla-vue-template/src/components/AppFooter.vue";
 import NavbarItem from "../../cla-vue-template/src/components/NavbarItem.vue";
+import { computed } from "vue";
 import type { User } from "../types";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     user?: User | null;
   }>(),
@@ -39,6 +40,8 @@ withDefaults(
     user: null,
   }
 );
+
+const isLoggedIn = computed(() => props.user && !props.user.guest_user);
 </script>
 <script lang="ts">
 // have attrs like `class` applied to the `<main>` element
