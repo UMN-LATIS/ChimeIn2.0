@@ -1,5 +1,7 @@
 # ChimeIn
 
+[![Tests](https://github.com/UMN-LATIS/ChimeIn2.0/actions/workflows/tests.yml/badge.svg)](https://github.com/UMN-LATIS/ChimeIn2.0/actions/workflows/tests.yml)
+
 > Real time polling for your presentations
 
 Chime-In is a web-based "clicker" tool for doing live polling in interactive presentations.
