@@ -1,227 +1,231 @@
 <template>
-  <div>
-    <NavBar
-      title="Back to Chime"
-      :user="user"
-      :link="{ name: 'chime', params: { chimeId } }"
-    />
+  <DefaultLayout :user="user">
+    <template #navbar-left>
+      <Back :to="`/chime/${chimeId}`">Back to Chime</Back>
+    </template>
     <ErrorDialog />
-    <div
-      v-if="!hideOpenAlert && otherFolderSessions.length > 0"
-      class="alert alert-warning"
-      role="alert"
-    >
-      You have {{ otherFolderSessions.length }}
-      {{ pluralize("question", otherFolderSessions.length) }} open outside this
-      folder. Would you like to
-      <a class="pointer" href="" @click.prevent="closeOthers"
-        >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
-      >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
-    </div>
-    <Spinner v-if="!isPageReady" />
-    <div v-if="isPageReady && !isParticipantView" class="container">
-      <div class="row mt-4">
-        <div class="col-4 align-items-center d-flex">
-          <h1 class="h4">{{ folder.name }}</h1>
-          <!-- <Chip v-if="isCanvasChime" color="yellow" :solid="true">Canvas</Chip> -->
-        </div>
-        <div class="col-md-8 col-sm-12">
-          <div
-            class="btn-group float-right"
-            style="flex-wrap: wrap"
-            role="group"
-            aria-label="Folder Controls"
-          >
-            <button
-              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-              @click="show_edit_folder = !show_edit_folder"
+    <div class="container-fluid">
+      <div
+        v-if="!hideOpenAlert && otherFolderSessions.length > 0"
+        class="alert alert-warning"
+        role="alert"
+      >
+        You have {{ otherFolderSessions.length }}
+        {{ pluralize("question", otherFolderSessions.length) }} open outside
+        this folder. Would you like to
+        <a class="pointer" href="" @click.prevent="closeOthers"
+          >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
+        >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
+      </div>
+      <Spinner v-if="!isPageReady" />
+      <div v-if="isPageReady && !isParticipantView">
+        <div class="row mt-4">
+          <div class="col-md-4 align-items-center d-flex">
+            <h1 class="h4">{{ folder.name }}</h1>
+          </div>
+          <div class="col-md-8 col-sm-12">
+            <div
+              class="btn-group float-right"
+              style="flex-wrap: wrap"
+              role="group"
+              aria-label="Folder Controls"
             >
-              <i class="material-icons pointer">edit</i> Folder Settings
-            </button>
-            <button
-              dusk="open-all-button"
-              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-              @click="openAll"
-            >
-              <i class="material-icons pointer">visibility</i> Open All
-            </button>
-            <button
-              dusk="close-all-button"
-              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-              @click="closeAll"
-            >
-              <i class="material-icons pointer">visibility_off</i> Close All
-            </button>
-            <router-link
-              :to="{
-                name: 'chimeStudent',
-                params: { chimeId: chimeId },
-                query: {
-                  viewMode: 'participant',
-                  callbackUrl: $route.path,
-                },
-              }"
-              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-            >
-              <i class="material-icons">preview</i>
-              Participant View
-            </router-link>
-            <router-link
-              :to="{
-                name: 'present',
-                params: { chimeId: chimeId, folderId: folderId },
-              }"
-              class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-            >
-              <i class="material-icons">play_arrow</i>
-              Present
-            </router-link>
+              <button
+                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
+                @click="show_edit_folder = !show_edit_folder"
+              >
+                <i class="material-icons pointer">edit</i> Folder Settings
+              </button>
+              <button
+                dusk="open-all-button"
+                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
+                @click="openAll"
+              >
+                <i class="material-icons pointer">visibility</i> Open All
+              </button>
+              <button
+                dusk="close-all-button"
+                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
+                @click="closeAll"
+              >
+                <i class="material-icons pointer">visibility_off</i> Close All
+              </button>
+              <router-link
+                :to="{
+                  name: 'chimeStudent',
+                  params: { chimeId: chimeId },
+                  query: {
+                    viewMode: 'participant',
+                    callbackUrl: $route.path,
+                  },
+                }"
+                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
+              >
+                <i class="material-icons">preview</i>
+                Participant View
+              </router-link>
+              <router-link
+                :to="{
+                  name: 'present',
+                  params: { chimeId: chimeId, folderId: folderId },
+                }"
+                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
+              >
+                <i class="material-icons">play_arrow</i>
+                Present
+              </router-link>
+            </div>
           </div>
         </div>
-      </div>
-      <div v-if="show_edit_folder && folder" class="ml-4 mt-2">
-        <div class="row">
-          <div class="col-12">
-            <div class="input-group mb-3">
-              <input
-                :value="folder.name"
-                type="text"
-                class="form-control"
-                @input="handleFolderNameInput"
-              />
+        <div v-if="show_edit_folder && folder" class="ml-4 mt-2">
+          <div class="row">
+            <div class="col-12">
+              <div class="input-group mb-3">
+                <input
+                  :value="folder.name"
+                  type="text"
+                  class="form-control"
+                  @input="handleFolderNameInput"
+                />
 
-              <div class="input-group-append">
-                <button
-                  class="btn btn-outline-primary align-items-center d-flex"
-                  @click="edit_folder"
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-outline-primary align-items-center d-flex"
+                    @click="edit_folder"
+                  >
+                    <span class="material-icons pointer">save</span> Save
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="ml-auto col-12 btn-toolbar justify-content-end">
+              <button
+                v-if="folder.resource_link_pk > 0 || folder.lti_lineitem"
+                class="mr-2 btn btn-success btn-sm align-items-center d-flex"
+                @click="sync"
+              >
+                Force Sync with Canvas
+                <span v-if="synced" class="material-icons md-18"
+                  >check_circle</span
                 >
-                  <span class="material-icons pointer">save</span> Save
+              </button>
+              <button
+                class="mr-2 btn btn-warning btn-sm align-items-center d-flex"
+                @click="reset"
+              >
+                Reset Folder
+              </button>
+              <button
+                class="btn btn-sm btn-danger align-items-center d-flex"
+                @click="delete_folder"
+              >
+                Delete Folder <i class="material-icons pointer md-18">delete</i>
+              </button>
+            </div>
+          </div>
+
+          <hr />
+          <fieldset class="form-group border p-2">
+            <legend class="col-form-label w-auto">Import Questions</legend>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="chime_select">Select a Chime:</label>
+                  <select
+                    id="chime_select"
+                    v-model="selected_chime"
+                    class="form-control"
+                    @change="update_folders"
+                  >
+                    <option disabled>Select a Chime</option>
+                    <option
+                      v-for="c in existing_chimes"
+                      :key="c.id"
+                      :value="c.id"
+                    >
+                      {{ c.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="folder_select">Select a Folder:</label>
+                  <select
+                    id="folder_select"
+                    v-model="selected_folder"
+                    class="form-control"
+                  >
+                    <option disabled>Select a Folder</option>
+                    <option
+                      v-for="f in existing_folders"
+                      :key="f.id"
+                      :value="f.id"
+                    >
+                      {{ f.name }}
+                    </option>
+                  </select>
+                </div>
+                <button class="btn btn-primary" @click="do_import">
+                  Import
                 </button>
               </div>
             </div>
-          </div>
-          <div class="ml-auto col-12 btn-toolbar justify-content-end">
-            <button
-              v-if="folder.resource_link_pk > 0 || folder.lti_lineitem"
-              class="mr-2 btn btn-success btn-sm align-items-center d-flex"
-              @click="sync"
-            >
-              Force Sync with Canvas
-              <span v-if="synced" class="material-icons md-18"
-                >check_circle</span
-              >
-            </button>
-            <button
-              class="mr-2 btn btn-warning btn-sm align-items-center d-flex"
-              @click="reset"
-            >
-              Reset Folder
-            </button>
-            <button
-              class="btn btn-sm btn-danger align-items-center d-flex"
-              @click="delete_folder"
-            >
-              Delete Folder <i class="material-icons pointer md-18">delete</i>
-            </button>
-          </div>
+          </fieldset>
         </div>
 
-        <hr />
-        <fieldset class="form-group border p-2">
-          <legend class="col-form-label w-auto">Import Questions</legend>
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group">
-                <label for="chime_select">Select a Chime:</label>
-                <select
-                  id="chime_select"
-                  v-model="selected_chime"
-                  class="form-control"
-                  @change="update_folders"
-                >
-                  <option disabled>Select a Chime</option>
-                  <option
-                    v-for="chime in existing_chimes"
-                    :key="chime.id"
-                    :value="chime.id"
-                  >
-                    {{ chime.name }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="folder_select">Select a Folder:</label>
-                <select
-                  id="folder_select"
-                  v-model="selected_folder"
-                  class="form-control"
-                >
-                  <option disabled>Select a Folder</option>
-                  <option
-                    v-for="f in existing_folders"
-                    :key="f.id"
-                    :value="f.id"
-                  >
-                    {{ f.name }}
-                  </option>
-                </select>
-              </div>
-              <button class="btn btn-primary" @click="do_import">Import</button>
+        <div class="border-top mt-3 pt-3 folder-page__main">
+          <div>
+            <button
+              data-cy="new-question-button"
+              class="btn btn-outline-primary align-items-center d-flex"
+              @click="showModal = true"
+            >
+              <i class="material-icons pointer">add</i> Add Question
+            </button>
+            <div class="grid-cols-2">
+              <Draggable
+                v-model="questions"
+                itemKey="id"
+                data-cy="question-list"
+                class="question-list"
+                handle=".handle"
+                ghostClass="ghost"
+                @end="swap_question"
+              >
+                <template #item="{ element }">
+                  <QuestionCard
+                    :folder="folder"
+                    :question="element"
+                    :showMoveIcon="questions.length > 1"
+                    @change="refreshFolder"
+                  />
+                </template>
+              </Draggable>
+              <JoinPanel :chime="chime" :includeFullUrl="true" />
             </div>
           </div>
-        </fieldset>
-      </div>
-
-      <div class="row border-top mt-3 pt-3">
-        <div class="col-sm-12">
-          <button
-            data-cy="new-question-button"
-            class="btn btn-outline-primary align-items-center d-flex"
-            @click="showModal = true"
-          >
-            <i class="material-icons pointer">add</i> Add Question
-          </button>
-          <Draggable
-            v-model="questions"
-            itemKey="id"
-            data-cy="question-list"
-            class="question-list"
-            handle=".handle"
-            ghostClass="ghost"
-            @end="swap_question"
-          >
-            <template #item="{ element }">
-              <QuestionCard
-                :folder="folder"
-                :question="element"
-                :showMoveIcon="questions.length > 1"
-                @change="refreshFolder"
-              />
-            </template>
-          </Draggable>
         </div>
       </div>
+      <QuestionForm
+        v-if="showModal"
+        :show="showModal"
+        :question="{
+          text: '',
+          question_info: {
+            question_type: 'multiple_choice',
+            question_responses: null,
+          },
+        }"
+        :folder="folder"
+        :chimeId="chimeId"
+        controlType="create"
+        @close="
+          showModal = false;
+          refreshFolder();
+        "
+      />
     </div>
-    <QuestionForm
-      v-if="showModal"
-      :show="showModal"
-      :question="{
-        text: '',
-        question_info: {
-          question_type: 'multiple_choice',
-          question_responses: null,
-        },
-      }"
-      :folder="folder"
-      :chimeId="chimeId"
-      controlType="create"
-      @close="
-        showModal = false;
-        refreshFolder();
-      "
-    />
-  </div>
+  </DefaultLayout>
 </template>
 
 <script setup>
@@ -229,12 +233,14 @@ import orderBy from "lodash/orderBy";
 import { defineAsyncComponent, ref, computed, watch, onMounted } from "vue";
 import Draggable from "vuedraggable";
 import ErrorDialog from "../../components/ErrorDialog.vue";
-import NavBar from "../../components/NavBar.vue";
 import QuestionCard from "./QuestionCard.vue";
+import Back from "../../components/Back.vue";
 import Spinner from "../../components/Spinner.vue";
 import pluralize from "../../common/pluralize.js";
 import useQuestionListener from "../../hooks/useQuestionListener";
 import { useStore } from "vuex";
+import DefaultLayout from "../../layouts/DefaultLayout.vue";
+import JoinPanel from "../../components/JoinPanel.vue";
 import {
   getChimes,
   getOpenSessionsWithinChime,
@@ -274,6 +280,7 @@ const synced = ref(false);
 const store = useStore();
 const router = useRouter();
 const {
+  chime,
   folder,
   questions,
   refresh: refreshFolder,
@@ -461,15 +468,20 @@ ul li {
   list-style: none;
 }
 
-.question-list {
-  margin: 1rem 0;
-}
-
 .align-items-center h4 {
   margin-bottom: 0;
 }
 .material-icons {
   font-size: 1.25rem;
   margin-right: 0.25rem;
+}
+
+@media (min-width: 50rem) {
+  .grid-cols-2 {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
 }
 </style>

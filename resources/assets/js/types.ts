@@ -9,6 +9,7 @@ export interface User {
   updated_at: string;
   umndid: string | null;
   global_admin: boolean;
+  guest_user: boolean;
   // a bunch of other stuff
   [key: string]: any;
 }

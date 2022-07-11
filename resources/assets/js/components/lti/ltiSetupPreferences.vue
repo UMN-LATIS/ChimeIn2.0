@@ -155,7 +155,7 @@ export default {
         title: "No Grades",
         description: "No participation grade will be recorded in Canvas.",
         img: {
-          src: "/img/passback-none.svg",
+          src: "/images/passback-none.svg",
           alt: "illustration that no participation will be recorded in Canvas. From left to right: Three check marks, then an arrow pointing right with an X over the arrow, then nothing to the right of the arrow.",
         },
       },
@@ -165,7 +165,7 @@ export default {
         description:
           "One grade column for all ChimeIn assignments in Canvas, totalling all participation.",
         img: {
-          src: "/img/passback-one.svg",
+          src: "/images/passback-one.svg",
           alt: "Illustration that all assignment scores will be aggregated into one grade in Canvas. From left to right: Three checkmarks, then an arrow pointing right, then a single large star.",
         },
       },
@@ -175,7 +175,7 @@ export default {
         description:
           "Separate grade column for each ChimeIn assignment in Canvas",
         img: {
-          src: "/img/passback-many.svg",
+          src: "/images/passback-many.svg",
           alt: "Illustration that each Chime In Assignment will have its own grade column. From left to right: Three checkmarks, then an arrow pointing right, then 3 stars the same size as the checkmarks.",
         },
       },
@@ -187,7 +187,7 @@ export default {
         description:
           "Full credit for participation. No credit for no response.",
         img: {
-          src: "/img/participation-credit-full.svg",
+          src: "/images/participation-credit-full.svg",
           alt: "Full credit for participation. Illustration shows a checkmark worth 100%, an X worth 100%, and a blank worth 0%.",
         },
       },
@@ -197,7 +197,7 @@ export default {
         description:
           "Full credit for correct answers. Half credit for participation. No credit for no response.",
         img: {
-          src: "/img/participation-credit-partial.svg",
+          src: "/images/participation-credit-partial.svg",
           alt: "Partial credit for participation. Illustration shows a checkmark worth 100%, an X worth 50%, and a blank worth 0%.",
         },
       },
@@ -207,7 +207,7 @@ export default {
         description:
           "Full credit for correct answers. Incorrect or non-responses are earn no credit.",
         img: {
-          src: "/img/participation-credit-none.svg",
+          src: "/images/participation-credit-none.svg",
           alt: "No credit for participation, only correct answer. Illustration shows a checkmark worth 100%, an X worth 0%, and a blank worth 0%.",
         },
       },

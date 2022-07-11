@@ -10,6 +10,9 @@
 @import "variables";
 @import "footer";
 
+// UMN Header styles
+@import "../cla-vue-template/src/index.css";
+
 .fade-enter-active,
 .fade-leave-active {
   transition: all 1s;
@@ -127,4 +130,38 @@ h5 {
 
 img {
   max-width: 100%;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  word-wrap: normal;
+}
+
+.container-fluid {
+  max-width: 90em;
+  margin: auto;
+  padding: 0 1rem;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  min-height: 100%;
+}
+
+@media (min-width: 50rem) {
+  .grid-cols-2 {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 1rem;
+    align-items: flex-start;
+    margin: 1rem 0;
+  }
 }
