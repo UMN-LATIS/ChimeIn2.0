@@ -444,12 +444,12 @@ function update_folders() {
 }
 
 async function sync() {
-  const isSyncSuccessful = await forceSyncGradesWithLMS({
+  synced.value = await forceSyncGradesWithLMS({
     chimeId: props.chimeId,
     folderId: props.folderId,
   });
 
-  if (!isSyncSuccessful) {
+  if (!synced.value) {
     store.commit(
       "message",
       "Could not sync Chime. Please contact support at latistecharch@umn.edu."
