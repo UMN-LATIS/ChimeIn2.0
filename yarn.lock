@@ -1620,10 +1620,10 @@
     parchment "^1.1.2"
     quill-delta "^4.0.1"
 
-"@types/ramda@^0.28.13":
-  version "0.28.13"
-  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.28.13.tgz#fbd4edddcdc39cba789efa6c45c41f8480882c4f"
-  integrity sha512-ugnamgmaRzB6yontWxKh9kVstbO5gbdNGcbmcZI0U4d9S0fmN/VYCbxVm4crMAkRvMyfO4u+VIjH/G2Fyk04aA==
+"@types/ramda@^0.28.14":
+  version "0.28.14"
+  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.28.14.tgz#66412478361cfce6a5f3e4a6da8a33e796fa3866"
+  integrity sha512-hLgAeKxS5MpIEROaIRHscFqWf+V04CB+A0Kq+OjnTs1fEGHXEs4aeOhXIRovAPe6PfWYKHEwEkVIYWf98OjxnA==
   dependencies:
     ts-toolbelt "^6.15.1"
 
@@ -2975,9 +2975,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001332:
-  version "1.0.30001341"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001341.tgz"
-  integrity sha512-2SodVrFFtvGENGCv0ChVJIDQ0KPaS1cg7/qtfMaICgeMolDdo/Z2OD32F0Aq9yl6F4YFwGPBS5AaPqNYiW4PoA==
+  version "1.0.30001363"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001363.tgz"
+  integrity sha512-HpQhpzTGGPVMnCjIomjt+jvyUu8vNFo3TaDiZ/RcoTrlOq/5+tC8zHdsbgFB6MxmaY+jCpsH09aD80Bb4Ow3Sg==
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -5256,10 +5256,10 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-husky@^7.0.4:
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-7.0.4.tgz#242048245dc49c8fb1bf0cc7cfb98dd722531535"
-  integrity sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==
+husky@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-8.0.1.tgz#511cb3e57de3e3190514ae49ed50f6bc3f50b3e9"
+  integrity sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==
 
 iconv-lite@0.4.24:
   version "0.4.24"
@@ -6195,10 +6195,10 @@ klona@^2.0.4, klona@^2.0.5:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
 
-laravel-echo@^1.11.7:
-  version "1.11.7"
-  resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.11.7.tgz#f9e4e6ce8069eaeca0b41924dd237629bf9f4bcb"
-  integrity sha512-LhEZp/RbdtdMlhptJyn452+aXfz+A1UW2bhJM7NROgXhnNgj+6P9BkG9JcPCBMernp5TGkOGI6A0NPbkAWYWGg==
+laravel-echo@^1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.12.0.tgz#b0f04092ed6708a26a4b03760c7a36e931a38ef3"
+  integrity sha512-eK2uRxuki7aIFKeubMq2hDwmsfF1wiaHAfEXpHk9ihjxoJpHadU7Q2d41b+yXi5Es8ggzfLKyWyDN7A6E2P8TQ==
 
 laravel-mix@^6.0.43:
   version "6.0.43"
@@ -8838,10 +8838,10 @@ trim-repeated@^1.0.0:
   dependencies:
     escape-string-regexp "^1.0.2"
 
-ts-loader@^9.3.0:
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.3.0.tgz#980f4dbfb60e517179e15e10ed98e454b132159f"
-  integrity sha512-2kLLAdAD+FCKijvGKi9sS0OzoqxLCF3CxHpok7rVgCZ5UldRzH0TkbwG9XECKjBzHsAewntC5oDaI/FwKzEUog==
+ts-loader@^9.3.1:
+  version "9.3.1"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.3.1.tgz#fe25cca56e3e71c1087fe48dc67f4df8c59b22d4"
+  integrity sha512-OkyShkcZTsTwyS3Kt7a4rsT/t2qvEVQuKCTg4LJmpj9fhFR7ukGdZwV6Qq3tRUkqcXtfGpPR7+hFKHCG/0d3Lw==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.0.0"
@@ -9081,10 +9081,15 @@ vue-carousel@^0.18.0:
     regenerator-runtime "^0.12.1"
     vue "^2.5.17"
 
-vue-chartjs@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-4.1.0.tgz#314474d33eb3bb9d0bafe7f075bb03e21e865602"
-  integrity sha512-lHOs5vjb9dDdXz/0TbQWjJuL1/KOLT1tlvo+6b1M+JyyIQjeAf8K9IVsUhx8fdSIR4QD9CBELN/cYgYwKdiJ7g==
+vue-chartjs@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-4.1.1.tgz#b1ffc2845e09d14cb5255305b11bd3e8df8058ab"
+  integrity sha512-rKIQ3jPrjhwxjKdNJppnYxRuBSrx4QeM3nNHsfIxEqjX6QS4Jq6e6vnZBxh2MDpURDC2uvuI2N0eIt1cWXbBVA==
+
+vue-demi@^0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.13.2.tgz#f6081c2feb5b698549729a81683ce029b8da289e"
+  integrity sha512-41ukrclEbMddAyP7PvxMSYqnOSzPV6r7GNnyTSKSCNTaz19GehxmTiXyP9kwHSUv2+Dr6hHqiUiF7L1VAw2KdQ==
 
 vue-easy-lightbox@^1.4.1:
   version "1.4.1"

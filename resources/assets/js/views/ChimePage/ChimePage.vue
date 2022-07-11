@@ -1,109 +1,116 @@
 <template>
-  <div class="chime">
-    <NavBar title="Back to Home" :user="user" :link="'/'" />
-    <ErrorDialog />
-    <div class="container">
-      <header class="chime__header">
-        <Chip
-          v-if="isCanvasChime"
-          class="chime-header__canvas-chip"
-          color="yellow"
-          :solid="true"
-          title="This chime is linked with Canvas."
-        >
-          Canvas
-        </Chip>
-        <div class="chime__header-container">
-          <h1 class="chime__name">
-            {{ chime.name }}
-          </h1>
+  <DefaultLayout :user="user">
+    <template #navbar-left>
+      <Back :to="`/`">Back to Home</Back>
+    </template>
+    <div class="chime container-fluid mt-4">
+      <ErrorDialog />
+      <div>
+        <header class="chime__header">
+          <Chip
+            v-if="isCanvasChime"
+            class="chime-header__canvas-chip"
+            color="yellow"
+            :solid="true"
+            title="This chime is linked with Canvas."
+          >
+            Canvas
+          </Chip>
+          <div class="chime__header-container">
+            <h1 class="chime__name">
+              {{ chime.name }}
+            </h1>
+            <div
+              class="chime__control-buttons btn-group"
+              role="group"
+              aria-label="Chime Controls"
+              :class="{
+                'chime__control-buttons--is-active':
+                  showSettings || exportPanel,
+              }"
+            >
+              <button
+                class="chime__control-button btn btn-outline-secondary align-items-center d-flex"
+                :class="{ 'btn--is-active': showSettings }"
+                data-cy="toggle-chime-settings-panel"
+                @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
+              >
+                <i class="material-icons">settings</i> Chime Settings
+              </button>
+
+              <button
+                class="chime__control-button btn btn-outline-secondary align-items-center d-flex"
+                :class="{ 'btn--is-active': exportPanel }"
+                data-cy="toggle-chime-export-panel"
+                @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
+              >
+                <i class="material-icons">save_alt</i> Export
+              </button>
+            </div>
+          </div>
           <div
-            class="chime__control-buttons btn-group"
-            role="group"
-            aria-label="Chime Controls"
+            v-if="isReady"
+            class="chime__settings-panel"
             :class="{
-              'chime__control-buttons--is-active': showSettings || exportPanel,
+              'chime__settings-panel--isOpen': showSettings || exportPanel,
             }"
           >
-            <button
-              class="chime__control-button btn btn-outline-secondary align-items-center d-flex"
-              :class="{ 'btn--is-active': showSettings }"
-              data-cy="toggle-chime-settings-panel"
-              @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
-            >
-              <i class="material-icons">settings</i> Chime Settings
-            </button>
-
-            <button
-              class="chime__control-button btn btn-outline-secondary align-items-center d-flex"
-              :class="{ 'btn--is-active': exportPanel }"
-              data-cy="toggle-chime-export-panel"
-              @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
-            >
-              <i class="material-icons">save_alt</i> Export
-            </button>
+            <ChimeManagement
+              v-if="showSettings"
+              :chime="chime"
+              @update:chime="handleChimeUpdate"
+            />
+            <ChimeExport v-if="exportPanel" :chime="chime" />
           </div>
-        </div>
-        <div
-          v-if="isReady"
-          class="chime__settings-panel"
-          :class="{
-            'chime__settings-panel--isOpen': showSettings || exportPanel,
-          }"
-        >
-          <ChimeManagement
-            v-if="showSettings"
-            :chime="chime"
-            @update:chime="handleChimeUpdate"
-          />
-          <ChimeExport v-if="exportPanel" :chime="chime" />
-        </div>
-      </header>
+        </header>
 
-      <Spinner v-if="!isReady" />
+        <Spinner v-if="!isReady" />
 
-      <div v-if="isReady" class="chime__folder-wrapper">
-        <div class="chime__folder-list">
-          <p v-if="!ordered_folders.length">
-            You don't have any folders yet. Why not create one now?
-          </p>
-          <NewFolder
-            class="chime__create-folder"
-            :chime="chime"
-            @newfolder="create_folder"
-          />
+        <div v-if="isReady" class="chime__folder-wrapper">
+          <div class="chime__folder-list">
+            <p v-if="!ordered_folders.length">
+              You don't have any folders yet. Why not create one now?
+            </p>
+            <NewFolder
+              class="chime__create-folder"
+              :chime="chime"
+              @newfolder="create_folder"
+            />
 
-          <Draggable
-            v-if="ordered_folders.length"
-            v-model="ordered_folders"
-            itemKey="id"
-            class="chime__ordered-folders"
-            handle=".handle"
-            :animation="200"
-            :disabled="false"
-            ghostClass="ghost"
-          >
-            <template #item="{ element }">
-              <div>
-                <FolderCard
-                  :chime="chime"
-                  :folder="element"
-                  :showMoveIcon="ordered_folders.length > 1"
-                  @change="loadChime"
-                />
-              </div>
-            </template>
-          </Draggable>
+            <div class="grid-cols-2">
+              <Draggable
+                v-if="ordered_folders.length"
+                v-model="ordered_folders"
+                itemKey="id"
+                class="chime__ordered-folders"
+                handle=".handle"
+                :animation="200"
+                :disabled="false"
+                ghostClass="ghost"
+              >
+                <template #item="{ element }">
+                  <div>
+                    <FolderCard
+                      :chime="chime"
+                      :folder="element"
+                      :showMoveIcon="ordered_folders.length > 1"
+                      @change="loadChime"
+                    />
+                  </div>
+                </template>
+              </Draggable>
+              <JoinPanel :chime="chime" :includeFullUrl="true" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </DefaultLayout>
 </template>
 
 <script>
 import Draggable from "vuedraggable";
 import orderBy from "lodash/orderBy";
-import NavBar from "../../components/NavBar.vue";
 import NewFolder from "./NewFolder.vue";
 import Spinner from "../../components/Spinner.vue";
 import ErrorDialog from "../../components/ErrorDialog.vue";
@@ -111,16 +118,18 @@ import ChimeManagement from "./ChimeManagement.vue";
 import ChimeExport from "./ChimeExport.vue";
 import FolderCard from "./FolderCard.vue";
 import Chip from "../../components/Chip.vue";
+import JoinPanel from "../../components/JoinPanel.vue";
 import {
   selectIsCanvasChime,
   selectCanvasCourseUrl,
 } from "../../helpers/chimeSelectors";
+import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import * as api from "../../common/api";
+import Back from "../../components/Back.vue";
 
 export default {
   components: {
     Draggable,
-    NavBar,
     NewFolder,
     Spinner,
     ErrorDialog,
@@ -128,8 +137,21 @@ export default {
     ChimeExport,
     FolderCard,
     Chip,
+    DefaultLayout,
+    Back,
+    JoinPanel,
   },
-  props: ["user", "chimeId"],
+  props: {
+    user: {
+      type: Object,
+      required: false,
+      default: null,
+    },
+    chimeId: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       isReady: false,
@@ -249,7 +271,7 @@ export default {
   margin: 0 0 0.25rem 0;
 }
 .chime__header {
-  margin: 2rem 0 2rem;
+  margin-bottom: 2rem;
 }
 .chime-header__canvas-chip {
   margin-bottom: 0.5rem;

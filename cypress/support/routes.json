@@ -112,6 +112,15 @@
       "POST"
     ]
   },
+  "cypress.current-user": {
+    "name": "cypress.current-user",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@currentUser",
+    "uri": "__cypress__/current-user",
+    "method": [
+      "POST"
+    ]
+  },
   "shibboleth-login": {
     "name": "shibboleth-login",
     "domain": null,

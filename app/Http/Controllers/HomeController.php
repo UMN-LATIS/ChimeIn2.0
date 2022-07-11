@@ -10,25 +10,20 @@ use Illuminate\Support\Facades\Cookie;
 class HomeController extends Controller
 {
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $req)
     {
-        return view('home', ['user' => $req->user()]);
+        return view('app', ['user' => $req->user()]);
     }
 
-    
+
     // call this URL with target=<target> to force a login and redirect
-    public function loginAndRedirect(Request $req) {
+    public function loginAndRedirect(Request $req)
+    {
         $target = $req->query('target');
-        if(!Auth::user()->guest_user) {
+        if (!Auth::user()->guest_user) {
             return redirect($target);
-        }
-        else {
-            return redirect()->guest('login');    
+        } else {
+            return redirect()->guest('login');
         }
     }
 }

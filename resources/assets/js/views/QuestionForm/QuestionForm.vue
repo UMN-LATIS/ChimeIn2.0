@@ -143,21 +143,22 @@ export default {
           label: "Free Response",
         },
         {
-          id: "text_heatmap_response",
-          label: "Text Heatmap",
+          id: "slider_response",
+          label: "Slider",
         },
         {
           id: "image_response",
           label: "Image Response",
         },
         {
-          id: "slider_response",
-          label: "Slider",
+          id: "heatmap_response",
+          label: "Image Heatmap",
         },
         {
-          id: "heatmap_response",
-          label: "Heatmap",
+          id: "text_heatmap_response",
+          label: "Text Heatmap",
         },
+
         {
           id: "no_response",
           label: "No Response (placeholder)",

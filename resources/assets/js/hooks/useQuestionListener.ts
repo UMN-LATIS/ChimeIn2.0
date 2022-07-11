@@ -1,11 +1,12 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
-import { getFolderWithQuestions } from "../common/api";
+import { getFolderWithQuestions, getChime } from "../common/api";
 import echoClient from "../common/echoClient.js";
-import type { Folder, Maybe, Question } from "../types";
+import { Chime, Folder, Maybe, Question } from "../types";
 
 export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
   const folder = ref<Maybe<Folder>>(null);
+  const chime = ref<Maybe<Chime>>(null);
   const questions = computed<Question[]>({
     get() {
       return folder.value?.questions ?? [];
@@ -28,7 +29,10 @@ export default function useQuestionListener({ chimeId, folderId }) {
   }
 
   onMounted(async () => {
-    folder.value = await getFolderWithQuestions({ chimeId, folderId });
+    [folder.value, chime.value] = await Promise.all([
+      getFolderWithQuestions({ chimeId, folderId }),
+      getChime(chimeId),
+    ]);
 
     echoClient
       .join(`session-status.${chimeId}`)
@@ -108,6 +112,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
   });
 
   return {
+    chime,
     folder,
     questions,
     usersCount,

@@ -39,12 +39,12 @@ export default {
 .chime-card {
   border: 1px solid #ddd;
   border-radius: 0.25rem;
-  background: #fafafa;
+  background: #fff;
   display: flex;
   align-items: flex-start;
   line-height: 1;
   transition: all 0.1s ease-out;
-  margin: 0.5rem 0;
+  margin-bottom: 0.5rem;
 
   a {
     color: var(--black);
