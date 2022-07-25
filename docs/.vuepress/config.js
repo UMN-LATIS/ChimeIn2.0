@@ -1,5 +1,4 @@
 module.exports = {
-  plugins: ["vuepress-plugin-export"],
   title: "ChimeIn Documentation",
   base: "/ChimeIn2.0/",
   themeConfig: {
@@ -34,7 +33,7 @@ module.exports = {
   },
   plugins: [
     [
-      "vuepress-plugin-medium-zoom",
+      "@vuepress/plugin-medium-zoom",
       {
         selector: "img",
         delay: 300,
@@ -46,5 +45,6 @@ module.exports = {
         },
       },
     ],
+    ["vuepress-plugin-export"],
   ],
 };
