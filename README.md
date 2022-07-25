@@ -94,29 +94,3 @@ For example:
 ```sh
 ./vendor/bin/dep deploy dev --branch feature/my-feature
 ```
-
-## Documentation
-
-ChimeIn documentation is in the `docs` folder, and published at <https://umn-latis.github.io/ChimeIn2.0/>. It uses [VuePress](https://vuepress.vuejs.org/) for static site generation.
-
-To develop locally:
-
-```sh
-cd docs
-yarn install
-yarn docs:dev
-```
-
-Building the documentation:
-
-```sh
-cd docs
-yarn docs:build
-```
-
-and publishing:
-
-```sh
-cd docs
-yarn docs:publish
-```
