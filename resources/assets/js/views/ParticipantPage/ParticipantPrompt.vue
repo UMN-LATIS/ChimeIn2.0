@@ -229,7 +229,7 @@ export default {
   position: relative;
   text-transform: uppercase;
   font-weight: bold;
-  color: #999;
+  color: var(--neutral-500);
   font-size: 0.8rem;
   display: flex;
   justify-content: space-between;
