@@ -208,14 +208,14 @@ export default {
   display: block;
   height: 0.8rem;
   width: 0.8rem;
-  background: #ccc;
+  background: var(--neutral-300);
   position: absolute;
   left: 0;
   top: 0;
 }
 
 .save-succeeded.participant-prompt:before {
-  background: #31d158;
+  background: #3cc03c;
 }
 .is-saving.participant-prompt:before {
   background: var(--gold);
@@ -229,7 +229,7 @@ export default {
   position: relative;
   text-transform: uppercase;
   font-weight: bold;
-  color: #999;
+  color: var(--neutral-500);
   font-size: 0.8rem;
   display: flex;
   justify-content: space-between;
@@ -237,7 +237,7 @@ export default {
 }
 
 .save-succeeded .prompt-header {
-  color: #31d158;
+  color: #008d22;
 }
 .is-saving .prompt-header {
   color: var(--gold);
