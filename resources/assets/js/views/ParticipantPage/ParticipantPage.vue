@@ -15,7 +15,7 @@
         {{ error }}
       </div>
       <VueAnnouncer />
-      <main class="participant-page__main container">
+      <div class="container">
         <div class="card">
           <!-- nav tabs -->
           <div class="card-header">
@@ -116,7 +116,7 @@
             </p>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   </DefaultLayout>
 </template>
