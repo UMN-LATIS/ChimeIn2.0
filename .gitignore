@@ -18,5 +18,7 @@ yarn-error.log
 *.DS_Store
 .phpintel
 docs/.vuepress/dist
+docs/.vuepress/.cache
+docs/.vuepress/.temp
 /cypress/**/routes.json
 /cypress/**/__diff_output__
