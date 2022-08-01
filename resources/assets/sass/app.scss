@@ -51,12 +51,18 @@
   box-shadow: 2px 2px 18px lightgray;
 }
 
+html {
+  height: -webkit-fill-available;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   color: var(--black);
   line-height: 1.4;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 main {
@@ -140,10 +146,6 @@ img {
   max-width: 90em;
   margin: auto;
   padding: 0 1rem;
-}
-
-#app {
-  min-height: 100vh;
 }
 
 @media (min-width: 50rem) {
