@@ -19,8 +19,8 @@
         <section class="card">
           <!-- nav tabs -->
           <div class="card-header">
-            <h2>Chime Questions</h2>
-            <ul class="nav nav-tabs card-header-tabs d-flex" role="tablist">
+            <h2 class="visually-hidden">Chime Questions</h2>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist">
               <li class="nav-item" role="none">
                 <a
                   id="open-questions-tab"
