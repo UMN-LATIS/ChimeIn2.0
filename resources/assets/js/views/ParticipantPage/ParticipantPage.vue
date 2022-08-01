@@ -15,33 +15,50 @@
         {{ error }}
       </div>
       <VueAnnouncer />
-      <main class="participant-page__main container">
-        <div class="card">
+      <div class="container" role="none">
+        <section class="card">
           <!-- nav tabs -->
           <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
-              <li class="nav-item">
+            <h2 class="visually-hidden">Chime Questions</h2>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist">
+              <li class="nav-item" role="none">
                 <a
+                  id="open-questions-tab"
                   class="nav-link active"
                   data-toggle="tab"
-                  href="#currentQuestions"
-                  >Open Questions</a
+                  type="button"
+                  role="tab"
+                  aria-controls="open-questions"
+                  aria-selected="true"
+                  href="#open-questions"
                 >
+                  Open Questions
+                </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#pastQuestions"
-                  >Answered Questions</a
+              <li class="nav-item" role="none">
+                <a
+                  id="answered-questions-tab"
+                  class="nav-link"
+                  data-toggle="tab"
+                  type="button"
+                  role="tab"
+                  aria-controls="answered-questions"
+                  aria-selected="false"
+                  href="#answered-questions"
                 >
+                  Answered Questions
+                </a>
               </li>
             </ul>
           </div>
 
           <div class="tab-content">
-            <!-- openQuestions -->
             <div
-              id="currentQuestions"
+              id="open-questions"
               class="tab-pane container active"
               aria-live="polite"
+              role="tabpanel"
+              aria-labelledby="open-questions-tab"
             >
               <div v-if="ltiLaunchWarning">
                 <h1 class="text-center">
@@ -68,13 +85,13 @@
                 </p>
               </div>
               <template v-else>
-                <div
+                <article
                   v-if="filteredSession.length < 1"
                   key="none"
                   class="text-center"
                 >
-                  <h1>No Open Questions</h1>
-                </div>
+                  <h3>No Open Questions</h3>
+                </article>
                 <TransitionGroup v-if="filteredSession.length > 0" name="fade">
                   <ParticipantPrompt
                     v-for="s in filteredSession"
@@ -87,9 +104,12 @@
                 </TransitionGroup>
               </template>
             </div>
-
-            <!-- answered Questions -->
-            <div id="pastQuestions" class="tab-pane container">
+            <div
+              id="answered-questions"
+              class="tab-pane container"
+              role="tabpanel"
+              aria-labelledby="answered-questions-tab"
+            >
               <div v-if="responses.length < 1" class="text-center">
                 <h1>No Answered Questions</h1>
               </div>
@@ -115,8 +135,8 @@
               </small>
             </p>
           </div>
-        </div>
-      </main>
+        </section>
+      </div>
     </div>
   </DefaultLayout>
 </template>

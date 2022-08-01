@@ -1,7 +1,9 @@
 <template>
-  <div class="row responseContainer">
+  <article class="row responseContainer">
     <div v-if="response.session && response.session.question" class="col-12">
-      <p class="questionText" v-html="response.session.question.text"></p>
+      <div role="heading" aria-level="3">
+        <div class="questionText" v-html="response.session.question.text" />
+      </div>
       <component
         :is="response.session.question.question_info.question_type"
         :question="response.session.question"
@@ -29,7 +31,7 @@
       </small>
       <hr />
     </div>
-  </div>
+  </article>
 </template>
 
 <script>

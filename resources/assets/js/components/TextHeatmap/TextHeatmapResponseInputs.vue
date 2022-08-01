@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :aria-labelledby="`question-${question.id}-heading`">
     <div
       data-cy="text-heatmap-highlighted-text-container"
       class="form-group text-heatmap-highlighted-text-container"

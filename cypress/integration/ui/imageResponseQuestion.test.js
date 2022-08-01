@@ -190,7 +190,7 @@ describe("image response", () => {
 
         // both responses should show in the Answered Questions tab
         cy.contains("Answered Questions").click();
-        cy.get("#pastQuestions [data-cy=image-response-thumbnail]").should(
+        cy.get("#answered-questions [data-cy=image-response-thumbnail]").should(
           "have.length",
           2
         );

@@ -1,7 +1,8 @@
 <template>
-  <div
+  <article
     v-if="question.question_info.question_type"
     class="participant-prompt"
+    :aria-label="`${questionTypeString} Question`"
     :class="{
       'save-succeeded': hasPreviouslySaved || saveSucceeded,
       'save-failed': saveFailed,
@@ -9,11 +10,17 @@
     }"
   >
     <div class="prompt-question-container">
-      <header class="prompt-header">
+      <div class="prompt-status">
         {{ saveStatus || questionTypeString }}
-      </header>
+      </div>
 
-      <div class="question-text" v-html="question.text" />
+      <div
+        :id="`question-${question.id}-heading`"
+        role="heading"
+        aria-level="3"
+      >
+        <div class="question-text" v-html="question.text" />
+      </div>
     </div>
 
     <div class="prompt-response-area">
@@ -45,7 +52,7 @@
       data-cy="show-folder-to-participants"
       ><strong>Folder</strong>: {{ session.question.folder.name }}
     </small>
-  </div>
+  </article>
 </template>
 
 <script>
@@ -224,7 +231,7 @@ export default {
   background: var(--red);
 }
 
-.prompt-header {
+.prompt-status {
   line-height: 1;
   position: relative;
   text-transform: uppercase;
@@ -236,13 +243,13 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-.save-succeeded .prompt-header {
+.save-succeeded .prompt-status {
   color: #008d22;
 }
-.is-saving .prompt-header {
+.is-saving .prompt-status {
   color: var(--gold);
 }
-.save-failed .prompt-header {
+.save-failed .prompt-status {
   color: var(--red);
 }
 
