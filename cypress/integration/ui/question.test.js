@@ -889,7 +889,7 @@ describe("question", () => {
           cy.visit(`/join/${testChime.access_code}`);
 
           // make sure image is loaded
-          cy.get("#currentQuestions [data-cy=image-heatmap-target]")
+          cy.get("#open-questions [data-cy=image-heatmap-target]")
             .as("image-heatmap-target")
             .should("be.visible")
             .and(($img) => {
