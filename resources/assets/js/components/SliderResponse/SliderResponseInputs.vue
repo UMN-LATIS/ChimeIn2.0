@@ -5,10 +5,13 @@
         <div class="range-wrap">
           <input
             id="formControlRange"
+            :aria-labelledby="`question-${question.id}-heading`"
             type="range"
             :disabled="disabled"
             class="form-control-range custom-range range"
             :value="sliderValue"
+            :min="left_choice_text"
+            :max="right_choice_text"
             data-cy="slider-response-input"
             @change="valueChanged($event.target.value)"
           />

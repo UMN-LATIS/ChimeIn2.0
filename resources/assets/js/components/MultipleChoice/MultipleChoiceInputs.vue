@@ -1,6 +1,10 @@
 <template>
   <div data-cy="multiple-choice-participant-choices">
-    <fieldset class="form-group" role="radiogroup">
+    <fieldset
+      class="form-group"
+      role="radiogroup"
+      :aria-labelledby="`question-${question.id}-heading`"
+    >
       <div v-for="(option, key) in selectOptions" :key="key" class="form-check">
         <input
           :id="'radio' + question.id + '_' + key"
