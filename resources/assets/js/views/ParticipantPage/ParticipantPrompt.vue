@@ -2,6 +2,7 @@
   <article
     v-if="question.question_info.question_type"
     class="participant-prompt"
+    :aria-label="`${questionTypeString} Question`"
     :class="{
       'save-succeeded': hasPreviouslySaved || saveSucceeded,
       'save-failed': saveFailed,
