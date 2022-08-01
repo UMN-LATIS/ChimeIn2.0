@@ -1,6 +1,6 @@
 <template>
   <header class="navbar">
-    <Heading></Heading>
+    <Header />
     <div class="vuepress-nav">
       <SidebarButton @toggle-sidebar="$emit('toggle-sidebar')" />
 
@@ -48,10 +48,10 @@ import AlgoliaSearchBox from "@AlgoliaSearchBox";
 import SearchBox from "@SearchBox";
 import SidebarButton from "@theme/components/SidebarButton.vue";
 import NavLinks from "@theme/components/NavLinks.vue";
-import Heading from "@theme/components/Header.vue";
+import Header from "@theme/components/Header.vue";
 
 export default {
-  components: { SidebarButton, NavLinks, SearchBox, AlgoliaSearchBox, Heading },
+  components: { SidebarButton, NavLinks, SearchBox, AlgoliaSearchBox, Header },
 
   data() {
     return {

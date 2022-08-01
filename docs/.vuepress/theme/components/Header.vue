@@ -60,7 +60,9 @@
       <label class="umnhf" for="umnhf-h-st">Search</label>
       <input class="umnhf" id="umnhf-h-st" type="text" name="q" />
       <label class="umnhf" for="umnhf-h-sb">Submit search query</label>
-      <input class="umnhf" id="umnhf-h-sb" type="submit" value="" />
+      <button class="umnhf" id="umnhf-h-sb" type="submit" value="">
+        <span class="visually-hidden">Search</span>
+      </button>
     </form>
   </header>
 </template>
