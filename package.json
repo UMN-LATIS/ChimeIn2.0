@@ -4,10 +4,10 @@
   "scripts": {
     "bundlewatch": "bundlewatch --config .bundlewatch.config.json",
     "dev": "npm run development",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
-    "docs:publish": "vuepress build docs && gh-pages -d docs/.vuepress/dist",
     "development": "mix",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs",
     "watch": "mix watch",
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
@@ -28,6 +28,7 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@algolia/client-search": "^4.14.2",
     "@babel/core": "^7.18.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
@@ -65,9 +66,9 @@
     "sass-loader": "^13.0.2",
     "ts-loader": "^9.3.1",
     "typescript": "^4.6.4",
+    "vitepress": "^1.0.0-alpha.4",
     "vue-loader": "^17.0.0",
     "vue-tsc": "^0.34.13",
-    "vuepress": "^2.0.0-beta.49",
     "webpack": "^5.72.1",
     "webpack-bundle-analyzer": "^4.5.0"
   },
@@ -104,7 +105,7 @@
     "socket.io-client": "^2.4.0",
     "stemmer": "^2.0.0",
     "stopword": "^2.0.2",
-    "vue": "^3.2.33",
+    "vue": "^3.2.37",
     "vue-carousel": "^0.18.0",
     "vue-chartjs": "^4.1.1",
     "vue-demi": "^0.13.2",
@@ -116,7 +117,6 @@
     "vue-select": "^4.0.0-beta.3",
     "vue-template-compiler": "^2.7.8",
     "vuedraggable": "^4.1.0",
-    "vuepress-plugin-medium-zoom": "^1.1.9",
     "vuex": "^4.0.2",
     "webpack-cli": "^4.9.2"
   },
