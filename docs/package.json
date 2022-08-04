@@ -5,11 +5,15 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build"
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:serve": "vitepress serve --port=8080"
   },
   "devDependencies": {
     "vitepress": "^1.0.0-alpha.4",
     "vue": "^3.2.37"
+  },
+  "dependencies": {
+    "@umn-latis/vitepress-theme-umn": "^0.1.0-0"
   }
 }

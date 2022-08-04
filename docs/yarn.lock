@@ -163,6 +163,11 @@
   resolved "https://registry.yarnpkg.com/@types/web-bluetooth/-/web-bluetooth-0.0.14.tgz#94e175b53623384bff1f354cdb3197a8d63cdbe5"
   integrity sha512-5d2RhCard1nQUC3aHcq/gHzWYO6K0WJmAbjO7mQJgCQKtZpgXxv1rOM6O/dBDhDYYVutk1sciOgNSe+5YyfM8A==
 
+"@umn-latis/vitepress-theme-umn@^0.1.0-0":
+  version "0.1.0-0"
+  resolved "https://registry.yarnpkg.com/@umn-latis/vitepress-theme-umn/-/vitepress-theme-umn-0.1.0-0.tgz#c2b02f0dd1d33b03e6f08b6b21557cb16ef7ffb1"
+  integrity sha512-CCSq8ahZJ7lK2Js8KG+LFOpI6LlSvz3J/NMfM+k8C7a3Re8+FCyiAx9mxWm6jkJ6qWRvMZ8YGC1zCloa3P8o6g==
+
 "@vitejs/plugin-vue@^2.3.2":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-2.3.3.tgz#fbf80cc039b82ac21a1acb0f0478de8f61fbf600"
