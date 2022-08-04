@@ -1,4 +1,6 @@
-export default {
+import { defineConfig } from "vitepress";
+
+export default defineConfig({
   lang: "en-US",
   title: "ChimeIn Help",
   base: "/ChimeIn2.0/",
@@ -70,4 +72,4 @@ export default {
     //   indexName: "",
     // },
   },
-};
+});
