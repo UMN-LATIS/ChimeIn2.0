@@ -97,7 +97,7 @@ For example:
 
 ## Documentation
 
-ChimeIn documentation is in the `docs` folder, and published at <https://umn-latis.github.io/ChimeIn2.0/>. It uses [VuePress](https://vuepress.vuejs.org/) for static site generation.
+ChimeIn documentation is in the `docs` folder, and published at <https://umn-latis.github.io/ChimeIn2.0/>. It uses [VitePress](https://vitepress.vuejs.org/) for static site generation.
 
 To develop locally:
 
