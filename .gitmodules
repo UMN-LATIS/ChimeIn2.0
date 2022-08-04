@@ -1,6 +1,3 @@
 [submodule "resources/assets/cla-vue-template"]
 	path = resources/assets/cla-vue-template
 	url = https://github.com/UMN-LATIS/CLA-vue-template.git
-[submodule "docs/.vitepress/theme-umn"]
-	path = docs/.vitepress/theme-umn
-	url = https://github.com/UMN-LATIS/vitepress-theme-umn.git
