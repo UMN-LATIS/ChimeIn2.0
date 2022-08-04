@@ -1,17 +1,21 @@
 {
+  "private": true,
+  "name": "docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "docs:dev": "vuepress dev",
-    "docs:build": "vuepress build",
-    "docs:publish": "yarn docs:build && gh-pages -d .vuepress/dist"
-  },
-  "dependencies": {
-    "medium-zoom": "^1.0.6",
-    "vue": "2.7",
-    "vuepress": "^1.9.7",
-    "vuepress-plugin-export": "^0.2.0"
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:serve": "vitepress serve --port=8080",
+    "docs:publish": "yarn docs:build && gh-pages -d .vitepress/dist"
   },
   "devDependencies": {
-    "@vuepress/plugin-medium-zoom": "^1.9.7",
+    "vitepress": "^1.0.0-alpha.4",
+    "vue": "^3.2.37",
     "gh-pages": "^4.0.0"
+  },
+  "dependencies": {
+    "@umn-latis/vitepress-theme-umn": "^0.1.0-0"
   }
 }
