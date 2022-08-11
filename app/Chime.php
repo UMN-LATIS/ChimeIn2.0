@@ -48,7 +48,7 @@ class Chime extends Model
     public function getUniqueCode() {
         $accessCode = DB::select('SELECT LPAD(random_num, 6,0) as code
 FROM (
-  SELECT FLOOR(RAND() * 999999) AS random_num
+  SELECT FLOOR(RAND() * 999999) AS random_num from chimes limit 100
 ) AS numbers_mst_plus_1
 WHERE random_num NOT IN (SELECT access_code FROM chimes WHERE access_Code IS NOT NULL)
 LIMIT 1');
