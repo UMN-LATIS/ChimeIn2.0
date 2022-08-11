@@ -7812,22 +7812,22 @@
     "packages-dev": [
         {
             "name": "appzcoder/crud-generator",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/appzcoder/crud-generator.git",
-                "reference": "1bc50e0260c1f713b657233be81620b0cb1a81fc"
+                "reference": "207dbdd1f9a8dd8c791d5304d57826c1bbb510b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/appzcoder/crud-generator/zipball/1bc50e0260c1f713b657233be81620b0cb1a81fc",
-                "reference": "1bc50e0260c1f713b657233be81620b0cb1a81fc",
+                "url": "https://api.github.com/repos/appzcoder/crud-generator/zipball/207dbdd1f9a8dd8c791d5304d57826c1bbb510b3",
+                "reference": "207dbdd1f9a8dd8c791d5304d57826c1bbb510b3",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^5.3|^6.0|^7.0|>=8.0",
-                "laravelcollective/html": "^5.3|^6.0",
-                "php": ">=5.6.4|>=7.0|>=8.0"
+                "illuminate/support": "^5.3|^6.0|^7.0|^8.0|^9.0",
+                "laravelcollective/html": "^5.3|^6.0|^7.0",
+                "php": ">=5.6.4|>=7.0|^8.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
@@ -7871,9 +7871,9 @@
             ],
             "support": {
                 "issues": "https://github.com/appzcoder/crud-generator/issues",
-                "source": "https://github.com/appzcoder/crud-generator/tree/v3.3.0"
+                "source": "https://github.com/appzcoder/crud-generator/tree/v3.3.1"
             },
-            "time": "2022-03-25T08:54:28+00:00"
+            "time": "2022-08-09T18:29:29+00:00"
         },
         {
             "name": "barryvdh/laravel-debugbar",
