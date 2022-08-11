@@ -1808,6 +1808,13 @@
     "@typescript-eslint/types" "5.25.0"
     eslint-visitor-keys "^3.3.0"
 
+"@umn-latis/quill-better-image-module@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@umn-latis/quill-better-image-module/-/quill-better-image-module-0.1.0.tgz#1ee9f5716d87150e1d7c3c36cf7fbb85e6e8369c"
+  integrity sha512-PHo5y31TgfWArLPjBw6f1gkT9+ziDr/8y/qtnCIsl098V4BsHF9tQINFzAGLpQk1JPK2IcHTob1PYH1621izIg==
+  dependencies:
+    lodash "^4.17.21"
+
 "@volar/code-gen@0.34.13":
   version "0.34.13"
   resolved "https://registry.yarnpkg.com/@volar/code-gen/-/code-gen-0.34.13.tgz#39c278777d33a06c6806f1701df3143441c71e16"

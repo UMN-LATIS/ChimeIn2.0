@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.5",
+    "@umn-latis/quill-better-image-module": "^0.1.0",
     "@vue-a11y/announcer": "^3.1.5",
     "axios": "^0.27",
     "bootstrap": "^4.6.0",
