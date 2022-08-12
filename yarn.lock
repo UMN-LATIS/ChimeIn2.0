@@ -6157,10 +6157,10 @@ klona@^2.0.4, klona@^2.0.5:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
 
-laravel-echo@^1.12.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.12.0.tgz#b0f04092ed6708a26a4b03760c7a36e931a38ef3"
-  integrity sha512-eK2uRxuki7aIFKeubMq2hDwmsfF1wiaHAfEXpHk9ihjxoJpHadU7Q2d41b+yXi5Es8ggzfLKyWyDN7A6E2P8TQ==
+laravel-echo@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.13.1.tgz#fe7d0c997a38a6fb6eb36f147a57b23b4090cdd9"
+  integrity sha512-tvJtbE0ppEwlO/rcFyN1JCLunDUG5pIVFWORSCkzkGEcJQzB+Eevs9PpIvsMtkz2JTNbUPHU+5GSkSh1/TIr4A==
 
 laravel-mix@^6.0.43:
   version "6.0.43"
