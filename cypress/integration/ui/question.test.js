@@ -945,6 +945,49 @@ describe("question", () => {
           );
         })
         .then(() => {
+          // check the circle location shows up in the correct place
+          cy.get("#open-questions [data-cy=image-heatmap-click-spot]").as(
+            "click-spot"
+          );
+
+          cy.get("@click-spot")
+            .should("have.css", "top")
+            .should((topVal) => {
+              expect(topVal).to.include("px");
+              expect(Number.parseInt(topVal, 10)).to.be.within(99, 101);
+            });
+
+          cy.get("@click-spot")
+            .should("have.css", "left")
+            .should((leftVal) => {
+              expect(leftVal).to.include("px");
+              expect(Number.parseInt(leftVal, 10)).to.be.within(49, 51);
+            });
+        })
+        .then(() => {
+          // check the answered questions tab
+          cy.contains("Answered Questions").click();
+
+          // check the circle location shows up in the correct place
+          cy.get("#answered-questions [data-cy=image-heatmap-click-spot]").as(
+            "answered-click-spot"
+          );
+
+          cy.get("@answered-click-spot")
+            .should("have.css", "top")
+            .should((topVal) => {
+              expect(topVal).to.include("px");
+              expect(Number.parseInt(topVal, 10)).to.be.within(99, 101);
+            });
+
+          cy.get("@answered-click-spot")
+            .should("have.css", "left")
+            .should((leftVal) => {
+              expect(leftVal).to.include("px");
+              expect(Number.parseInt(leftVal, 10)).to.be.within(49, 51);
+            });
+        })
+        .then(() => {
           // login as faculty
           cy.login("faculty");
           cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
