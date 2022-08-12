@@ -11,9 +11,11 @@ class Question extends Model
 
     protected $fillable = ['text', 'order', 'question_info', 'anonymous', 'folder_id', "allow_multiple"];
     protected $dates = ['deleted_at'];
-     
+
     protected $casts = [
         'question_info' => 'array',
+        'anonymous' => 'boolean',
+        'allow_multiple' => 'boolean'
     ];
     public function folder() {
         return $this->belongsTo(Folder::class);

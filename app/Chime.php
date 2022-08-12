@@ -19,6 +19,13 @@ class Chime extends Model
         'join_instructions' => true,
     ];
     
+    protected $casts = [
+        'require_login' => 'boolean',
+        'students_can_view' => 'boolean',
+        'join_instructions' => 'boolean',
+        'show_folder_title_to_participants' => 'boolean'
+    ];
+
     protected $dates = ['deleted_at'];
     protected $cascadeDeletes = ['folders'];
 

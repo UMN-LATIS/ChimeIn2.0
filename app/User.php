@@ -32,6 +32,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $casts = [
+        'guest_user' => 'boolean',
+        'global_admin' => 'boolean',
+    ];
+
     public function chimes() {
         return $this->belongsToMany(Chime::class)
             ->withPivot('permission_number')
