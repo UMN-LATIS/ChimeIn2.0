@@ -198,6 +198,42 @@ describe("question", () => {
   });
 
   it("changes the folder");
+
+  it("persists question settings changes on save", () => {
+    let testChime;
+    let testFolder;
+    api
+      .createChime({ name: "Test Chime" })
+      .then((chime) => {
+        testChime = chime;
+        return api.createFolder({ name: "Test Folder", chimeId: chime.id });
+      })
+      .then((folder) => {
+        testFolder = folder;
+      })
+      .then(() => {
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+        // create the question
+        cy.get("[data-cy=new-question-button]").click();
+        cy.get("[data-cy=question-type]").type("Free Response{enter}");
+        cy.get("[data-cy=question-editor]").type("Free response question?");
+
+        // try toggling a question option and save
+        cy.get('[data-cy="allow-multiple-responses-checkbox"]').click();
+        cy.contains("Save").click();
+        cy.wait("@apiCreateQuestion");
+
+        // open the question
+        cy.get('[data-cy="edit-question-button"]').click();
+
+        // check that allow multiple is still checked
+        cy.get('[data-cy="allow-multiple-responses-checkbox"]').should(
+          "be.checked"
+        );
+      });
+  });
+
   it("allows multiple responses", () => {
     let testChime;
     let testFolder;
