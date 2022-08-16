@@ -134,8 +134,7 @@ export default {
 }
 
 .clickPointer {
-  margin-top: -1.5em;
-  margin-left: -0.5em;
+  transform: translate(-50%, -50%);
   padding: 1em;
   border: solid 0.5em #c00;
   border-radius: 50%;
