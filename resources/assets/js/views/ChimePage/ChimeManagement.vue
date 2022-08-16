@@ -104,7 +104,7 @@
                   <button
                     data-cy="remove-user-from-chime-button"
                     class="btn btn-sm btn-danger"
-                    @click="deleteUser(index)"
+                    @click="deleteUser(u.id)"
                   >
                     Remove User
                   </button>
@@ -207,9 +207,9 @@ async function saveUsers() {
   }
 }
 
-function deleteUser(index) {
+function deleteUser(userId) {
   if (!confirm("Are you sure you want to remove this user?")) return;
-  users.value.splice(index, 1);
+  users.value = users.value.filter((u) => u.id !== userId);
   saveUsers();
 }
 
