@@ -16,7 +16,6 @@
 .fade-enter-active,
 .fade-leave-active {
   transition: all 1s;
-  // position: absolute;
 }
 
 .fade-enter,
@@ -53,17 +52,19 @@
 }
 
 html {
-  height: 100%;
+  height: -webkit-fill-available;
 }
 
 body {
-  min-height: 100%;
   font-family: "Open Sans", sans-serif;
   color: var(--black);
   line-height: 1.4;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
+
 main {
   flex-grow: 1;
 }
@@ -145,15 +146,6 @@ img {
   max-width: 90em;
   margin: auto;
   padding: 0 1rem;
-}
-
-html,
-body {
-  height: 100%;
-}
-
-#app {
-  min-height: 100%;
 }
 
 @media (min-width: 50rem) {

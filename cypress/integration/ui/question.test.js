@@ -198,6 +198,42 @@ describe("question", () => {
   });
 
   it("changes the folder");
+
+  it("persists question settings changes on save", () => {
+    let testChime;
+    let testFolder;
+    api
+      .createChime({ name: "Test Chime" })
+      .then((chime) => {
+        testChime = chime;
+        return api.createFolder({ name: "Test Folder", chimeId: chime.id });
+      })
+      .then((folder) => {
+        testFolder = folder;
+      })
+      .then(() => {
+        cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
+
+        // create the question
+        cy.get("[data-cy=new-question-button]").click();
+        cy.get("[data-cy=question-type]").type("Free Response{enter}");
+        cy.get("[data-cy=question-editor]").type("Free response question?");
+
+        // try toggling a question option and save
+        cy.get('[data-cy="allow-multiple-responses-checkbox"]').click();
+        cy.contains("Save").click();
+        cy.wait("@apiCreateQuestion");
+
+        // open the question
+        cy.get('[data-cy="edit-question-button"]').click();
+
+        // check that allow multiple is still checked
+        cy.get('[data-cy="allow-multiple-responses-checkbox"]').should(
+          "be.checked"
+        );
+      });
+  });
+
   it("allows multiple responses", () => {
     let testChime;
     let testFolder;
@@ -889,7 +925,7 @@ describe("question", () => {
           cy.visit(`/join/${testChime.access_code}`);
 
           // make sure image is loaded
-          cy.get("#currentQuestions [data-cy=image-heatmap-target]")
+          cy.get("#open-questions [data-cy=image-heatmap-target]")
             .as("image-heatmap-target")
             .should("be.visible")
             .and(($img) => {
@@ -907,6 +943,49 @@ describe("question", () => {
           cy.get("@image-heatmap-target").matchImageSnapshot(
             `image-heatmap-response-view_1920x1080`
           );
+        })
+        .then(() => {
+          // check the circle location shows up in the correct place
+          cy.get("#open-questions [data-cy=image-heatmap-click-spot]").as(
+            "click-spot"
+          );
+
+          cy.get("@click-spot")
+            .should("have.css", "top")
+            .should((topVal) => {
+              expect(topVal).to.include("px");
+              expect(Number.parseInt(topVal, 10)).to.be.within(99, 101);
+            });
+
+          cy.get("@click-spot")
+            .should("have.css", "left")
+            .should((leftVal) => {
+              expect(leftVal).to.include("px");
+              expect(Number.parseInt(leftVal, 10)).to.be.within(49, 51);
+            });
+        })
+        .then(() => {
+          // check the answered questions tab
+          cy.contains("Answered Questions").click();
+
+          // check the circle location shows up in the correct place
+          cy.get("#answered-questions [data-cy=image-heatmap-click-spot]").as(
+            "answered-click-spot"
+          );
+
+          cy.get("@answered-click-spot")
+            .should("have.css", "top")
+            .should((topVal) => {
+              expect(topVal).to.include("px");
+              expect(Number.parseInt(topVal, 10)).to.be.within(99, 101);
+            });
+
+          cy.get("@answered-click-spot")
+            .should("have.css", "left")
+            .should((leftVal) => {
+              expect(leftVal).to.include("px");
+              expect(Number.parseInt(leftVal, 10)).to.be.within(49, 51);
+            });
         })
         .then(() => {
           // login as faculty

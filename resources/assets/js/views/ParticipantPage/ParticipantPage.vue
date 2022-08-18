@@ -15,92 +15,125 @@
         {{ error }}
       </div>
       <VueAnnouncer />
-      <main class="participant-page__main container">
-        <div class="card">
+      <div class="container" role="none">
+        <section class="card">
           <!-- nav tabs -->
           <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
-              <li class="nav-item">
-                <a
-                  class="nav-link active"
-                  data-toggle="tab"
-                  href="#currentQuestions"
-                  >Open Questions</a
+            <h2 class="visually-hidden">Chime Questions</h2>
+            <ul class="nav nav-tabs card-header-tabs" role="tablist">
+              <li class="nav-item" role="none">
+                <button
+                  id="open-questions-tab"
+                  class="nav-link"
+                  :class="{ active: activeTab === 'open-questions' }"
+                  type="button"
+                  role="tab"
+                  aria-controls="open-questions"
+                  aria-selected="true"
+                  @click="setActiveTab('open-questions')"
                 >
+                  Open Questions
+                </button>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#pastQuestions"
-                  >Answered Questions</a
+              <li class="nav-item" role="none">
+                <button
+                  id="answered-questions-tab"
+                  class="nav-link"
+                  :class="{ active: activeTab === 'answered-questions' }"
+                  type="button"
+                  role="tab"
+                  aria-controls="answered-questions"
+                  aria-selected="false"
+                  @click="setActiveTab('answered-questions')"
                 >
+                  Answered Questions
+                </button>
               </li>
             </ul>
           </div>
 
           <div class="tab-content">
-            <!-- openQuestions -->
-            <div
-              id="currentQuestions"
-              class="tab-pane container active"
-              aria-live="polite"
-            >
-              <div v-if="ltiLaunchWarning">
-                <h1 class="text-center">
-                  Whoops! You Didn't Follow the Link in Canvas
-                </h1>
-                <p class="text-left">
-                  This chime is linked to Canvas. To participate, join this
-                  chime by clicking the assignment link in your Canvas course.
-                </p>
+            <Transition>
+              <div
+                v-if="activeTab === 'open-questions'"
+                id="open-questions"
+                class="tab-pane container"
+                :class="{ active: activeTab === 'open-questions' }"
+                aria-live="polite"
+                role="tabpanel"
+                aria-labelledby="open-questions-tab"
+              >
+                <div v-if="ltiLaunchWarning">
+                  <h1 class="text-center">
+                    Whoops! You Didn't Follow the Link in Canvas
+                  </h1>
+                  <p class="text-left">
+                    This chime is linked to Canvas. To participate, join this
+                    chime by clicking the assignment link in your Canvas course.
+                  </p>
 
-                <a class="btn btn-primary" :href="canvasCourseUrl">
-                  Go to Canvas
-                </a>
-                <p class="mt-3">
-                  <small class="text-muted">
-                    If you believe this message is in error, you may use
-                    <a href="#" @click.prevent="forceLoad = true">this link</a>
-                    to force the chime to load. You may not recieve credit for
-                    your responses. Please contact your instructor or
-                    <a href="mailto:help@umn.edu" class="text-muted"
-                      >help@umn.edu</a
-                    >.
-                  </small>
-                </p>
-              </div>
-              <template v-else>
-                <div
-                  v-if="filteredSession.length < 1"
-                  key="none"
-                  class="text-center"
-                >
-                  <h1>No Open Questions</h1>
+                  <a class="btn btn-primary" :href="canvasCourseUrl">
+                    Go to Canvas
+                  </a>
+                  <p class="mt-3">
+                    <small class="text-muted">
+                      If you believe this message is in error, you may use
+                      <a href="#" @click.prevent="forceLoad = true"
+                        >this link</a
+                      >
+                      to force the chime to load. You may not recieve credit for
+                      your responses. Please contact your instructor or
+                      <a href="mailto:help@umn.edu" class="text-muted"
+                        >help@umn.edu</a
+                      >.
+                    </small>
+                  </p>
                 </div>
-                <TransitionGroup v-if="filteredSession.length > 0" name="fade">
-                  <ParticipantPrompt
-                    v-for="s in filteredSession"
-                    :key="s.id"
-                    :session="s"
-                    :chime="chime"
-                    :responses="responses"
-                    @updateResponse="updateResponse"
-                  />
-                </TransitionGroup>
-              </template>
-            </div>
-
-            <!-- answered Questions -->
-            <div id="pastQuestions" class="tab-pane container">
-              <div v-if="responses.length < 1" class="text-center">
-                <h1>No Answered Questions</h1>
+                <template v-else>
+                  <article
+                    v-if="filteredSession.length < 1"
+                    key="none"
+                    class="text-center"
+                  >
+                    <h3>No Open Questions</h3>
+                  </article>
+                  <TransitionGroup
+                    v-if="filteredSession.length > 0"
+                    name="fade"
+                  >
+                    <ParticipantPrompt
+                      v-for="s in filteredSession"
+                      :key="s.id"
+                      :session="s"
+                      :chime="chime"
+                      :responses="responses"
+                      @updateResponse="updateResponse"
+                    />
+                  </TransitionGroup>
+                </template>
               </div>
-              <Response
-                v-for="(response, i) in sortedResponses"
-                v-else
-                :key="i"
-                :chime="chime"
-                :response="response"
-              />
-            </div>
+            </Transition>
+            <Transition>
+              <div
+                v-if="activeTab === 'answered-questions'"
+                id="answered-questions"
+                class="tab-pane container"
+                :class="{ active: activeTab === 'answered-questions' }"
+                role="tabpanel"
+                aria-labelledby="answered-questions-tab"
+              >
+                <div v-if="responses.length < 1" class="text-center">
+                  <h1>No Answered Questions</h1>
+                </div>
+                <Response
+                  v-for="(response, i) in sortedResponses"
+                  v-else
+                  :key="i"
+                  :chime="chime"
+                  :response="response"
+                />
+              </div>
+            </Transition>
             <p v-if="!ltiLaunchWarning" class="text-center m-0">
               <small v-if="chime.lti_course_title" class="text-muted"
                 >Not seeing the prompts you're looking for? Make sure you've
@@ -115,8 +148,8 @@
               </small>
             </p>
           </div>
-        </div>
-      </main>
+        </section>
+      </div>
     </div>
   </DefaultLayout>
 </template>
@@ -166,6 +199,7 @@ const forceLoad = ref(false);
 const store = useStore();
 const announcer = useAnnouncer();
 const route = useRoute();
+const activeTab = ref("open-questions");
 
 const canvasCourseUrl = computed(() => selectCanvasCourseUrl(chime.value));
 const joinUrl = computed(() => selectJoinUrl(chime.value));
@@ -291,6 +325,10 @@ onMounted(() => {
   });
 });
 
+function setActiveTab(tabId) {
+  activeTab.value = tabId;
+}
+
 onUnmounted(() => {
   echoClient.leave(`session-status.props.${props.chimeId}`);
   echoClient.connector.socket.off("reconnect");
@@ -308,6 +346,26 @@ onUnmounted(() => {
   grid-template-columns: 1fr 1fr;
   align-items: flex-end;
   text-align: center;
+}
+
+.nav-link {
+  width: 100%;
+  /* make inactive tab button background consistent across browsers */
+  background: rgb(239, 239, 239);
+}
+
+.v-enter-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+.v-enter-to,
+.v-leave-from {
+  opacity: 1;
 }
 
 .tab-pane {

@@ -1,18 +1,18 @@
 import { onMounted, ref } from "vue";
 import Quill from "quill";
-// import BlotFormatter from "quill-blot-formatter";
 import QuillImageUploader from "quill-image-uploader";
+import QuillBetterImage from "@umn-latis/quill-better-image-module";
 import mergeDeepRight from "ramda/es/mergeDeepRight.js";
 import "quill/dist/quill.snow.css";
 
 const defaultModules = [
-  // {
-  //   name: "blotFormatter",
-  //   module: BlotFormatter,
-  // },
   {
     name: "imageUploader",
     module: QuillImageUploader,
+  },
+  {
+    name: "betterImage",
+    module: QuillBetterImage,
   },
 ];
 
@@ -49,6 +49,7 @@ export default function useQuill({
           );
         },
       },
+      betterImage: {},
     },
     theme: "snow",
   };

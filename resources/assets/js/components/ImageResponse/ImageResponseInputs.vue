@@ -21,6 +21,7 @@
       <div class="dropbox-group">
         <ImageUploadDropbox
           v-if="chime"
+          :aria-labelledby="`question-${question.id}-heading`"
           class="dropbox-group__uploader"
           :imageSrc="tempImagePath"
           :uploadTo="`/api/chime/${chime.id}/image`"

@@ -52,7 +52,7 @@ export default {
 
 <style scoped>
 .default-layout {
-  min-height: 100%;
+  min-height: 100vh;
 }
 .default-layout__main {
   padding-bottom: 4rem;

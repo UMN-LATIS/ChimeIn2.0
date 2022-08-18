@@ -1,5 +1,7 @@
 # ChimeIn
 
+[![Tests](https://github.com/UMN-LATIS/ChimeIn2.0/actions/workflows/tests.yml/badge.svg)](https://github.com/UMN-LATIS/ChimeIn2.0/actions/workflows/tests.yml)
+
 > Real time polling for your presentations
 
 Chime-In is a web-based "clicker" tool for doing live polling in interactive presentations.
@@ -91,4 +93,30 @@ For example:
 
 ```sh
 ./vendor/bin/dep deploy dev --branch feature/my-feature
+```
+
+## Documentation
+
+ChimeIn documentation is in the `docs` folder, and published at <https://umn-latis.github.io/ChimeIn2.0/>. It uses [VitePress](https://vitepress.vuejs.org/) for static site generation.
+
+To develop locally:
+
+```sh
+cd docs
+yarn install
+yarn docs:dev
+```
+
+Building the documentation:
+
+```sh
+cd docs
+yarn docs:build
+```
+
+and publishing:
+
+```sh
+cd docs
+yarn docs:publish
 ```

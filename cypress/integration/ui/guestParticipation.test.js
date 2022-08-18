@@ -48,7 +48,7 @@ describe("participating as a guest", () => {
   it("shows no questions if none are open", () => {
     // guests should see no chime open
     cy.visit(`/join/${testChime.access_code}`)
-      .get("#currentQuestions")
+      .get("#open-questions")
       .should("contain.text", "No Open Questions");
   });
 
@@ -61,7 +61,7 @@ describe("participating as a guest", () => {
 
     // check that chime is now available to guests
     cy.visit(`/join/${testChime.access_code}`)
-      .get("#currentQuestions")
+      .get("#open-questions")
       .should("contain.text", testQuestion.text);
 
     cy.get("#radio1_0").click();

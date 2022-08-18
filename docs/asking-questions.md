@@ -52,9 +52,11 @@ You can **optionally** select a "correct" answer or answers for a question by ch
   - Hace referencia a la celebración griega en honor al diós del vino
   - Comparación entre flores que hace referencia a la frágilidad y pureza de la mujer
 
-#### True/False
+### True/False
 
-True/false questions are great ways to check comprehension. You can check the "True/false" box when making a multiple choice question to automatically fill in entries for True and False. These can easily be prepared both in and before class. Instructors can provide the prompt verbally and have students select true or false in ChimeIn for impromptu comprehension checks, or plan more detailed questions ahead of time.
+True/false questions can be created using a **multiple choice question** with two choices: "True" and "False".
+
+Examples:
 
 - Is this [spoken claim] true or false? T/F
 - Los trabajadores del Banco de Ahorros decidieron comprar juntos números de la lotería. T/F

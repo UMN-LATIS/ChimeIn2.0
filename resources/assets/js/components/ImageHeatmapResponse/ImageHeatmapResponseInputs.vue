@@ -3,6 +3,7 @@
     <div class="image-heatmap-response__image-container">
       <div
         v-if="image_coordinates && targetImageLoaded"
+        data-cy="image-heatmap-click-spot"
         class="clickPointer"
         :style="{
           top: image_coordinates.coordinate_y + 'px',
@@ -133,8 +134,7 @@ export default {
 }
 
 .clickPointer {
-  margin-top: -1.5em;
-  margin-left: -0.5em;
+  transform: translate(-50%, -50%);
   padding: 1em;
   border: solid 0.5em #c00;
   border-radius: 50%;

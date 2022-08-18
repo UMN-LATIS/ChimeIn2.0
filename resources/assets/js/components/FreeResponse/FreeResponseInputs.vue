@@ -3,6 +3,7 @@
     <div class="form-group">
       <textarea
         v-model="response_text"
+        :aria-labelledby="`question-${question.id}-heading`"
         data-cy="free-response-textarea"
         class="form-control"
         placeholder="Type your response"

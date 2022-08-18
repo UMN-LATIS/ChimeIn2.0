@@ -1,18 +1,18 @@
 <template>
-  <div class="view-mode grid">
+  <div class="view-mode">
     <header class="view-mode__header">
       <i class="material-icons">preview</i>
       <h2 class="view-mode__heading">Participant View</h2>
     </header>
-    <div class="view-mode__description">
-      <p>This is a preview of what your Chime participants will see.</p>
+    <div class="view-mode__description d-none d-md-block">
+      <p>This is a preview of what participants will see.</p>
       <p>
         <a :href="canvasUrl || joinUrl">{{ canvasUrl || joinUrl }}</a>
       </p>
     </div>
     <div>
       <router-link :to="callbackUrl" class="btn btn-outline-secondary">
-        Leave Participant View
+        Leave <span class="d-none d-md-inline">Participant View</span>
       </router-link>
     </div>
   </div>
