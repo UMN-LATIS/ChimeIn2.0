@@ -4,6 +4,7 @@ import "@vue-a11y/announcer/dist/style.css";
 import $ from "jquery";
 import "bootstrap";
 import ltilaunch from "./components/lti/ltiLaunch.vue";
+import DefaultLayout from "./layouts/DefaultLayout.vue";
 import router from "./router.js";
 import store from "./store.js";
 import axiosClient from "./common/axiosClient";
@@ -33,5 +34,6 @@ app.directive("tooltip", (el, binding) =>
 );
 
 app.component("LtiLaunch", ltilaunch);
+app.component("DefaultLayout", DefaultLayout);
 
 app.use(router).use(store).mount("#app");
