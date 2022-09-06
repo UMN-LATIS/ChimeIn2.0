@@ -8,5 +8,7 @@
     "moduleResolution": "node",
     "noImplicitAny": false,
     "allowJs": true
-  }
+  },
+  "include": ["resources"],
+  "exclude": ["vendor", "node_modules"]
 }
