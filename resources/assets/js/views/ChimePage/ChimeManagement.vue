@@ -45,9 +45,7 @@
             @update="handleUpdateChimeOptions"
           />
           <button
-            v-if="
-              chime.resource_link_pk > 0 || chime.lti13_resource_link_id > 0
-            "
+            v-if="isCanvasChime"
             class="btn btn-outline-success btn-sm align-items-center d-flex"
             @click="forceSyncGrades"
           >
@@ -124,25 +122,23 @@ import * as api from "../../common/api";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
 import { useStore } from "vuex";
+import { selectIsCanvasChime } from "../../helpers/chimeSelectors";
 import type { Chime, ChimeOptions, User, Partial } from "../../types";
 
-interface Props {
+const props = defineProps<{
   chime: Chime;
-}
+}>();
 
-const props = defineProps<Props>();
-
-interface Emits {
+const emit = defineEmits<{
   (event: "update:chime", chimeUpdates: Partial<Chime>);
-}
-
-const emit = defineEmits<Emits>();
+}>();
 
 const users = ref<User[]>([]);
 const chimeName = ref<string>(props.chime.name);
 const store = useStore();
 
-// successful force sync
+const isCanvasChime = computed((): boolean => selectIsCanvasChime(props.chime));
+
 const isForceSyncSuccessful = ref<boolean>(false);
 
 const sortedUsers = computed(() =>
