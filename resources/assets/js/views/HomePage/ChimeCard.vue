@@ -96,7 +96,7 @@ import {
   selectLtiReturnUrl,
   selectIsCanvasChime,
   selectJoinUrl,
-} from "../../helpers/chimeSelectors.js";
+} from "../../helpers/chimeSelectors";
 import isPermittedOnChime from "../../helpers/isPermittedOnChime";
 import { PERMISSIONS } from "../../helpers/constants";
 import DetailsItem from "../../components/DetailsItem.vue";
