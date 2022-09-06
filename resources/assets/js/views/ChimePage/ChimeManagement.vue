@@ -122,6 +122,7 @@ import * as api from "../../common/api";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
 import { useStore } from "vuex";
+import { selectIsCanvasChime } from "../../helpers/chimeSelectors";
 import type { Chime, ChimeOptions, User, Partial } from "../../types";
 
 const props = defineProps<{
@@ -136,14 +137,7 @@ const users = ref<User[]>([]);
 const chimeName = ref<string>(props.chime.name);
 const store = useStore();
 
-const isCanvasChime = computed((): boolean => {
-  const { resource_link_pk, lti13_resource_link_id } = props.chime;
-
-  return (
-    (!!resource_link_pk && resource_link_pk > 0) ||
-    (!!lti13_resource_link_id && lti13_resource_link_id > 0)
-  );
-});
+const isCanvasChime = computed((): boolean => selectIsCanvasChime(props.chime));
 
 const isForceSyncSuccessful = ref<boolean>(false);
 
