@@ -7,7 +7,8 @@
     "jsx": "preserve",
     "moduleResolution": "node",
     "noImplicitAny": false,
-    "allowJs": true
+    "allowJs": true,
+    "esModuleInterop": true
   },
   "include": ["resources"],
   "exclude": ["vendor", "node_modules"]
