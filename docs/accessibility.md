@@ -38,7 +38,7 @@ A [Voluntary Product Accessibility Template (VPAT)](https://www.section508.gov/s
 
 **Contact Information:** [latistecharch@umn.edu](mailto:latistecharch@umn.edu)
 
-**Download:** [ChimeIn VPAT](./chimein-vpat-rev202208.pdf)
+**Download:** [ChimeIn VPAT](https://github.com/UMN-LATIS/ChimeIn2.0/raw/develop/docs/chimein-vpat-rev202208.pdf)
 
 ## Resources
 
