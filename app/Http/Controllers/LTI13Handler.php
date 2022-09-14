@@ -40,7 +40,17 @@ class LTI13Handler extends Controller
 
     public function launch() {
          try {
-            $launch = LtiMessageLaunch::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
+            $launch = LtiMessageLaunch::new(
+                new \App\Library\LTI13Database, 
+                new \App\Library\LTI13Cache, 
+                new \App\Library\LTI13Cookie, 
+                new \Packback\Lti1p3\LtiServiceConnector(
+                    new \App\Library\LTI13Cache, 
+                    new \GuzzleHttp\Client([
+                        'timeout' => 30,
+                    ])
+                )
+            )
             ->validate();
         }
         catch (LtiException $e) {

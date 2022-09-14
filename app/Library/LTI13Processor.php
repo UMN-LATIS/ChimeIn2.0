@@ -348,7 +348,13 @@ class LTI13Processor {
         $registration = $db->findRegistrationByIssuer($issuer, $clientId);
         $endpoint = $chime->lti13_resource_link->endpoint;
         $ags = new \Packback\Lti1p3\LtiAssignmentsGradesService(
-            new \Packback\Lti1p3\LtiServiceConnector($registration),
+            new \Packback\Lti1p3\LtiServiceConnector(
+				new \App\Library\LTI13Cache, 
+				new \GuzzleHttp\Client([
+					'timeout' => 30,
+				])
+            ),
+			$registration,
             $endpoint);
         return $ags;
     }
