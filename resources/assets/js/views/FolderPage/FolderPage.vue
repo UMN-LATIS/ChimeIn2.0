@@ -185,7 +185,7 @@
           <div>
             <button
               data-cy="new-question-button"
-              class="btn btn-outline-primary align-items-center d-flex"
+              class="btn btn-outline-primary align-items-center d-flex my-2"
               @click="showModal = true"
             >
               <i class="material-icons pointer">add</i> Add Question
