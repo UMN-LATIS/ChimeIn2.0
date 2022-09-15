@@ -19,6 +19,14 @@
       </div>
       <Spinner v-if="!isPageReady" />
       <div v-if="isPageReady && !isParticipantView">
+        <BreadcrumbNav
+          :links="[
+            { name: 'Home', to: '/' },
+            { name: chime.name, to: `/chime/${chime.id}` },
+            { name: folder.name },
+          ]"
+          class="my-4"
+        />
         <div class="row mt-4">
           <div class="col-md-4 align-items-center d-flex">
             <h1 class="h4">{{ folder.name }}</h1>
@@ -241,6 +249,7 @@ import useQuestionListener from "../../hooks/useQuestionListener";
 import { useStore } from "vuex";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
+import BreadcrumbNav from "../../components/BreadcrumbNav.vue";
 import {
   getChimes,
   getOpenSessionsWithinChime,
