@@ -7,15 +7,24 @@
     <div class="container-fluid">
       <div
         v-if="!hideOpenAlert && otherFolderSessions.length > 0"
-        class="alert alert-warning"
+        class="alert alert-warning d-flex my-4 align-items-center justify-content-between"
         role="alert"
       >
-        You have {{ otherFolderSessions.length }}
-        {{ pluralize("question", otherFolderSessions.length) }} open outside
-        this folder. Would you like to
-        <a class="pointer" href="" @click.prevent="closeOthers"
-          >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
-        >?<a class="float-right pointer" @click="hideOpenAlert = true">X</a>
+        <p class="flex-1 m-0">
+          You have {{ otherFolderSessions.length }}
+          {{ pluralize("question", otherFolderSessions.length) }} open outside
+          this folder. Would you like to
+          <a class="pointer" href="#!" @click.prevent="closeOthers"
+            >close {{ otherFolderSessions.length == 1 ? "it" : "them" }}</a
+          >?
+        </p>
+
+        <button
+          class="pointer btn d-flex align-items-center justify-content-center p-2 m-0"
+          @click="hideOpenAlert = true"
+        >
+          <span class="material-icons">close</span>
+        </button>
       </div>
       <Spinner v-if="!isPageReady" />
       <div v-if="isPageReady && !isParticipantView">
@@ -475,7 +484,6 @@ ul li {
 }
 .material-icons {
   font-size: 1.25rem;
-  margin-right: 0.25rem;
 }
 
 @media (min-width: 50rem) {
@@ -493,11 +501,10 @@ ul li {
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 1rem;
+  align-items: center;
+  margin: 2rem 0;
 }
 .folder-page-header__folder-name-group {
-  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -532,6 +539,7 @@ ul li {
   align-items: center;
   padding: 0.5rem 1rem;
   border-radius: 0;
+  gap: 0.25rem;
 }
 
 .folder-page-header__button-group .btn:hover {
