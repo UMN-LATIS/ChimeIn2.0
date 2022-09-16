@@ -6,9 +6,6 @@
     <div class="chime container-fluid mt-4">
       <ErrorDialog />
       <div>
-        <BreadcrumbNav
-          :links="[{ name: 'Home', to: '/' }, { name: chime.name }]"
-        />
         <header class="chime__header">
           <Chip
             v-if="isCanvasChime"
@@ -129,7 +126,6 @@ import {
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import * as api from "../../common/api";
 import Back from "../../components/Back.vue";
-import BreadcrumbNav from "../../components/BreadcrumbNav.vue";
 
 export default {
   components: {
@@ -144,7 +140,6 @@ export default {
     DefaultLayout,
     Back,
     JoinPanel,
-    BreadcrumbNav,
   },
   props: {
     user: {
@@ -312,7 +307,7 @@ export default {
   display: none;
   margin-top: 1rem;
   padding: 2rem;
-  background-color: #fafafa;
+  background-color: #fff;
   line-height: 1.5;
   border-radius: 0.25rem;
   overflow: auto;
