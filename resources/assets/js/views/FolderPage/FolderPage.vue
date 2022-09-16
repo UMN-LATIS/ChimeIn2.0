@@ -19,43 +19,34 @@
       </div>
       <Spinner v-if="!isPageReady" />
       <div v-if="isPageReady && !isParticipantView">
-        <BreadcrumbNav
-          :links="[
-            { name: 'Home', to: '/' },
-            { name: chime.name, to: `/chime/${chime.id}` },
-            { name: folder.name },
-          ]"
-          class="my-4"
-        />
-        <div class="row mt-4">
-          <div class="col-md-4 align-items-center d-flex">
-            <h1 class="h4">{{ folder.name }}</h1>
+        <header class="folder-page-header">
+          <div class="folder-page-header__folder-name-group">
+            <p class="folder-page-header__chime-name">
+              <RouterLink :to="`/chime/${chime.id}`">
+                {{ chime.name }}
+              </RouterLink>
+            </p>
+            <h2 class="folder-page-header__folder-name">{{ folder.name }}</h2>
           </div>
-          <div class="col-md-8 col-sm-12">
+          <div class="folder-page-header__controls">
             <div
-              class="btn-group float-right"
-              style="flex-wrap: wrap"
+              class="folder-page-header__button-group"
               role="group"
               aria-label="Folder Controls"
             >
               <button
-                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
+                class="btn folder-settings-btn"
+                :class="{
+                  'folder-settings-btn--is-active': show_edit_folder,
+                }"
                 @click="show_edit_folder = !show_edit_folder"
               >
                 <i class="material-icons pointer">edit</i> Folder Settings
               </button>
-              <button
-                dusk="open-all-button"
-                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-                @click="openAll"
-              >
+              <button class="btn" @click="openAll">
                 <i class="material-icons pointer">visibility</i> Open All
               </button>
-              <button
-                dusk="close-all-button"
-                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
-                @click="closeAll"
-              >
+              <button class="btn" @click="closeAll">
                 <i class="material-icons pointer">visibility_off</i> Close All
               </button>
               <router-link
@@ -67,7 +58,7 @@
                     callbackUrl: $route.path,
                   },
                 }"
-                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
+                class="btn"
               >
                 <i class="material-icons">preview</i>
                 Participant View
@@ -77,108 +68,111 @@
                   name: 'present',
                   params: { chimeId: chimeId, folderId: folderId },
                 }"
-                class="btn btn-sm btn-outline-secondary align-items-center d-flex"
+                class="btn"
               >
                 <i class="material-icons">play_arrow</i>
                 Present
               </router-link>
             </div>
           </div>
-        </div>
-        <div v-if="show_edit_folder && folder" class="ml-4 mt-2">
-          <div class="row">
-            <div class="col-12">
-              <div class="input-group mb-3">
-                <input
-                  :value="folder.name"
-                  type="text"
-                  class="form-control"
-                  @input="handleFolderNameInput"
-                />
+        </header>
+        <div v-if="show_edit_folder && folder" class="folder-settings-panel">
+          <div class="folder-settings-panel__container">
+            <h3 class="folder-settings-panel__heading">Folder Settings</h3>
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group mb-3">
+                  <input
+                    :value="folder.name"
+                    type="text"
+                    class="form-control"
+                    @input="handleFolderNameInput"
+                  />
 
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-outline-primary align-items-center d-flex"
-                    @click="edit_folder"
-                  >
-                    <span class="material-icons pointer">save</span> Save
-                  </button>
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-outline-primary align-items-center d-flex"
+                      @click="edit_folder"
+                    >
+                      <span class="material-icons pointer">save</span> Save
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="ml-auto col-12 btn-toolbar justify-content-end">
-              <button
-                v-if="folder.resource_link_pk > 0 || folder.lti_lineitem"
-                class="mr-2 btn btn-success btn-sm align-items-center d-flex"
-                @click="sync"
-              >
-                Force Sync with Canvas
-                <span v-if="synced" class="material-icons md-18"
-                  >check_circle</span
+              <div class="ml-auto col-12 btn-toolbar justify-content-end">
+                <button
+                  v-if="folder.resource_link_pk > 0 || folder.lti_lineitem"
+                  class="mr-2 btn btn-success btn-sm align-items-center d-flex"
+                  @click="sync"
                 >
-              </button>
-              <button
-                class="mr-2 btn btn-warning btn-sm align-items-center d-flex"
-                @click="reset"
-              >
-                Reset Folder
-              </button>
-              <button
-                class="btn btn-sm btn-danger align-items-center d-flex"
-                @click="delete_folder"
-              >
-                Delete Folder <i class="material-icons pointer md-18">delete</i>
-              </button>
-            </div>
-          </div>
-
-          <hr />
-          <fieldset class="form-group border p-2">
-            <legend class="col-form-label w-auto">Import Questions</legend>
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="form-group">
-                  <label for="chime_select">Select a Chime:</label>
-                  <select
-                    id="chime_select"
-                    v-model="selected_chime"
-                    class="form-control"
-                    @change="update_folders"
+                  Force Sync with Canvas
+                  <span v-if="synced" class="material-icons md-18"
+                    >check_circle</span
                   >
-                    <option disabled>Select a Chime</option>
-                    <option
-                      v-for="c in existing_chimes"
-                      :key="c.id"
-                      :value="c.id"
-                    >
-                      {{ c.name }}
-                    </option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="folder_select">Select a Folder:</label>
-                  <select
-                    id="folder_select"
-                    v-model="selected_folder"
-                    class="form-control"
-                  >
-                    <option disabled>Select a Folder</option>
-                    <option
-                      v-for="f in existing_folders"
-                      :key="f.id"
-                      :value="f.id"
-                    >
-                      {{ f.name }}
-                    </option>
-                  </select>
-                </div>
-                <button class="btn btn-primary" @click="do_import">
-                  Import
+                </button>
+                <button
+                  class="mr-2 btn btn-warning btn-sm align-items-center d-flex"
+                  @click="reset"
+                >
+                  Reset Folder
+                </button>
+                <button
+                  class="btn btn-sm btn-danger align-items-center d-flex"
+                  @click="delete_folder"
+                >
+                  Delete Folder
+                  <i class="material-icons pointer md-18">delete</i>
                 </button>
               </div>
             </div>
-          </fieldset>
+
+            <fieldset class="form-group border p-2">
+              <legend class="col-form-label w-auto">Import Questions</legend>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label for="chime_select">Select a Chime:</label>
+                    <select
+                      id="chime_select"
+                      v-model="selected_chime"
+                      class="form-control"
+                      @change="update_folders"
+                    >
+                      <option disabled>Select a Chime</option>
+                      <option
+                        v-for="c in existing_chimes"
+                        :key="c.id"
+                        :value="c.id"
+                      >
+                        {{ c.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="folder_select">Select a Folder:</label>
+                    <select
+                      id="folder_select"
+                      v-model="selected_folder"
+                      class="form-control"
+                    >
+                      <option disabled>Select a Folder</option>
+                      <option
+                        v-for="f in existing_folders"
+                        :key="f.id"
+                        :value="f.id"
+                      >
+                        {{ f.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <button class="btn btn-primary" @click="do_import">
+                    Import
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </div>
         </div>
 
         <div class="border-top mt-3 pt-3 folder-page__main">
@@ -249,7 +243,6 @@ import useQuestionListener from "../../hooks/useQuestionListener";
 import { useStore } from "vuex";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
-import BreadcrumbNav from "../../components/BreadcrumbNav.vue";
 import {
   getChimes,
   getOpenSessionsWithinChime,
@@ -492,5 +485,84 @@ ul li {
     gap: 1.5rem;
     align-items: flex-start;
   }
+}
+
+.folder-page-header {
+  /* border: 1px solid red; */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1rem;
+}
+.folder-page-header__folder-name-group {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.folder-page-header__folder-name,
+.folder-page-header__chime-name {
+  margin: 0;
+}
+
+.folder-page-header__chime-name {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.folder-page-header__chime-name a {
+  color: var(--dark-gray);
+}
+
+.folder-page-header__button-group {
+  display: flex;
+  flex-wrap: wrap;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+.folder-page-header__button-group .btn {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+}
+
+.folder-page-header__button-group .btn:hover {
+  background: #f3f3f3;
+  color: #111;
+}
+
+.folder-settings-panel {
+  margin-top: 1rem;
+  padding: 2rem;
+  background-color: #fff;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  border: 1px solid var(--gray-light);
+}
+
+.folder-settings-panel__heading {
+  font-size: 1.25rem;
+}
+
+.folder-settings-panel__container {
+  max-width: 40rem;
+}
+
+.folder-settings-btn.folder-settings-btn--is-active {
+  background: #111;
+  color: #fff;
+}
+
+.folder-settings-btn.folder-settings-btn--is-active:hover {
+  background: #333;
+  color: #fff;
 }
 </style>
