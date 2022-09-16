@@ -17,20 +17,16 @@
             Canvas
           </Chip>
           <div class="chime__header-container">
-            <h1 class="chime__name">
+            <h1 class="chime__name" data-cy="chime-name">
               {{ chime.name }}
             </h1>
             <div
-              class="chime__control-buttons btn-group"
+              class="chime-page-header__button-group"
               role="group"
               aria-label="Chime Controls"
-              :class="{
-                'chime__control-buttons--is-active':
-                  showSettings || exportPanel,
-              }"
             >
               <button
-                class="chime__control-button btn btn-outline-secondary align-items-center d-flex"
+                class="btn"
                 :class="{ 'btn--is-active': showSettings }"
                 data-cy="toggle-chime-settings-panel"
                 @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
@@ -39,7 +35,7 @@
               </button>
 
               <button
-                class="chime__control-button btn btn-outline-secondary align-items-center d-flex"
+                class="btn"
                 :class="{ 'btn--is-active': exportPanel }"
                 data-cy="toggle-chime-export-panel"
                 @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
@@ -50,17 +46,19 @@
           </div>
           <div
             v-if="isReady"
-            class="chime__settings-panel"
+            class="chime-settings-panel"
             :class="{
-              'chime__settings-panel--isOpen': showSettings || exportPanel,
+              'chime-settings-panel--isOpen': showSettings || exportPanel,
             }"
           >
-            <ChimeManagement
-              v-if="showSettings"
-              :chime="chime"
-              @update:chime="handleChimeUpdate"
-            />
-            <ChimeExport v-if="exportPanel" :chime="chime" />
+            <div class="chime-settings-panel__container">
+              <ChimeManagement
+                v-if="showSettings"
+                :chime="chime"
+                @update:chime="handleChimeUpdate"
+              />
+              <ChimeExport v-if="exportPanel" :chime="chime" />
+            </div>
           </div>
         </header>
 
@@ -289,8 +287,29 @@ export default {
   margin: 0;
   margin-right: 0.5rem;
 }
-.chime__control-buttons {
+
+.chime-page-header__button-group {
+  display: flex;
+  flex-wrap: wrap;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  background: #fff;
   flex-shrink: 0;
+}
+
+.chime-page-header__button-group .btn {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  gap: 0.25rem;
+}
+
+.chime-page-header__button-group .btn:hover {
+  background: #f3f3f3;
+  color: #111;
 }
 
 .chime__control-buttons .material-icons {
@@ -298,23 +317,37 @@ export default {
   margin-right: 0.25rem;
 }
 
-.chime__control-buttons .btn--is-active {
-  background: var(--gray-dark);
+.btn.btn--is-active {
+  background: #111;
   color: #fff;
 }
 
-.chime__settings-panel {
+.btn.btn--is-active:hover {
+  background: #333;
+  color: #fff;
+}
+
+.btn:focus-visible {
+  border: 2px solid #007bff;
+  border-radius: 0.25rem;
+}
+
+.chime-settings-panel {
   display: none;
   margin-top: 1rem;
   padding: 2rem;
-  background-color: #fafafa;
+  background-color: #fff;
   line-height: 1.5;
   border-radius: 0.25rem;
   overflow: auto;
-  border: 1px solid var(--gray-light);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
-.chime__settings-panel--isOpen {
+.chime-settings-panel--isOpen {
   display: block;
+}
+
+.chime-settings-panel__container {
+  max-width: 40rem;
 }
 
 .chime__create-folder {
@@ -323,7 +356,8 @@ export default {
 
 @media (max-width: 768px) {
   .chime__header-container {
-    display: block;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .chime__control-buttons {
