@@ -545,7 +545,7 @@ ul li {
   background-color: #fff;
   line-height: 1.5;
   border-radius: 0.25rem;
-  border: 1px solid var(--gray-light);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .folder-settings-panel__heading {
