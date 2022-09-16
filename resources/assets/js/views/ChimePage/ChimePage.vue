@@ -304,6 +304,7 @@ export default {
   align-items: center;
   padding: 0.5rem 1rem;
   border-radius: 0;
+  gap: 0.25rem;
 }
 
 .chime-page-header__button-group .btn:hover {
@@ -355,7 +356,8 @@ export default {
 
 @media (max-width: 768px) {
   .chime__header-container {
-    display: block;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .chime__control-buttons {
