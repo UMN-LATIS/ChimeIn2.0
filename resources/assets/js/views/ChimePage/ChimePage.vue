@@ -17,7 +17,7 @@
             Canvas
           </Chip>
           <div class="chime__header-container">
-            <h1 class="chime__name">
+            <h1 class="chime__name" data-cy="chime-name">
               {{ chime.name }}
             </h1>
             <div

@@ -35,7 +35,9 @@
                 {{ chime.name }}
               </RouterLink>
             </p>
-            <h2 class="folder-page-header__folder-name">{{ folder.name }}</h2>
+            <h2 class="folder-page-header__folder-name" data-cy="folder-name">
+              {{ folder.name }}
+            </h2>
           </div>
           <div class="folder-page-header__controls">
             <div
