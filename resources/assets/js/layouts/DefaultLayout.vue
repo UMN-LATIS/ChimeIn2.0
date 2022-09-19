@@ -22,7 +22,7 @@
     <main class="default-layout__main flex-grow-1" v-bind="$attrs">
       <slot> Sorry. Nothing to see here. </slot>
     </main>
-    <AppFooter />
+    <AppFooter class="default-layout__app-footer" />
   </div>
 </template>
 <script setup lang="ts">
@@ -56,5 +56,22 @@ export default {
 }
 .default-layout__main {
   padding-bottom: 4rem;
+}
+
+/* 
+* the app-footer cla component has a negative margin so that it can tuck
+* under the "post-it" component. Since we're not using the post-it component,
+* we need to remove the negative margin to prevent the footer from overlapping
+* the main section.
+*/
+.default-layout__app-footer {
+  margin-top: 0;
+}
+
+/**
+ * decrease app-footer padding to compensate for no negative margin
+ */
+.default-layout__app-footer::v-deep .footer-offset-container {
+  padding-top: 3rem;
 }
 </style>
