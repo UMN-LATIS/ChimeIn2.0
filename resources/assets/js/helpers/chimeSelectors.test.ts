@@ -4,20 +4,21 @@ import {
   selectCanvasCourseUrl,
   selectJoinUrl,
 } from "./chimeSelectors";
+import type { Chime } from "../types";
 
 const linkedChime = {
   id: 1,
   access_code: "123456",
   name: "Canvas Course",
   lti_return_url: "https://canvas.umn.edu/courses/277604/assignments",
-};
+} as Chime;
 
 const unlinkedChime = {
   id: 2,
   access_code: "987654",
   name: "Test Chime",
   lti_return_url: null,
-};
+} as Chime;
 
 describe("selectIsCanvasChime", () => {
   it("returns true if a given chime is linked to Canvas via LTI", () => {

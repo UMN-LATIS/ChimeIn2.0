@@ -166,7 +166,7 @@ import {
   selectCanvasCourseUrl,
   selectJoinUrl,
   selectIsCanvasChime,
-} from "../../helpers/chimeSelectors.js";
+} from "../../helpers/chimeSelectors";
 import { useStore } from "vuex";
 import { useAnnouncer } from "@vue-a11y/announcer";
 import { useRoute } from "vue-router";

@@ -67,7 +67,7 @@ export interface Folder {
   deleted_at: string | null;
   name: string;
   chime_id: number;
-  resource_link_pk: string | null;
+  resource_link_pk: number | null;
   order: number;
   lti_lineitem: any;
   questions_count: number;
@@ -106,8 +106,8 @@ export interface Chime extends ChimeOptions {
   lti_course_title: string | null;
   lti_course_id: any;
   lti_setup_complete: boolean;
-  resource_link_pk: string | null;
-  lti13_resource_link_id: string | null;
+  resource_link_pk: number | null;
+  lti13_resource_link_id: number | null;
   lti_grade_mode: string | null;
   pivot: {
     /** current user */

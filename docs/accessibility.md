@@ -16,7 +16,7 @@ We:
 
 For ChimeIn help documentation, tap [Help](https://umn-latis.github.io/ChimeIn2.0/) in the main menu.
 
-Users experiencing technical or accessibility issues my contact [help@umn.edu](mailto:help@umn.edu).
+Users experiencing technical or accessibility issues may contact [help@umn.edu](mailto:help@umn.edu).
 
 ChimeIn is an open source project that welcomes community participation. Interested users can track development work, submit issues, and share feature requests at [https://github.com/UMN-LATIS/ChimeIn2.0](https://github.com/UMN-LATIS/ChimeIn2.0).
 
@@ -25,6 +25,20 @@ ChimeIn is an open source project that welcomes community participation. Interes
 - Plain text can be read by assistive devices. Do not use screenshots of text.
 - Images with alternative text or captions can be read by assistive devices. Include alt text on all images.
 - The image submission question type allows participants to add image descriptions which can be read by screen readers. Ask your participants to include an image description with their submission. Model this behavior for users.
+
+## Voluntary Product Accessibility Template (VPAT)
+
+A [Voluntary Product Accessibility Template (VPAT)](https://www.section508.gov/sell/vpat/) is a document that explains how information and communication technology (ICT) products conform to the Revised 508 Standards for IT accessibility.
+
+**Name of Product:** ChimeIn
+
+**Product Description:** ChimeIn is a live polling tool for partipant engagement.
+
+**Last VPAT Update:** August 2022
+
+**Contact Information:** [latistecharch@umn.edu](mailto:latistecharch@umn.edu)
+
+**Download:** [ChimeIn VPAT](https://github.com/UMN-LATIS/ChimeIn2.0/raw/develop/docs/chimein-vpat-rev202208.pdf)
 
 ## Resources
 

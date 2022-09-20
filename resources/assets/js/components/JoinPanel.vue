@@ -76,7 +76,7 @@ import {
   selectCanvasCourseUrl,
   selectIsCanvasChime,
   selectJoinUrl,
-} from "../helpers/chimeSelectors.js";
+} from "../helpers/chimeSelectors";
 import toHyphenatedCode from "../helpers/toHyphenatedCode.js";
 
 export default {

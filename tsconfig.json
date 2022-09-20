@@ -8,5 +8,9 @@
     "moduleResolution": "node",
     "noImplicitAny": false,
     "allowJs": true
-  }
+    // disabling: nlp-compromise doesn't like this setting
+    // "esModuleInterop": true
+  },
+  "include": ["resources"],
+  "exclude": ["vendor", "node_modules"]
 }
