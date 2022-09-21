@@ -17,7 +17,7 @@ describe("happy path", () => {
     cy.get("#joinInstructions").check();
     cy.get("[data-cy=create-chime-button]").click();
     cy.url().should("match", /chime\/[0-9]+$/);
-    cy.get("h1").should("contain", "Test Chime");
+    cy.get("[data-cy=chime-name]").should("contain", "Test Chime");
 
     // create a folder
     cy.get("#createFolder").type("Test Folder 1");
@@ -26,7 +26,7 @@ describe("happy path", () => {
     // go into the folder
     cy.get("[data-cy=folder-card]").contains("Test Folder 1").click();
     cy.url().should("match", /chime\/[0-9]+\/folder\/[0-9]+$/);
-    cy.get("h1").should("contain", "Test Folder 1");
+    cy.get("[data-cy=folder-name]").should("contain", "Test Folder 1");
 
     // create a question
     cy.get("[data-cy=new-question-button]").click();

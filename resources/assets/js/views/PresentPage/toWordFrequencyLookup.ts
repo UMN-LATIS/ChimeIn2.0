@@ -36,7 +36,9 @@ export default function toWordFrequencyLookup(
   responseTexts: string[],
   filteredWords: string[] = []
 ): WordFrequencyLookup {
-  const words: string[] = responseTexts.flatMap(getWordsFromText);
+  const words: string[] = responseTexts
+    .filter((n) => n)
+    .flatMap(getWordsFromText);
 
   // filter out stopwords and filtered words
   const normalizedWords = removeStopwords(words).filter(
