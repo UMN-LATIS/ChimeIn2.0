@@ -4,6 +4,7 @@
 namespace App\Library;
 
 use DB;
+use Carbon\Carbon;
 use Log;
 use IMSGlobal\LTI\ToolProvider;
 use IMSGlobal\LTI\ToolProvider\DataConnector;
@@ -127,7 +128,7 @@ class LTI13Processor {
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
-                ->setTimestamp($userScore["submission_date"]->toIso8601String())
+                ->setTimestamp(Carbon::now()->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
 				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
@@ -181,7 +182,7 @@ class LTI13Processor {
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
-                ->setTimestamp($userScore["submission_date"]->toIso8601String())
+                ->setTimestamp(Carbon::now()->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
 				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
