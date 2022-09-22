@@ -130,6 +130,7 @@ class LTI13Processor {
                 ->setTimestamp($userScore["submission_date"]->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
+				->setCustom(["https://canvas.instructure.com/lti/submission"=>["submitted_at"=>$userScore["submission_date"]->toIso8601String()]])
                 ->setUserId($userId);
             $result = $ags->putGrade($score, $lineItem);
 
@@ -183,6 +184,7 @@ class LTI13Processor {
                 ->setTimestamp($userScore["submission_date"]->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
+				->setCustom(["https://canvas.instructure.com/lti/submission"=>["submitted_at"=>$userScore["submission_date"]->toIso8601String()]])
                 ->setUserId($userId);
             $result = $ags->putGrade($score, $lineItem);
 
