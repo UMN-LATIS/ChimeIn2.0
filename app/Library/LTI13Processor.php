@@ -5,6 +5,7 @@ namespace App\Library;
 
 use DB;
 use Log;
+use Carbon\Carbon;
 use IMSGlobal\LTI\ToolProvider;
 use IMSGlobal\LTI\ToolProvider\DataConnector;
 use \App\LTI13ResourceLink;
@@ -127,9 +128,10 @@ class LTI13Processor {
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
-                ->setTimestamp($userScore["submission_date"]->toIso8601String())
+                ->setTimestamp(Carbon::now()->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
+				->setCustom(["https://canvas.instructure.com/lti/submission"=>["submitted_at"=>$userScore["submission_date"]->toIso8601String()]])
                 ->setUserId($userId);
             $result = $ags->putGrade($score, $lineItem);
 
@@ -180,9 +182,10 @@ class LTI13Processor {
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
-                ->setTimestamp($userScore["submission_date"]->toIso8601String())
+                ->setTimestamp(Carbon::now()->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
+				->setCustom(["https://canvas.instructure.com/lti/submission"=>["submitted_at"=>$userScore["submission_date"]->toIso8601String()]])
                 ->setUserId($userId);
             $result = $ags->putGrade($score, $lineItem);
 
