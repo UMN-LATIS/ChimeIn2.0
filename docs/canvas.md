@@ -18,18 +18,19 @@ ChimeIn is available as an "external tool" within the Canvas assignment tool. Th
 
 Below is a set of a step-by-step instructions for making a ChimeIn assignment in Canvas.
 
-| Step                                                                                                                                   |                   Screenshot                    |
-| -------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------: |
-| Add a new assignment within Canvas                                                                                                     | ![Add an assignment](./step1-addassignment.png) |
-| Set a point value and grading basis if you'd like                                                                                      |      ![Grading basis](./step2-grades.png)       |
-| Set "Submission Type" to "External Tool"                                                                                               | ![Submission Type](./step3-submission-type.png) |
-| Click "Find"                                                                                                                           |         ![Click Find](./step4-find.png)         |
-| Select "ChimeIn 2" in the list and click **Select**                                                                                    |     ![Select ChimeIn](./step5-chimein.png)      |
-| Check the box for "open in a new tab" (**important**)                                                                                  |   ![Load in a new tab](./step6-checkbox.png)    |
-| Click "save" at the bottom of the page                                                                                                 |      ![Save and Display](./step7-save.png)      |
-| Click the "load" button to open ChimeIn                                                                                                |            ![Load](./step8-load.png)            |
-| Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. |        ![Add questions](./step9-new.png)        |
-| **Don't forget to publish your assignment** when you're ready for your students to view it                                             |          ![Load](./step10-publish.png)          |
+| Step                                                                                                                                   |                                         Screenshot                                          |
+| -------------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------------------: |
+| Add a new assignment within Canvas                                                                                                     |                       ![Add an assignment](./step1-addassignment.png)                       |
+| Set a point value and grading basis if you'd like                                                                                      |                            ![Grading basis](./step2-grades.png)                             |
+| Set "Submission Type" to "External Tool"                                                                                               |                       ![Submission Type](./step3-submission-type.png)                       |
+| Click "Find"                                                                                                                           |                               ![Click Find](./step4-find.png)                               |
+| Select "ChimeIn 2" in the list and click **Select**                                                                                    |                           ![Select ChimeIn](./step5-chimein.png)                            |
+| Check the box for "open in a new tab" (**important**)                                                                                  |                         ![Load in a new tab](./step6-checkbox.png)                          |
+| Verify that Submission Attempts is set to "Unlimited"                                                                                  | ![Submission Attempts set to Unlimited](./step6.1-canvas-submission-attempts-unlimited.png) |
+| Click "save" at the bottom of the page                                                                                                 |                            ![Save and Display](./step7-save.png)                            |
+| Click the "load" button to open ChimeIn                                                                                                |                                  ![Load](./step8-load.png)                                  |
+| Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. |                              ![Add questions](./step9-new.png)                              |
+| **Don't forget to publish your assignment** when you're ready for your students to view it                                             |                                ![Load](./step10-publish.png)                                |
 
 ## Gradebook integration options
 
