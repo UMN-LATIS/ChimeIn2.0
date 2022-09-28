@@ -40,11 +40,12 @@ class LTI13Handler extends Controller
 
     public function launch() {
 
-        if(isset($REQUEST['error'])) {
+        if(isset($_REQUEST['error'])) {
+            $exception = new Exception($_REQUEST['error_description']);
             if (app()->bound('sentry')) {
-                app('sentry')->captureMessage($REQUEST['error_description']);
+                app('sentry')->captureException($exception);
             }
-            return view("errors.500", ["exception"=>$REQUEST['error_description']]);
+            return view("errors.500", ["exception"=>$exception]);
         }
 
          try {
