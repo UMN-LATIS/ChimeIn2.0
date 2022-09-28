@@ -29,7 +29,7 @@ Below is a set of a step-by-step instructions for making a ChimeIn assignment in
 | Verify that Submission Attempts is set to "Unlimited"                                                                                  | ![Submission Attempts set to Unlimited](./step6.1-canvas-submission-attempts-unlimited.png) |
 | Click "save" at the bottom of the page                                                                                                 |                            ![Save and Display](./step7-save.png)                            |
 | Click the "load" button to open ChimeIn                                                                                                |                                  ![Load](./step8-load.png)                                  |
-| Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. |                              ![Add questions](./step9-new.png)                              |
+| Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. |      ![Click Add Question button to add your questions](./step9-add-new-question.png)       |
 | **Don't forget to publish your assignment** when you're ready for your students to view it                                             |                                ![Load](./step10-publish.png)                                |
 
 ## Gradebook integration options
