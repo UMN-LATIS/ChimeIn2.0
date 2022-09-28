@@ -39,6 +39,11 @@ class LTI13Handler extends Controller
 
 
     public function launch() {
+
+        if(isset($REQUEST['error'])) {
+            return view("errors.500", ["exception"=>$REQUEST['error_description']]);
+        }
+
          try {
             $launch = LtiMessageLaunch::new(
                 new \App\Library\LTI13Database, 
