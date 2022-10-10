@@ -133,6 +133,7 @@ class LTI13Processor {
                 ->setGradingProgress('FullyGraded')
 				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
                 ->setUserId($userId);
+
             $result = $ags->putGrade($score, $lineItem);
 
 		}

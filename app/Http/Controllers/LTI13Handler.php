@@ -40,8 +40,8 @@ class LTI13Handler extends Controller
 
     public function launch() {
 
-        if(isset($_REQUEST['error'])) {
-            $exception = new Exception($_REQUEST['error_description']);
+        if(isset($_REQUEST['error']) && $_REQUEST['error'] == 'launch_no_longer_valid') {
+            $exception = new \Exception($_REQUEST['error_description']);
             if (app()->bound('sentry')) {
                 app('sentry')->captureException($exception);
             }
