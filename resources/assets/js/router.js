@@ -4,6 +4,7 @@ import ChimePage from "./views/ChimePage/ChimePage.vue";
 import FolderPage from "./views/FolderPage/FolderPage.vue";
 import ParticipantPage from "./views/ParticipantPage/ParticipantPage.vue";
 import PresentPage from "./views/PresentPage/PresentPage.vue";
+import NotFoundPage from "./views/NotFoundPage/NotFoundPage.vue";
 
 const toInt = (value, fallback = undefined) => {
   const n = Number.parseInt(value);
@@ -48,6 +49,7 @@ const routes = [
       questionIndex: toInt(route.params.questionIndex, 0),
     }),
   },
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundPage },
 ];
 
 const router = createRouter({
