@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChimeController;
+use App\Http\Controllers\ChimeFolderParticipationContoller;
 use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\PresentController;
@@ -66,6 +67,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::post('/api/chime/{chime_id}/folder', 'ChimeController@createFolder');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@editFolder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@deleteFolder');
+    Route::get('/api/chime/{chime}/folder/{folder}/participation', [ChimeFolderParticipationContoller::class, 'index']);
     Route::get('/api/chime/{chime}/openQuestions', 'ChimeController@getOpenQuestions');
 
     Route::patch('/api/chime/{chime}', 'ChimeController@update');
