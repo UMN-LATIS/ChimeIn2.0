@@ -27,7 +27,8 @@ class ChimeFolderParticipationContoller extends Controller
             ->map(function (Response $response) use ($folder) {
                 return [
                     ...$response->toArray(),
-                    'is_correct' => $response->isCorrect()
+                    'is_correct' => $response->isCorrect(),
+                    'question_id' => $response->getQuestion()->id,
                 ];
             });
 

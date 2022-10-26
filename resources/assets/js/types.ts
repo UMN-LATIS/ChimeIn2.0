@@ -144,3 +144,14 @@ export type Maybe<T> = T | null;
 export interface FormInputEvent extends Event {
   target: HTMLInputElement;
 }
+
+export type ChimeFolderParticipationResponseItem = Response & {
+  is_correct: boolean;
+  question_id: number;
+};
+
+export interface ChimeFolderParticipationSummary {
+  participants: User[];
+  presenters: User[];
+  responses: ChimeFolderParticipationResponseItem[];
+}

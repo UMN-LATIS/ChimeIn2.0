@@ -27,7 +27,12 @@ class Response extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getQuestionType()
+    public function getQuestion(): Question
+    {
+        return $this->session->question;
+    }
+
+    public function getQuestionType(): string
     {
         return $this->response_info['question_type'];
     }

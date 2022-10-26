@@ -8,6 +8,7 @@ import type {
   Session,
   ChimeOptions,
   User,
+  ChimeFolderParticipationSummary,
 } from "../types";
 
 export function getFolderWithQuestions({
@@ -269,4 +270,18 @@ export function getChime(chimeId: number): Promise<Chime> {
         ),
       }))
   );
+}
+
+export function getChimeFolderParticipation({
+  chimeId,
+  folderId,
+}: {
+  chimeId: number;
+  folderId?: number;
+}): Promise<ChimeFolderParticipationSummary> {
+  return axios
+    .get<ChimeFolderParticipationSummary>(
+      `/api/chime/${chimeId}/folder/${folderId}/participation`
+    )
+    .then((res) => res.data);
 }
