@@ -27,8 +27,9 @@ class ChimesTableSeeder extends Seeder
             ->create();
 
         Chime::factory()
-            ->withResponses()
             ->withPresenter(User::find(1))
+            ->withParticipants(40)
+            ->withResponses(20)
             ->create([
                 'name' => 'A chime with Responses',
             ]);
