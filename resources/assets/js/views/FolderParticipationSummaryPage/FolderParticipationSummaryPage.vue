@@ -27,40 +27,17 @@
               Q{{ index + 1 }}
             </th>
             <th>Total</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="participant in participationSummary?.participants"
+          <UserParticipationRow
+            v-for="participant in participants"
             :key="participant.id"
-          >
-            <th scope="row">
-              <span>{{ participant.name }}</span>
-              <span>{{ participant.email }}</span>
-            </th>
-            <td v-for="question in folder?.questions" :key="question.id">
-              {{
-                getQuestionScoreForUser({
-                  userId: participant.id,
-                  questionId: question.id,
-                  allResponses: participationSummary?.responses ?? [],
-                })
-              }}
-            </td>
-            <td>
-              <!-- total folder score -->
-              {{
-                (
-                  getTotalFolderScoreForUser({
-                    userId: participant.id,
-                    allQuestionIds: questionIds,
-                    allResponses: participationSummary?.responses ?? [],
-                  }) * 100
-                ).toFixed(2)
-              }}%
-            </td>
-          </tr>
+            :user="participant"
+            :questions="folder?.questions ?? []"
+            :responses="getResponsesForUser(participant.id, responses)"
+            :numberOfActiveQuestions="numberOfActiveQuestions"
+          />
         </tbody>
       </table>
     </div>
@@ -80,7 +57,9 @@ import {
 import { onMounted, ref, computed } from "vue";
 import * as api from "../../common/api";
 import { RouterLink } from "vue-router";
-import { sum, uniq } from "ramda";
+import getResponsesForUser from "./getResponsesForUser";
+import UserParticipationRow from "./UserParticipationRow.vue";
+import { uniq } from "ramda";
 
 const props = defineProps<{
   user: User;
@@ -91,6 +70,19 @@ const props = defineProps<{
 const participationSummary = ref<ChimeFolderParticipationSummary>();
 const chime = ref<Chime | null>(null);
 const folder = ref<FolderWithQuestions | null>(null);
+const responses = computed(
+  (): ChimeFolderParticipationResponseItem[] =>
+    participationSummary.value?.responses ?? []
+);
+const participants = computed(
+  (): User[] => participationSummary.value?.participants ?? []
+);
+
+/** questions with at least one response */
+const numberOfActiveQuestions = computed((): number => {
+  const questionIds = responses.value.map((r) => r.question_id);
+  return uniq(questionIds).length;
+});
 
 onMounted(async () => {
   [participationSummary.value, chime.value, folder.value] = await Promise.all([
@@ -105,66 +97,5 @@ onMounted(async () => {
     }),
   ]);
 });
-
-/**
- * questions with at least one response
- */
-const questionIds = computed((): number[] => {
-  const responses = participationSummary.value?.responses;
-  if (!responses) return [];
-  return uniq(responses.map((r) => r.question_id));
-});
-
-/**
- * Calculates the score for given question responses.
- * If the responses have at least one correct answer, the value is 1.
- * Otherwise the value is `valueOfIncorrectResponse`, 0 by default.
- * @param questionResponses
- * @param valueOfIncorrectResponse
- */
-function calculateQuestionScore(
-  questionResponses: ChimeFolderParticipationResponseItem[],
-  valueOfIncorrectResponse = 0
-) {
-  return questionResponses.reduce(
-    (acc, response) =>
-      response.is_correct
-        ? Math.max(acc, 1)
-        : Math.max(acc, valueOfIncorrectResponse),
-    0
-  );
-}
-
-function getQuestionScoreForUser({
-  userId,
-  questionId,
-  allResponses,
-}: {
-  userId: number;
-  questionId: number;
-  allResponses: ChimeFolderParticipationResponseItem[];
-}): number {
-  const questionResponsesForUser = allResponses.filter(
-    (response) =>
-      response.user_id === userId && response.question_id === questionId
-  );
-
-  return calculateQuestionScore(questionResponsesForUser);
-}
-
-function getTotalFolderScoreForUser({
-  userId,
-  allQuestionIds,
-  allResponses,
-}: {
-  userId: number;
-  allQuestionIds: number[];
-  allResponses: ChimeFolderParticipationResponseItem[];
-}): number {
-  const questionScores = allQuestionIds.map((questionId) =>
-    getQuestionScoreForUser({ userId, questionId, allResponses })
-  );
-  return sum(questionScores) / allQuestionIds.length;
-}
 </script>
 <style scoped></style>
