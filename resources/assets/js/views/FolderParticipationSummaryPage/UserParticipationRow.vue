@@ -1,14 +1,21 @@
 <template>
   <tr>
-    <th>
-      {{ user.name }}
+    <th scope="row" class="align-middle">
+      <div class="d-flex flex-column">
+        <span>{{ user.name }}</span>
+        <small class="text-muted">{{ user.email }}</small>
+      </div>
     </th>
-    <td v-for="questionId in questionIds" :key="questionId">
+    <td
+      v-for="questionId in questionIds"
+      :key="questionId"
+      class="align-middle"
+    >
       <QuestionScoreItem
         :score="getQuestionScoreForUser({ questionId, responses })"
       />
     </td>
-    <td>
+    <td class="text-right text-monospace text-muted text-sm align-middle">
       {{ total }}
     </td>
   </tr>

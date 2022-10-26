@@ -1,5 +1,7 @@
 <template>
-  <div class="question-score-item">
+  <div
+    class="question-score-item d-flex align-items-center justify-content-center"
+  >
     <Icon v-if="score === 1">star</Icon>
     <Icon v-else-if="0 < score && score < 1">star_half</Icon>
     <span v-else>-</span>

@@ -23,15 +23,81 @@
           <h2 v-if="folder">Folder Participation Scores</h2>
           <p>Summary of scores for all questions within this folder.</p>
         </header>
+      </div>
 
-        <section class="card max-w-fit mb-3">
-          <div class="card-body d-flex gap-4">
-            <div>
+      <!-- Participants Table -->
+      <div class="table-responsive table-container">
+        <table class="table">
+          <thead>
+            <tr class="text-xs uppercase">
+              <th scope="col">Participant</th>
+              <th
+                v-for="(question, index) in folder?.questions"
+                :key="question.id"
+                scope="col"
+                class="text-center"
+              >
+                Q{{ index + 1 }}
+              </th>
+              <th scope="col" class="text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <UserParticipationRow
+              v-for="participant in participants"
+              :key="participant.id"
+              :user="participant"
+              :questions="folder?.questions ?? []"
+              :responses="getResponsesForUser(participant.id, responses)"
+              :numberOfActiveQuestions="numberOfActiveQuestions"
+            />
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Presenters Table -->
+      <h3 class="mt-5 mb-3">Presenters</h3>
+      <div class="table-responsive table-container">
+        <table class="table">
+          <thead>
+            <tr class="text-xs uppercase">
+              <th scope="col">Presenter</th>
+              <th
+                v-for="(question, index) in folder?.questions"
+                :key="question.id"
+                scope="col"
+                class="text-center"
+              >
+                Q{{ index + 1 }}
+              </th>
+              <th scope="col" class="text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <UserParticipationRow
+              v-for="presenter in presenters"
+              :key="presenter.id"
+              :user="presenter"
+              :questions="folder?.questions ?? []"
+              :responses="getResponsesForUser(presenter.id, responses)"
+              :numberOfActiveQuestions="numberOfActiveQuestions"
+            />
+          </tbody>
+        </table>
+      </div>
+
+      <section class="max-w-fit mt-5 mb-3">
+        <h3>Score Settings</h3>
+        <div class="max-w-fit">
+          <div class="card">
+            <div class="card-body">
               <h4 class="h6 text-muted">Credit for Incorrect</h4>
               <p class="m-0">{{ PartialCreditSetting }}</p>
             </div>
+          </div>
 
-            <div v-if="LTIGradeMode">
+          <div v-if="LTIGradeMode" class="card">
+            <div class="card-body">
               <h4 class="h6 text-muted d-flex align-items-center gap-2">
                 Grade Mode <Chip color="yellow" :solid="true">Canvas</Chip>
               </h4>
@@ -41,33 +107,8 @@
               <p>{{ LTIGradeMode }}</p>
             </div>
           </div>
-        </section>
-      </div>
-
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th scope="col">Participant</th>
-            <th
-              v-for="(question, index) in folder?.questions"
-              :key="question.id"
-            >
-              Q{{ index + 1 }}
-            </th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <UserParticipationRow
-            v-for="participant in participants"
-            :key="participant.id"
-            :user="participant"
-            :questions="folder?.questions ?? []"
-            :responses="getResponsesForUser(participant.id, responses)"
-            :numberOfActiveQuestions="numberOfActiveQuestions"
-          />
-        </tbody>
-      </table>
+        </div>
+      </section>
     </div>
   </DefaultLayout>
 </template>
@@ -106,6 +147,9 @@ const responses = computed(
 );
 const participants = computed(
   (): User[] => participationSummary.value?.participants ?? []
+);
+const presenters = computed(
+  (): User[] => participationSummary.value?.presenters ?? []
 );
 const LTIGradeMode = computed((): string | null => {
   const gradeMode = chime.value?.lti_grade_mode;
@@ -154,4 +198,18 @@ onMounted(async () => {
   ]);
 });
 </script>
-<style scoped></style>
+<style scoped>
+.table td,
+.table th {
+  border-top: 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table-container {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 2rem;
+  width: fit-content;
+  min-width: 40rem;
+}
+</style>
