@@ -22,7 +22,7 @@ export interface Response {
   session_id: number;
   user_id: number;
   response_info: {
-    question_type: string;
+    question_type: QuestionType;
     // a bunch of other stuff
     [key: string]: any;
   };
@@ -39,6 +39,14 @@ export interface Session {
   responses: Response[];
 }
 
+export type QuestionType =
+  | "multiple_choice"
+  | "slider"
+  | "free_response"
+  | "image_response"
+  | "heatmap_response"
+  | "text_heatmap_response";
+
 export interface Question {
   id: number;
   created_at?: string;
@@ -51,7 +59,7 @@ export interface Question {
   folder_id: number;
   order: number;
   question_info: {
-    question_type: string;
+    question_type: QuestionType;
     /** content varies depending on question type */
     [key: string]: any;
   };

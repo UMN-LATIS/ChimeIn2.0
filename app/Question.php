@@ -11,6 +11,13 @@ class Question extends Model
     use SoftDeletes;
     use HasFactory;
 
+    public const MULTIPLE_CHOICE_TYPE = 'multiple_choice';
+    public const SLIDER_TYPE = 'slider';
+    public const FREE_RESPONSE_TYPE = 'free_response';
+    public const IMAGE_RESPONSE_TYPE = 'image_response';
+    public const HEATMAP_RESPONSE_TYPE = 'heatmap_response';
+    public const TEXT_HEATMAP_RESPONSE_TYPE = 'text_heatmap_response';
+
     protected $fillable = ['text', 'order', 'question_info', 'anonymous', 'folder_id', "allow_multiple"];
     protected $dates = ['deleted_at'];
 
