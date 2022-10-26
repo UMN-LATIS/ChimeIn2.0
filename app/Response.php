@@ -44,11 +44,14 @@ class Response extends Model
 
         // if question choice set has no correct answers
         // then any choice is correct
-        if (!$correctChoices->isEmpty()) return true;
+        if ($correctChoices->isEmpty()) return true;
 
         // otherwise the answer is correct only if the response
         // matches some correct choice
-        return $correctChoices->contains($this->getResponseTextAttribute());
+        return $correctChoices->contains(
+            fn ($choice) =>
+            $choice['text'] === $this->getResponseTextAttribute()
+        );
     }
 
     public function getResponseTextAttribute()

@@ -46,7 +46,6 @@ class Question extends Model
         return $this->question_info['question_type'];
     }
 
-
     /**
      * get the set of choices for a multiple choice question
      * if the question is not multiple choice, returns null
