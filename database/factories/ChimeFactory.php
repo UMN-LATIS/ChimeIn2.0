@@ -56,17 +56,25 @@ class ChimeFactory extends Factory
         return $this->hasAttached(User::factory($numberOfParticipants), ['permission_number' => 100]);
     }
 
-    public function withResponses(int $numberOfResponses = 20)
+    public function withContent($opts = [])
     {
-        return $this
-            ->has(
-                Folder::factory()->has(
-                    Question::factory()->has(
-                        Session::factory()->has(
-                            Response::factory($numberOfResponses)
-                        )
+        $defaultOpts = [
+            'folders' => 1,
+            'questions' => 1,
+            'sessions' => 0,
+            'responses' => 0,
+        ];
+
+        $opts = [...$defaultOpts, ...$opts];
+
+        return $this->has(
+            Folder::factory($opts['folders'])->has(
+                Question::factory($opts['questions'])->has(
+                    Session::factory($opts['sessions'])->has(
+                        Response::factory($opts['responses'])
                     )
                 )
-            );
+            )
+        );
     }
 }

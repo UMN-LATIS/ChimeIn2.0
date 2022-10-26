@@ -18,18 +18,23 @@ class ChimesTableSeeder extends Seeder
         // regular chimes
         Chime::factory()
             ->withPresenter(User::find(1))
+            ->withContent(['folders' => 3, 'questions' => 3])
             ->create();
 
         // LTI Chimes
         Chime::factory()
             ->withPresenter(User::find(1))
             ->withLTI()
+            ->withContent(['folders' => 3, 'questions' => 3])
             ->create();
 
         Chime::factory()
             ->withPresenter(User::find(1))
             ->withParticipants(40)
-            ->withResponses(20)
+            ->withContent([
+                'folders' => 3, 'questions' => 3,
+                'sessions' => 1, 'responses' => 20
+            ])
             ->create([
                 'name' => 'A chime with Responses',
             ]);
