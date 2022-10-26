@@ -31,7 +31,7 @@ class ResponseFactory extends Factory
                 $session = Session::find($responseAttrs['session_id']);
                 $question = Question::find($session->question_id);
                 $choices = $question->question_info['question_responses'];
-                $randomIndex = rand(0, count($choices));
+                $randomIndex = rand(0, count($choices) - 1);
                 $choice = $choices[$randomIndex];
 
                 return [
