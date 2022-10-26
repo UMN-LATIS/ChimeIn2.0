@@ -8,6 +8,7 @@ use App\Question;
 use App\Session;
 use Error;
 use Illuminate\Http\Request;
+use App\Response;
 
 class ChimeFolderParticipationContoller extends Controller
 {
@@ -16,20 +17,23 @@ class ChimeFolderParticipationContoller extends Controller
         $user = $request->user();
         abort_unless($chime->hasPresenter($user), 403);
 
-        $responses = $folder->questions->flatmap(function (Question $question) {
-            return $question->sessions;
-        })->flatmap(function (Session $session) {
-            return $session->responses;
-        });
+        $responses = $folder->questions
+            ->flatmap(function (Question $question) {
+                return $question->sessions;
+            })
+            ->flatmap(function (Session $session) {
+                return $session->responses;
+            })
+            ->map(function (Response $response) use ($folder) {
+                return [
+                    ...$response->toArray(),
+                    'is_correct' => $response->isCorrect()
+                ];
+            });
 
         return [
             'presenters' => $chime->presenters,
             'participants' => $chime->participants,
-            // 'user' => $user,
-            // 'chime' => $chime,
-            // 'folder' => $folder,
-            // 'questions' => $folder->questions,
-            // // 'sessions' => $sessions,
             'responses' => $responses,
         ];
     }

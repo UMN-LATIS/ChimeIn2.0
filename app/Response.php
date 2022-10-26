@@ -12,20 +12,47 @@ class Response extends Model
     use HasFactory;
 
     protected $fillable = ['response_info', 'user_id'];
-    
+
     protected $casts = [
         'response_info' => 'array',
     ];
 
-    public function session() {
+    public function session()
+    {
         return $this->belongsTo(Session::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function getResponseTextAttribute() {
+    public function getQuestionType()
+    {
+        return $this->response_info['question_type'];
+    }
+
+    public function isCorrect(): bool
+    {
+        if ($this->getQuestionType() !== Question::MULTIPLE_CHOICE_TYPE) {
+            return true;
+        }
+
+        $multChoiceQuestion = $this->session->question;
+        $choiceSet = collect($multChoiceQuestion->getResponseChoices());
+        $correctChoices = $choiceSet->filter(fn ($choice) => $choice['correct']);
+
+        // if question choice set has no correct answers
+        // then any choice is correct
+        if (!$correctChoices->isEmpty()) return true;
+
+        // otherwise the answer is correct only if the response
+        // matches some correct choice
+        return $correctChoices->contains($this->getResponseTextAttribute());
+    }
+
+    public function getResponseTextAttribute()
+    {
         $responseInfo = $this->response_info;
         switch ($responseInfo["question_type"]) {
             case Question::MULTIPLE_CHOICE_TYPE:

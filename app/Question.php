@@ -26,15 +26,37 @@ class Question extends Model
         'anonymous' => 'boolean',
         'allow_multiple' => 'boolean'
     ];
-    public function folder() {
+    public function folder()
+    {
         return $this->belongsTo(Folder::class);
     }
 
-    public function sessions() {
+    public function sessions()
+    {
         return $this->hasMany(Session::class);
     }
 
-    public function current_session() {
+    public function current_session()
+    {
         return $this->belongsTo('\App\Session', 'current_session_id');
+    }
+
+    public function getQuestionType(): string
+    {
+        return $this->question_info['question_type'];
+    }
+
+
+    /**
+     * get the set of choices for a multiple choice question
+     * if the question is not multiple choice, returns null
+     */
+    public function getResponseChoices(): array | null
+    {
+        if ($this->getQuestionType() !== self::MULTIPLE_CHOICE_TYPE) {
+            return null;
+        }
+
+        return $this->question_info['question_responses'];
     }
 }
