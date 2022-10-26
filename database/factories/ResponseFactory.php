@@ -35,7 +35,7 @@ class ResponseFactory extends Factory
                 $choice = $choices[$randomIndex];
 
                 return [
-                    'question_type' => 'multiple_choice',
+                    'question_type' => Question::MULTIPLE_CHOICE_TYPE,
                     'choice' => $choice,
                 ];
             },

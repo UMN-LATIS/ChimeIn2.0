@@ -23,7 +23,7 @@ class QuestionFactory extends Factory
             "text" => fake()->sentence(),
             "order" => 1,
             "question_info" => [
-                "question_type" => 'multiple_choice',
+                "question_type" => Question::MULTIPLE_CHOICE_TYPE,
                 "question_responses" => [
                     [
                         'text' => fake()->words(5, true),
