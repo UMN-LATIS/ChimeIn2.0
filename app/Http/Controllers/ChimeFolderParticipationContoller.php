@@ -6,7 +6,6 @@ use App\Chime;
 use App\Folder;
 use App\Question;
 use App\Session;
-use Error;
 use Illuminate\Http\Request;
 use App\Response;
 

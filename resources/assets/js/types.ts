@@ -103,6 +103,8 @@ export interface ChimeOptions {
   only_correct_answers_lti?: LTIGradeOptions;
 }
 
+type LTI_Grade_Mode = "no_grades" | "one_grade" | "multiple_grades" | null;
+
 export interface Chime extends ChimeOptions {
   id: number;
   access_code: string;
@@ -116,7 +118,7 @@ export interface Chime extends ChimeOptions {
   lti_setup_complete: boolean;
   resource_link_pk: number | null;
   lti13_resource_link_id: number | null;
-  lti_grade_mode: string | null;
+  lti_grade_mode: LTI_Grade_Mode;
   pivot: {
     /** current user */
     user_id: number;
