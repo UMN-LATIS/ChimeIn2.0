@@ -58,4 +58,25 @@ class Question extends Model
 
         return $this->question_info['question_responses'];
     }
+
+    public function isResponseCorrect(Response $response): bool
+    {
+        if ($this->getQuestionType() !== Question::MULTIPLE_CHOICE_TYPE) {
+            return true;
+        }
+
+        $correctChoices = collect($this->getResponseChoices())
+            ->filter(fn ($choice) => $choice['correct']);
+
+        // if question choice set has no correct answers
+        // then any choice is correct
+        if ($correctChoices->isEmpty()) return true;
+
+        // otherwise the answer is correct only if the response
+        // matches some correct choice
+        return $correctChoices->contains(
+            fn ($choice) =>
+            $choice['text'] === $response->getResponseTextAttribute()
+        );
+    }
 }
