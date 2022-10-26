@@ -1,33 +1,48 @@
 <template>
   <DefaultLayout :user="user">
     <template #navbar-left>
-      <Back :to="`/chime/${chimeId}`">Back to Chime</Back>
+      <Back :to="`/chime/${chimeId}/folder/${folderId}`">Back to Folder</Back>
     </template>
     <ErrorDialog />
-    <div class="container-fluid">
-      <header>
-        <p v-if="chime">
-          <RouterLink :to="`/chime/${chime?.id}`">
-            {{ chime?.name }}
-          </RouterLink>
-        </p>
-        <h2 v-if="folder">{{ folder?.name }}</h2>
-      </header>
+    <div class="container-fluid pt-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <header>
+          <BreadcrumbNav
+            v-if="chime && folder"
+            :links="[
+              { name: 'Home', to: '/' },
+              { name: chime.name, to: `/chime/${chime.id}` },
+              {
+                name: folder.name,
+                to: `/chime/${chime.id}/folder/${folder.id}`,
+              },
+              { name: 'Participation Scores' },
+            ]"
+          >
+          </BreadcrumbNav>
+          <h2 v-if="folder">Folder Participation Scores</h2>
+          <p>Summary of scores for all questions within this folder.</p>
+        </header>
 
-      <section>
-        <h3>Score Settings</h3>
-        <dl>
-          <div v-if="LTIGradeMode">
-            <dt>LTI Grade Mode</dt>
-            <dd>{{ LTIGradeMode }}</dd>
+        <section class="card max-w-fit mb-3">
+          <div class="card-body d-flex gap-4">
+            <div>
+              <h4 class="h6 text-muted">Credit for Incorrect</h4>
+              <p class="m-0">{{ PartialCreditSetting }}</p>
+            </div>
+
+            <div v-if="LTIGradeMode">
+              <h4 class="h6 text-muted d-flex align-items-center gap-2">
+                Grade Mode <Chip color="yellow" :solid="true">Canvas</Chip>
+              </h4>
+              <small class="text-muted d-block">
+                How grades are recorded in Canvas
+              </small>
+              <p>{{ LTIGradeMode }}</p>
+            </div>
           </div>
-
-          <dt>Partial credit</dt>
-          <dd>{{ PartialCreditSetting }}</dd>
-        </dl>
-      </section>
-
-      <h3>Participation Summary</h3>
+        </section>
+      </div>
 
       <table class="table table-sm">
         <thead>
@@ -70,10 +85,11 @@ import {
 } from "../../types";
 import { onMounted, ref, computed } from "vue";
 import * as api from "../../common/api";
-import { RouterLink } from "vue-router";
+import Chip from "../../components/Chip.vue";
 import getResponsesForUser from "./getResponsesForUser";
 import UserParticipationRow from "./UserParticipationRow.vue";
 import { uniq } from "ramda";
+import BreadcrumbNav from "../../components/BreadcrumbNav.vue";
 
 const props = defineProps<{
   user: User;
