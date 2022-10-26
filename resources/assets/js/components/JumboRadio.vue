@@ -56,7 +56,7 @@ export default {
   border-radius: 0.5rem;
   border: 3px solid #ccc;
   background: #f4f4f4;
-  transition: all 0.3s ease-out;
+  transition: all 0.1s ease-out;
   text-align: center;
 }
 
@@ -66,16 +66,23 @@ export default {
   }
 }
 
-.jumbo-radio--is-active,
 .jumbo-radio:hover {
-  background: #fff;
-  border-color: #333;
+  background: #fafafa;
 
   .jumbo-radio__img {
-    filter: grayscale(0) opacity(1);
-    transition: all 0.3s ease-out;
+    filter: grayscale(0);
   }
 }
+
+.jumbo-radio.jumbo-radio--is-active {
+  background: #fff;
+  border-color: #111;
+  transform: scale(1.05);
+  .jumbo-radio__img {
+    filter: grayscale(0) opacity(1);
+  }
+}
+
 .jumbo-radio__img {
   display: block;
   margin: 0 auto 2rem;
