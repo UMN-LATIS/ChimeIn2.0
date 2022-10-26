@@ -36,7 +36,7 @@ class ResponseFactory extends Factory
 
                 return [
                     'question_type' => Question::MULTIPLE_CHOICE_TYPE,
-                    'choice' => $choice,
+                    'choice' => $choice['text'],
                 ];
             },
         ];
