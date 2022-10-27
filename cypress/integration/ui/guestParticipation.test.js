@@ -64,7 +64,7 @@ describe("participating as a guest", () => {
       .get("#open-questions")
       .should("contain.text", testQuestion.text);
 
-    cy.get("#radio1_0").click();
+    cy.get(":nth-child(1) > .form-check-label").click();
     cy.contains("Response Updated");
   });
 
@@ -94,7 +94,7 @@ describe("participating as a guest", () => {
     // as a guest, record a response
     cy.visit(`/join/${testChime.access_code}`);
 
-    cy.get("#radio1_0").click();
+    cy.get(":nth-child(1) > .form-check-label").click();
     cy.contains("Response Updated");
 
     // as faculty, verify that the response is recorded
