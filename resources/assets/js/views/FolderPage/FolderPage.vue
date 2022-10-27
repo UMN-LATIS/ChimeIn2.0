@@ -54,6 +54,13 @@
               >
                 <i class="material-icons pointer">edit</i> Folder Settings
               </button>
+              <router-link
+                :to="`/chime/${chimeId}/folder/${folderId}/participation`"
+                class="btn"
+              >
+                <Icon>grade</Icon>
+                Scores
+              </router-link>
               <button class="btn" @click="openAll">
                 <i class="material-icons pointer">visibility</i> Open All
               </button>
@@ -268,6 +275,7 @@ import {
   forceSyncGradesWithLMS,
 } from "../../common/api";
 import { useRouter } from "vue-router";
+import Icon from "../../components/Icon.vue";
 const QuestionForm = defineAsyncComponent(() =>
   import(
     /* webpackChunkName: "QuestionForm" */
