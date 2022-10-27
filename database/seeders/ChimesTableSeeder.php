@@ -15,21 +15,23 @@ class ChimesTableSeeder extends Seeder
      */
     public function run()
     {
+        $admin = User::where('umndid', 'admin')->firstOrFail();
+
         // regular chimes
         Chime::factory()
-            ->withPresenter(User::find(1))
+            ->withPresenter($admin)
             ->withContent(['folders' => 3, 'questions' => 3])
             ->create();
 
         // LTI Chimes
         Chime::factory()
-            ->withPresenter(User::find(1))
+            ->withPresenter($admin)
             ->withLTI()
             ->withContent(['folders' => 3, 'questions' => 3])
             ->create();
 
         Chime::factory()
-            ->withPresenter(User::find(1))
+            ->withPresenter($admin)
             ->withParticipants(40)
             ->withContent([
                 'folders' => 3, 'questions' => 3,
