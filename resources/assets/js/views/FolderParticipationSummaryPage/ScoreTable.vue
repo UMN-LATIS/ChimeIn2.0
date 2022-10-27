@@ -10,7 +10,7 @@
             scope="col"
             class="text-center"
           >
-            Q{{ index + 1 }}
+            Q{{ (index as number) + 1 }}
           </th>
           <th scope="col" class="text-right">Total</th>
         </tr>
