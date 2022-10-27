@@ -16,12 +16,12 @@
                 name: folder.name,
                 to: `/chime/${chime.id}/folder/${folder.id}`,
               },
-              { name: 'Participation Scores' },
+              { name: 'Folder Scores' },
             ]"
           >
           </BreadcrumbNav>
-          <h2 v-if="folder">Folder Participation Scores</h2>
-          <p>Summary of scores for all questions within this folder.</p>
+          <h2 v-if="folder">Folder Scores</h2>
+          <p>Scores for all questions within this folder.</p>
         </header>
       </div>
 
@@ -87,6 +87,9 @@ import Chip from "../../components/Chip.vue";
 import BreadcrumbNav from "../../components/BreadcrumbNav.vue";
 import ScoreTable from "./ScoreTable.vue";
 import { uniq } from "ramda";
+import { useStore } from "vuex";
+
+const store = useStore();
 
 const props = defineProps<{
   user: User;
@@ -149,16 +152,26 @@ const numberOfActiveQuestions = computed((): number => {
 });
 
 onMounted(async () => {
-  [participationSummary.value, chime.value, folder.value] = await Promise.all([
-    api.getChimeFolderParticipation({
-      chimeId: props.chimeId,
-      folderId: props.folderId,
-    }),
-    api.getChime(props.chimeId),
-    api.getFolderWithQuestions({
-      chimeId: props.chimeId,
-      folderId: props.folderId,
-    }),
-  ]);
+  try {
+    [participationSummary.value, chime.value, folder.value] = await Promise.all(
+      [
+        api.getChimeFolderParticipation({
+          chimeId: props.chimeId,
+          folderId: props.folderId,
+        }),
+        api.getChime(props.chimeId),
+        api.getFolderWithQuestions({
+          chimeId: props.chimeId,
+          folderId: props.folderId,
+        }),
+      ]
+    );
+  } catch (err) {
+    store.commit(
+      "message",
+      "Could not load folder scores. You may not have permission to view this page."
+    );
+    console.error(err);
+  }
 });
 </script>

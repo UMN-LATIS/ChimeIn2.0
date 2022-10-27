@@ -5,7 +5,7 @@ import FolderPage from "./views/FolderPage/FolderPage.vue";
 import ParticipantPage from "./views/ParticipantPage/ParticipantPage.vue";
 import PresentPage from "./views/PresentPage/PresentPage.vue";
 import NotFoundPage from "./views/NotFoundPage/NotFoundPage.vue";
-import FolderParticipationSummaryPage from "./views/FolderParticipationSummaryPage/FolderParticipationSummaryPage.vue";
+import FolderScoresPage from "./views/FolderScoresPage/FolderScoresPage.vue";
 
 const toInt = (value: string | string[], fallback?: number) => {
   if (Array.isArray(value) && !value.length) {
@@ -39,8 +39,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/chime/:chimeId/folder/:folderId/participation",
-    name: "folderParticipationSummary",
-    component: FolderParticipationSummaryPage,
+    name: "folderScores",
+    component: FolderScoresPage,
     props: (route) => ({
       chimeId: toInt(route.params.chimeId),
       folderId: toInt(route.params.folderId),
