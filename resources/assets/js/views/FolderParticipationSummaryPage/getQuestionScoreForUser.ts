@@ -14,15 +14,20 @@ function calculateQuestionScore(
 }
 
 export default function getQuestionScoreForUser({
+  userId,
   questionId,
   responses,
+  valueForIncorrect,
 }: {
+  userId: number;
   questionId: number;
   responses: ChimeFolderParticipationResponseItem[];
+  valueForIncorrect: number;
 }): number {
   const questionResponsesForUser = responses.filter(
-    (response) => response.question_id === questionId
+    (response) =>
+      response.user_id === userId && response.question_id === questionId
   );
 
-  return calculateQuestionScore(questionResponsesForUser);
+  return calculateQuestionScore(questionResponsesForUser, valueForIncorrect);
 }

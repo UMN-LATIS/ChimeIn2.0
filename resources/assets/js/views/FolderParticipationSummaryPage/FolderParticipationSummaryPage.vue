@@ -25,69 +25,26 @@
         </header>
       </div>
 
-      <!-- Participants Table -->
-      <div class="table-responsive table-container">
-        <table class="table">
-          <thead>
-            <tr class="text-xs uppercase">
-              <th scope="col">Participant</th>
-              <th
-                v-for="(question, index) in folder?.questions"
-                :key="question.id"
-                scope="col"
-                class="text-center"
-              >
-                Q{{ index + 1 }}
-              </th>
-              <th scope="col" class="text-right">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <UserParticipationRow
-              v-for="participant in participants"
-              :key="participant.id"
-              :user="participant"
-              :questions="folder?.questions ?? []"
-              :responses="getResponsesForUser(participant.id, responses)"
-              :numberOfActiveQuestions="numberOfActiveQuestions"
-            />
-          </tbody>
-        </table>
-      </div>
+      <h3 class="text-base uppercase font-bold mt-3 mb-3">Participants</h3>
+      <ScoreTable
+        :users="participants"
+        :questions="questions"
+        :responses="responses"
+        :numberOfActiveQuestions="numberOfActiveQuestions"
+        :valueForIncorrect="valueForIncorrect"
+      />
 
-      <!-- Presenters Table -->
-      <h3 class="mt-5 mb-3">Presenters</h3>
-      <div class="table-responsive table-container">
-        <table class="table">
-          <thead>
-            <tr class="text-xs uppercase">
-              <th scope="col">Presenter</th>
-              <th
-                v-for="(question, index) in folder?.questions"
-                :key="question.id"
-                scope="col"
-                class="text-center"
-              >
-                Q{{ index + 1 }}
-              </th>
-              <th scope="col" class="text-right">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <UserParticipationRow
-              v-for="presenter in presenters"
-              :key="presenter.id"
-              :user="presenter"
-              :questions="folder?.questions ?? []"
-              :responses="getResponsesForUser(presenter.id, responses)"
-              :numberOfActiveQuestions="numberOfActiveQuestions"
-            />
-          </tbody>
-        </table>
-      </div>
+      <h3 class="text-base uppercase font-bold mt-5 mb-3">Presenters</h3>
+      <ScoreTable
+        :users="presenters"
+        :questions="questions"
+        :responses="responses"
+        :numberOfActiveQuestions="numberOfActiveQuestions"
+        :valueForIncorrect="valueForIncorrect"
+      />
 
-      <section class="max-w-fit mt-5 mb-3">
-        <h3>Score Settings</h3>
+      <section class="mt-5 mb-3">
+        <h3 class="text-base uppercase font-bold">Details</h3>
         <div class="max-w-fit">
           <div class="card">
             <div class="card-body">
@@ -127,10 +84,9 @@ import {
 import { onMounted, ref, computed } from "vue";
 import * as api from "../../common/api";
 import Chip from "../../components/Chip.vue";
-import getResponsesForUser from "./getResponsesForUser";
-import UserParticipationRow from "./UserParticipationRow.vue";
-import { uniq } from "ramda";
 import BreadcrumbNav from "../../components/BreadcrumbNav.vue";
+import ScoreTable from "./ScoreTable.vue";
+import { uniq } from "ramda";
 
 const props = defineProps<{
   user: User;
@@ -151,6 +107,8 @@ const participants = computed(
 const presenters = computed(
   (): User[] => participationSummary.value?.presenters ?? []
 );
+const questions = computed(() => folder.value?.questions ?? []);
+
 const LTIGradeMode = computed((): string | null => {
   const gradeMode = chime.value?.lti_grade_mode;
   if (!gradeMode) return null;
@@ -160,27 +118,33 @@ const LTIGradeMode = computed((): string | null => {
   return null;
 });
 
-const PartialCreditSetting = computed((): string | null => {
+const valueForIncorrect = computed((): number => {
   const ltiSetting = chime.value?.only_correct_answers_lti;
 
-  if (ltiSetting === LTIGradeOptions.FULL_CREDIT_FOR_PARITICIPATION) {
-    return "100%";
-  }
+  const lookup = {
+    [LTIGradeOptions.FULL_CREDIT_FOR_PARITICIPATION]: 1,
+    [LTIGradeOptions.HALF_CREDIT_FOR_PARTICIPATION]: 0.5,
+    [LTIGradeOptions.ONLY_POINTS_FOR_CORRECT]: 0,
+  };
 
-  if (ltiSetting === LTIGradeOptions.HALF_CREDIT_FOR_PARTICIPATION) {
-    return "50%";
-  }
-
-  if (ltiSetting === LTIGradeOptions.ONLY_POINTS_FOR_CORRECT) {
-    return "0%";
-  }
-
-  return null;
+  return lookup[ltiSetting ?? LTIGradeOptions.FULL_CREDIT_FOR_PARITICIPATION];
 });
 
-/** questions with at least one response */
+const PartialCreditSetting = computed(
+  (): string => `${valueForIncorrect.value * 100}%`
+);
+
+/**
+ * questions with at least one response from . For example, if the users are all participants,
+ * responses for presenters don't count towards "active
+ * questions"
+ */
 const numberOfActiveQuestions = computed((): number => {
-  const questionIds = responses.value.map((r) => r.question_id);
+  const participantIds = participants.value.map((p) => p.id);
+  const questionIds = responses.value
+    // only look at responses for this set of users
+    .filter((r) => participantIds.includes(r.user_id))
+    .map((r) => r.question_id);
   return uniq(questionIds).length;
 });
 
@@ -198,18 +162,3 @@ onMounted(async () => {
   ]);
 });
 </script>
-<style scoped>
-.table td,
-.table th {
-  border-top: 0;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.table-container {
-  border: 1px solid #ddd;
-  background: #fff;
-  padding: 2rem;
-  width: fit-content;
-  min-width: 40rem;
-}
-</style>

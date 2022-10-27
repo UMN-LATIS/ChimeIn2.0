@@ -12,8 +12,18 @@
       class="align-middle"
     >
       <QuestionScoreItem
-        :score="getQuestionScoreForUser({ questionId, responses })"
+        v-if="userHasResponseForQuestion(user.id, questionId, responses)"
+        :score="
+          getQuestionScoreForUser({
+            userId: user.id,
+            questionId,
+            responses,
+            valueForIncorrect,
+          })
+        "
+        :valueForIncorrect="valueForIncorrect"
       />
+      <span v-else>-</span>
     </td>
     <td class="text-right text-monospace text-muted text-sm align-middle">
       {{ total }}
@@ -34,20 +44,36 @@ import QuestionScoreItem from "./QuestionScoreItem.vue";
 const props = defineProps<{
   user: User;
   questions: Question[];
-  /** responses from this user for this folder */
   responses: ChimeFolderParticipationResponseItem[];
   numberOfActiveQuestions: number;
+  valueForIncorrect: number;
 }>();
 
 const questionIds = computed((): number[] =>
   uniq(props.questions.map((q) => q.id))
 );
 
+function userHasResponseForQuestion(
+  userId: number,
+  questionId: number,
+  responses: ChimeFolderParticipationResponseItem[]
+) {
+  return responses.some(
+    (r) => r.user_id === userId && r.question_id === questionId
+  );
+}
+
 const total = computed((): string => {
+  if (props.numberOfActiveQuestions === 0) {
+    return "-";
+  }
+
   const questionScores: number[] = props.questions.map((question) =>
     getQuestionScoreForUser({
+      userId: props.user.id,
       questionId: question.id,
       responses: props.responses,
+      valueForIncorrect: props.valueForIncorrect,
     })
   );
 
