@@ -50,7 +50,7 @@
 
         <section class="mt-5 mb-3">
           <h3 class="text-base uppercase font-bold">Details</h3>
-          <div class="max-w-fit">
+          <div class="max-w-fit d-flex flex-wrap gap-3">
             <div class="card">
               <div class="card-body">
                 <h4 class="h6 text-muted">Credit for Incorrect</h4>
