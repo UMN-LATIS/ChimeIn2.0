@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Question;
 use App\Session;
+use App\Chime;
+use App\Folder;
 use App\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,10 +23,16 @@ class ResponseFactory extends Factory
      */
     public function definition()
     {
-        $allUserIds = User::all()->map(fn ($u) => $u->id)->toArray();
-
         return [
-            'user_id' => fake()->randomElement($allUserIds),
+            'user_id' => function (array $responseAttrs) {
+                $session = Session::find($responseAttrs['session_id']);
+                $question = Question::find($session->question_id);
+                $folder = Folder::find($question->folder_id);
+                $chime = Chime::find($folder->chime_id);
+                $chimeUserIds = $chime->users->pluck('id')->toArray();
+
+                return fake()->randomElement($chimeUserIds);
+            },
             'response_info' => function (array $responseAttrs) {
                 // look up associated question and it's choices
                 // then pick one at random
