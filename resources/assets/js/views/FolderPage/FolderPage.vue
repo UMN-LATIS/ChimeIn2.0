@@ -59,7 +59,7 @@
                 class="btn"
               >
                 <Icon>grade</Icon>
-                Scores
+                Report
               </router-link>
               <button class="btn" @click="openAll">
                 <i class="material-icons pointer">visibility</i> Open All

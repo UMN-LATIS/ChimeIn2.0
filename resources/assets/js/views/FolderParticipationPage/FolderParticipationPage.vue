@@ -16,12 +16,12 @@
                 name: folder.name,
                 to: `/chime/${chime.id}/folder/${folder.id}`,
               },
-              { name: 'Folder Scores' },
+              { name: 'Participation Report' },
             ]"
           >
           </BreadcrumbNav>
-          <h2 v-if="folder">Folder Scores</h2>
-          <p>Scores for all questions within this folder.</p>
+          <h2 v-if="folder">Participation Report</h2>
+          <p>Participation for all questions within this folder.</p>
         </header>
       </div>
 

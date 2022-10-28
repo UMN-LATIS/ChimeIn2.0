@@ -9,7 +9,7 @@ use App\Session;
 use Illuminate\Http\Request;
 use App\Response;
 
-class ChimeFolderParticipationContoller extends Controller
+class FolderParticipationContoller extends Controller
 {
     public function index(Request $request, Chime $chime, Folder $folder)
     {
