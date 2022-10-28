@@ -14,6 +14,13 @@ export interface User {
   [key: string]: any;
 }
 
+export interface SortableUser extends User {
+  lastName: string;
+  firstName: string;
+  /** `lastName, firstName` */
+  sortableName: string;
+}
+
 export interface Response {
   id: number;
   created_at?: string;

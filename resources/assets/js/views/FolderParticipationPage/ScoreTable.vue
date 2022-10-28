@@ -17,7 +17,7 @@
       </thead>
       <tbody>
         <UserParticipationRow
-          v-for="user in users"
+          v-for="user in usersSortedByLastName"
           :key="user.id"
           :user="user"
           :questions="questions"
@@ -35,16 +35,29 @@ import {
   User,
   Question,
   ChimeFolderParticipationResponseItem,
+  SortableUser,
 } from "../../types";
 import UserParticipationRow from "./UserParticipationRow.vue";
+import { computed } from "vue";
+import { toSortableUser } from "../../common/toSortableUsers";
 
-defineProps<{
+const props = defineProps<{
   users: User[];
   questions: Question[];
   responses: ChimeFolderParticipationResponseItem[];
   numberOfActiveQuestions: number;
   valueForIncorrect: number;
 }>();
+
+const sortableUsers = computed((): SortableUser[] =>
+  props.users.map(toSortableUser)
+);
+
+const usersSortedByLastName = computed((): SortableUser[] =>
+  [...sortableUsers.value].sort((u1, u2) =>
+    u1.sortableName.localeCompare(u2.sortableName)
+  )
+);
 </script>
 <style scoped>
 .table-container {

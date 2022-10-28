@@ -2,7 +2,7 @@
   <tr>
     <th scope="row" class="align-middle">
       <div class="d-flex flex-column">
-        <span>{{ user.name }}</span>
+        <span>{{ user.sortableName }}</span>
         <small class="text-muted">{{ user.email }}</small>
       </div>
     </th>
@@ -40,13 +40,13 @@ import { sum, uniq } from "ramda";
 import {
   ChimeFolderParticipationResponseItem,
   Question,
-  User,
+  SortableUser,
 } from "../../types";
 import getQuestionScoreForUser from "./getQuestionScoreForUser";
 import QuestionScoreItem from "./QuestionScoreItem.vue";
 
 const props = defineProps<{
-  user: User;
+  user: SortableUser;
   questions: Question[];
   responses: ChimeFolderParticipationResponseItem[];
   numberOfActiveQuestions: number;
