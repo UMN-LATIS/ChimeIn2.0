@@ -66,7 +66,7 @@ const usersSortedByLastName = computed((): SortableUser[] =>
   width: fit-content;
   min-width: 40rem;
   max-width: 100%;
-  overflow: scroll;
+  overflow: auto;
   max-height: 50vh;
 }
 .table {
