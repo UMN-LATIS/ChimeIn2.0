@@ -85,4 +85,16 @@ const total = computed((): string => {
   return `${percent.toFixed(2)}%`;
 });
 </script>
-<style scoped></style>
+<style scoped>
+th {
+  position: sticky;
+  left: 0;
+  background: #f3f3f3;
+}
+
+th,
+td {
+  border-top: 0;
+  border-bottom: 1px solid #ddd;
+}
+</style>

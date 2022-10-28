@@ -25,47 +25,56 @@
         </header>
       </div>
 
-      <h3 class="text-base uppercase font-bold mt-3 mb-3">Participants</h3>
-      <ScoreTable
-        :users="participants"
-        :questions="questions"
-        :responses="responses"
-        :numberOfActiveQuestions="numberOfActiveQuestions"
-        :valueForIncorrect="valueForIncorrect"
-      />
+      <div v-if="participationSummary">
+        <h3 class="text-base uppercase font-bold mt-3 mb-3">Participants</h3>
+        <ScoreTable
+          v-if="participants.length"
+          :users="participants"
+          :questions="questions"
+          :responses="responses"
+          :numberOfActiveQuestions="numberOfActiveQuestions"
+          :valueForIncorrect="valueForIncorrect"
+        />
+        <span v-else>Nothing yet.</span>
 
-      <h3 class="text-base uppercase font-bold mt-5 mb-3">Presenters</h3>
-      <ScoreTable
-        :users="presenters"
-        :questions="questions"
-        :responses="responses"
-        :numberOfActiveQuestions="numberOfActiveQuestions"
-        :valueForIncorrect="valueForIncorrect"
-      />
+        <h3 class="text-base uppercase font-bold mt-5 mb-3">Presenters</h3>
+        <ScoreTable
+          v-if="presenters.length"
+          :users="presenters"
+          :questions="questions"
+          :responses="responses"
+          :numberOfActiveQuestions="numberOfActiveQuestions"
+          :valueForIncorrect="valueForIncorrect"
+        />
+        <span v-else>Nothing yet.</span>
 
-      <section class="mt-5 mb-3">
-        <h3 class="text-base uppercase font-bold">Details</h3>
-        <div class="max-w-fit">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="h6 text-muted">Credit for Incorrect</h4>
-              <p class="m-0">{{ PartialCreditSetting }}</p>
+        <section class="mt-5 mb-3">
+          <h3 class="text-base uppercase font-bold">Details</h3>
+          <div class="max-w-fit">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="h6 text-muted">Credit for Incorrect</h4>
+                <p class="m-0">{{ PartialCreditSetting }}</p>
+              </div>
+            </div>
+
+            <div v-if="LTIGradeMode" class="card">
+              <div class="card-body">
+                <h4 class="h6 text-muted d-flex align-items-center gap-2">
+                  Grade Mode <Chip color="yellow" :solid="true">Canvas</Chip>
+                </h4>
+                <small class="text-muted d-block">
+                  How grades are recorded in Canvas
+                </small>
+                <p>{{ LTIGradeMode }}</p>
+              </div>
             </div>
           </div>
-
-          <div v-if="LTIGradeMode" class="card">
-            <div class="card-body">
-              <h4 class="h6 text-muted d-flex align-items-center gap-2">
-                Grade Mode <Chip color="yellow" :solid="true">Canvas</Chip>
-              </h4>
-              <small class="text-muted d-block">
-                How grades are recorded in Canvas
-              </small>
-              <p>{{ LTIGradeMode }}</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
+      <div v-if="!participationSummary">
+        <Spinner> Creating Report </Spinner>
+      </div>
     </div>
   </DefaultLayout>
 </template>
@@ -88,6 +97,7 @@ import BreadcrumbNav from "../../components/BreadcrumbNav.vue";
 import ScoreTable from "./ScoreTable.vue";
 import { uniq } from "ramda";
 import { useStore } from "vuex";
+import Spinner from "../../components/Spinner.vue";
 
 const store = useStore();
 
