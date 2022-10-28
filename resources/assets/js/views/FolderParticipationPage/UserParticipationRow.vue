@@ -23,7 +23,11 @@
         "
         :valueForIncorrect="valueForIncorrect"
       />
-      <span v-else>-</span>
+      <span
+        v-else
+        class="question-score-item d-flex align-items-center justify-content-center"
+        >-</span
+      >
     </td>
     <td class="text-right text-monospace text-muted text-sm align-middle">
       {{ total }}
