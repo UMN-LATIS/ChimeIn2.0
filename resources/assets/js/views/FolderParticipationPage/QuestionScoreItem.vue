@@ -4,7 +4,7 @@
   >
     <Icon v-if="score === 1">star</Icon>
     <Icon v-else-if="score < 1 && valueForIncorrect > 0">star_half</Icon>
-    <Icon v-else class="no-points">star</Icon>
+    <Icon v-else class="no-points">close</Icon>
   </div>
 </template>
 <script setup lang="ts">
@@ -16,7 +16,10 @@ defineProps<{
 }>();
 </script>
 <style scoped>
+.question-score-item {
+  color: var(--gold);
+}
 .no-points {
-  opacity: 0.1;
+  color: red;
 }
 </style>
