@@ -63,9 +63,6 @@
                 <h4 class="h6 text-muted d-flex align-items-center gap-2">
                   Grade Mode <Chip color="yellow" :solid="true">Canvas</Chip>
                 </h4>
-                <small class="text-muted d-block">
-                  How grades are recorded in Canvas
-                </small>
                 <p>{{ LTIGradeMode }}</p>
               </div>
             </div>
@@ -126,8 +123,10 @@ const LTIGradeMode = computed((): string | null => {
   const gradeMode = chime.value?.lti_grade_mode;
   if (!gradeMode) return null;
   if (gradeMode === "no_grades") return "No grades recorded";
-  if (gradeMode === "one_grade") return "One grade recorded";
-  if (gradeMode === "multiple_grades") return "One grade per folder";
+  if (gradeMode === "one_grade")
+    return "One grade column for all folders combined";
+  if (gradeMode === "multiple_grades")
+    return "Separate grade column for each folder";
   return null;
 });
 
