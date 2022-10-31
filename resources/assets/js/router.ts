@@ -1,17 +1,24 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomePage from "./views/HomePage/HomePage.vue";
 import ChimePage from "./views/ChimePage/ChimePage.vue";
 import FolderPage from "./views/FolderPage/FolderPage.vue";
 import ParticipantPage from "./views/ParticipantPage/ParticipantPage.vue";
 import PresentPage from "./views/PresentPage/PresentPage.vue";
 import NotFoundPage from "./views/NotFoundPage/NotFoundPage.vue";
+import FolderParticipationPage from "./views/FolderParticipationPage/FolderParticipationPage.vue";
 
-const toInt = (value, fallback = undefined) => {
-  const n = Number.parseInt(value);
+const toInt = (value: string | string[], fallback?: number) => {
+  if (Array.isArray(value) && !value.length) {
+    return fallback;
+  }
+
+  const n: number = Array.isArray(value)
+    ? Number.parseInt(value[0])
+    : Number.parseInt(value);
   return Number.isNaN(n) ? fallback : n;
 };
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   { path: "/", component: HomePage },
   {
     path: "/chime/:chimeId",
@@ -25,6 +32,15 @@ const routes = [
     path: "/chime/:chimeId/folder/:folderId",
     name: "folder",
     component: FolderPage,
+    props: (route) => ({
+      chimeId: toInt(route.params.chimeId),
+      folderId: toInt(route.params.folderId),
+    }),
+  },
+  {
+    path: "/chime/:chimeId/folder/:folderId/participation",
+    name: "folderParticipationReport",
+    component: FolderParticipationPage,
     props: (route) => ({
       chimeId: toInt(route.params.chimeId),
       folderId: toInt(route.params.folderId),
