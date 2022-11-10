@@ -103,7 +103,7 @@
     "socket.io-client": "^2.4.0",
     "stemmer": "^2.0.0",
     "stopword": "^2.0.2",
-    "vue": "^3.2.33",
+    "vue": "^3.2.44",
     "vue-carousel": "^0.18.0",
     "vue-chartjs": "^4.1.1",
     "vue-demi": "^0.13.8",
