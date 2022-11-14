@@ -18,7 +18,7 @@
             data-cy="slider-response-input"
             @change="valueChanged($event.target.value)"
           />
-          <output v-if="isNumericInput" class="bubble" :style="customStyle">
+          <output v-if="isQuantitative" class="bubble" :style="customStyle">
             {{ bubbleValue }}
           </output>
         </div>
@@ -41,10 +41,6 @@
 </template>
 <script>
 import get from "lodash/get";
-
-function isNumeric(value) {
-  return /^-?\d+$/.test(value);
-}
 
 export default {
   // eslint-disable-next-line vue/require-prop-types
@@ -85,16 +81,14 @@ export default {
         null
       );
     },
-    isNumericInput() {
+    isQuantitative() {
       return (
         this.question.question_info.question_responses.range_type ==
-          "Numeric (Linear)" ||
-        // left choice and right choice texts are actually numbers
-        (isNumeric(this.left_choice_text) && isNumeric(this.right_choice_text))
+        "Numeric (Linear)"
       );
     },
     inputValueText() {
-      return this.isNumericInput
+      return this.isQuantitative
         ? this.bubbleValue
         : `${this.sliderValue}% between ${this.left_choice_text} and ${this.right_choice_text}`;
     },
