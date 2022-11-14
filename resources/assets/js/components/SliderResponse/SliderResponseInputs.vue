@@ -3,15 +3,35 @@
     <div class="row value-slider">
       <div class="col">
         <div class="range-wrap">
+          <!-- 
+            the range of this question is set as a min="0" and max="100",
+            but these aren't the real values.
+            We need to tell users using screenreaders the actual range the presenter set, someplace, so we do that here.
+
+            TODO: The min/max values on the input should correspond to actual min/max values, not 0/100, if it's numeric. (I believe) screenreaders will read the min/max values on input. So, if the 
+            question is something like "How large is angle A?" and the range is 0-180, the input should have min="0" and max="180", not 0 and 100.
+          -->
+          <div
+            :for="`formControlRange-${question.id}`"
+            class="sr-only"
+            role="heading"
+            aria-level="3"
+          >
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="question.text" />
+            <p>
+              Choose a value between {{ left_choice_text }} and
+              {{ right_choice_text }}
+            </p>
+          </div>
           <input
-            id="formControlRange"
-            :aria-labelledby="`question-${question.id}-heading`"
+            id="`formControlRange-${question.id}`"
             type="range"
             :disabled="disabled"
             class="form-control-range custom-range range"
             :value="sliderValue"
-            :min="left_choice_text"
-            :max="right_choice_text"
+            :min="0"
+            :max="100"
             data-cy="slider-response-input"
             @change="valueChanged($event.target.value)"
           />
