@@ -4,26 +4,23 @@
       <div class="col">
         <div class="range-wrap">
           <input
-            id="formControlRange"
+            :id="`formControlRange-question-${question.id}`"
             :aria-labelledby="`question-${question.id}-heading`"
             type="range"
             :disabled="disabled"
             class="form-control-range custom-range range"
             :value="sliderValue"
-            :min="left_choice_text"
-            :max="right_choice_text"
+            min="0"
+            max="100"
+            :aria-valuemin="left_choice_text"
+            :aria-valuemax="right_choice_text"
+            :aria-valuetext="inputValueText"
             data-cy="slider-response-input"
             @change="valueChanged($event.target.value)"
           />
-          <output
-            v-if="
-              question.question_info.question_responses.range_type ==
-              'Numeric (Linear)'
-            "
-            class="bubble"
-            :style="customStyle"
-            >{{ bubbleValue }}</output
-          >
+          <output v-if="isQuantitative" class="bubble" :style="customStyle">
+            {{ bubbleValue }}
+          </output>
         </div>
       </div>
     </div>
@@ -44,6 +41,7 @@
 </template>
 <script>
 import get from "lodash/get";
+
 export default {
   // eslint-disable-next-line vue/require-prop-types
   props: ["question", "response", "disabled"],
@@ -82,6 +80,17 @@ export default {
         "question_info.question_responses.right_choice_text",
         null
       );
+    },
+    isQuantitative() {
+      return (
+        this.question.question_info.question_responses.range_type ==
+        "Numeric (Linear)"
+      );
+    },
+    inputValueText() {
+      return this.isQuantitative
+        ? this.bubbleValue
+        : `${this.sliderValue}% between ${this.left_choice_text} and ${this.right_choice_text}`;
     },
   },
   watch: {
