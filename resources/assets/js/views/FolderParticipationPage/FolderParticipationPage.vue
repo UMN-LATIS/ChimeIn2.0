@@ -20,8 +20,10 @@
             ]"
           >
           </BreadcrumbNav>
-          <h2 v-if="folder">Participation Report</h2>
-          <p>Participation for all questions within this folder.</p>
+          <div v-if="folder">
+            <h2>Participation Report</h2>
+            <p>Participation for all questions within this folder.</p>
+          </div>
         </header>
       </div>
 
@@ -70,7 +72,14 @@
         </section>
       </div>
       <div v-if="!participationSummary">
-        <Spinner> Creating Report </Spinner>
+        <Spinner>
+          <div class="text-center">
+            <h2>Creating Report</h2>
+            <p>
+              This could take a minute or two if there are a lot of responses.
+            </p>
+          </div>
+        </Spinner>
       </div>
     </div>
   </DefaultLayout>
