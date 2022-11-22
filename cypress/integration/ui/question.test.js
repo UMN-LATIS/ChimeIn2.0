@@ -283,9 +283,10 @@ describe("question", () => {
         cy.visit(`/join/${testChime.access_code}`);
 
         // check options
-        cy.get("#radio1_1").click();
+        cy.get(":nth-child(2) > .form-check-label").click();
+
         cy.wait("@apiSubmitResponse");
-        cy.get("#radio1_2").click();
+        cy.get(":nth-child(3) > .form-check-label").click();
       })
       .then(() => {
         // check that results render properly

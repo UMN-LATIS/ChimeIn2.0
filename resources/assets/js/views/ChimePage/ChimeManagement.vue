@@ -50,10 +50,24 @@
             @click="forceSyncGrades"
           >
             Force Sync with Canvas
-            <span v-if="isForceSyncSuccessful" class="material-icons md-18"
+            <span
+              v-if="forceSyncState === 'success'"
+              class="material-icons sync-status sync-status--is-success md-18"
               >check_circle</span
             >
+            <span
+              v-if="forceSyncState === 'inProgress'"
+              class="material-icons sync-status sync-status--is-inprogress md-18"
+              >sync</span
+            >
           </button>
+          <div
+            v-if="forceSyncState === 'error'"
+            class="sync-status sync-status--is-error"
+          >
+            <span class="material-icons md-18">error</span>
+            Error syncing grades with Canvas
+          </div>
         </div>
       </div>
       <hr />
@@ -139,7 +153,8 @@ const store = useStore();
 
 const isCanvasChime = computed((): boolean => selectIsCanvasChime(props.chime));
 
-const isForceSyncSuccessful = ref<boolean>(false);
+type ForceSyncState = "idle" | "inProgress" | "success" | "error";
+const forceSyncState = ref<ForceSyncState>("idle");
 
 const sortedUsers = computed(() =>
   [...users.value].sort((a, b) => {
@@ -210,10 +225,14 @@ function deleteUser(userId) {
 }
 
 async function forceSyncGrades() {
-  isForceSyncSuccessful.value = await api.forceSyncGradesWithLMS({
+  forceSyncState.value = "inProgress";
+  const response = await api.forceSyncGradesWithLMS({
     chimeId: props.chime.id,
   });
-  if (!isForceSyncSuccessful.value) {
+
+  forceSyncState.value = response ? "success" : "error";
+
+  if (forceSyncState.value === "error") {
     store.commit(
       "message",
       "Could not sync Chime. Please contact support at latistecharch@umn.edu."
@@ -248,5 +267,28 @@ ul {
 
 .chime-management__join-panel {
   margin-bottom: 1rem;
+}
+
+.sync-status {
+  display: flex;
+  align-items: center;
+}
+
+.sync-status--is-inprogress {
+  animation: 1s infinite spin;
+}
+.sync-status--is-error {
+  margin: 0.5rem 0;
+  color: #dc3545;
+  font-size: 0.9rem;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

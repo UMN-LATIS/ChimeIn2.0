@@ -19,8 +19,8 @@
         <div class="jumbo-radio-group">
           <JumboRadio
             v-for="choice in gradePassbackChoices"
-            name="lti_grade_mode"
             :key="choice.id"
+            name="lti_grade_mode"
             :img="choice.img"
             :title="choice.title"
             :description="choice.description"
@@ -51,7 +51,7 @@
     </ol>
 
     <div class="form-actions">
-      <button @click.prevent="cancelForm" class="btn btn-outline-secondary">
+      <button class="btn btn-outline-secondary" @click.prevent="cancelForm">
         Cancel
       </button>
       <button
@@ -64,60 +64,6 @@
     </div>
   </div>
 </template>
-<style scoped>
-.setup-list {
-  margin: 4rem 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: setup-list;
-}
-
-.setup-list li {
-  margin: 4rem 0;
-  counter-increment: setup-list;
-  padding-left: 3rem;
-  position: relative;
-}
-
-.setup-list li::before {
-  content: counter(setup-list);
-  display: flex;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  border: 2px solid #333;
-  font-weight: bold;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: var(--gold-light);
-}
-
-.setup-item__heading {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
-}
-
-.jumbo-radio-group {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-@media (max-width: 40rem) {
-  .jumbo-radio-group {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.form-actions {
-  text-align: right;
-}
-</style>
-
 <script>
 import JumboRadio from "../JumboRadio.vue";
 
@@ -217,8 +163,43 @@ export default {
     cancelForm() {
       this.gradePassbackChoice = null;
       this.gradeCalcChoice = null;
-      // window.history.go(-1);
     },
   },
 };
 </script>
+
+<style scoped>
+.setup-list {
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: setup-list;
+}
+
+.setup-list li {
+  margin: 2rem 0;
+  position: relative;
+}
+
+.setup-item__heading {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.jumbo-radio-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 40rem) {
+  .jumbo-radio-group {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.form-actions {
+  text-align: right;
+}
+</style>

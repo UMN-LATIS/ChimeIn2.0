@@ -12,7 +12,8 @@
           {{ questionTypeToString }}
         </router-link>
       </h2>
-      <Chip :color="totalResponses ? 'primary' : 'muted'" :solid="true"
+
+      <Chip :color="totalResponses ? 'dark' : 'muted'" :solid="true"
         >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
       >
     </header>

@@ -2,12 +2,14 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Folder extends Model
 {
-	use SoftDeletes;
+    use SoftDeletes;
+    use HasFactory;
 
     protected $fillable = ['name', 'order'];
     protected $dates = ['deleted_at'];
