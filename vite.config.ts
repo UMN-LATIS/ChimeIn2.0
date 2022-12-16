@@ -5,7 +5,7 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   plugins: [
     // TODO: Move CSS entry point to js for a better dev experience
-    laravel(["resources/css/app.css", "resources/js/app.js"]),
+    laravel(["resources/assets/sass/app.scss", "resources/assets/js/app.ts"]),
     vue({
       template: {
         transformAssetUrls: {
