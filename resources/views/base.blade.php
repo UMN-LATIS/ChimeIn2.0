@@ -7,8 +7,7 @@
 	<meta charset="UTF-8">
 
     	<meta name="csrf-token" content="{{ csrf_token() }}">
-
-		<link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css">
+        @vite(['resources/js/app.js'])
 			@yield('header')
 		</head>
 		<body>
@@ -32,7 +31,6 @@
 				
 				<script>window.pusherKey = '{{ env('PUSHER_APP_KEY') }}'</script>
 				<script>window.lti_launch = '{{ session('lti_launch') }}'</script>
-				<script src="{{ mix('js/app.js') }}"></script>
 
 				@yield('footer')
 			</body>
