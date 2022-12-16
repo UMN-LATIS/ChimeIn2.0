@@ -36,7 +36,7 @@ jobs:
 
       - run: docker-compose exec -T app ./bin/ci.sh
       - run: yarn install --frozen-lockfile
-      - run: yarn run prod
+      - run: yarn build
       - run: docker-compose exec -T app php artisan key:generate
       - run: docker-compose exec -T app php artisan migrate:fresh
       - run: docker-compose exec -T app php artisan db:seed
