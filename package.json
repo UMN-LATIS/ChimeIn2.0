@@ -50,7 +50,6 @@
     "husky": "^8.0.1",
     "jest": "^28.1.0",
     "jest-environment-jsdom": "^28.1.3",
-    "laravel-mix": "^6.0.43",
     "laravel-vite-plugin": "^0.7.2",
     "postcss": "^8.4.14",
     "prettier": "^2.6.2",
