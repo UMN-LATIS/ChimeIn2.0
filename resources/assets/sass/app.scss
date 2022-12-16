@@ -1,17 +1,14 @@
-// Fonts
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap");
-
 // Vendor
-@import "~bootstrap/dist/css/bootstrap.min.css";
-@import "~vue-select/src/scss/vue-select.scss";
-@import "~katex/dist/katex.min.css";
+@use "bootstrap/dist/css/bootstrap.min.css";
+@use "vue-select/src/scss/vue-select.scss";
+@use "katex/dist/katex.min.css";
 
 // Variables
-@import "variables";
-@import "footer";
+@use "variables";
+@use "footer";
 
 // UMN Header styles
-@import "../cla-vue-template/src/index.css";
+@use "../cla-vue-template/src/index.css";
 
 .fade-enter-active,
 .fade-leave-active {
