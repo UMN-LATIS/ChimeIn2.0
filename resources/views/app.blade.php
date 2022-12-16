@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  @vite(['resources/js/app.js'])
+  @vite(['resources/assets/js/app.ts'])
 </head>
 
 <body>

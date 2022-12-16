@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 
     	<meta name="csrf-token" content="{{ csrf_token() }}">
-        @vite(['resources/js/app.js'])
+        @vite(['resources/assets/js/app.ts'])
 			@yield('header')
 		</head>
 		<body>
