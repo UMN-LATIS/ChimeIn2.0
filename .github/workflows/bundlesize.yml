@@ -9,7 +9,7 @@ on:
 
 env:
   # check production bundle sizes
-  MIX_APP_ENV: production
+  VITE_APP_ENV: production
   FORCE_COLOR: 2
   NODE: 16
   CI_REPO_OWNER: umn-latis
