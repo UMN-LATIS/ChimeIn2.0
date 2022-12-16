@@ -20,4 +20,8 @@ export default defineConfig({
       "@": "/resources/assets/js",
     },
   },
+  // TODO: Remove this when we've migrated MIX variables to VITE
+  // WARNING: DO NOT SET TO "" OR [] OR IT WILL EXPOSE ALL ENV VARS
+  // just remove the line if you don't need it
+  envPrefix: ["VITE_", "MIX_"],
 });
