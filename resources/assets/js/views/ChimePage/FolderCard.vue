@@ -66,7 +66,7 @@ import Card from "../../components/Card.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
 import Chip from "../../components/Chip.vue";
 import Modal from "../../components/Modal.vue";
-import pluralize from "../../common/pluralize.js";
+import pluralize from "../../common/pluralize";
 
 export default {
   components: {
