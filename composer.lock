@@ -771,16 +771,16 @@
         },
         {
             "name": "dyrynda/laravel-cascade-soft-deletes",
-            "version": "4.2.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/michaeldyrynda/laravel-cascade-soft-deletes.git",
-                "reference": "6a4826c26954b83f3c11e08c5b4a63867c36b0a0"
+                "reference": "6dc274b9b1009895a3786db4f0c879fb90ffe3e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michaeldyrynda/laravel-cascade-soft-deletes/zipball/6a4826c26954b83f3c11e08c5b4a63867c36b0a0",
-                "reference": "6a4826c26954b83f3c11e08c5b4a63867c36b0a0",
+                "url": "https://api.github.com/repos/michaeldyrynda/laravel-cascade-soft-deletes/zipball/6dc274b9b1009895a3786db4f0c879fb90ffe3e2",
+                "reference": "6dc274b9b1009895a3786db4f0c879fb90ffe3e2",
                 "shasum": ""
             },
             "require": {
@@ -811,9 +811,9 @@
             "description": "Cascading deletes for Eloquent models that implement soft deletes",
             "support": {
                 "issues": "https://github.com/michaeldyrynda/laravel-cascade-soft-deletes/issues",
-                "source": "https://github.com/michaeldyrynda/laravel-cascade-soft-deletes/tree/4.2.0"
+                "source": "https://github.com/michaeldyrynda/laravel-cascade-soft-deletes/tree/4.2.1"
             },
-            "time": "2022-01-26T03:50:42+00:00"
+            "time": "2022-11-22T03:11:30+00:00"
         },
         {
             "name": "egulias/email-validator",
