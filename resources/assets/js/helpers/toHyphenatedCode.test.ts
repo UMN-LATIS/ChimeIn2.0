@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@jest/globals";
-import toHyphenatedCode from "./toHyphenatedCode.js";
+import toHyphenatedCode from "./toHyphenatedCode";
 
 describe("toHyphenatedCode", () => {
   it("adds a hyphen in a 6-digit access code", () => {

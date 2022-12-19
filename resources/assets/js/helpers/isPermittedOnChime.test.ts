@@ -1,13 +1,16 @@
 import { describe, expect, it } from "@jest/globals";
-import { PERMISSIONS } from "./constants.js";
-import isPermittedOnChime from "./isPermittedOnChime.js";
+import { PERMISSIONS } from "./constants";
+import isPermittedOnChime from "./isPermittedOnChime";
+import { Chime, PartialNested } from "../types";
 
-const createChimeWithCurrentUserPermissionNumber = (permissionNumber) => ({
+const createChimeWithCurrentUserPermissionNumber = (
+  permissionNumber
+): PartialNested<Chime> => ({
   id: 8,
   name: "Test Chime",
-  require_login: 0,
+  require_login: false,
   deleted_at: null,
-  students_can_view: 0,
+  students_can_view: false,
   pivot: {
     user_id: 4,
     permission_number: permissionNumber,

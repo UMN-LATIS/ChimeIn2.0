@@ -44,7 +44,6 @@ import {
   WordElement,
 } from "chartjs-chart-wordcloud";
 import getBaseFontSize from "./getBaseFontSize";
-import type { Ref } from "vue";
 import type { WordFrequencyLookup } from "../../types";
 
 Chart.register(WordCloudController, WordElement, LinearScale);
@@ -68,8 +67,6 @@ const wordColors = [
   "#EE626F",
   "#F18E44",
 ];
-
-const chart: Ref<Chart<"wordCloud", number[], string> | null> = ref(null);
 
 const orderedWordList = computed(() =>
   Object.entries(props.wordFreqLookup)
@@ -101,6 +98,9 @@ function renderWordcloud() {
     // with accessibility
     orderedWordList.value.map(([word, freq]) => `${word}: ${freq}`).join(", ")
   );
+
+  // if there's no words, skip rendering the chart
+  if (!words.length) return;
 
   new Chart(canvas, {
     type: "wordCloud",
@@ -137,7 +137,6 @@ function renderWordcloud() {
       },
     },
   });
-  return chart;
 }
 
 watchEffect(renderWordcloud);

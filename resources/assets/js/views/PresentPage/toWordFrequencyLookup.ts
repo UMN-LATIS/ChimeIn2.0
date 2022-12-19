@@ -1,4 +1,4 @@
-import { removeStopwords } from "stopword";
+import { removeStopwords } from "stopword/dist/stopword.esm.min.mjs";
 import { WordFrequencyLookup } from "../../types";
 
 const quotedRegex = /"(?<quoted>[^"]*)"/g;

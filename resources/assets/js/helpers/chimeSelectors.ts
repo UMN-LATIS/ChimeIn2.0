@@ -1,5 +1,3 @@
-// import get from "lodash/get.js";
-
 import { Chime } from "../types";
 
 export const selectIsCanvasChime = (chime: Chime): boolean =>

@@ -14,6 +14,7 @@ yarn-error.log
 /public/*.js
 /public/css
 /public/js/
+/public/build
 /public/mix-manifest.json
 *.DS_Store
 .phpintel

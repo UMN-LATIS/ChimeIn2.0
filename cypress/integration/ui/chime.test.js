@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 
 import api from "../api/index.js";
-import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode.js";
+import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode";
 
 const questionText = "<p>What?</p>";
 const questionResponses = [
