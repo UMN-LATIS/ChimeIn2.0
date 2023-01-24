@@ -77,7 +77,7 @@ import {
   selectIsCanvasChime,
   selectJoinUrl,
 } from "../helpers/chimeSelectors";
-import toHyphenatedCode from "../helpers/toHyphenatedCode.js";
+import toHyphenatedCode from "../helpers/toHyphenatedCode";
 
 export default {
   props: {

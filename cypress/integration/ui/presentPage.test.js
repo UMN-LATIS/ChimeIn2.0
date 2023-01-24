@@ -1,5 +1,5 @@
 import api from "../api/index.js";
-import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode.js";
+import toHyphenatedCode from "../../../resources/assets/js/helpers/toHyphenatedCode";
 
 const favoriteColorQuestion = {
   chimeName: "Test Chime",

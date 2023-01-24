@@ -1,4 +1,4 @@
-import axios from "../common/axiosClient";
+import axios from "./axiosClient";
 import orderBy from "lodash/orderBy";
 import type {
   FolderWithQuestions,

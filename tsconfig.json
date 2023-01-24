@@ -7,10 +7,11 @@
     "jsx": "preserve",
     "moduleResolution": "node",
     "noImplicitAny": false,
-    "allowJs": true
+    "allowJs": true,
     // disabling: nlp-compromise doesn't like this setting
     // "esModuleInterop": true
+    "outDir": "./public/build"
   },
   "include": ["resources"],
-  "exclude": ["vendor", "node_modules"]
+  "exclude": ["vendor", "node_modules", "./public/build"]
 }
