@@ -468,10 +468,10 @@ class ChimeController extends Controller
                         
                     }
                     if(!$correctText || count(array_intersect($choice, $correctText)) > 0) {
-                        $points = 1;
+                        $points = max($points, 1);
                     }
                     if($correctText && $correctOnly == 2 && count(array_intersect($choice, $correctText)) == 0) {
-                        $points = 0.5;
+                        $points = max($points, 0.5);
                     }
                 }
                 $result[] = $points;
