@@ -284,7 +284,7 @@ class LTI13Handler extends Controller
                 if($chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
                     foreach($lineItems as $lineitem) {
                         if($lineitem["label"] == $sourceFolder->name) {
-                            $folder->lti_lineitem = $lineitem["resource_link_id"];
+                            $folder->lti_lineitem = $lineitem["id"];
                         }
                     }
                 }
