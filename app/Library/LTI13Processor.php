@@ -4,8 +4,8 @@
 namespace App\Library;
 
 use DB;
-use Log;
 use Carbon\Carbon;
+use Log;
 use IMSGlobal\LTI\ToolProvider;
 use IMSGlobal\LTI\ToolProvider\DataConnector;
 use \App\LTI13ResourceLink;
@@ -131,8 +131,9 @@ class LTI13Processor {
                 ->setTimestamp(Carbon::now()->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
-				->setCustom(["https://canvas.instructure.com/lti/submission"=>["submitted_at"=>$userScore["submission_date"]->toIso8601String()]])
+				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
                 ->setUserId($userId);
+
             $result = $ags->putGrade($score, $lineItem);
 
 		}
@@ -185,7 +186,7 @@ class LTI13Processor {
                 ->setTimestamp(Carbon::now()->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
-				->setCustom(["https://canvas.instructure.com/lti/submission"=>["submitted_at"=>$userScore["submission_date"]->toIso8601String()]])
+				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
                 ->setUserId($userId);
             $result = $ags->putGrade($score, $lineItem);
 
@@ -351,7 +352,13 @@ class LTI13Processor {
         $registration = $db->findRegistrationByIssuer($issuer, $clientId);
         $endpoint = $chime->lti13_resource_link->endpoint;
         $ags = new \Packback\Lti1p3\LtiAssignmentsGradesService(
-            new \Packback\Lti1p3\LtiServiceConnector($registration),
+            new \Packback\Lti1p3\LtiServiceConnector(
+				new \App\Library\LTI13Cache, 
+				new \GuzzleHttp\Client([
+					'timeout' => 30,
+				])
+            ),
+			$registration,
             $endpoint);
         return $ags;
     }

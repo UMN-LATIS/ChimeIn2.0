@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "51b6632b07bf71dec85329104754f1c1",
+  "content-hash": "a3a90a3e7d75afcc72b55e52cd8878f8",
   "packages": [
     {
       "name": "brick/math",
@@ -904,23 +904,28 @@
     },
     {
       "name": "firebase/php-jwt",
-      "version": "v5.5.1",
+      "version": "v6.3.2",
       "source": {
         "type": "git",
         "url": "https://github.com/firebase/php-jwt.git",
-        "reference": "83b609028194aa042ea33b5af2d41a7427de80e6"
+        "reference": "ea7dda77098b96e666c5ef382452f94841e439cd"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/firebase/php-jwt/zipball/83b609028194aa042ea33b5af2d41a7427de80e6",
-        "reference": "83b609028194aa042ea33b5af2d41a7427de80e6",
+        "url": "https://api.github.com/repos/firebase/php-jwt/zipball/ea7dda77098b96e666c5ef382452f94841e439cd",
+        "reference": "ea7dda77098b96e666c5ef382452f94841e439cd",
         "shasum": ""
       },
       "require": {
-        "php": ">=5.3.0"
+        "php": "^7.1||^8.0"
       },
       "require-dev": {
-        "phpunit/phpunit": ">=4.8 <=9"
+        "guzzlehttp/guzzle": "^6.5||^7.4",
+        "phpspec/prophecy-phpunit": "^1.1",
+        "phpunit/phpunit": "^7.5||^9.5",
+        "psr/cache": "^1.0||^2.0",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0"
       },
       "suggest": {
         "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present"
@@ -950,9 +955,9 @@
       "keywords": ["jwt", "php"],
       "support": {
         "issues": "https://github.com/firebase/php-jwt/issues",
-        "source": "https://github.com/firebase/php-jwt/tree/v5.5.1"
+        "source": "https://github.com/firebase/php-jwt/tree/v6.3.2"
       },
-      "time": "2021-11-08T20:18:51+00:00"
+      "time": "2022-12-19T17:10:46+00:00"
     },
     {
       "name": "fruitcake/php-cors",
@@ -1078,6 +1083,130 @@
         }
       ],
       "time": "2022-07-30T15:56:11+00:00"
+    },
+    {
+      "name": "guzzlehttp/guzzle",
+      "version": "7.5.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/guzzle/guzzle.git",
+        "reference": "b50a2a1251152e43f6a37f0fa053e730a67d25ba"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b50a2a1251152e43f6a37f0fa053e730a67d25ba",
+        "reference": "b50a2a1251152e43f6a37f0fa053e730a67d25ba",
+        "shasum": ""
+      },
+      "require": {
+        "ext-json": "*",
+        "guzzlehttp/promises": "^1.5",
+        "guzzlehttp/psr7": "^1.9 || ^2.4",
+        "php": "^7.2.5 || ^8.0",
+        "psr/http-client": "^1.0",
+        "symfony/deprecation-contracts": "^2.2 || ^3.0"
+      },
+      "provide": {
+        "psr/http-client-implementation": "1.0"
+      },
+      "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.8.1",
+        "ext-curl": "*",
+        "php-http/client-integration-tests": "^3.0",
+        "phpunit/phpunit": "^8.5.29 || ^9.5.23",
+        "psr/log": "^1.1 || ^2.0 || ^3.0"
+      },
+      "suggest": {
+        "ext-curl": "Required for CURL handler support",
+        "ext-intl": "Required for Internationalized Domain Name (IDN) support",
+        "psr/log": "Required for using the Log middleware"
+      },
+      "type": "library",
+      "extra": {
+        "bamarni-bin": {
+          "bin-links": true,
+          "forward-command": false
+        },
+        "branch-alias": {
+          "dev-master": "7.5-dev"
+        }
+      },
+      "autoload": {
+        "files": ["src/functions_include.php"],
+        "psr-4": {
+          "GuzzleHttp\\": "src/"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": ["MIT"],
+      "authors": [
+        {
+          "name": "Graham Campbell",
+          "email": "hello@gjcampbell.co.uk",
+          "homepage": "https://github.com/GrahamCampbell"
+        },
+        {
+          "name": "Michael Dowling",
+          "email": "mtdowling@gmail.com",
+          "homepage": "https://github.com/mtdowling"
+        },
+        {
+          "name": "Jeremy Lindblom",
+          "email": "jeremeamia@gmail.com",
+          "homepage": "https://github.com/jeremeamia"
+        },
+        {
+          "name": "George Mponos",
+          "email": "gmponos@gmail.com",
+          "homepage": "https://github.com/gmponos"
+        },
+        {
+          "name": "Tobias Nyholm",
+          "email": "tobias.nyholm@gmail.com",
+          "homepage": "https://github.com/Nyholm"
+        },
+        {
+          "name": "Márk Sági-Kazár",
+          "email": "mark.sagikazar@gmail.com",
+          "homepage": "https://github.com/sagikazarmark"
+        },
+        {
+          "name": "Tobias Schultze",
+          "email": "webmaster@tubo-world.de",
+          "homepage": "https://github.com/Tobion"
+        }
+      ],
+      "description": "Guzzle is a PHP HTTP client library",
+      "keywords": [
+        "client",
+        "curl",
+        "framework",
+        "http",
+        "http client",
+        "psr-18",
+        "psr-7",
+        "rest",
+        "web service"
+      ],
+      "support": {
+        "issues": "https://github.com/guzzle/guzzle/issues",
+        "source": "https://github.com/guzzle/guzzle/tree/7.5.0"
+      },
+      "funding": [
+        {
+          "url": "https://github.com/GrahamCampbell",
+          "type": "github"
+        },
+        {
+          "url": "https://github.com/Nyholm",
+          "type": "github"
+        },
+        {
+          "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/guzzle",
+          "type": "tidelift"
+        }
+      ],
+      "time": "2022-08-28T15:39:27+00:00"
     },
     {
       "name": "guzzlehttp/promises",
@@ -2991,23 +3120,25 @@
     },
     {
       "name": "packbackbooks/lti-1p3-tool",
-      "version": "dev-develop",
+      "version": "dev-upstream-merge",
       "source": {
         "type": "git",
         "url": "https://github.com/cmcfadden/lti-1-3-php-library.git",
-        "reference": "ceffb2b76665f810265f6a12f03dbc6d2be4160b"
+        "reference": "23aca26ca01bf968cc3a3b5ed546fabce817a8b1"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/cmcfadden/lti-1-3-php-library/zipball/ceffb2b76665f810265f6a12f03dbc6d2be4160b",
-        "reference": "ceffb2b76665f810265f6a12f03dbc6d2be4160b",
+        "url": "https://api.github.com/repos/cmcfadden/lti-1-3-php-library/zipball/23aca26ca01bf968cc3a3b5ed546fabce817a8b1",
+        "reference": "23aca26ca01bf968cc3a3b5ed546fabce817a8b1",
         "shasum": ""
       },
       "require": {
-        "firebase/php-jwt": "^5.2",
+        "firebase/php-jwt": "^5.5|^6.0",
+        "guzzlehttp/guzzle": "^7.0",
         "phpseclib/phpseclib": "^2.0"
       },
       "require-dev": {
+        "jubeki/laravel-code-style": "^1.0",
         "mockery/mockery": "^1.4",
         "nesbot/carbon": "^2.43",
         "phpunit/phpunit": "^9.5"
@@ -3024,8 +3155,11 @@
         }
       },
       "scripts": {
-        "test": ["phpunit"]
+        "test": ["phpunit"],
+        "lint": ["php-cs-fixer fix -v --dry-run"],
+        "lint-fix": ["php-cs-fixer fix -v"]
       },
+      "license": ["Apache-2.0"],
       "authors": [
         {
           "name": "Davo Hynds",
@@ -3043,9 +3177,9 @@
       "description": "A library used for building IMS-certified LTI 1.3 tool providers in PHP.",
       "keywords": ["lti"],
       "support": {
-        "source": "https://github.com/cmcfadden/lti-1-3-php-library/tree/develop"
+        "source": "https://github.com/cmcfadden/lti-1-3-php-library/tree/upstream-merge"
       },
-      "time": "2021-02-16T20:44:47+00:00"
+      "time": "2022-09-14T14:45:13+00:00"
     },
     {
       "name": "php-http/client-common",

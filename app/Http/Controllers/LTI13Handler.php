@@ -39,8 +39,27 @@ class LTI13Handler extends Controller
 
 
     public function launch() {
+
+        if(isset($_REQUEST['error']) && $_REQUEST['error'] == 'launch_no_longer_valid') {
+            $exception = new \Exception($_REQUEST['error_description']);
+            if (app()->bound('sentry')) {
+                app('sentry')->captureException($exception);
+            }
+            return view("errors.500", ["exception"=>$exception]);
+        }
+
          try {
-            $launch = LtiMessageLaunch::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
+            $launch = LtiMessageLaunch::new(
+                new \App\Library\LTI13Database, 
+                new \App\Library\LTI13Cache, 
+                new \App\Library\LTI13Cookie, 
+                new \Packback\Lti1p3\LtiServiceConnector(
+                    new \App\Library\LTI13Cache, 
+                    new \GuzzleHttp\Client([
+                        'timeout' => 30,
+                    ])
+                )
+            )
             ->validate();
         }
         catch (LtiException $e) {
