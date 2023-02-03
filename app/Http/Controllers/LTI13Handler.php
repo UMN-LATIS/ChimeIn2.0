@@ -265,6 +265,7 @@ class LTI13Handler extends Controller
         $chime->lti_setup_complete = true;
         $chime->save();
         $ags = LTI13Processor::getAGS($chime);
+        $lineItems = $ags->getLineItems();
         $resourceLink = $chime->lti13_resource_link;
         $resource_link_title  = $req->get("lti_resource_title");
         $lineitem = $resourceLink->endpoint["lineitem"];
@@ -281,7 +282,7 @@ class LTI13Handler extends Controller
                 $folder->name = $sourceFolder->name;
                 $folder->order = $sourceFolder->order;
                 if($chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
-                    foreach($ags as $lineitem) {
+                    foreach($lineItems as $lineitem) {
                         if($lineitem["label"] == $sourceFolder->name) {
                             $folder->lti_lineitem = $lineitem["resource_link_id"];
                         }
