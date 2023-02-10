@@ -55,7 +55,7 @@
     "@umn-latis/cla-vue-template": "^1.0.4",
     "@umn-latis/quill-better-image-module": "^0.1.0",
     "@vue-a11y/announcer": "^3.1.5",
-    "axios": "^0.27",
+    "axios": "^1.3",
     "bootstrap": "^4.6.0",
     "chart.js": "^3.9.1",
     "chartjs-chart-wordcloud": "^3.8.0",
