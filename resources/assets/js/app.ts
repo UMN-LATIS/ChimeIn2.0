@@ -10,6 +10,7 @@ import store from "./store";
 import axiosClient from "./common/axiosClient";
 // import socketIOClient from "./common/socketioClient";
 import echoClient from "./common/echoClient";
+import "@umn-latis/cla-vue-template/dist/style.css";
 import "../sass/app.scss";
 
 declare global {

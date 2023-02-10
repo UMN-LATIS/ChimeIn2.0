@@ -11,7 +11,7 @@
 </template>
 <script setup lang="ts">
 import DefaultLayout from "./DefaultLayout.vue";
-import PostIt from "../../cla-vue-template/src/components/PostIt.vue";
+import { PostIt } from "@umn-latis/cla-vue-template";
 import type { User } from "../types";
 
 withDefaults(

@@ -26,9 +26,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import AppHeader from "../../cla-vue-template/src/components/AppHeader.vue";
-import AppFooter from "../../cla-vue-template/src/components/AppFooter.vue";
-import NavbarItem from "../../cla-vue-template/src/components/NavbarItem.vue";
+import { AppHeader, AppFooter, NavbarItem } from "@umn-latis/cla-vue-template";
 import { computed } from "vue";
 import type { User } from "../types";
 
