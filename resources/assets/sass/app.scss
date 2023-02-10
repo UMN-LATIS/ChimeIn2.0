@@ -6,9 +6,6 @@
 @use "variables";
 @use "footer";
 
-// UMN Header styles
-@use "../cla-vue-template/src/index.css";
-
 .fade-enter-active,
 .fade-leave-active {
   transition: all 1s;
@@ -234,4 +231,8 @@ img {
 
 .max-w-2xl {
   max-width: 42rem; /* 672px */
+}
+
+ul {
+  margin-bottom: 0;
 }
