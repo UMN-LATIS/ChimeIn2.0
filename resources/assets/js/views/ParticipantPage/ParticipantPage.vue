@@ -216,13 +216,13 @@ const filteredSession = computed(() => {
     : sessions.value;
 });
 
-const compareBy = (prop) => (a, b) => {
-  if (a[prop] > b[prop]) return -1;
-  if (a[prop] < b[prop]) return 1;
-  return 0;
-};
+// put most recent responses first
 const sortedResponses = computed(() =>
-  [...responses.value].sort(compareBy("updated_at"))
+  [...responses.value].sort((a, b) => {
+    const aDate = new Date(a.updated_at);
+    const bDate = new Date(b.updated_at);
+    return bDate - aDate;
+  })
 );
 
 const ltiLaunchWarning = computed(
