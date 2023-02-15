@@ -251,7 +251,7 @@ function loadChime() {
     .then((res) => {
       chime.value = res.data.chime;
       document.title = chime.value.name;
-      sessions.value = res.data.sessions.reverse();
+      sessions.value = res.data.sessions;
     })
     .catch((err) => {
       if (err.response.data.status == "AttemptAuth") {
