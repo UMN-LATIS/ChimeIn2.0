@@ -126,7 +126,7 @@
                   <h1>No Answered Questions</h1>
                 </div>
                 <Response
-                  v-for="(response, i) in sortedResponses"
+                  v-for="(response, i) in responses"
                   v-else
                   :key="i"
                   :chime="chime"
@@ -215,15 +215,6 @@ const filteredSession = computed(() => {
     ? sessions.value.filter((s) => s.question.folder_id === props.folderId)
     : sessions.value;
 });
-
-// put most recent responses first
-const sortedResponses = computed(() =>
-  [...responses.value].sort((a, b) => {
-    const aDate = new Date(a.updated_at);
-    const bDate = new Date(b.updated_at);
-    return bDate - aDate;
-  })
-);
 
 const ltiLaunchWarning = computed(
   () =>
