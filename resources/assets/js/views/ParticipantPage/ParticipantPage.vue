@@ -126,7 +126,7 @@
                   <h1>No Answered Questions</h1>
                 </div>
                 <Response
-                  v-for="(response, i) in sortedResponses"
+                  v-for="(response, i) in responses"
                   v-else
                   :key="i"
                   :chime="chime"
@@ -216,15 +216,6 @@ const filteredSession = computed(() => {
     : sessions.value;
 });
 
-const compareBy = (prop) => (a, b) => {
-  if (a[prop] > b[prop]) return -1;
-  if (a[prop] < b[prop]) return 1;
-  return 0;
-};
-const sortedResponses = computed(() =>
-  [...responses.value].sort(compareBy("updated_at"))
-);
-
 const ltiLaunchWarning = computed(
   () =>
     !forceLoad.value &&
@@ -251,7 +242,7 @@ function loadChime() {
     .then((res) => {
       chime.value = res.data.chime;
       document.title = chime.value.name;
-      sessions.value = res.data.sessions.reverse();
+      sessions.value = res.data.sessions;
     })
     .catch((err) => {
       if (err.response.data.status == "AttemptAuth") {
