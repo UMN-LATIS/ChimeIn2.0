@@ -7944,32 +7944,32 @@
         },
         {
             "name": "yadahan/laravel-authentication-log",
-            "version": "v1.5.0",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yadahan/laravel-authentication-log.git",
-                "reference": "1262e4accb3ff103673525da190c022011cd267b"
+                "reference": "4a74b217db8565271bc3c51c8f74768a5ddba0f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yadahan/laravel-authentication-log/zipball/1262e4accb3ff103673525da190c022011cd267b",
-                "reference": "1262e4accb3ff103673525da190c022011cd267b",
+                "url": "https://api.github.com/repos/yadahan/laravel-authentication-log/zipball/4a74b217db8565271bc3c51c8f74768a5ddba0f1",
+                "reference": "4a74b217db8565271bc3c51c8f74768a5ddba0f1",
                 "shasum": ""
             },
             "require": {
-                "illuminate/auth": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "illuminate/bus": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "illuminate/console": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "illuminate/contracts": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "illuminate/database": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "illuminate/http": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "illuminate/notifications": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0|^8.0|^9.0",
-                "php": ">=7.0"
+                "illuminate/auth": "^7.30.4|^8.40.0|^9.0|^10.0",
+                "illuminate/bus": "^7.30.4|^8.40.0|^9.0|^10.0",
+                "illuminate/console": "^7.30.4|^8.40.0|^9.0|^10.0",
+                "illuminate/contracts": "^7.30.4|^8.40.0|^9.0|^10.0",
+                "illuminate/database": "^7.30.4|^8.40.0|^9.0|^10.0",
+                "illuminate/http": "^7.30.4|^8.40.0|^9.0|^10.0",
+                "illuminate/notifications": "^7.30.4|^8.40.0|^9.0|^10.0",
+                "illuminate/support": "^7.30.4|^8.40.0|^9.0|^10.0",
+                "php": "^7.2.5|^8.0"
             },
             "require-dev": {
-                "orchestra/testbench": "^3.5|^4.0|^5.0|^6.0|^7.0",
-                "phpunit/phpunit": "^6.0|^7.0|^8.0|^9.0"
+                "orchestra/testbench": "^5.0|^6.0|^7.0|^8.0",
+                "phpunit/phpunit": "^8.4|^9.3.3|^10.0"
             },
             "suggest": {
                 "guzzlehttp/guzzle": "Required to use the Slack transport (~6.0)",
@@ -8010,9 +8010,9 @@
             ],
             "support": {
                 "issues": "https://github.com/yadahan/laravel-authentication-log/issues",
-                "source": "https://github.com/yadahan/laravel-authentication-log/tree/v1.5.0"
+                "source": "https://github.com/yadahan/laravel-authentication-log/tree/v1.6.0"
             },
-            "time": "2022-01-25T23:01:58+00:00"
+            "time": "2023-02-15T19:30:41+00:00"
         }
     ],
     "packages-dev": [
