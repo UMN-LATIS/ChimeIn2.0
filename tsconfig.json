@@ -10,7 +10,8 @@
     "allowJs": true,
     // disabling: nlp-compromise doesn't like this setting
     // "esModuleInterop": true
-    "outDir": "./public/build"
+    "outDir": "./public/build",
+    "allowSyntheticDefaultImports": true
   },
   "include": ["resources"],
   "exclude": ["vendor", "node_modules", "./public/build"]
