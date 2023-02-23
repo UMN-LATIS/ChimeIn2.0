@@ -7,7 +7,7 @@ function removeQuotedStrings(text) {
   return text.replace(quotedRegex, "");
 }
 
-function getQuotedStrings(text): string[] {
+export function getQuotedStrings(text): string[] {
   // get the captured group from the regex at index 1
   return [...text.matchAll(quotedRegex)].map((m) => m[1]);
 }
