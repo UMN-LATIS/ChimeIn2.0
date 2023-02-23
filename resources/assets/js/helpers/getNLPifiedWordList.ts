@@ -8,6 +8,7 @@ function toTitleCase(str: string) {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+
 function cleanupText(text: string) {
   return text
     .replace(/[^a-zA-Z0-9 ]/g, "") // remove non-alphanumeric chars
@@ -29,7 +30,12 @@ function removeWordsFromText(text, wordsToRemove) {
   return cleanupText(textWithouTopics);
 }
 
-export default (text: string): string[] => {
+export interface NLPifiedWordList {
+  topics: string[];
+  nonTopics: string[];
+}
+
+export default (text: string): NLPifiedWordList => {
   const normalizedText = nlp(text).normalize({
     possessives: true,
     plurals: true,
@@ -37,19 +43,14 @@ export default (text: string): string[] => {
   });
 
   // get a list of topic words like ["James Bond", "New York"]
-  const topics = normalizedText
-    .topics()
-    .out("array")
-    // compromise seems to clobber the case of the words
-    // so we need to manually title case topics
-    .map(toTitleCase);
+  const topics = normalizedText.topics().out("array").map(toTitleCase);
 
   const textWithoutTopics = removeWordsFromText(
     normalizedText.out("text"),
     topics
   );
 
-  const nonTopicWords = nlp(textWithoutTopics)
+  const nonTopics = nlp(textWithoutTopics)
     .normalize({
       possessives: true,
       plurals: true,
@@ -57,5 +58,6 @@ export default (text: string): string[] => {
     })
     .terms()
     .out("array");
-  return [...topics, ...nonTopicWords];
+
+  return { topics, nonTopics };
 };

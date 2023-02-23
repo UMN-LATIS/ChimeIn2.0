@@ -74,7 +74,7 @@ import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
 import type { Question, Response, WordFrequencyLookup } from "../../types";
-import { legacyBuildWords } from "../../helpers/legacyBuildWords";
+import getNLPifiedWordList from "../../helpers/getNLPifiedWordList";
 
 interface Props {
   responses: Response[];
@@ -98,16 +98,15 @@ const wordFreqLookup = computed<WordFrequencyLookup>(() => {
     return toWordFrequencyLookup(responseTexts.value, filteredWords.value);
   }
 
-  return legacyBuildWords({
-    responses: props.responses,
-    textProcessing: processWithNLP.value,
-    filterWords: filteredWords.value,
-  }).reduce(
-    (acc, wordObj) => ({
-      ...acc,
-      [wordObj.name]: wordObj.value,
-    }),
-    {}
+  const text = responseTexts.value.join("\n");
+  const { topics, nonTopics } = getNLPifiedWordList(text);
+
+  // wrap topics in quotes so that they're treated as a single word
+  const quotedTopics = topics.map((t) => `"${t}"`);
+
+  return toWordFrequencyLookup(
+    [...nonTopics, ...quotedTopics],
+    filteredWords.value
   );
 });
 
