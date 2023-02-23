@@ -16,8 +16,8 @@
             @click="processWithNLP = !processWithNLP"
           />
 
-          <strong>Experimental</strong>
-          Filter for just names, places, and organizations.
+          <strong>Experimental</strong> Use Natural Language Processing to group
+          names, places, and other entities.
         </label>
       </p>
 
@@ -72,11 +72,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
-import nlp from "compromise";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
 import type { Question, Response, WordFrequencyLookup } from "../../types";
-
-// import { legacyBuildWords } from "../../helpers/legacyBuildWords";
+import { legacyBuildWords } from "../../helpers/legacyBuildWords";
 
 interface Props {
   responses: Response[];
@@ -95,46 +93,22 @@ const responseTexts = computed(() =>
   props.responses.map((r) => r.response_info.text)
 );
 
-function getNlpifiedWordlist(text: string) {
-  const nlpText = nlp(text);
-
-  const topics = nlpText.topics().out("array");
-  return topics;
-}
-
-// words that the Natural Language Processing (nlp) package
-// picks out as topics
-const nlpifiedWordlist = computed(() => {
-  const mergedText = responseTexts.value.join("\n");
-  const nlpWordList = getNlpifiedWordlist(mergedText);
-
-  //wrap each word quotes so that it's treated as a phrase
-  // by the word frequency lookup function. e.g. "New York"
-  return nlpWordList.map((t) => `"${t}"`);
-});
-
 const wordFreqLookup = computed<WordFrequencyLookup>(() => {
   if (!processWithNLP.value) {
     return toWordFrequencyLookup(responseTexts.value, filteredWords.value);
   }
 
-  // nlp word list generated from the simplified word list builder
-  return toWordFrequencyLookup(nlpifiedWordlist.value, filteredWords.value);
-
-  // Below is the nlp word list generated from the legacy word list builder
-  // keeping this around for now in case we want to switch back
-
-  // return legacyBuildWords({
-  //   responses: props.responses,
-  //   textProcessing: processWithNLP.value,
-  //   filterWords: filteredWords.value,
-  // }).reduce(
-  //   (acc, wordObj) => ({
-  //     ...acc,
-  //     [wordObj.name]: wordObj.value,
-  //   }),
-  //   {}
-  // );
+  return legacyBuildWords({
+    responses: props.responses,
+    textProcessing: processWithNLP.value,
+    filterWords: filteredWords.value,
+  }).reduce(
+    (acc, wordObj) => ({
+      ...acc,
+      [wordObj.name]: wordObj.value,
+    }),
+    {}
+  );
 });
 
 function handleWordClick(word) {
