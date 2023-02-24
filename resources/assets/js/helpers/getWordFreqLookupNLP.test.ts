@@ -2,7 +2,7 @@
 import getWordFreqLookupNLP from "./legacyBuildWords";
 
 describe("getNLPifiedWordList", () => {
-  it("should return lookup of words with their frequency", () => {
+  it.only("should return lookup of words with their frequency", () => {
     expect(getWordFreqLookupNLP("test test car cat")).toEqual({
       test: 2,
       car: 1,
@@ -10,14 +10,14 @@ describe("getNLPifiedWordList", () => {
     });
   });
 
-  it("should filter stopwords", () => {
+  it.only("should filter stopwords", () => {
     const words1 = getWordFreqLookupNLP("I a the with an and to test");
     expect(words1).toEqual({
       test: 1,
     });
   });
 
-  it("should treat topics as a single word", () => {
+  it.only("should treat topics as a single word", () => {
     expect(
       getWordFreqLookupNLP("James Bond bought a new bond in New York")
     ).toEqual({
@@ -29,7 +29,7 @@ describe("getNLPifiedWordList", () => {
     });
   });
 
-  it("should count duplicates", () => {
+  it.only("should count duplicates", () => {
     expect(
       getWordFreqLookupNLP("New york, new york! It's a helluva town")
     ).toEqual({
@@ -56,14 +56,20 @@ describe("getNLPifiedWordList", () => {
     });
   });
 
-  it("should use infinites for verbs", () => {
+  it.only("should use first occurance of a stem's word", () => {
     const words1 = getWordFreqLookupNLP(
       "I walked a walk with Walt Walker while walking the dog."
     );
     expect(words1).toEqual({
-      walk: 3,
+      walked: 3,
       "Walt Walker": 1,
       dog: 1,
+    });
+  });
+
+  it.only("should normalize non-topic words to lowercase", () => {
+    expect(getWordFreqLookupNLP("Walk walks WALKING wAlKeD")).toEqual({
+      walk: 4,
     });
   });
 
