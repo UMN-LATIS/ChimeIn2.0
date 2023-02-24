@@ -2,7 +2,7 @@
 import getWordFreqLookupNLP from "./legacyBuildWords";
 
 describe("getNLPifiedWordList", () => {
-  it.only("should return lookup of words with their frequency", () => {
+  it("should return lookup of words with their frequency", () => {
     expect(getWordFreqLookupNLP("test test car cat")).toEqual({
       test: 2,
       car: 1,
@@ -10,14 +10,14 @@ describe("getNLPifiedWordList", () => {
     });
   });
 
-  it.only("should filter stopwords", () => {
+  it("should filter stopwords", () => {
     const words1 = getWordFreqLookupNLP("I a the with an and to test");
     expect(words1).toEqual({
       test: 1,
     });
   });
 
-  it.only("should treat topics as a single word", () => {
+  it("should treat topics as a single word", () => {
     expect(
       getWordFreqLookupNLP("James Bond bought a new bond in New York")
     ).toEqual({
@@ -29,7 +29,7 @@ describe("getNLPifiedWordList", () => {
     });
   });
 
-  it.only("should count duplicates", () => {
+  it("should count duplicates", () => {
     expect(
       getWordFreqLookupNLP("New york, new york! It's a helluva town")
     ).toEqual({
@@ -39,7 +39,7 @@ describe("getNLPifiedWordList", () => {
     });
   });
 
-  it.only("shouldn't have punctuation", () => {
+  it("shouldn't have punctuation", () => {
     const words1 = getWordFreqLookupNLP("This is a test.");
     expect(words1).toEqual({
       test: 1,
@@ -56,7 +56,7 @@ describe("getNLPifiedWordList", () => {
     });
   });
 
-  it.only("should use first occurance of a stem's word", () => {
+  it("should use first occurance of a stem's word", () => {
     const words1 = getWordFreqLookupNLP(
       "I walked a walk with Walt Walker while walking the dog."
     );
@@ -67,19 +67,16 @@ describe("getNLPifiedWordList", () => {
     });
   });
 
-  it.only("should normalize non-topic words to lowercase", () => {
+  it("should normalize non-topic words to lowercase", () => {
     expect(getWordFreqLookupNLP("Walk walks WALKING wAlKeD")).toEqual({
       walk: 4,
     });
   });
 
   it("should filter words if provided", () => {
-    const words1 = getWordFreqLookupNLP(
-      "I walked a walk with Walt Walker while walking the dog.",
-      ["dog"]
-    );
-    expect(words1).toEqual({
-      walk: 3,
+    const phrase = "I walked a walk with Walt Walker while walking the dog.";
+    expect(getWordFreqLookupNLP(phrase, ["dog"])).toEqual({
+      walked: 3,
       "Walt Walker": 1,
     });
   });
@@ -97,7 +94,7 @@ describe("getNLPifiedWordList", () => {
       "New York": 2,
       Molly: 1,
       dog: 1,
-      go: 2,
+      went: 2,
     });
   });
 
@@ -107,18 +104,22 @@ describe("getNLPifiedWordList", () => {
         "The President talks. She talked. They are talking. I talk."
       )
     ).toEqual({
-      President: 1,
-      She: 1,
-      talk: 4,
+      president: 1,
+      she: 1,
+      talks: 4,
     });
 
-    expect(getWordFreqLookupNLP("Dancing dancers danced drunkenly")).toEqual({
-      dance: 3,
+    expect(
+      getWordFreqLookupNLP("Dancing dancers danced drunkenly. Let's dance.")
+    ).toEqual({
+      dancing: 3, // dancing, dance, danced have stem `danc`
+      dancers: 1, // has stem `dancer` via stemmer
+      let: 1,
       drunkenly: 1,
     });
 
     expect(getWordFreqLookupNLP("Coloring colors are colored dog")).toEqual({
-      color: 3,
+      coloring: 3,
       dog: 1,
     });
   });
