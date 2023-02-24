@@ -2,15 +2,17 @@ import nlp from "compromise";
 import { removeStopwords } from "stopword";
 import { stemmer } from "stemmer";
 import type { WordFrequencyLookup } from "../types";
-interface WordListItem {
-  name: string;
-  stem: string;
-  value: number;
+
+interface StemFrequencyLookup {
+  [stem: string]: {
+    wordToDisplay: string;
+    count: number;
+  };
 }
 
 function cleanupText(text: string) {
   return text
-    .replace(/[^a-zA-Z0-9'\- ]/g, "") // remove non-alphanumeric chars except hyphens
+    .replace(/[^a-zA-Z0-9- ]/g, "") // remove non-alphanumeric chars except hyphens
     .replace(/\s+/g, " ") // replace multiple spaces with a single space
     .trim(); // remove leading and trailing whitespace
 }
@@ -21,7 +23,7 @@ export default function getWordFreqLookupNLP(
 ): WordFrequencyLookup {
   const words = text;
 
-  let nonTopics;
+  let nonTopics: string;
   const doc = nlp(words);
 
   // sort so that longest is first in case topic is a substring
@@ -47,20 +49,15 @@ export default function getWordFreqLookupNLP(
     );
   }
 
-  if (!nonTopics.length && !topics.length) {
-    return {};
-  }
+  // get a list of all the words in the non-topics
+  // but keep quoted string together as "one word"
+  const tokenizedNonTopics = nonTopics.match(/"(.*?)"|'(.*?)'|\w+/g) || [];
 
-  // words is a single string of all the responses
-  // we need to break into tokens, so that we keep things together like "New York" and "New York City" as one word
-  const wordsWithoutStops = removeStopwords(
-    // keep quote stuff together, but don't grab the quotes
-    nonTopics.match(/"(.*?)"|\w+/g)
-  );
+  // remove stopwords like "the" and "a"
+  const wordsWithoutStops = removeStopwords(tokenizedNonTopics);
 
-  // combine the topics and the our nonTopic words into one array
-  // (non topic words could also be "Quoted String" ..)
-  const finalizedWords = wordsWithoutStops
+  const stemsOfFilterWords = filterWords.map((w) => stemmer(w));
+  const wordFreqLookupByStem = wordsWithoutStops
     // convert nonTopic words to lowercase
     .map((w) => w.toLowerCase())
     // add the topics back in
@@ -70,42 +67,36 @@ export default function getWordFreqLookupNLP(
     // remove any short words
     .filter((w) => w.length > 1)
     // remove any punctuation
-    .map(cleanupText);
+    .map(cleanupText)
+    // convert to WordFrequencyLookup
+    .reduce((acc: StemFrequencyLookup, word) => {
+      const stem = stemmer(word);
+      const prevCount = acc[stem]?.count || 0;
 
-  const groups: WordListItem[] = finalizedWords.reduce((acc: any[], w) => {
-    const unquotedWord = w.replace(/"/g, "");
+      // if the stem matches a filter word, don't add it
+      if (stemsOfFilterWords.includes(stem)) {
+        return acc;
+      }
 
-    const normalizedWord = unquotedWord.toLowerCase();
-    const stem = stemmer(normalizedWord);
+      return {
+        ...acc,
+        [stem]: {
+          // use the first instance of the word as the word to display
+          wordToDisplay: acc[stem]?.wordToDisplay ?? word,
+          count: prevCount + 1,
+        },
+      };
+    }, {});
 
-    const indexOfStem = acc.findIndex((e) => e.stem === stem);
-
-    if (indexOfStem > -1) {
-      acc[indexOfStem].value += 1;
-    } else {
-      acc.push({
-        name: unquotedWord,
-        value: 1,
-        stem: stem,
-      });
-    }
-
-    return acc;
-  }, []);
-
-  // remove only the most important word. So sort them by count
-  const sortedArray = groups.sort((a, b) => {
-    return b.value - a.value;
-  });
-
-  // only return the top 200 words
-  const topWordsOnly = sortedArray.slice(0, 200);
-
-  // convert to a word frequency lookup
-  return topWordsOnly.reduce((acc, word) => {
-    return {
-      ...acc,
-      [word.name]: word.value,
-    };
-  }, {});
+  return (
+    Object.values(wordFreqLookupByStem)
+      // convert to WordFrequencyLookup
+      .reduce(
+        (acc: WordFrequencyLookup, { wordToDisplay, count }) => ({
+          ...acc,
+          [wordToDisplay]: count,
+        }),
+        {}
+      )
+  );
 }
