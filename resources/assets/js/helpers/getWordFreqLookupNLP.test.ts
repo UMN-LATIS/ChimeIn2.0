@@ -21,7 +21,7 @@ describe("getNLPifiedWordList", () => {
       getWordFreqLookupNLP("James Bond bought a new bond in New York")
     ).toEqual({
       "James Bond": 1,
-      bought: 1,
+      buy: 1,
       new: 1,
       bond: 1,
       "New York": 1,
@@ -85,12 +85,12 @@ describe("getNLPifiedWordList", () => {
     ];
 
     expect(getWordFreqLookupNLP(responses.join("\n"))).toEqual({
-      "Molly Mcfadden": 1,
-      "Colin Mcfadden": 1,
+      "Molly McFadden": 1,
+      "Colin McFadden": 1,
       "New York": 2,
       Molly: 1,
       dog: 1,
-      went: 2,
+      go: 2,
     });
   });
 });
