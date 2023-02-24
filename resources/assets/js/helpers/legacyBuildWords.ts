@@ -1,69 +1,63 @@
 import nlp from "compromise";
 import { removeStopwords } from "stopword";
 import { stemmer } from "stemmer";
-import { Response } from "../types";
-
-interface BuildWordsArgs {
-  responses: Response[];
-  textProcessing: boolean;
-  filterWords: string[];
-}
-
+import type { WordFrequencyLookup } from "../types";
 interface WordListItem {
   name: string;
   stem: string;
   value: number;
 }
 
-export function legacyBuildWords({
-  responses,
-  textProcessing,
-  filterWords,
-}: BuildWordsArgs): WordListItem[] {
-  const words = responses.map((r) => r.response_info.text).join("\n ");
+function cleanupText(text: string) {
+  return text
+    .replace(/[^a-zA-Z0-9- ]/g, "") // remove non-alphanumeric chars except hyphens
+    .replace(/\s+/g, " ") // replace multiple spaces with a single space
+    .trim(); // remove leading and trailing whitespace
+}
 
-  let filteredWords;
-  let topics;
-  if (textProcessing) {
-    const doc = nlp(words);
+export default function getWordFreqLookupNLP(
+  text: string,
+  filterWords: string[] = []
+): WordFrequencyLookup {
+  const words = text;
 
-    // sort so that longest is first in case topic is a substring
-    // of another topic
-    topics = doc
-      .topics()
-      .out("array")
-      .sort((a, b) => b.length - a.length);
+  let nonTopics;
+  const doc = nlp(words);
 
-    // this will be the string of all responses without the topics
-    filteredWords = words;
+  // sort so that longest is first in case topic is a substring
+  // of another topic
+  const topics = doc
+    .topics()
+    .toTitleCase()
+    .out("array")
+    .map(cleanupText)
+    .sort((a, b) => b.length - a.length);
 
-    for (let i = 0; i < topics.length; i++) {
-      // remove topics words from our filtered words
+  // this will be the string of all responses without the topics
+  nonTopics = words;
 
-      // escapes any special chars from the topic that might mess up the regex
-      const escapedTopic = topics[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      filteredWords = filteredWords.replace(
-        new RegExp("\\b" + escapedTopic + "\\b", "gi"),
-        "" // remove the topic
-      );
+  for (let i = 0; i < topics.length; i++) {
+    // remove topics words
 
-      // at this point, filteredWords hold all the non-topics
-    }
-  } else {
-    filteredWords = words;
-    topics = [];
+    // escapes any special chars from the topic that might mess up the regex
+    const escapedTopic = topics[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    nonTopics = nonTopics.replace(
+      new RegExp("\\b" + escapedTopic + "\\b", "gi"),
+      "" // remove the topic
+    );
+
+    // at this point, filteredWords hold all the non-topics
   }
 
-  // BUG: Topics
-  if (filteredWords.length == 0 && topics.length == 0) {
-    return [];
+  if (!nonTopics.length && !topics.length) {
+    return {};
   }
 
   // words is a single string of all the responses
   // we need to break into tokens, so that we keep things together like "New York" and "New York City" as one word
   const wordsWithoutStops = removeStopwords(
     // keep quote stuff together, but don't grab the quotes
-    filteredWords.match(/"(.*?)"|\w+/g)
+    nonTopics.match(/"(.*?)"|\w+/g)
   );
 
   // combine the topics and the our nonTopic words into one array
@@ -105,5 +99,13 @@ export function legacyBuildWords({
   });
 
   // only return the top 200 words
-  return sortedArray.slice(0, 200);
+  const topWordsOnly = sortedArray.slice(0, 200);
+
+  // convert to a word frequency lookup
+  return topWordsOnly.reduce((acc, word) => {
+    return {
+      ...acc,
+      [word.name]: word.value,
+    };
+  }, {});
 }
