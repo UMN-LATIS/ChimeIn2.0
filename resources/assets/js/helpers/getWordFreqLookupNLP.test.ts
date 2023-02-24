@@ -104,22 +104,42 @@ describe("getNLPifiedWordList", () => {
       She: 1,
       talk: 4,
     });
+
+    expect(getWordFreqLookupNLP("Dancing dancers danced drunkenly")).toEqual({
+      dance: 3,
+      drunkenly: 1,
+    });
+
+    expect(getWordFreqLookupNLP("Coloring colors are colored dog")).toEqual({
+      color: 3,
+      dog: 1,
+    });
   });
 
   it("should not count words opposite meanings but the same stem as a single item", () => {
     expect(
       getWordFreqLookupNLP(
-        "I'm comforted when she comforts the crowd. The crowd feel discomfort when they hear her voice."
+        "comfort comforting discomfort discomforted discomforting"
       )
     ).toEqual({
       comfort: 2,
-      she: 1,
-      crowd: 2,
-      feel: 1,
-      discomfort: 1,
-      hear: 1,
-      voice: 1,
-      when: 2,
+      discomfort: 3,
     });
+  });
+
+  it('should treat "Quoted Phrases" as a single item', () => {
+    const phraseWithDoubleQuote =
+      'The "most important" thing is time. But "most important" is relative.';
+    const phraseWithSingleQuote =
+      "The 'most important' thing is time. But 'most important' is relative.";
+    const expected = {
+      "most important": 2,
+      thing: 1,
+      time: 1,
+      relative: 1,
+    };
+
+    expect(getWordFreqLookupNLP(phraseWithDoubleQuote)).toEqual(expected);
+    expect(getWordFreqLookupNLP(phraseWithSingleQuote)).toEqual(expected);
   });
 });
