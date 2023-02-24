@@ -10,7 +10,7 @@ interface WordListItem {
 
 function cleanupText(text: string) {
   return text
-    .replace(/[^a-zA-Z0-9- ]/g, "") // remove non-alphanumeric chars except hyphens
+    .replace(/[^a-zA-Z0-9'\- ]/g, "") // remove non-alphanumeric chars except hyphens
     .replace(/\s+/g, " ") // replace multiple spaces with a single space
     .trim(); // remove leading and trailing whitespace
 }
@@ -45,8 +45,6 @@ export default function getWordFreqLookupNLP(
       new RegExp("\\b" + escapedTopic + "\\b", "gi"),
       "" // remove the topic
     );
-
-    // at this point, filteredWords hold all the non-topics
   }
 
   if (!nonTopics.length && !topics.length) {
@@ -63,16 +61,18 @@ export default function getWordFreqLookupNLP(
   // combine the topics and the our nonTopic words into one array
   // (non topic words could also be "Quoted String" ..)
   const finalizedWords = wordsWithoutStops
+    // convert nonTopic words to lowercase
+    .map((w) => w.toLowerCase())
+    // add the topics back in
     .concat(topics)
     // remove user defined filter words
-    .filter((w) => !filterWords.includes(w));
+    .filter((w) => !filterWords.includes(w))
+    // remove any short words
+    .filter((w) => w.length > 1)
+    // remove any punctuation
+    .map(cleanupText);
 
   const groups: WordListItem[] = finalizedWords.reduce((acc: any[], w) => {
-    // don't include single letter words or numbers
-    if (w.length < 2) {
-      return acc;
-    }
-
     const unquotedWord = w.replace(/"/g, "");
 
     const normalizedWord = unquotedWord.toLowerCase();
