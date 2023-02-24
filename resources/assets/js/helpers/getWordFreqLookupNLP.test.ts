@@ -155,4 +155,15 @@ describe("getNLPifiedWordList", () => {
     const phrase = Array.from({ length: 300 }, (_, i) => `word${i}`).join(" ");
     expect(Object.keys(getWordFreqLookupNLP(phrase)).length).toEqual(200);
   });
+
+  it("should remove filter words with a common stem", () => {
+    const phrase = "I walked a walk with Walt Walker while walking the dog.";
+
+    ["walk", "walked", "walking"].forEach((word) => {
+      expect(getWordFreqLookupNLP(phrase, [word])).toEqual({
+        "Walt Walker": 1,
+        dog: 1,
+      });
+    });
+  });
 });

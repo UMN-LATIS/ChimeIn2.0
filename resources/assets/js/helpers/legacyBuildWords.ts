@@ -17,6 +17,8 @@ function cleanupText(text: string) {
     .trim(); // remove leading and trailing whitespace
 }
 
+const MAX_WORDS = 200;
+
 export default function getWordFreqLookupNLP(
   text: string,
   filterWords: string[] = []
@@ -90,6 +92,10 @@ export default function getWordFreqLookupNLP(
 
   return (
     Object.values(wordFreqLookupByStem)
+      // sort by count
+      .sort((a, b) => b.count - a.count)
+      // only keep the top 200 words
+      .slice(0, MAX_WORDS)
       // convert to WordFrequencyLookup
       .reduce(
         (acc: WordFrequencyLookup, { wordToDisplay, count }) => ({
