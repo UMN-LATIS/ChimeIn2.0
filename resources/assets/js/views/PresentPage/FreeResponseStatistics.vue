@@ -74,7 +74,7 @@ import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
 import type { Question, Response, WordFrequencyLookup } from "../../types";
-import { legacyBuildWords } from "../../helpers/legacyBuildWords";
+import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
 
 interface Props {
   responses: Response[];
@@ -94,21 +94,9 @@ const responseTexts = computed(() =>
 );
 
 const wordFreqLookup = computed<WordFrequencyLookup>(() => {
-  if (!processWithNLP.value) {
-    return toWordFrequencyLookup(responseTexts.value, filteredWords.value);
-  }
-
-  return legacyBuildWords({
-    responses: props.responses,
-    textProcessing: processWithNLP.value,
-    filterWords: filteredWords.value,
-  }).reduce(
-    (acc, wordObj) => ({
-      ...acc,
-      [wordObj.name]: wordObj.value,
-    }),
-    {}
-  );
+  return processWithNLP.value
+    ? getWordFreqLookupNLP(responseTexts.value.join("\n"), filteredWords.value)
+    : toWordFrequencyLookup(responseTexts.value, filteredWords.value);
 });
 
 function handleWordClick(word) {

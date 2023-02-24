@@ -34,7 +34,7 @@ import type { WordFrequencyLookup } from "../../types";
 // this is inversely proportional to the base font size
 // so increasing above 1 will decrease the base fontsize
 // allowing for more whitespace per character
-const whitespaceTuning = 1;
+const whitespaceTuning = 2;
 
 const getWordSize = ([word, freq]: [string, number]): number =>
   whitespaceTuning * word.length * freq ** 2;

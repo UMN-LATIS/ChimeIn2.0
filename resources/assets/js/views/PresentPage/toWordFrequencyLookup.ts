@@ -7,7 +7,7 @@ function removeQuotedStrings(text) {
   return text.replace(quotedRegex, "");
 }
 
-function getQuotedStrings(text): string[] {
+export function getQuotedStrings(text): string[] {
   // get the captured group from the regex at index 1
   return [...text.matchAll(quotedRegex)].map((m) => m[1]);
 }
@@ -23,33 +23,32 @@ function getSingleWords(text) {
   );
 }
 
-function getWordsFromText(text: string): string[] {
+function getWordsFromText(
+  text: string,
+  filteredWords: string[] = []
+): string[] {
   const textWithoutQuotedStrings = removeQuotedStrings(text);
+  const singleWords = getSingleWords(textWithoutQuotedStrings);
 
-  return [
-    ...getQuotedStrings(text),
-    ...getSingleWords(textWithoutQuotedStrings),
-  ];
+  // remove stopwords and filtered words
+  const normalizedSingleWords = removeStopwords(singleWords).filter(
+    (word) => !filteredWords.includes(word)
+  );
+
+  return [...getQuotedStrings(text), ...normalizedSingleWords];
 }
 
 export default function toWordFrequencyLookup(
   responseTexts: string[],
   filteredWords: string[] = []
 ): WordFrequencyLookup {
-  const words: string[] = responseTexts
-    .filter((n) => n)
-    .flatMap(getWordsFromText);
-
-  // filter out stopwords and filtered words
-  const normalizedWords = removeStopwords(words).filter(
-    (word) => !filteredWords.includes(word)
-  );
-
-  return normalizedWords.reduce((acc, word) => {
-    const prevWordCount = acc[word] || 0;
-    return {
-      ...acc,
-      [word]: prevWordCount + 1,
-    };
-  }, {});
+  return responseTexts
+    .flatMap((text) => getWordsFromText(text, filteredWords))
+    .reduce((acc, word) => {
+      const prevWordCount = acc[word] || 0;
+      return {
+        ...acc,
+        [word]: prevWordCount + 1,
+      };
+    }, {});
 }
