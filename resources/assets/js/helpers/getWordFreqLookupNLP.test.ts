@@ -1,5 +1,4 @@
-// import getWordFreqLookupNLP from "./getWordFreqLookupNLP";
-import getWordFreqLookupNLP from "./legacyBuildWords";
+import getWordFreqLookupNLP from "./getWordFreqLookupNLP";
 
 describe("getNLPifiedWordList", () => {
   it("should return lookup of words with their frequency", () => {

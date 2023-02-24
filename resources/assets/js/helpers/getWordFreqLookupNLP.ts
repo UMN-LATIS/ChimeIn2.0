@@ -1,85 +1,108 @@
 import nlp from "compromise";
 import { removeStopwords } from "stopword";
-
+import { stemmer } from "stemmer";
 import type { WordFrequencyLookup } from "../types";
+
+interface StemFrequencyLookup {
+  [stem: string]: {
+    wordToDisplay: string;
+    count: number;
+  };
+}
 
 function cleanupText(text: string) {
   return text
-    .replace(/[^a-zA-Z0-9 ]/g, "") // remove non-alphanumeric chars
+    .replace(/[^a-zA-Z0-9- ]/g, "") // remove non-alphanumeric chars except hyphens
     .replace(/\s+/g, " ") // replace multiple spaces with a single space
     .trim(); // remove leading and trailing whitespace
 }
 
-// removeWordsFromText("New York, new", ["Minnesota"]) => "world"
-function removeWordsFromText(text: string, wordsToRemove: string[]) {
-  // before removing the words from the text,
-  // we sort the them so that the longest word are removed first
-  // otherwise, topic "Molly" might be removed before topic "Molly Ringwald"
-  // which would leave "Ringwald" in the text.
-  const sortedWordsToRemove = [...wordsToRemove].sort((a, b) => {
-    // sort from largest to smallest
-    return b.length - a.length;
-  });
+const MAX_WORDS = 200;
 
-  const anyWordMatch = new RegExp(
-    `\\b(${sortedWordsToRemove.join("|")})\\b`, // match any word
-    "gi" // global and case insensitive
-  );
-
-  const textWithoutTopics = text.replace(anyWordMatch, "");
-
-  // do a bit of cleanup in case we have multiple spaces,
-  // weird punctuation, etc.
-  return cleanupText(textWithoutTopics);
-}
-
-function toWordFrequencyLookup(wordlist: string[]) {
-  return wordlist.reduce((acc, word) => {
-    const prevWordCount = acc[word] || 0;
-    return {
-      ...acc,
-      [word]: prevWordCount + 1,
-    };
-  }, {});
-}
-
-export default (
+export default function getWordFreqLookupNLP(
   text: string,
-  filteredWords: string[] = []
-): WordFrequencyLookup => {
-  const normalizedText = nlp(text)
-    .normalize({
-      possessives: true,
-      plurals: true,
-      verbs: true,
-    })
-    .text();
+  filterWords: string[] = []
+): WordFrequencyLookup {
+  const words = text;
 
-  // get a list of topic words like ["James Bond", "New York"]
-  const topics = nlp(normalizedText)
+  let nonTopics: string;
+  const doc = nlp(words);
+
+  // sort so that longest is first in case topic is a substring
+  // of another topic
+  const topics = doc
     .topics()
     .toTitleCase()
     .out("array")
-    .map(cleanupText);
+    .map(cleanupText)
+    .sort((a, b) => b.length - a.length);
 
-  // get the remaining words in the text
-  const otherWords = removeWordsFromText(normalizedText, topics);
+  // this will be the string of all responses without the topics
+  nonTopics = words;
 
-  const otherWordList = nlp(otherWords)
-    .normalize({
-      possessives: true,
-      plurals: true,
-      verbs: true,
-    })
-    .terms()
-    .out("array");
+  for (let i = 0; i < topics.length; i++) {
+    // remove topics words
 
-  // remove any stopwords and filtered words
-  const filteredWordlist = removeStopwords([
-    ...topics,
-    ...otherWordList,
-  ]).filter((word) => !filteredWords.includes(word));
+    // escapes any special chars from the topic that might mess up the regex
+    const escapedTopic = topics[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    nonTopics = nonTopics.replace(
+      new RegExp("\\b" + escapedTopic + "\\b", "gi"),
+      "" // remove the topic
+    );
+  }
 
-  // get the word frequency count
-  return toWordFrequencyLookup(filteredWordlist);
-};
+  // get a list of all the words in the non-topics
+  // but keep quoted string together as "one word"
+  const tokenizedNonTopics = nonTopics.match(/"(.*?)"|'(.*?)'|\w+/g) || [];
+
+  // remove stopwords like "the" and "a"
+  const wordsWithoutStops = removeStopwords(tokenizedNonTopics);
+
+  const stemsOfFilterWords = filterWords.map((w) => stemmer(w));
+  const wordFreqLookupByStem = wordsWithoutStops
+    // convert nonTopic words to lowercase
+    .map((w) => w.toLowerCase())
+    // add the topics back in
+    .concat(topics)
+    // remove user defined filter words
+    .filter((w) => !filterWords.includes(w))
+    // remove any short words
+    .filter((w) => w.length > 1)
+    // remove any punctuation
+    .map(cleanupText)
+    // convert to WordFrequencyLookup
+    .reduce((acc: StemFrequencyLookup, word) => {
+      const stem = stemmer(word);
+      const prevCount = acc[stem]?.count || 0;
+
+      // if the stem matches a filter word, don't add it
+      if (stemsOfFilterWords.includes(stem)) {
+        return acc;
+      }
+
+      return {
+        ...acc,
+        [stem]: {
+          // use the first instance of the word as the word to display
+          wordToDisplay: acc[stem]?.wordToDisplay ?? word,
+          count: prevCount + 1,
+        },
+      };
+    }, {});
+
+  return (
+    Object.values(wordFreqLookupByStem)
+      // sort by count
+      .sort((a, b) => b.count - a.count)
+      // only keep the top 200 words
+      .slice(0, MAX_WORDS)
+      // convert to WordFrequencyLookup
+      .reduce(
+        (acc: WordFrequencyLookup, { wordToDisplay, count }) => ({
+          ...acc,
+          [wordToDisplay]: count,
+        }),
+        {}
+      )
+  );
+}
