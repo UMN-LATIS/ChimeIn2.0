@@ -150,4 +150,8 @@ describe("getNLPifiedWordList", () => {
     expect(getWordFreqLookupNLP(phraseWithDoubleQuote)).toEqual(expected);
     expect(getWordFreqLookupNLP(phraseWithSingleQuote)).toEqual(expected);
   });
+  it("should only return the top 200 most common words", () => {
+    const phrase = Array.from({ length: 300 }, (_, i) => `word${i}`).join(" ");
+    expect(Object.keys(getWordFreqLookupNLP(phrase)).length).toEqual(200);
+  });
 });
