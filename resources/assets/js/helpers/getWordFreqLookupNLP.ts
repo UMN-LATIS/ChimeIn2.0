@@ -60,11 +60,22 @@ export default (
   const verbs = normalizedText.verbs().terms().out("array");
   const stemmedVerbs = verbs.map(stemmer);
 
+  // before removing the topics and verbs from the text,
+  // we sort the them so that the longest word are removed first
+  // otherwise, topic "Molly" might be removed before topic "Molly Ringwald"
+  // which would leave "Ringwald" in the text.
+  // This would cause "Molly", "Ringwald", and "Molly Ringwald" to all show up
+  // in the word frequency lookup
+  const sortedWordsToRemove = [...topics, ...verbs].sort((a, b) => {
+    // sort from largest to smallest
+    return b.length - a.length;
+  });
+
   // get the remaining words in the text
-  const otherWords = removeWordsFromText(normalizedText.out("text"), [
-    ...topics,
-    ...verbs,
-  ]);
+  const otherWords = removeWordsFromText(
+    normalizedText.out("text"),
+    sortedWordsToRemove
+  );
 
   const otherWordList = nlp(otherWords)
     .normalize({

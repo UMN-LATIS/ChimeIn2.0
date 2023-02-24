@@ -76,4 +76,21 @@ describe("getNLPifiedWordList", () => {
       "Walt Walker": 1,
     });
   });
+
+  it("should handle topics that are substrings of other topics", () => {
+    const responses = [
+      "Molly is a dog",
+      "Molly McFadden went to New York",
+      "Colin McFadden went to New York",
+    ];
+
+    expect(getWordFreqLookupNLP(responses.join("\n"))).toEqual({
+      "Molly Mcfadden": 1,
+      "Colin Mcfadden": 1,
+      "New York": 2,
+      Molly: 1,
+      dog: 1,
+      went: 2,
+    });
+  });
 });
