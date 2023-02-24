@@ -23,37 +23,33 @@ export default function getWordFreqLookupNLP(
   text: string,
   filterWords: string[] = []
 ): WordFrequencyLookup {
-  const words = text;
+  const doc = nlp(text);
 
-  let nonTopics: string;
-  const doc = nlp(words);
+  // get the topics from the text
+  const topics = doc.topics().toTitleCase().out("array").map(cleanupText);
 
-  // sort so that longest is first in case topic is a substring
-  // of another topic
-  const topics = doc
-    .topics()
-    .toTitleCase()
-    .out("array")
-    .map(cleanupText)
-    .sort((a, b) => b.length - a.length);
+  // start with the full text and remove the topics
+  let nonTopics = text;
+  topics
+    // sort by length so that longer topics are removed first
+    // this handles the case where a topic is a substring of another topic
+    .sort((a, b) => b.length - a.length)
+    // for each topic, remove it from the nonTopics string
+    .forEach((topic) => {
+      // escapes any special chars from the topic that might mess up the regex
+      const escapedTopic = topic.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-  // this will be the string of all responses without the topics
-  nonTopics = words;
+      // remove topics words from the nonTopics string
+      nonTopics = nonTopics.replace(
+        new RegExp(`\\b${escapedTopic}\\b`, "gi"),
+        ""
+      );
+    });
 
-  for (let i = 0; i < topics.length; i++) {
-    // remove topics words
-
-    // escapes any special chars from the topic that might mess up the regex
-    const escapedTopic = topics[i].replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    nonTopics = nonTopics.replace(
-      new RegExp("\\b" + escapedTopic + "\\b", "gi"),
-      "" // remove the topic
-    );
-  }
-
-  // get a list of all the words in the non-topics
+  // get a list of all the words in `nonTopics`
   // but keep quoted string together as "one word"
-  const tokenizedNonTopics = nonTopics.match(/"(.*?)"|'(.*?)'|\w+/g) || [];
+  const tokenizedNonTopics: string[] =
+    nonTopics.match(/"(.*?)"|'(.*?)'|\w+/g) || [];
 
   // remove stopwords like "the" and "a"
   const wordsWithoutStops = removeStopwords(tokenizedNonTopics);
