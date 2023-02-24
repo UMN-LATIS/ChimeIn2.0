@@ -93,4 +93,33 @@ describe("getNLPifiedWordList", () => {
       go: 2,
     });
   });
+
+  it("should count words with the same stem as a single item", () => {
+    expect(
+      getWordFreqLookupNLP(
+        "The President talks. She talked. They are talking. I talk."
+      )
+    ).toEqual({
+      President: 1,
+      She: 1,
+      talk: 4,
+    });
+  });
+
+  it("should not count words opposite meanings but the same stem as a single item", () => {
+    expect(
+      getWordFreqLookupNLP(
+        "I'm comforted when she comforts the crowd. The crowd feel discomfort when they hear her voice."
+      )
+    ).toEqual({
+      comfort: 2,
+      she: 1,
+      crowd: 2,
+      feel: 1,
+      discomfort: 1,
+      hear: 1,
+      voice: 1,
+      when: 2,
+    });
+  });
 });
