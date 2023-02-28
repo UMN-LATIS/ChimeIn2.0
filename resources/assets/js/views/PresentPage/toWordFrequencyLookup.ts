@@ -3,7 +3,7 @@ import { WordFrequencyLookup } from "../../types";
 
 const quotedRegex = /"(?<quoted>[^"]*)"/g;
 
-function removeQuotedStrings(text) {
+function removeQuotedStrings(text: string) {
   return text.replace(quotedRegex, "");
 }
 
@@ -38,17 +38,25 @@ function getWordsFromText(
   return [...getQuotedStrings(text), ...normalizedSingleWords];
 }
 
+function isNotEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+  return value !== null && value !== undefined;
+}
+
 export default function toWordFrequencyLookup(
-  responseTexts: string[],
+  responseTexts: (string | null)[],
   filteredWords: string[] = []
 ): WordFrequencyLookup {
-  return responseTexts
-    .flatMap((text) => getWordsFromText(text, filteredWords))
-    .reduce((acc, word) => {
-      const prevWordCount = acc[word] || 0;
-      return {
-        ...acc,
-        [word]: prevWordCount + 1,
-      };
-    }, {});
+  return (
+    responseTexts
+      // remove null responses
+      .filter(isNotEmpty)
+      .flatMap((text) => getWordsFromText(text, filteredWords))
+      .reduce((acc, word) => {
+        const prevWordCount = acc[word] || 0;
+        return {
+          ...acc,
+          [word]: prevWordCount + 1,
+        };
+      }, {})
+  );
 }
