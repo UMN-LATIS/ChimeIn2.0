@@ -13,8 +13,7 @@ use App\Session;
 use App\Response;
 use Auth;
 
-class ResponseController extends Controller
-{
+class ResponseController extends Controller {
 
 
     /**
@@ -26,10 +25,22 @@ class ResponseController extends Controller
         $user = $req->user();
 
         // get all of the user's existing responses for this chime
+        // ordered by the most recent session first
+        $responses = DB::table('responses')
+            ->where("user_id", $user->id)
+            ->join('sessions', 'responses.session_id', '=', 'sessions.id')
+            ->join('questions', 'sessions.question_id', '=', 'questions.id')
+            ->join('folders', 'questions.folder_id', '=', 'folders.id')
+            ->join('chimes', 'folders.chime_id', '=', 'chimes.id')
+            ->where('chimes.id', $req->route('chime_id'))
+            ->select('responses.*')
+            ->orderBy("responses.updated_at", "desc")
+            // in cases of responses with the same updated_at, 
+            // use the id to break the tie (makes tests deterministic)
+            ->orderBy("responses.id", "desc")
+            ->get();
 
-        $responses = DB::table('responses')->where("user_id", $user->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->join('chimes', 'folders.chime_id', '=', 'chimes.id')->where('chimes.id', $req->route('chime_id'))->select('responses.*')->get();
-
-        $responseModels = \App\Response::hydrate($responses->toArray()); 
+        $responseModels = \App\Response::hydrate($responses->toArray());
         $responseModels->load("session.question", "session.question.folder");
         return response()->json($responseModels);
     }
@@ -39,20 +50,19 @@ class ResponseController extends Controller
 
         $chime = $user->chimes()->find($chime->id);
 
-        if(!$chime->sessions()->contains($session)) {
-            return response()->json(["message"=>'Session not found.'], 403);
+        if (!$chime->sessions()->contains($session)) {
+            return response()->json(["message" => 'Session not found.'], 403);
         }
 
-        if(!$session->question->current_session || $session->question->current_session->id != $session->id) {
-            return response()->json(["message"=>'Session has been closed.'], 403);
+        if (!$session->question->current_session || $session->question->current_session->id != $session->id) {
+            return response()->json(["message" => 'Session has been closed.'], 403);
         }
-        
-        if($response) {
+
+        if ($response) {
             $response->response_info = $request->get('response_info');
-        }
-        else {
-            if(!$request->get("response_info")) {
-                return response()->json(["message"=>'Responses cannot be blank.'], 400);
+        } else {
+            if (!$request->get("response_info")) {
+                return response()->json(["message" => 'Responses cannot be blank.'], 400);
             }
             $response = $session->responses()->create([
                 'response_info' => $request->get('response_info'),
@@ -61,8 +71,8 @@ class ResponseController extends Controller
         }
 
         $response->save();
-        
-        event(new SubmitResponse($chime, $session, $response, $isEdit=true));
+
+        event(new SubmitResponse($chime, $session, $response, $isEdit = true));
 
         return response()->json($response->load("session.question", "session.question.folder"));
     }
@@ -71,15 +81,12 @@ class ResponseController extends Controller
         $user = Auth::user();
 
         $chime = $user->chimes()->find($chime->id);
-        
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $response->delete();
             return response('Response Deleted', 200);
         } else {
             return response('Invalid Permissions to Delete Response', 403);
         }
-
-
     }
-
 }
