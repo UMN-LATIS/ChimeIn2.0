@@ -232,7 +232,7 @@ function updateResponse(updatedResponse) {
   const isNewResponse = responseIndex === -1;
 
   responses.value = isNewResponse
-    ? responses.value.concat(updatedResponse)
+    ? [updatedResponse, ...responses.value]
     : updateList(responseIndex, updatedResponse, responses.value);
 }
 
