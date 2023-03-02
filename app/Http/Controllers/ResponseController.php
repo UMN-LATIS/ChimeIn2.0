@@ -26,8 +26,20 @@ class ResponseController extends Controller
         $user = $req->user();
 
         // get all of the user's existing responses for this chime
-
-        $responses = DB::table('responses')->where("user_id", $user->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->join('chimes', 'folders.chime_id', '=', 'chimes.id')->where('chimes.id', $req->route('chime_id'))->select('responses.*')->get();
+        // ordered by the most recent session first
+        $responses = DB::table('responses')
+            ->where("user_id", $user->id)
+            ->join('sessions', 'responses.session_id', '=', 'sessions.id')
+            ->join('questions', 'sessions.question_id', '=', 'questions.id')
+            ->join('folders', 'questions.folder_id', '=', 'folders.id')
+            ->join('chimes', 'folders.chime_id', '=', 'chimes.id')
+            ->where('chimes.id', $req->route('chime_id'))
+            ->select('responses.*')
+            ->orderBy("responses.updated_at", "desc")
+            // in cases of responses with the same updated_at, 
+            // use the id to break the tie (makes tests deterministic)
+            ->orderBy("responses.id", "desc")
+            ->get();
 
         $responseModels = \App\Response::hydrate($responses->toArray()); 
         $responseModels->load("session.question", "session.question.folder");
