@@ -20,5 +20,6 @@ export default defineConfig({
     },
     baseUrl: "http://localhost",
     specPattern: "cypress/e2e/**/*.{test,spec}.js",
+    experimentalRunAllSpecs: true,
   },
 });
