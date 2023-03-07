@@ -8,6 +8,7 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+import "cypress-file-upload";
 import { addMatchImageSnapshotCommand } from "@simonsmith/cypress-image-snapshot/command";
 
 addMatchImageSnapshotCommand({
