@@ -41,9 +41,8 @@ sail artisan migrate:fresh
 # Install node modules
 yarn install
 
-# Start Laravel Mix to compile Vue
-yarn run watch
-
+# Start Vite to compile Vue
+yarn dev
 ```
 
 The application will be running on <http://localhost>.
@@ -52,10 +51,7 @@ The application will be running on <http://localhost>.
 
 ```sh
 sail up
-yarn run watch
-
-# For Hot Module Replacement (HMR), do:
-# yarn run dev && yarn run hot
+yarn dev
 ```
 
 Load <http://localhost> in your browser.
@@ -70,8 +66,6 @@ Additional users can be configured in `config/shibboleth.php`.
 Stop the application: `sail down`.
 
 ## Running Tests Locally
-
-⚠️ Stop laravel mix's hot module reloading before running cypress.
 
 ```sh
 yarn run cypress
