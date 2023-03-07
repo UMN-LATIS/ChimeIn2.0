@@ -10,7 +10,7 @@
 
 import "cypress-file-upload";
 import { addMatchImageSnapshotCommand } from "cypress-image-snapshot/command";
-import cypressConfig from "../../cypress.json";
+import cypressConfig from "../../cypress.config";
 
 /**
  * Adds an artificial network delay when responding to url for the
