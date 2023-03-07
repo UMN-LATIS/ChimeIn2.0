@@ -351,7 +351,7 @@ describe("question", () => {
         });
     });
 
-    it.only("edits a question choice", () => {
+    it("edits a question choice", () => {
       let testChime, testFolder, testQuestion;
       api
         .createChimeFolderQuestion(favoriteColorQuestion)
