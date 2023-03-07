@@ -97,7 +97,11 @@
                   </div>
                 </template>
               </Draggable>
-              <JoinPanel :chime="chime" :includeFullUrl="true" />
+              <JoinPanel
+                v-if="!isEmpty(chime)"
+                :chime="chime"
+                :includeFullUrl="true"
+              />
             </div>
           </div>
         </div>
@@ -124,6 +128,7 @@ import {
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import * as api from "../../common/api";
 import Back from "../../components/Back.vue";
+import { isEmpty } from "ramda";
 
 export default {
   components: {
@@ -153,6 +158,8 @@ export default {
   data() {
     return {
       isReady: false,
+      // FIXME: refactor so that `chime` is either a true
+      // chime object or null
       chime: {},
       showSettings: false,
       exportPanel: false,
@@ -196,6 +203,7 @@ export default {
     this.isReady = true;
   },
   methods: {
+    isEmpty,
     toggle(value, { setToFalse = [], setToTrue = [] } = {}) {
       this[value] = !this[value];
       setToFalse.forEach((key) => {
