@@ -241,7 +241,10 @@ export function getChimeUsers(chimeId: number): Promise<User[]> {
   return axios
     .get(`/api/chime/${chimeId}/users`)
     .then((res) => res.data)
-    .catch(console.error);
+    .catch((err) => {
+      console.error("cannot get chime users:", err.message);
+      return [];
+    });
 }
 
 export function updateChimeUsers(
