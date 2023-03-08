@@ -72,6 +72,9 @@ class ResponseController extends Controller
             ]);
         }
 
+
+        $response->limitResponseTextLength();
+
         $response->save();
         
         event(new SubmitResponse($chime, $session, $response, $isEdit=true));

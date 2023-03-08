@@ -11,6 +11,8 @@ class Response extends Model
     use SoftDeletes;
     use HasFactory;
 
+    public const MAX_TEXT_LENGTH = 10000;
+
     protected $fillable = ['response_info', 'user_id'];
 
     protected $casts = [
@@ -71,5 +73,19 @@ class Response extends Model
                 return "";
                 break;
         }
+    }
+
+    /**
+     * if the response_info has a `text` property, 
+     * limit the length to $maxLength
+     */
+    public function limitResponseTextLength($maxLength = self::MAX_TEXT_LENGTH) {
+        if (!isset($this->response_info['text'])) {
+            return;
+        }
+    
+        $this->response_info = array_merge($this->response_info, [
+            'text' => substr($this->response_info['text'], 0, $maxLength)
+        ]);
     }
 }
