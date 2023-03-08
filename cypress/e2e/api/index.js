@@ -1,11 +1,12 @@
 /// <reference types="Cypress" />
 
-import * as chimeApi from "./chime.js";
-import * as folderApi from "./folder.js";
-import * as questionApi from "./question.js";
-import * as comboApi from "./combo.js";
-import * as userApi from "./user.js";
-import * as chimeUserApi from "./chimeUser.js";
+import * as chimeApi from "./chime";
+import * as folderApi from "./folder";
+import * as questionApi from "./question";
+import * as comboApi from "./combo";
+import * as userApi from "./user";
+import * as chimeUserApi from "./chimeUser";
+import * as responseApi from "./response";
 
 export default {
   ...chimeApi,
@@ -14,4 +15,5 @@ export default {
   ...comboApi,
   ...chimeUserApi,
   ...userApi,
+  ...responseApi,
 };
