@@ -23,7 +23,7 @@
     "@simonsmith/cypress-image-snapshot": "^6.0.0",
     "@types/jest": "^29.0.0",
     "@types/quill": "^2.0.9",
-    "@types/ramda": "^0.28.20",
+    "@types/ramda": "^0.28.23",
     "@types/stopword": "^2.0.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^10.0.0",
