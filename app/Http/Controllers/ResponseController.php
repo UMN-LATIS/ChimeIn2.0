@@ -41,7 +41,7 @@ class ResponseController extends Controller
             ->orderBy("responses.id", "desc")
             ->get();
 
-        $responseModels = \App\Response::hydrate($responses->toArray());
+        $responseModels = \App\Response::hydrate($responses->toArray()); 
         $responseModels->load("session.question", "session.question.folder");
         return response()->json($responseModels);
     }
