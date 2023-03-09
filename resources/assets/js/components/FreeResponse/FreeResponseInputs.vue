@@ -15,7 +15,7 @@
       <small
         v-if="isLargerThanMaxChars"
         data-cy="free-response-char-count"
-        class="d-block text-right text-danger"
+        class="d-block text-right text-danger mt-1"
       >
         {{ response_text.length.toLocaleString() }} /
         {{ MAX_CHARS.toLocaleString() }}
@@ -54,7 +54,7 @@
         Clear and Start a New Response
       </button>
 
-      <small v-if="isLargerThanMaxChars" role="alert" class="text-danger">
+      <small v-if="isLargerThanMaxChars" role="alert" class="text-danger ml-1">
         Your response is too long. Please shorten it.
       </small>
     </div>
