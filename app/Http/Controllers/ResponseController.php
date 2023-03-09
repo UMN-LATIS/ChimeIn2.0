@@ -49,6 +49,15 @@ class ResponseController extends Controller
     public function createOrUpdateResponse(Request $request, Chime $chime, Session $session, Response $response = null) {
         $user = Auth::user();
 
+        $request->validate([
+            'response_info' => 'required',
+            'response_info.question_type' => 'required',
+            'response_info.text' => 'max:10000',
+        ], [
+            'response_info.required' => 'Responses cannot be blank.',
+            'response_info.text.max' => 'Response text cannot be longer than 10,000 characters.',
+        ]);
+
         $chime = $user->chimes()->find($chime->id);
 
         if(!$chime->sessions()->contains($session)) {
@@ -63,9 +72,6 @@ class ResponseController extends Controller
             $response->response_info = $request->get('response_info');
         }
         else {
-            if(!$request->get("response_info")) {
-                return response()->json(["message"=>'Responses cannot be blank.'], 400);
-            }
             $response = $session->responses()->create([
                 'response_info' => $request->get('response_info'),
                 'user_id' => $user->id
