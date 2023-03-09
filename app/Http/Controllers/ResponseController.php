@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Events\SubmitResponse;
-use App\Question;
+use App\Http\Requests\CreateOrUpdateResponseRequest;
 use DB;
 
 use App\Chime;
@@ -46,16 +46,10 @@ class ResponseController extends Controller
         return response()->json($responseModels);
     }
 
-    public function createOrUpdateResponse(Request $request, Chime $chime, Session $session, Response $response = null) {
+    public function createOrUpdateResponse(CreateOrUpdateResponseRequest $request, Chime $chime, Session $session, Response $response = null) {
         $user = Auth::user();
 
-        $validatedRequest = $request->validate([
-            'response_info' => 'required',
-            'response_info.question_type' => 'required',
-            'response_info.text' => 'max:10000',
-        ], [
-            'response_info.text.max' => "Response text cannot be longer than " . number_format(Response::MAX_TEXT_LENGTH) . " characters.",
-        ]);
+        $validated = $request->validated();
 
         $chime = $user->chimes()->find($chime->id);
 
@@ -68,16 +62,13 @@ class ResponseController extends Controller
         }
         
         if ($response) {
-            $response->response_info = $validatedRequest['response_info'];
+            $response->response_info = $validated['response_info'];
         } else {
             $response = $session->responses()->create([
-                'response_info' => $validatedRequest['response_info'],
+                'response_info' => $validated['response_info'],
                 'user_id' => $user->id
             ]);
         }
-
-
-        $response->limitResponseTextLength();
 
         $response->save();
         
