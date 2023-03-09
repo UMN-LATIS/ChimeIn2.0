@@ -11,8 +11,6 @@ class Response extends Model
     use SoftDeletes;
     use HasFactory;
 
-    public const MAX_TEXT_LENGTH = 10000;
-
     protected $fillable = ['response_info', 'user_id'];
 
     protected $casts = [

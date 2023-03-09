@@ -41,7 +41,7 @@ class ResponseController extends Controller
             ->orderBy("responses.id", "desc")
             ->get();
 
-        $responseModels = \App\Response::hydrate($responses->toArray()); 
+        $responseModels = \App\Response::hydrate($responses->toArray());
         $responseModels->load("session.question", "session.question.folder");
         return response()->json($responseModels);
     }
@@ -49,12 +49,13 @@ class ResponseController extends Controller
     public function createOrUpdateResponse(Request $request, Chime $chime, Session $session, Response $response = null) {
         $user = Auth::user();
 
-        $validatedRequest = $request->validate([
+        $request->validate([
             'response_info' => 'required',
             'response_info.question_type' => 'required',
             'response_info.text' => 'max:10000',
         ], [
-            'response_info.text.max' => "Response text cannot be longer than " . number_format(Response::MAX_TEXT_LENGTH) . " characters.",
+            'response_info.required' => 'Responses cannot be blank.',
+            'response_info.text.max' => 'Response text cannot be longer than 10,000 characters.',
         ]);
 
         $chime = $user->chimes()->find($chime->id);
@@ -67,17 +68,15 @@ class ResponseController extends Controller
             return response()->json(["message"=>'Session has been closed.'], 403);
         }
         
-        if ($response) {
-            $response->response_info = $validatedRequest['response_info'];
-        } else {
+        if($response) {
+            $response->response_info = $request->get('response_info');
+        }
+        else {
             $response = $session->responses()->create([
-                'response_info' => $validatedRequest['response_info'],
+                'response_info' => $request->get('response_info'),
                 'user_id' => $user->id
             ]);
         }
-
-
-        $response->limitResponseTextLength();
 
         $response->save();
         

@@ -84,64 +84,89 @@ describe("free response question", () => {
       });
   });
 
-  it("limits the size of a text response", () => {
-    const MAX_RESPONSE_LENGTH = 10000;
-
+  describe("Free Response input", () => {
     let testChime;
     let testFolder;
     let testQuestion;
-    // create an free response question
-    api
-      .createChime({ name: "Test Chime" })
-      .then((chime) => {
-        testChime = chime;
-        return api.createFolder({ chimeId: chime.id, name: "Test Folder" });
-      })
-      .then((folder) => {
-        testFolder = folder;
-        return api.createQuestion({
-          chimeId: testChime.id,
-          folderId: testFolder.id,
-          question_text: "Open response question",
-          question_info: {
-            question_type: "free_response",
-          },
+
+    beforeEach(() => {
+      // create an free response question
+      api
+        .createChime({ name: "Test Chime" })
+        .then((chime) => {
+          testChime = chime;
+          return api.createFolder({ chimeId: chime.id, name: "Test Folder" });
+        })
+        .then((folder) => {
+          testFolder = folder;
+          return api.createQuestion({
+            chimeId: testChime.id,
+            folderId: testFolder.id,
+            question_text: "Open response question",
+            question_info: {
+              question_type: "free_response",
+            },
+          });
+        })
+        .then((question) => {
+          testQuestion = question;
+
+          // open the question
+          api.openQuestion({
+            chimeId: testChime.id,
+            folderId: testFolder.id,
+            questionId: testQuestion.id,
+          });
+        })
+        .then(() => {
+          // logout faculty
+          cy.logout();
         });
-      })
-      .then((question) => {
-        testQuestion = question;
+    });
 
-        // open the question
-        api.openQuestion({
-          chimeId: testChime.id,
-          folderId: testFolder.id,
-          questionId: testQuestion.id,
-        });
-      })
-      .then(() => {
-        // logout faculty
-        cy.logout();
-      })
-      .then(() => {
-        // join the chime as a participant
-        cy.visit(`/join/${testChime.access_code}`);
+    it.only("should limit the size of a text response", () => {
+      const MAX_RESPONSE_LENGTH = 10000;
 
-        // create a response longer than the max length
-        const longResponse = "a".repeat(1.5 * MAX_RESPONSE_LENGTH);
+      // join the chime as a participant
+      cy.visit(`/join/${testChime.access_code}`);
 
-        // put the long response in the textarea (faster than typing)
-        cy.get('[data-cy="free-response-textarea"]')
-          .invoke("val", longResponse)
-          .trigger("input");
+      // create a response longer than the max length
+      const longResponse = "a".repeat(MAX_RESPONSE_LENGTH);
 
-        // save the response
-        cy.contains("Save").click();
+      // put the long response in the textarea (faster than typing)
+      cy.get('[data-cy="free-response-textarea"]')
+        .invoke("val", longResponse)
+        .trigger("input");
 
-        // check that the error message is displayed
-        cy.get(".participant-prompt > .alert").should(
-          "contain",
-          `cannot be longer than ${MAX_RESPONSE_LENGTH.toLocaleString()} characters`
-        );
-      });
+      // at max length, the character count should not be displayed
+      cy.get('[data-cy="free-response-char-count"]').should("not.exist");
+
+      // the save button should be enabled
+      cy.contains("Save").should("not.be.disabled");
+
+      // add a character to the response
+      cy.get('[data-cy="free-response-textarea"]').type("a");
+
+      // it should show the character count
+      cy.get('[data-cy="free-response-char-count"]').should(
+        "contain",
+        `10,001 / 10,000`
+      );
+
+      // it should show the error message
+      cy.contains("Your response is too long.");
+
+      // it should disable the save button
+      cy.contains("Save").should("be.disabled");
+
+      // force enable the save button to test server validation
+      cy.contains("Save").invoke("removeAttr", "disabled").click();
+
+      // check that the server's error message is displayed
+      cy.get(".participant-prompt > .alert").should(
+        "contain",
+        `cannot be longer than ${MAX_RESPONSE_LENGTH.toLocaleString()} characters`
+      );
+    });
   });
 });

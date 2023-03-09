@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="form-group">
+    <div class="form-group mt-2">
       <textarea
         v-model="response_text"
         :aria-labelledby="`question-${question.id}-heading`"
@@ -12,12 +12,21 @@
         :max-rows="6"
       >
       </textarea>
+      <small
+        v-if="isLargerThanMaxChars"
+        data-cy="free-response-char-count"
+        class="d-block text-right text-danger"
+      >
+        {{ response_text.length.toLocaleString() }} /
+        {{ MAX_CHARS.toLocaleString() }}
+      </small>
     </div>
-    <div>
+    <div class="mb-3">
       <button
         v-if="(!disabled && !response.id) || create_new_response"
         class="btn btn-outline-primary"
         variant="primary"
+        :disabled="isEmpty || isLargerThanMaxChars"
         @click="record_response"
       >
         Save
@@ -26,6 +35,7 @@
         v-if="!disabled && response.id && !create_new_response"
         class="btn btn-outline-primary"
         variant="primary"
+        :disabled="isEmpty || isLargerThanMaxChars"
         @click="record_response"
       >
         Update
@@ -43,12 +53,17 @@
       >
         Clear and Start a New Response
       </button>
+
+      <small v-if="isLargerThanMaxChars" role="alert" class="text-danger">
+        Your response is too long. Please shorten it.
+      </small>
     </div>
   </div>
 </template>
 
 <script>
 import get from "lodash/get";
+const MAX_CHARS = 10000;
 
 export default {
   // eslint-disable-next-line vue/require-prop-types
@@ -58,7 +73,16 @@ export default {
     return {
       response_text: "",
       create_new_response: false,
+      MAX_CHARS,
     };
+  },
+  computed: {
+    isLargerThanMaxChars() {
+      return this.response_text.length > MAX_CHARS;
+    },
+    isEmpty() {
+      return this.response_text.length === 0;
+    },
   },
   watch: {
     response() {
@@ -87,3 +111,12 @@ export default {
   },
 };
 </script>
+<style scoped>
+button[disabled],
+button[disabled]:hover {
+  cursor: not-allowed;
+  background-color: #e9ecef;
+  border-color: #e9ecef;
+  color: #6c757d;
+}
+</style>
