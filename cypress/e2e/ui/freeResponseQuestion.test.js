@@ -124,7 +124,7 @@ describe("free response question", () => {
         });
     });
 
-    it.only("should limit the size of a text response", () => {
+    it("should limit the size of a text response", () => {
       const MAX_RESPONSE_LENGTH = 10000;
 
       // join the chime as a participant
