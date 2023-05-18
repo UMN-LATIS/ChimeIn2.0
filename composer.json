@@ -8,7 +8,8 @@
       "php": "8.1"
     },
     "allow-plugins": {
-      "symfony/thanks": false
+      "symfony/thanks": false,
+      "php-http/discovery": true
     }
   },
   "description": "The Laravel Framework.",
@@ -45,7 +46,7 @@
     "laravel/tinker": "~2.0",
     "laravelcollective/html": "^6.1",
     "orangehill/iseed": "^3.0",
-    "packbackbooks/lti-1p3-tool": "dev-develop",
+    "packbackbooks/lti-1p3-tool": "dev-upstream-merge",
     "predis/predis": "^1.1",
     "razorbacks/laravel-shibboleth": "dev-umn",
     "sentry/sentry-laravel": "^3.1",

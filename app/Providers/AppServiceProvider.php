@@ -6,9 +6,11 @@ use Firebase\JWT\JWT;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
-use Packback\Lti1p3\Interfaces\Cache;
-use Packback\Lti1p3\Interfaces\Cookie;
-use Packback\Lti1p3\Interfaces\Database;
+use Packback\Lti1p3\Interfaces\ICache;
+use Packback\Lti1p3\Interfaces\ICookie;
+use Packback\Lti1p3\Interfaces\IDatabase;
+use Packback\Lti1p3\Interfaces\ILtiServiceConnector as LtiServiceConnector;
+use GuzzleHttp\Client;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +35,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(Cache::class, LTI13Cache::class);
         $this->app->bind(Cookie::class, LTI13Cookie::class);
         $this->app->bind(Database::class, LTI13Database::class);
+        $this->app->bind(LtiServiceConnector::class, function () {
+            return new LtiServiceConnector(app(ICache::class), new Client([
+                'timeout' => 30,
+            ]));
+        });
 
     }
 }
