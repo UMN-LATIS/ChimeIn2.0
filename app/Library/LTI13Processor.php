@@ -124,8 +124,10 @@ class LTI13Processor {
 
         foreach($globalUsers as $userId=>$userScore) {
             $score = $userScore["points"] / $totalQuestions;
-			// TODO: test the date stuff
-            $score = \Packback\Lti1p3\LtiGrade::new()
+			// the canvas data extension allows us to report the time the participant submitted their response, 
+			// so they don't get flagged as late if they submitted after the due date in canvas
+			// this is documented at https://canvas.instructure.com/doc/api/file.assignment_tools.html
+			$score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
                 ->setTimestamp(Carbon::now()->toIso8601String())
@@ -179,7 +181,9 @@ class LTI13Processor {
         $lineItem = new \Packback\Lti1p3\LtiLineitem(["id"=>$lineItemId]);
 		foreach($globalUsers as $userId=>$userScore) {
             $score = $userScore["points"] / $totalQuestions;
-			// TODO: test the date stuff
+			// the canvas data extension allows us to report the time the participant submitted their response, 
+			// so they don't get flagged as late if they submitted after the due date in canvas
+			// this is documented at https://canvas.instructure.com/doc/api/file.assignment_tools.html
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
