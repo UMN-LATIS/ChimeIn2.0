@@ -282,6 +282,9 @@ class LTI13Handler extends Controller
                 $folder->name = $sourceFolder->name;
                 $folder->order = $sourceFolder->order;
                 if($chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
+                    // If we have multiple grades, let's see if their new canvas courses matches any folders from
+                    // the old chime. This will fail if they've renamed assignments, but it at least gets us closer to
+                    // the truth (hopefully)
                     foreach($lineItems as $lineitem) {
                         if($lineitem["label"] == $sourceFolder->name) {
                             $folder->lti_lineitem = $lineitem["id"];
