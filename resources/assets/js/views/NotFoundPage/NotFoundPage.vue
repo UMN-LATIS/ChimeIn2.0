@@ -22,7 +22,7 @@
   </DefaultLayout>
 </template>
 <script setup lang="ts">
-import { PostIt } from "../../../cla-vue-template/src";
+import { PostIt } from "@umn-latis/cla-vue-template";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import { User } from "../../types";
 

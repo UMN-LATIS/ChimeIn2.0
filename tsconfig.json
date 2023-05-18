@@ -8,9 +8,9 @@
     "moduleResolution": "node",
     "noImplicitAny": false,
     "allowJs": true,
-    // disabling: nlp-compromise doesn't like this setting
-    // "esModuleInterop": true
-    "outDir": "./public/build"
+    "esModuleInterop": true,
+    "outDir": "./public/build",
+    "allowSyntheticDefaultImports": true
   },
   "include": ["resources"],
   "exclude": ["vendor", "node_modules", "./public/build"]

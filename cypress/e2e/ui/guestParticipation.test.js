@@ -117,4 +117,74 @@ describe("participating as a guest", () => {
         });
       });
   });
+
+  it("shows Answered Questions in reverse chronological order", () => {
+    // login as faculty
+    cy.login("faculty");
+
+    // create a few more questions in your chime and folder
+    cy.wrap([1, 2, 3]).each((i) => {
+      api
+        .createQuestion({
+          folderId: testFolder.id,
+          chimeId: testChime.id,
+          question_text: `<p>Question ${i}</p>`,
+          question_info: {
+            question_type: "multiple_choice",
+            question_responses: [
+              {
+                text: "This",
+                correct: false,
+              },
+              {
+                text: "That",
+                correct: true,
+              },
+            ],
+          },
+        })
+        .then((question) => {
+          api.openQuestion({
+            chimeId: testChime.id,
+            folderId: testFolder.id,
+            questionId: question.id,
+          });
+        });
+    });
+
+    // logout faculty
+    cy.logout();
+
+    // go to the participant page
+    cy.visit(`/join/${testChime.access_code}`);
+
+    // answer the questions in order 1, 2, 3
+    cy.wrap([1, 2, 3]).each((i) => {
+      // answer the question
+      cy.contains(`Question ${i}`)
+        .closest(".participant-prompt")
+        .within(() => {
+          cy.contains("This").click();
+
+          // make sure the response is saved
+          cy.contains("Saved").should("be.visible");
+        });
+    });
+    // click the Answered Questions tab
+    cy.contains("Answered Questions").click();
+
+    cy.get("#answered-questions").should("be.visible");
+
+    // verify that the questions are in reverse chronological order
+    cy.get("#answered-questions .responseContainer").each(($el, index) => {
+      expect($el).to.contain(`Question ${3 - index}`);
+    });
+
+    // verify that the questions remain in the same order after refreshing
+    cy.reload();
+    cy.contains("Answered Questions").click();
+    cy.get("#answered-questions .responseContainer").each(($el, index) => {
+      expect($el).to.contain(`Question ${3 - index}`);
+    });
+  });
 });

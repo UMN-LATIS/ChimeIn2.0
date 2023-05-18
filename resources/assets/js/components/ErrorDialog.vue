@@ -1,6 +1,6 @@
 <template>
   <Modal
-    :show="$store.getters.message"
+    :show="!!$store.getters.message"
     style="z-index: 15000"
     :closeable="false"
   >

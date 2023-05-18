@@ -7,7 +7,7 @@
   </NavbarItem>
 </template>
 <script setup lang="ts">
-import NavbarItem from "../../cla-vue-template/src/components/NavbarItem.vue";
+import { NavbarItem } from "@umn-latis/cla-vue-template";
 
 withDefaults(
   defineProps<{
@@ -18,11 +18,4 @@ withDefaults(
   }
 );
 </script>
-<style scoped>
-@media (min-width: 1000px) {
-  /* align back button content, not the back button edge */
-  .navbar-item--back {
-    transform: translateX(-1rem);
-  }
-}
-</style>
+<style scoped></style>
