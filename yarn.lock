@@ -1808,10 +1808,10 @@ chart.js@^3.9.1:
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.9.1.tgz#3abf2c775169c4c71217a107163ac708515924b8"
   integrity sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==
 
-chartjs-chart-wordcloud@^3.8.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/chartjs-chart-wordcloud/-/chartjs-chart-wordcloud-3.10.0.tgz#493bfb3ffc87af712c4acb3fd25e40e61bd93b0d"
-  integrity sha512-vxoNjYBsurNZXJcw7u/UEtd6E8D6KJQDWam0SiIlvKHZNN4i7JJMsexNZFHbQULnldt5BZ5tYZbdFyAGTcc0FQ==
+chartjs-chart-wordcloud@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/chartjs-chart-wordcloud/-/chartjs-chart-wordcloud-4.0.0.tgz#e6454d52185e36185d067e035ab94861b2fbd815"
+  integrity sha512-iu+CTk2eIcVDxiqX1+yfoc05VJLrAY7ptAkz+JEvsmtUSRR96OjDWo0gx4ux8eT90+WG4NyLpb1NB9MIQO7nFg==
   dependencies:
     "@types/d3-cloud" "^1.2.5"
     d3-cloud "^1.2.5"
