@@ -4,8 +4,8 @@
 namespace App\Library;
 
 use DB;
-use Log;
 use Carbon\Carbon;
+use Log;
 use IMSGlobal\LTI\ToolProvider;
 use IMSGlobal\LTI\ToolProvider\DataConnector;
 use \App\LTI13ResourceLink;
@@ -124,15 +124,18 @@ class LTI13Processor {
 
         foreach($globalUsers as $userId=>$userScore) {
             $score = $userScore["points"] / $totalQuestions;
-			// TODO: test the date stuff
-            $score = \Packback\Lti1p3\LtiGrade::new()
+			// the canvas data extension allows us to report the time the participant submitted their response, 
+			// so they don't get flagged as late if they submitted after the due date in canvas
+			// this is documented at https://canvas.instructure.com/doc/api/file.assignment_tools.html
+			$score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
                 ->setTimestamp(Carbon::now()->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
-				->setCustom(["https://canvas.instructure.com/lti/submission"=>["submitted_at"=>$userScore["submission_date"]->toIso8601String()]])
+				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
                 ->setUserId($userId);
+
             $result = $ags->putGrade($score, $lineItem);
 
 		}
@@ -178,14 +181,16 @@ class LTI13Processor {
         $lineItem = new \Packback\Lti1p3\LtiLineitem(["id"=>$lineItemId]);
 		foreach($globalUsers as $userId=>$userScore) {
             $score = $userScore["points"] / $totalQuestions;
-			// TODO: test the date stuff
+			// the canvas data extension allows us to report the time the participant submitted their response, 
+			// so they don't get flagged as late if they submitted after the due date in canvas
+			// this is documented at https://canvas.instructure.com/doc/api/file.assignment_tools.html
             $score = \Packback\Lti1p3\LtiGrade::new()
                 ->setScoreGiven($score)
                 ->setScoreMaximum(1)
                 ->setTimestamp(Carbon::now()->toIso8601String())
                 ->setActivityProgress('Submitted')
                 ->setGradingProgress('FullyGraded')
-				->setCustom(["https://canvas.instructure.com/lti/submission"=>["submitted_at"=>$userScore["submission_date"]->toIso8601String()]])
+				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
                 ->setUserId($userId);
             $result = $ags->putGrade($score, $lineItem);
 
@@ -351,7 +356,13 @@ class LTI13Processor {
         $registration = $db->findRegistrationByIssuer($issuer, $clientId);
         $endpoint = $chime->lti13_resource_link->endpoint;
         $ags = new \Packback\Lti1p3\LtiAssignmentsGradesService(
-            new \Packback\Lti1p3\LtiServiceConnector($registration),
+            new \Packback\Lti1p3\LtiServiceConnector(
+				new \App\Library\LTI13Cache, 
+				new \GuzzleHttp\Client([
+					'timeout' => 30,
+				])
+            ),
+			$registration,
             $endpoint);
         return $ags;
     }

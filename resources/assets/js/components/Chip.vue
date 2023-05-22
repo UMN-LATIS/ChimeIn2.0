@@ -54,7 +54,7 @@ export default {
   border: 1px solid var(--color);
   font-size: 0.75rem;
   line-height: 1em;
-  padding: 0.5em;
+  padding: 0.33em 0.5rem;
   border-radius: 1rem;
 }
 .chip--primary {

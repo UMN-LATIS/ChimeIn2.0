@@ -39,8 +39,27 @@ class LTI13Handler extends Controller
 
 
     public function launch() {
+
+        if(isset($_REQUEST['error']) && $_REQUEST['error'] == 'launch_no_longer_valid') {
+            $exception = new \Exception($_REQUEST['error_description']);
+            if (app()->bound('sentry')) {
+                app('sentry')->captureException($exception);
+            }
+            return view("errors.500", ["exception"=>$exception]);
+        }
+
          try {
-            $launch = LtiMessageLaunch::new(new \App\Library\LTI13Database, new \App\Library\LTI13Cache, new \App\Library\LTI13Cookie)
+            $launch = LtiMessageLaunch::new(
+                new \App\Library\LTI13Database, 
+                new \App\Library\LTI13Cache, 
+                new \App\Library\LTI13Cookie, 
+                new \Packback\Lti1p3\LtiServiceConnector(
+                    new \App\Library\LTI13Cache, 
+                    new \GuzzleHttp\Client([
+                        'timeout' => 30,
+                    ])
+                )
+            )
             ->validate();
         }
         catch (LtiException $e) {
@@ -245,6 +264,8 @@ class LTI13Handler extends Controller
         $chime->fill($req->all());
         $chime->lti_setup_complete = true;
         $chime->save();
+        $ags = LTI13Processor::getAGS($chime);
+        $lineItems = $ags->getLineItems();
         $resourceLink = $chime->lti13_resource_link;
         $resource_link_title  = $req->get("lti_resource_title");
         $lineitem = $resourceLink->endpoint["lineitem"];
@@ -260,10 +281,17 @@ class LTI13Handler extends Controller
                 $folder->chime()->associate($chime);
                 $folder->name = $sourceFolder->name;
                 $folder->order = $sourceFolder->order;
-                if($folder->name == $resource_link_title && $chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
-                    $folder->lti_lineitem = $lineitem;
-                    $targetFolder = $folder;
+                if($chime->lti_grade_mode == \App\LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
+                    // If we have multiple grades, let's see if their new canvas courses matches any folders from
+                    // the old chime. This will fail if they've renamed assignments, but it at least gets us closer to
+                    // the truth (hopefully)
+                    foreach($lineItems as $lineitem) {
+                        if($lineitem["label"] == $sourceFolder->name) {
+                            $folder->lti_lineitem = $lineitem["id"];
+                        }
+                    }
                 }
+                
                 
                 $folder->save();
                 foreach($sourceFolder->questions as $question) {

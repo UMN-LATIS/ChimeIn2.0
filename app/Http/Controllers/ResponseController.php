@@ -26,8 +26,20 @@ class ResponseController extends Controller
         $user = $req->user();
 
         // get all of the user's existing responses for this chime
-
-        $responses = DB::table('responses')->where("user_id", $user->id)->join('sessions', 'responses.session_id', '=', 'sessions.id')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->join('chimes', 'folders.chime_id', '=', 'chimes.id')->where('chimes.id', $req->route('chime_id'))->select('responses.*')->get();
+        // ordered by the most recent session first
+        $responses = DB::table('responses')
+            ->where("user_id", $user->id)
+            ->join('sessions', 'responses.session_id', '=', 'sessions.id')
+            ->join('questions', 'sessions.question_id', '=', 'questions.id')
+            ->join('folders', 'questions.folder_id', '=', 'folders.id')
+            ->join('chimes', 'folders.chime_id', '=', 'chimes.id')
+            ->where('chimes.id', $req->route('chime_id'))
+            ->select('responses.*')
+            ->orderBy("responses.updated_at", "desc")
+            // in cases of responses with the same updated_at, 
+            // use the id to break the tie (makes tests deterministic)
+            ->orderBy("responses.id", "desc")
+            ->get();
 
         $responseModels = \App\Response::hydrate($responses->toArray()); 
         $responseModels->load("session.question", "session.question.folder");
@@ -36,6 +48,15 @@ class ResponseController extends Controller
 
     public function createOrUpdateResponse(Request $request, Chime $chime, Session $session, Response $response = null) {
         $user = Auth::user();
+
+        $request->validate([
+            'response_info' => 'required',
+            'response_info.question_type' => 'required',
+            'response_info.text' => 'max:10000',
+        ], [
+            'response_info.required' => 'Responses cannot be blank.',
+            'response_info.text.max' => 'Response text cannot be longer than 10,000 characters.',
+        ]);
 
         $chime = $user->chimes()->find($chime->id);
 
@@ -51,9 +72,6 @@ class ResponseController extends Controller
             $response->response_info = $request->get('response_info');
         }
         else {
-            if(!$request->get("response_info")) {
-                return response()->json(["message"=>'Responses cannot be blank.'], 400);
-            }
             $response = $session->responses()->create([
                 'response_info' => $request->get('response_info'),
                 'user_id' => $user->id

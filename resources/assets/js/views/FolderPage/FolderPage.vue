@@ -54,6 +54,13 @@
               >
                 <i class="material-icons pointer">edit</i> Folder Settings
               </button>
+              <router-link
+                :to="`/chime/${chimeId}/folder/${folderId}/participation`"
+                class="btn"
+              >
+                <Icon>grade</Icon>
+                Report
+              </router-link>
               <button class="btn" @click="openAll">
                 <i class="material-icons pointer">visibility</i> Open All
               </button>
@@ -249,7 +256,7 @@ import ErrorDialog from "../../components/ErrorDialog.vue";
 import QuestionCard from "./QuestionCard.vue";
 import Back from "../../components/Back.vue";
 import Spinner from "../../components/Spinner.vue";
-import pluralize from "../../common/pluralize.js";
+import pluralize from "../../common/pluralize";
 import useQuestionListener from "../../hooks/useQuestionListener";
 import { useStore } from "vuex";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
@@ -268,6 +275,7 @@ import {
   forceSyncGradesWithLMS,
 } from "../../common/api";
 import { useRouter } from "vue-router";
+import Icon from "../../components/Icon.vue";
 const QuestionForm = defineAsyncComponent(() =>
   import(
     /* webpackChunkName: "QuestionForm" */

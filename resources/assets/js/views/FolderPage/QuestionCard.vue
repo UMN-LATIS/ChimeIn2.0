@@ -12,7 +12,8 @@
           {{ questionTypeToString }}
         </router-link>
       </h2>
-      <Chip :color="totalResponses ? 'primary' : 'muted'" :solid="true"
+
+      <Chip :color="totalResponses ? 'dark' : 'muted'" :solid="true"
         >{{ totalResponses }} {{ pluralize("Response", totalResponses) }}</Chip
       >
     </header>
@@ -321,5 +322,8 @@ export default {
   height: 10rem;
   max-width: 100%;
   max-height: 100%;
+}
+.question-card a:hover {
+  color: currentColor;
 }
 </style>

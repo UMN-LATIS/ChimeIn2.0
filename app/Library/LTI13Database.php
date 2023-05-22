@@ -1,13 +1,13 @@
 <?php
 // define("TOOL_HOST", "https://sith.knowfear.net/lti/src/web");
 namespace App\Library;
-use Packback\Lti1p3\Interfaces\Database;
+use Packback\Lti1p3\Interfaces\IDatabase;
 use Packback\Lti1p3\LtiRegistration;
 use Packback\Lti1p3\LtiDeployment;
 use Packback\Lti1p3\OidcException;
 
 
-class LTI13Database implements Database {
+class LTI13Database implements IDatabase {
     
       public static function findIssuer($issuer_url, $client_id = null)
     {

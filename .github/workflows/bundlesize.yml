@@ -9,7 +9,7 @@ on:
 
 env:
   # check production bundle sizes
-  MIX_APP_ENV: production
+  VITE_APP_ENV: production
   FORCE_COLOR: 2
   NODE: 16
   CI_REPO_OWNER: umn-latis
@@ -26,7 +26,7 @@ jobs:
           submodules: recursive
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@v3.6.0
         with:
           node-version: "${{ env.NODE }}"
 
@@ -34,7 +34,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run dist
-        run: yarn run prod
+        run: yarn build
 
       - name: Run bundlewatch
         run: yarn run bundlewatch

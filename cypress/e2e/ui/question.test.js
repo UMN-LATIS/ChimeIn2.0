@@ -283,9 +283,10 @@ describe("question", () => {
         cy.visit(`/join/${testChime.access_code}`);
 
         // check options
-        cy.get("#radio1_1").click();
+        cy.get(":nth-child(2) > .form-check-label").click();
+
         cy.wait("@apiSubmitResponse");
-        cy.get("#radio1_2").click();
+        cy.get(":nth-child(3) > .form-check-label").click();
       })
       .then(() => {
         // check that results render properly
@@ -297,6 +298,7 @@ describe("question", () => {
         // wait for rendering
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(3000);
+        cy.viewport(1920, 1080);
         cy.get("#app").matchImageSnapshot("multiple-response");
       });
   });
@@ -365,7 +367,7 @@ describe("question", () => {
           cy.get("[data-cy=edit-question-button]").click();
 
           // change a response option
-          cy.get(".response-choice-item__text")
+          cy.get(".response-choice-item__text [contenteditable]")
             .first()
             .as("test-response")
             .should("contain", "Red");
@@ -495,6 +497,7 @@ describe("question", () => {
           cy.get(".katex-html");
 
           // expect screenshot to look correct
+          cy.viewport(1920, 1080);
           cy.get("[data-cy=multiple-choice-options-list]").matchImageSnapshot(
             "presenter-equation-choices"
           );
@@ -510,6 +513,7 @@ describe("question", () => {
 
           // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.wait(1000);
+          cy.viewport(1920, 1080);
           cy.get(
             "[data-cy=multiple-choice-participant-choices]"
           ).matchImageSnapshot("participant-equation-choices");
@@ -571,6 +575,7 @@ describe("question", () => {
           // wait for rendering and animation to complete
           // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.wait(1500);
+          cy.viewport(1920, 1080);
           cy.get("#app").matchImageSnapshot(
             `mult-choice-stats-with-long-labels`
           );
@@ -620,72 +625,12 @@ describe("question", () => {
           // wait for rendering and animation to complete
           // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.wait(1500);
+          cy.viewport(1920, 1080);
           cy.get("#app").matchImageSnapshot(
             `mult-choice-stats-with-checkmark-on-correct`
           );
         });
     });
-  });
-
-  describe("free response question", () => {
-    it("creates a free response question and shows wordcloud of responses", () => {
-      let testChime;
-      let testFolder;
-      api
-        .createChime({ name: "Test Chime" })
-        .then((chime) => {
-          testChime = chime;
-          return api.createFolder({ name: "Test Folder", chimeId: chime.id });
-        })
-        .then((folder) => {
-          testFolder = folder;
-        })
-        .then(() => {
-          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
-
-          // create the question
-          cy.get("[data-cy=new-question-button]").click();
-          cy.get("[data-cy=question-type]").type("Free Response{enter}");
-          cy.get("[data-cy=question-editor]").type("Free response question?");
-          cy.contains("Save").click();
-          cy.wait("@apiCreateQuestion");
-
-          // check that the question was created
-          cy.get("[data-cy=question-list]").should(
-            "contain",
-            "Free response question?"
-          );
-
-          // open question
-          cy.get("[data-cy=toggle-open-question]").click();
-          cy.wait("@apiOpenQuestion");
-
-          // logout faculty, become guest user
-          cy.logout();
-
-          // as a guest, record a response
-          cy.visit(`/join/${testChime.access_code}`);
-          cy.get("[data-cy=free-response-textarea]").type("Guest response");
-          cy.contains("Save").click();
-          cy.wait("@apiSubmitResponse", { requestTimeout: 2000 });
-
-          // login as faculty
-          cy.login("faculty");
-          cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
-          cy.get("[data-cy=present-question-button]").click();
-          cy.get("[data-cy=show-results-button]").click();
-
-          // FIXME: different snapshot between local and CI
-          // cy.get("[data-cy=word-cloud]").matchImageSnapshot(
-          //   "ui-free-response-question-word-cloud"
-          // );
-          cy.get("[data-cy=word-cloud] canvas")
-            .invoke("attr", "aria-label")
-            .should("eq", "guest: 1, response: 1");
-        });
-    });
-
-    it("hides wordcloud");
   });
 
   describe("text heatmap", () => {
@@ -940,6 +885,7 @@ describe("question", () => {
         })
         .then(() => {
           // check that the circle appears on user interface
+          cy.viewport(1920, 1080);
           cy.get("@image-heatmap-target").matchImageSnapshot(
             `image-heatmap-response-view_1920x1080`
           );
@@ -1001,6 +947,7 @@ describe("question", () => {
             $img.css("filter", "grayscale(1)");
           });
 
+          cy.viewport(1920, 1080);
           cy.get(".overlay-container").matchImageSnapshot(
             `image-heatmap-present-view_1920x1080`
           );

@@ -1,11 +1,11 @@
 {
   "files": [
     {
-      "path": "./public/js/*.js",
+      "path": "./public/build/assets/*.js",
       "maxSize": "1 MB"
     },
     {
-      "path": "./public/css/*.css",
+      "path": "./public/build/assets/*.css",
       "maxSize": "1 MB"
     }
   ],

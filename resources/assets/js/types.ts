@@ -14,6 +14,13 @@ export interface User {
   [key: string]: any;
 }
 
+export interface SortableUser extends User {
+  lastName: string;
+  firstName: string;
+  /** `lastName, firstName` */
+  sortableName: string;
+}
+
 export interface Response {
   id: number;
   created_at?: string;
@@ -22,7 +29,7 @@ export interface Response {
   session_id: number;
   user_id: number;
   response_info: {
-    question_type: string;
+    question_type: QuestionType;
     // a bunch of other stuff
     [key: string]: any;
   };
@@ -39,6 +46,14 @@ export interface Session {
   responses: Response[];
 }
 
+export type QuestionType =
+  | "multiple_choice"
+  | "slider"
+  | "free_response"
+  | "image_response"
+  | "heatmap_response"
+  | "text_heatmap_response";
+
 export interface Question {
   id: number;
   created_at?: string;
@@ -51,7 +66,7 @@ export interface Question {
   folder_id: number;
   order: number;
   question_info: {
-    question_type: string;
+    question_type: QuestionType;
     /** content varies depending on question type */
     [key: string]: any;
   };
@@ -95,6 +110,8 @@ export interface ChimeOptions {
   only_correct_answers_lti?: LTIGradeOptions;
 }
 
+type LTI_Grade_Mode = "no_grades" | "one_grade" | "multiple_grades" | null;
+
 export interface Chime extends ChimeOptions {
   id: number;
   access_code: string;
@@ -108,7 +125,7 @@ export interface Chime extends ChimeOptions {
   lti_setup_complete: boolean;
   resource_link_pk: number | null;
   lti13_resource_link_id: number | null;
-  lti_grade_mode: string | null;
+  lti_grade_mode: LTI_Grade_Mode;
   pivot: {
     /** current user */
     user_id: number;
@@ -136,3 +153,18 @@ export type Maybe<T> = T | null;
 export interface FormInputEvent extends Event {
   target: HTMLInputElement;
 }
+
+export type ChimeFolderParticipationResponseItem = Response & {
+  is_correct: boolean;
+  question_id: number;
+};
+
+export interface ChimeFolderParticipationSummary {
+  participants: User[];
+  presenters: User[];
+  responses: ChimeFolderParticipationResponseItem[];
+}
+
+export type PartialNested<T> = {
+  [P in keyof T]?: PartialNested<T[P]>;
+};

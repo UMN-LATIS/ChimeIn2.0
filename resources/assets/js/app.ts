@@ -5,11 +5,13 @@ import $ from "jquery";
 import "bootstrap";
 import ltilaunch from "./components/lti/ltiLaunch.vue";
 import DefaultLayout from "./layouts/DefaultLayout.vue";
-import router from "./router.js";
-import store from "./store.js";
+import router from "./router";
+import store from "./store";
 import axiosClient from "./common/axiosClient";
 // import socketIOClient from "./common/socketioClient";
 import echoClient from "./common/echoClient";
+import "@umn-latis/cla-vue-template/dist/style.css";
+import "../sass/app.scss";
 
 declare global {
   interface Window {

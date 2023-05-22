@@ -1,4 +1,0 @@
-[submodule "resources/assets/cla-vue-template"]
-	path = resources/assets/cla-vue-template
-	url = https://github.com/UMN-LATIS/CLA-vue-template.git
-	branch = main

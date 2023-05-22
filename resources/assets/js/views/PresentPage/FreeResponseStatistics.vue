@@ -16,8 +16,8 @@
             @click="processWithNLP = !processWithNLP"
           />
 
-          <strong>Experimental</strong>
-          Filter for just names, places, and organizations.
+          <strong>Experimental</strong> Use Natural Language Processing to group
+          names, places, and other entities.
         </label>
       </p>
 
@@ -72,10 +72,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
-import * as nlp from "compromise";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
-
 import type { Question, Response, WordFrequencyLookup } from "../../types";
+import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
 
 interface Props {
   responses: Response[];
@@ -94,15 +93,11 @@ const responseTexts = computed(() =>
   props.responses.map((r) => r.response_info.text)
 );
 
-const topics = computed(() =>
-  nlp(responseTexts.value.join("\n")).topics().out("array")
-);
-
-const wordFreqLookup = computed<WordFrequencyLookup>(() =>
-  processWithNLP.value
-    ? toWordFrequencyLookup(topics.value, filteredWords.value)
-    : toWordFrequencyLookup(responseTexts.value, filteredWords.value)
-);
+const wordFreqLookup = computed<WordFrequencyLookup>(() => {
+  return processWithNLP.value
+    ? getWordFreqLookupNLP(responseTexts.value.join("\n"), filteredWords.value)
+    : toWordFrequencyLookup(responseTexts.value, filteredWords.value);
+});
 
 function handleWordClick(word) {
   filteredWords.value.push(word);

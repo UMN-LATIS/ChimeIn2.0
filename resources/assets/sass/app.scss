@@ -1,17 +1,10 @@
-// Fonts
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap");
-
 // Vendor
-@import "~bootstrap/dist/css/bootstrap.min.css";
-@import "~vue-select/src/scss/vue-select.scss";
-@import "~katex/dist/katex.min.css";
+@use "bootstrap/dist/css/bootstrap.min.css";
+@use "katex/dist/katex.min.css";
 
 // Variables
-@import "variables";
-@import "footer";
-
-// UMN Header styles
-@import "../cla-vue-template/src/index.css";
+@use "variables";
+@use "footer";
 
 .fade-enter-active,
 .fade-leave-active {
@@ -156,4 +149,90 @@ img {
     align-items: flex-start;
     margin: 1rem 0;
   }
+}
+
+/* Bootstrap 5 Gap Utils */
+.gap-0 {
+  gap: 0;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-3 {
+  gap: 1rem;
+}
+
+.gap-4 {
+  gap: 1.5rem;
+}
+
+.max-w-fit {
+  max-width: fit-content;
+}
+
+.text-xs {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1rem; /* 16px */
+}
+
+.text-sm {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem; /* 20px */
+}
+
+.text-base {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem; /* 24px */
+}
+
+.text-lg {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+}
+
+.text-xl {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.75rem; /* 28px */
+}
+
+.text-2xl {
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+.max-w-lg {
+  max-width: 32rem; /* 512px */
+}
+.max-w-xl {
+  max-width: 36rem; /* 576px */
+}
+
+.max-w-2xl {
+  max-width: 42rem; /* 672px */
+}
+
+ul {
+  margin-bottom: 0;
 }

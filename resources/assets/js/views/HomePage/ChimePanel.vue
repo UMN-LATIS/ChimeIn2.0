@@ -82,7 +82,7 @@
 import orderBy from "lodash/orderBy";
 import ChimeCard from "./ChimeCard.vue";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
-import pluralize from "../../common/pluralize.js";
+import pluralize from "../../common/pluralize";
 
 const newChimeDefaults = {
   name: "",

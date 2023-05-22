@@ -411,19 +411,32 @@ class ChimeController extends Controller
         }
 
 
-        $questions = \App\Question::join('folders', 'folders.id','=','questions.folder_id')->join('chimes','folders.chime_id','=','chimes.id')->whereNotNull('questions.current_session_id')->where('chimes.id', $chime->id)->select('questions.*')->with('current_session')->with('current_session.question')->with('current_session.question.folder')->get(); 
+        $questions = \App\Question::join('folders', 'folders.id', '=', 'questions.folder_id')
+            ->join('chimes', 'folders.chime_id', '=', 'chimes.id')
+            ->whereNotNull('questions.current_session_id')
+            ->where('chimes.id', $chime->id)
+            ->select('questions.*')
+            ->with('current_session')
+            ->with('current_session.question')
+            ->with('current_session.question.folder')
+            ->get();
+
         $sessions = [];
 
-
-        foreach($questions as $question) {
+        foreach ($questions as $question) {
             $sessions[] = $question->current_session;
         }
 
-        usort($sessions, function($a, $b) {
-            if(strtotime($a->updated_at) == strtotime($b->updated_at)) {
+        usort($sessions, function ($a, $b) {
+            $a_time = strtotime($a->updated_at);
+            $b_time = strtotime($b->updated_at);
+
+            // If there's a tie, sort by question order
+            if ($a_time == $b_time) {
                 return $a->question->order - $b->question->order;
             }
-            return strtotime($a->updated_at)<strtotime($b->updated_at)?-1:1;
+            // sort by update time, most recent at the top
+            return $a_time < $b_time ? 1 : -1;
         });
 
 
@@ -468,10 +481,10 @@ class ChimeController extends Controller
                         
                     }
                     if(!$correctText || count(array_intersect($choice, $correctText)) > 0) {
-                        $points = 1;
+                        $points = max($points, 1);
                     }
                     if($correctText && $correctOnly == 2 && count(array_intersect($choice, $correctText)) == 0) {
-                        $points = 0.5;
+                        $points = max($points, 0.5);
                     }
                 }
                 $result[] = $points;

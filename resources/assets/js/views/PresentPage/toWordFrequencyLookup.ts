@@ -1,13 +1,13 @@
-import { removeStopwords } from "stopword";
+import { removeStopwords } from "stopword/dist/stopword.esm.min.mjs";
 import { WordFrequencyLookup } from "../../types";
 
 const quotedRegex = /"(?<quoted>[^"]*)"/g;
 
-function removeQuotedStrings(text) {
+function removeQuotedStrings(text: string) {
   return text.replace(quotedRegex, "");
 }
 
-function getQuotedStrings(text): string[] {
+export function getQuotedStrings(text): string[] {
   // get the captured group from the regex at index 1
   return [...text.matchAll(quotedRegex)].map((m) => m[1]);
 }
@@ -23,33 +23,40 @@ function getSingleWords(text) {
   );
 }
 
-function getWordsFromText(text: string): string[] {
-  const textWithoutQuotedStrings = removeQuotedStrings(text);
-
-  return [
-    ...getQuotedStrings(text),
-    ...getSingleWords(textWithoutQuotedStrings),
-  ];
-}
-
-export default function toWordFrequencyLookup(
-  responseTexts: string[],
+function getWordsFromText(
+  text: string,
   filteredWords: string[] = []
-): WordFrequencyLookup {
-  const words: string[] = responseTexts
-    .filter((n) => n)
-    .flatMap(getWordsFromText);
+): string[] {
+  const textWithoutQuotedStrings = removeQuotedStrings(text);
+  const singleWords = getSingleWords(textWithoutQuotedStrings);
 
-  // filter out stopwords and filtered words
-  const normalizedWords = removeStopwords(words).filter(
+  // remove stopwords and filtered words
+  const normalizedSingleWords = removeStopwords(singleWords).filter(
     (word) => !filteredWords.includes(word)
   );
 
-  return normalizedWords.reduce((acc, word) => {
-    const prevWordCount = acc[word] || 0;
-    return {
-      ...acc,
-      [word]: prevWordCount + 1,
-    };
-  }, {});
+  return [...getQuotedStrings(text), ...normalizedSingleWords];
+}
+
+function isNotEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+  return value !== null && value !== undefined;
+}
+
+export default function toWordFrequencyLookup(
+  responseTexts: (string | null)[],
+  filteredWords: string[] = []
+): WordFrequencyLookup {
+  return (
+    responseTexts
+      // remove null responses
+      .filter(isNotEmpty)
+      .flatMap((text) => getWordsFromText(text, filteredWords))
+      .reduce((acc, word) => {
+        const prevWordCount = acc[word] || 0;
+        return {
+          ...acc,
+          [word]: prevWordCount + 1,
+        };
+      }, {})
+  );
 }

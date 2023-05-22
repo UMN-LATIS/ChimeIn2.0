@@ -1,4 +1,4 @@
-import axios from "../common/axiosClient";
+import axios from "./axiosClient";
 import orderBy from "lodash/orderBy";
 import type {
   FolderWithQuestions,
@@ -8,6 +8,7 @@ import type {
   Session,
   ChimeOptions,
   User,
+  ChimeFolderParticipationSummary,
 } from "../types";
 
 export function getFolderWithQuestions({
@@ -240,7 +241,10 @@ export function getChimeUsers(chimeId: number): Promise<User[]> {
   return axios
     .get(`/api/chime/${chimeId}/users`)
     .then((res) => res.data)
-    .catch(console.error);
+    .catch((err) => {
+      console.error("cannot get chime users:", err.message);
+      return [];
+    });
 }
 
 export function updateChimeUsers(
@@ -269,4 +273,18 @@ export function getChime(chimeId: number): Promise<Chime> {
         ),
       }))
   );
+}
+
+export function getChimeFolderParticipation({
+  chimeId,
+  folderId,
+}: {
+  chimeId: number;
+  folderId?: number;
+}): Promise<ChimeFolderParticipationSummary> {
+  return axios
+    .get<ChimeFolderParticipationSummary>(
+      `/api/chime/${chimeId}/folder/${folderId}/participation`
+    )
+    .then((res) => res.data);
 }
