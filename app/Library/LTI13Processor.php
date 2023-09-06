@@ -136,7 +136,13 @@ class LTI13Processor {
 				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
                 ->setUserId($userId);
 
-            $result = $ags->putGrade($score, $lineItem);
+				try {
+					$result = $ags->putGrade($score, $lineItem);
+				}
+				catch (\Exception $e) {
+					Log::error("Error syncing folder: " . $folder->id . " user: " . $userId . " score: " . $score);
+					Log::error($e);
+				}
 
 		}
 		return true;
@@ -192,7 +198,13 @@ class LTI13Processor {
                 ->setGradingProgress('FullyGraded')
 				->setCanvasExtension(["submitted_at"=>$userScore["submission_date"]->toIso8601String()])
                 ->setUserId($userId);
-            $result = $ags->putGrade($score, $lineItem);
+			try {
+            	$result = $ags->putGrade($score, $lineItem);
+			}
+			catch (\Exception $e) {
+				Log::error("Error syncing chime: " . $chime->id . " user: " . $userId . " score: " . $score);
+				Log::error($e);
+			}
 
 		}
 		return true;
