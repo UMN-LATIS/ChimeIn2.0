@@ -38,6 +38,9 @@ sail exec app ./bin/ci.sh
 # migrate the database
 sail artisan migrate:fresh
 
+# seed the database with some sample data
+sail artisan db:seed
+
 # Install node modules
 yarn install
 
