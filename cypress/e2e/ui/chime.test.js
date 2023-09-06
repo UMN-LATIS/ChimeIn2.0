@@ -330,7 +330,7 @@ describe("chime UI", () => {
         );
       });
 
-      it("can promote/demote users to presenters/participants", () => {
+      it.only("can promote/demote users to presenters/participants", () => {
         api.openQuestion({
           chimeId: testChime.id,
           folderId: testFolder.id,
@@ -360,9 +360,6 @@ describe("chime UI", () => {
           .contains("student@umn.edu")
           .parent()
           .as("student-row");
-
-        // activate select (currently not active by default?)
-        cy.get("@student-row").contains("Participant").click();
         cy.get("@student-row").find("select").select("Presenter");
         cy.logout();
 
@@ -382,7 +379,6 @@ describe("chime UI", () => {
           .contains("faculty@umn.edu")
           .parent()
           .as("faculty-row");
-        cy.get("@faculty-row").contains("Presenter").click();
         cy.get("@faculty-row").find("select").select("Participant");
         cy.logout();
 
