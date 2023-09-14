@@ -73,19 +73,24 @@
 import { computed, ref } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
-import type { Question, Response, WordFrequencyLookup } from "../../types";
+import type {
+  FreeResponse,
+  FreeResponseQuestion,
+  WordFrequencyLookup,
+} from "../../types";
 import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
 
 interface Props {
-  responses: Response[];
-  question: Question;
+  responses: FreeResponse[];
+  question: FreeResponseQuestion;
 }
 
 const props = defineProps<Props>();
 const filteredWords = ref<string[]>([]);
-const hideWordcloud = computed(
-  () => props.question.question_info.question_responses.hideWordcloud
-);
+const hideWordcloud = computed(() => {
+  const question_responses = props.question.question_info.question_responses;
+  return !Array.isArray(question_responses) && question_responses.hideWordcloud;
+});
 const responsesByMostRecent = computed(() => [...props.responses].reverse());
 
 const processWithNLP = ref(false);

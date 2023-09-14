@@ -148,7 +148,11 @@ export interface MultipleChoiceQuestionInfo extends QuestionInfo {
 
 export interface FreeResponseQuestionInfo extends QuestionInfo {
   question_type: "free_response";
-  question_responses: never[];
+  question_responses:
+    | [] // default until hideWordcloud is checked
+    | {
+        hideWordcloud: boolean;
+      };
 }
 
 export interface ImageResponseQuestionInfo extends QuestionInfo {
