@@ -197,7 +197,7 @@ export interface PinOnImageQuestionInfo extends QuestionInfo {
 export type MultipleChoiceQuestion = Question<MultipleChoiceQuestionInfo>;
 export type FreeResponseQuestion = Question<FreeResponseQuestionInfo>;
 export type ImageResponseQuestion = Question<ImageResponseQuestionInfo>;
-export type HeatmapQuestion = Question<ImageHeatmapQuestionInfo>;
+export type ImageHeatmapQuestion = Question<ImageHeatmapQuestionInfo>;
 export type SliderResponseQuestion = Question<SliderResponseQuestionInfo>;
 export type TextHeatmapQuestion = Question<TextHeatmapQuestionInfo>;
 export type PinOnImageQuestion = Question<PinOnImageQuestionInfo>;
