@@ -7,7 +7,10 @@
         data-cy="image-heatmap-original"
         class="img-fluid heatmap-target-image"
         :src="'/storage/' + question.question_info.question_responses.image"
-        :alt="question.question_info.question_responses.image_alt"
+        :alt="
+          question.question_info.question_responses.image_alt ||
+          question.question_info.question_responses.image_name
+        "
         @load="renderHeatMap"
       />
     </div>
@@ -17,11 +20,11 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import simpleheat from "simpleheat";
-import { Question, Response } from "../../types";
+import { ImageHeatmapQuestion, ImageHeatmapResponse } from "@/types";
 
 interface Props {
-  responses: Response[];
-  question: Question;
+  responses: ImageHeatmapResponse[];
+  question: ImageHeatmapQuestion;
 }
 
 const props = defineProps<Props>();
