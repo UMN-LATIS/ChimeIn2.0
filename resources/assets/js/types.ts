@@ -56,27 +56,94 @@ export type QuestionType =
   | "pin_on_image_response"
   | "no_response";
 
+export type HTMLString = string;
 
-export interface Question {
+export interface Question<T extends QuestionInfo = QuestionInfo> {
   id: number;
   created_at?: string;
   updated_at?: string;
   deleted_at?: string | null;
   /** the session that's currently active within this chime */
   current_session_id: number | null;
-  /** HTML string */
-  text: string;
+  text: HTMLString;
   folder_id: number;
   order: number;
-  question_info: {
-    question_type: QuestionType;
-    /** content varies depending on question type */
-    [key: string]: any;
-  };
+  question_info: T;
   anonymous: boolean;
   allow_multiple: boolean;
   sessions: Session[];
 }
+
+export interface QuestionInfo {
+  question_type: QuestionType;
+  question_responses: unknown;
+}
+
+export interface ChoiceForMultipleChoiceQuestionInfo {
+  text: string;
+  correct: boolean;
+}
+
+export interface MultipleChoiceQuestionInfo extends QuestionInfo {
+  question_type: "multiple_choice";
+  question_responses: ChoiceForMultipleChoiceQuestionInfo[];
+}
+
+export interface FreeResponseQuestionInfo extends QuestionInfo {
+  question_type: "free_response";
+  question_responses: never[];
+}
+
+export interface ImageResponseQuestionInfo extends QuestionInfo {
+  question_type: "image_response";
+  question_responses: never[];
+}
+
+export type Filename = string;
+
+export interface ImageHeatmapQuestionInfo extends QuestionInfo {
+  question_type: "heatmap_response";
+  question_responses: {
+    image: Filename; // "1jpqNOnV5Kig4FVwOf9tPIAarwvVl8nRvZrOiuLI.jpg"
+    image_name: string; // alt attribute for image
+  };
+}
+
+export interface SliderResponseQuestionInfo extends QuestionInfo {
+  question_type: "slider_response";
+  question_responses: {
+    left_choice_text: string;
+    right_choice_text: string;
+    range_type: "Qualitative" | "Numeric (Linear)";
+  };
+}
+
+export interface TextHeatmapQuestionInfo extends QuestionInfo {
+  question_type: "text_heatmap_response";
+  question_responses: { heatmap_text: HTMLString };
+}
+
+export interface NoResponseQuestionInfo extends QuestionInfo {
+  question_type: "no_response";
+  question_responses: never[];
+}
+
+export interface PinOnImageQuestionInfo extends QuestionInfo {
+  question_type: "pin_on_image_response";
+  question_responses: {
+    image: Filename; // "1jpqNOnV5Kig4FVwOf9tPIAarwvVl8nRvZrOiuLI.jpg"
+    image_name: string; // alt attribute for image
+  };
+}
+
+export type MultipleChoiceQuestion = Question<MultipleChoiceQuestionInfo>;
+export type FreeResponseQuestion = Question<FreeResponseQuestionInfo>;
+export type ImageResponseQuestion = Question<ImageResponseQuestionInfo>;
+export type HeatmapQuestion = Question<ImageHeatmapQuestionInfo>;
+export type SliderResponseQuestion = Question<SliderResponseQuestionInfo>;
+export type TextHeatmapQuestion = Question<TextHeatmapQuestionInfo>;
+export type PinOnImageQuestion = Question<PinOnImageQuestionInfo>;
+export type NoResponseQuestion = Question<NoResponseQuestionInfo>;
 
 export interface Folder {
   id: number;
