@@ -48,11 +48,14 @@ export interface Session {
 
 export type QuestionType =
   | "multiple_choice"
-  | "slider"
+  | "slider_response"
   | "free_response"
   | "image_response"
   | "heatmap_response"
-  | "text_heatmap_response";
+  | "text_heatmap_response"
+  | "pin_on_image_response"
+  | "no_response";
+
 
 export interface Question {
   id: number;
