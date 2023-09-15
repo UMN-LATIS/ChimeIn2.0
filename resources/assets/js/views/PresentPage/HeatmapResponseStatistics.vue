@@ -1,8 +1,8 @@
 <template>
-  <div class="col-sm-12">
+  <div>
     <div class="overlay-container">
-      <canvas id="simpleheat" ref="targetCanvas"></canvas>
-      <ul class="pin-container">
+      <canvas v-show="showHeatmap" id="simpleheat" ref="targetCanvas"></canvas>
+      <ul v-show="showPins" class="pin-container">
         <li
           v-for="response in responses"
           :key="response.id"
@@ -36,12 +36,36 @@
         data-cy="image-heatmap-original"
         class="img-fluid heatmap-target-image"
         :src="'/storage/' + question.question_info.question_responses.image"
+        :style="imageStyle"
         :alt="
           question.question_info.question_responses.image_alt ||
           question.question_info.question_responses.image_name
         "
         @load="renderHeatMap"
       />
+    </div>
+    <div class="image-tools">
+      <div>
+        <label class="range-group">
+          Saturation
+          <input v-model="imageSaturation" type="range" min="0" max="100" />
+        </label>
+        <label class="range-group">
+          Opacity
+          <input v-model="imageOpacity" type="range" min="0" max="100" />
+        </label>
+      </div>
+
+      <div>
+        <label class="checkbox-group">
+          <input v-model="showHeatmap" type="checkbox" />
+          Heatmap
+        </label>
+        <label class="checkbox-group">
+          <input v-model="showPins" type="checkbox" />
+          Pins
+        </label>
+      </div>
     </div>
   </div>
 </template>
@@ -60,6 +84,10 @@ interface Props {
 const props = defineProps<Props>();
 const targetImage = ref<HTMLImageElement | null>(null);
 const targetCanvas = ref<HTMLCanvasElement | null>(null);
+const imageSaturation = ref(100);
+const imageOpacity = ref(100);
+const showHeatmap = ref(true);
+const showPins = ref(true);
 
 interface Point {
   x: number;
@@ -79,6 +107,13 @@ const scaleY = computed(() => {
     return 1;
   }
   return imageHeight.value / targetImage.value.naturalHeight;
+});
+
+const imageStyle = computed<StyleValue>(() => {
+  return {
+    filter: `saturate(${imageSaturation.value}%)`,
+    opacity: imageOpacity.value / 100,
+  };
 });
 
 function getScaledImageCoords(p: Point): Point {
@@ -132,7 +167,7 @@ useResizeObserver(targetImage, renderHeatMap);
 watch(() => props.responses, renderHeatMap);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .heatmap-target-image {
   display: block;
   max-width: 100%;
@@ -148,6 +183,7 @@ canvas {
   right: 0;
   bottom: 0;
   left: 0;
+  z-index: 1;
 }
 
 .pin-container {
@@ -156,12 +192,16 @@ canvas {
   padding: 0;
   margin: 0;
   list-style-type: none;
+  z-index: 2;
 }
 
 .pin {
   padding: 0;
   margin: 0;
   border-radius: 50%;
+  width: 0.25rem;
+  height: 0.125rem;
+  background: rgba(#000, 0.25);
 }
 
 .pin-icon {
@@ -172,5 +212,42 @@ canvas {
   color: #007bff;
   width: 1.25rem;
   height: 1.25rem;
+}
+
+.image-tools {
+  background: #f3f3f3;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  font-size: 0.825rem;
+  margin: 1rem 0;
+
+  div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  label {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.form-range {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  label {
+    margin: 0;
+  }
 }
 </style>
