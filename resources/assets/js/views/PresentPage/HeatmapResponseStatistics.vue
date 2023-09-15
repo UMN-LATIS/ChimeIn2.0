@@ -50,6 +50,7 @@
 import { StyleValue, computed, onMounted, onUnmounted, ref, watch } from "vue";
 import simpleheat from "simpleheat";
 import { ImageHeatmapQuestion, ImageHeatmapResponse } from "@/types";
+import { useResizeObserver, useElementSize } from "@vueuse/core";
 
 interface Props {
   responses: ImageHeatmapResponse[];
@@ -65,17 +66,19 @@ interface Point {
   y: number;
 }
 
+const { width: imageWidth, height: imageHeight } = useElementSize(targetImage);
+
 const scaleX = computed(() => {
   if (!targetImage.value) {
     return 1;
   }
-  return targetImage.value.clientWidth / targetImage.value.naturalWidth;
+  return imageWidth.value / targetImage.value.naturalWidth;
 });
 const scaleY = computed(() => {
   if (!targetImage.value) {
     return 1;
   }
-  return targetImage.value.clientHeight / targetImage.value.naturalHeight;
+  return imageHeight.value / targetImage.value.naturalHeight;
 });
 
 function getScaledImageCoords(p: Point): Point {
@@ -124,6 +127,8 @@ function renderHeatMap() {
 onMounted(() => window.addEventListener("resize", renderHeatMap));
 onUnmounted(() => window.removeEventListener("resize", renderHeatMap));
 
+useResizeObserver(targetImage, renderHeatMap);
+
 watch(() => props.responses, renderHeatMap);
 </script>
 
@@ -156,11 +161,7 @@ canvas {
 .pin {
   padding: 0;
   margin: 0;
-  width: 0.5rem;
-  height: 0.25rem;
   border-radius: 50%;
-  background: hsla(0, 0%, 0%, 0.25);
-  backdrop-filter: blur(0.5rem);
 }
 
 .pin-icon {
@@ -169,7 +170,7 @@ canvas {
   left: 50%;
   transform: translate(-50%, 0);
   color: #007bff;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 </style>
