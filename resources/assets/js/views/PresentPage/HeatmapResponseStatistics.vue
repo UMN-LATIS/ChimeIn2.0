@@ -215,17 +215,17 @@ canvas {
 }
 
 .image-tools {
-  background: #f3f3f3;
+  background: #fafafa;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
-  border: 1px solid #ddd;
+  border: 1px solid #eee;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
   font-size: 0.825rem;
-  margin: 1rem 0;
+  margin: 2rem 0;
 
   div {
     display: flex;
