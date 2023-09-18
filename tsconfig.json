@@ -14,7 +14,7 @@
     "paths": {
       "@/*": ["./resources/assets/js/*"]
     },
-    "types": ["vite/client"]
+    "types": ["vite/client", "jest"]
   },
   "include": ["resources"],
   "exclude": ["vendor", "node_modules", "./public/build"]
