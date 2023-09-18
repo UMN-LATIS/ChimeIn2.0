@@ -6,8 +6,8 @@ export default defineConfig({
   viewportWidth: 1920,
   viewportHeight: 1080,
   e2e: {
-    setupNodeEvents(on, config) {
-      addMatchImageSnapshotPlugin(on, config);
+    setupNodeEvents(on) {
+      addMatchImageSnapshotPlugin(on);
     },
     baseUrl: "http://localhost",
     specPattern: "cypress/e2e/**/*.{test,spec}.js",
