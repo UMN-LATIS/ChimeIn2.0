@@ -107,7 +107,6 @@ describe("multiple choice", () => {
           .should("contain", "Red");
 
         cy.get("@test-response").click();
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.focused().type("{selectAll}Updated response");
         cy.contains("Save").click();
         cy.wait("@apiUpdateQuestion");
@@ -215,7 +214,6 @@ describe("multiple choice", () => {
               )
               .click();
 
-            // eslint-disable-next-line cypress/unsafe-to-chain-command
             cy.focused().type(`${eq}{enter}`);
           },
         );

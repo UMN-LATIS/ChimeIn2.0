@@ -68,13 +68,10 @@ describe("question", () => {
         // add multiple choice options
         // new input should be focussed automatically after click and upon each {enter}
         cy.get("[data-cy=add-choice-button]").click();
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.focused().type("Red{enter}");
 
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.focused().type("Green{enter}");
 
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.focused().type("Blue");
 
         cy.contains("Save").click();
@@ -260,16 +257,9 @@ describe("question", () => {
         cy.get("[data-cy=question-editor]").type("Which numbers are prime?");
         cy.get("[data-cy=add-choice-button]").click();
 
-        // The eslint disables are there as a temp workaround until
-        // issue https://github.com/cypress-io/eslint-plugin-cypress/issues/140 is fixed
-
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.focused().type("1{enter}");
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.focused().type("2{enter}");
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.focused().type("3{enter}");
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
         cy.focused().type("4{enter}");
 
         // mark 2 and 3 as correct
