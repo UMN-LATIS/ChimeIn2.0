@@ -68,9 +68,14 @@ describe("question", () => {
         // add multiple choice options
         // new input should be focussed automatically after click and upon each {enter}
         cy.get("[data-cy=add-choice-button]").click();
-        cy.type("Red{enter}");
-        cy.type("Green{enter}");
-        cy.type("Blue");
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.focused().type("Red{enter}");
+
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.focused().type("Green{enter}");
+
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.focused().type("Blue");
 
         cy.contains("Save").click();
 
