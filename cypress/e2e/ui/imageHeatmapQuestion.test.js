@@ -66,7 +66,7 @@ describe("image heatmap", () => {
         // press down arrow to get the second "Heatmap" option.
         // This is brittle. Maybe rename "Heatmap" as "Image Heatmap" once
         // tests are working.
-        cy.get("[data-cy=question-type]").type("Image Heatmap").type("{enter}");
+        cy.get("[data-cy=question-type]").type("Image Heatmap{enter}");
         cy.get("[data-cy=question-editor]").type("Image heatmap question?");
 
         cy.get("[data-cy=image-dropzone]").attachFile("goldy-650x435.jpg");
@@ -83,7 +83,7 @@ describe("image heatmap", () => {
         // check that the question was created
         cy.get("[data-cy=question-list]").should(
           "contain",
-          "Image heatmap question?"
+          "Image heatmap question?",
         );
 
         // open question
@@ -114,13 +114,13 @@ describe("image heatmap", () => {
         // check that the circle appears on user interface
         cy.viewport(1920, 1080);
         cy.get("@image-heatmap-target").matchImageSnapshot(
-          `image-heatmap-response-view_1920x1080`
+          `image-heatmap-response-view_1920x1080`,
         );
       })
       .then(() => {
         // check the circle location shows up in the correct place
         cy.get("#open-questions [data-cy=image-heatmap-click-spot]").as(
-          "click-spot"
+          "click-spot",
         );
 
         cy.get("@click-spot")
@@ -143,7 +143,7 @@ describe("image heatmap", () => {
 
         // check the circle location shows up in the correct place
         cy.get("#answered-questions [data-cy=image-heatmap-click-spot]").as(
-          "answered-click-spot"
+          "answered-click-spot",
         );
 
         cy.get("@answered-click-spot")
@@ -176,7 +176,7 @@ describe("image heatmap", () => {
 
         cy.viewport(1920, 1080);
         cy.get(".overlay-container").matchImageSnapshot(
-          `image-heatmap-present-view_1920x1080`
+          `image-heatmap-present-view_1920x1080`,
         );
       });
   });

@@ -62,23 +62,22 @@ describe("question", () => {
         cy.get("[data-cy=new-question-button]").click();
         cy.get("[data-cy=question-type]").type("Multiple Choice{enter}");
         cy.get("[data-cy=question-editor]").type(
-          "What is your favorite color?"
+          "What is your favorite color?",
         );
 
         // add multiple choice options
         // new input should be focussed automatically after click and upon each {enter}
-        cy.get("[data-cy=add-choice-button]")
-          .click()
-          .type("Red{enter}")
-          .type("Green{enter}")
-          .type("Blue");
+        cy.get("[data-cy=add-choice-button]").click();
+        cy.type("Red{enter}");
+        cy.type("Green{enter}");
+        cy.type("Blue");
 
         cy.contains("Save").click();
 
         // check that the question was created
         cy.get("[data-cy=question-list] .question-card").should(
           "contain",
-          "What is your favorite color?"
+          "What is your favorite color?",
         );
 
         // check that question card shows choices
@@ -138,8 +137,7 @@ describe("question", () => {
         // change the question text
         cy.get("[data-cy=question-editor]")
           .find(".ql-editor")
-          .clear()
-          .type("Updated question prompt");
+          .type("{selectAll}Updated question prompt");
 
         cy.contains("Save").click();
         cy.wait("@apiUpdateQuestion");
@@ -147,7 +145,7 @@ describe("question", () => {
         // expect that the UI is updated on question list page
         cy.get("[data-cy=question-list] .question-card").should(
           "contain",
-          "Updated question prompt"
+          "Updated question prompt",
         );
 
         // expect that question is updated in presentation view
@@ -183,7 +181,7 @@ describe("question", () => {
         // check UI that question does not exist
         cy.get("[data-cy=question-list]").should(
           "not.contain.text",
-          favoriteColorQuestion.questionText
+          favoriteColorQuestion.questionText,
         );
 
         // check API too
@@ -229,7 +227,7 @@ describe("question", () => {
 
         // check that allow multiple is still checked
         cy.get('[data-cy="allow-multiple-responses-checkbox"]').should(
-          "be.checked"
+          "be.checked",
         );
       });
   });
@@ -255,19 +253,18 @@ describe("question", () => {
         cy.get('[data-cy="allow-multiple-responses-checkbox"]').click();
 
         cy.get("[data-cy=question-editor]").type("Which numbers are prime?");
-        cy.get("[data-cy=add-choice-button]")
-          .click()
-          .type("1{enter}")
-          .type("2{enter}")
-          .type("3{enter}")
-          .type("4{enter}");
+        cy.get("[data-cy=add-choice-button]").click();
+        cy.type("1{enter}");
+        cy.type("2{enter}");
+        cy.type("3{enter}");
+        cy.type("4{enter}");
 
         // mark 2 and 3 as correct
         cy.get(
-          "#response-choice-item-1 > .response-choice-item__correct-toggle"
+          "#response-choice-item-1 > .response-choice-item__correct-toggle",
         ).click();
         cy.get(
-          "#response-choice-item-2 > .response-choice-item__correct-toggle"
+          "#response-choice-item-2 > .response-choice-item__correct-toggle",
         ).click();
 
         cy.contains("Save").click();

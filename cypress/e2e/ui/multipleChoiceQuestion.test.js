@@ -56,13 +56,13 @@ describe("multiple choice", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
         cy.get("[data-cy=edit-question-button]").click();
         cy.get(
-          "#response-choice-item-2 > .response-choice-item__correct-toggle"
+          "#response-choice-item-2 > .response-choice-item__correct-toggle",
         ).click();
 
         // except input background color to be green
         cy.get("#response-choice-item-2").should(
           "have.class",
-          "response-choice-item--is-correct"
+          "response-choice-item--is-correct",
         );
         cy.contains("Save").click();
         cy.wait("@apiUpdateQuestion");
@@ -106,7 +106,8 @@ describe("multiple choice", () => {
           .as("test-response")
           .should("contain", "Red");
 
-        cy.get("@test-response").click().clear().type("Updated response");
+        cy.get("@test-response").click();
+        cy.type("{selectAll}Updated response");
         cy.contains("Save").click();
         cy.wait("@apiUpdateQuestion");
 
@@ -154,7 +155,7 @@ describe("multiple choice", () => {
         cy.get("[data-cy=present-question-button]").click();
         cy.get("[data-cy=multiple-choice-options-list]").should(
           "not.contain",
-          "Red"
+          "Red",
         );
       })
       .then(() => {
@@ -194,7 +195,7 @@ describe("multiple choice", () => {
         cy.get("[data-cy=new-question-button]").click();
         cy.get("[data-cy=question-type]").type("Multiple Choice{enter}");
         cy.get("[data-cy=question-editor]").type(
-          "What is your favorite equation?"
+          "What is your favorite equation?",
         );
 
         // add multiple choice options
@@ -209,11 +210,11 @@ describe("multiple choice", () => {
             cy.get(`#response-choice-item-${i}`)
               .find(
                 // ".response-choice-item__contents > .quillWrapper > .ql-toolbar > .ql-formats > .ql-formula"
-                ".response-choice-item__contents > .ql-toolbar > .ql-formats > .ql-formula"
+                ".response-choice-item__contents > .ql-toolbar > .ql-formats > .ql-formula",
               )
-              .click()
-              .type(`${eq}{enter}`);
-          }
+              .click();
+            cy.type(`${eq}{enter}`);
+          },
         );
 
         cy.contains("Save").click();
@@ -233,7 +234,7 @@ describe("multiple choice", () => {
         // expect screenshot to look correct
         cy.viewport(1920, 1080);
         cy.get("[data-cy=multiple-choice-options-list]").matchImageSnapshot(
-          "presenter-equation-choices"
+          "presenter-equation-choices",
         );
 
         cy.logout();
@@ -249,7 +250,7 @@ describe("multiple choice", () => {
         cy.wait(1000);
         cy.viewport(1920, 1080);
         cy.get(
-          "[data-cy=multiple-choice-participant-choices]"
+          "[data-cy=multiple-choice-participant-choices]",
         ).matchImageSnapshot("participant-equation-choices");
 
         // click e^πi-1=0
@@ -359,7 +360,7 @@ describe("multiple choice", () => {
         cy.wait(1500);
         cy.viewport(1920, 1080);
         cy.get("#app").matchImageSnapshot(
-          `mult-choice-stats-with-checkmark-on-correct`
+          `mult-choice-stats-with-checkmark-on-correct`,
         );
       });
   });
