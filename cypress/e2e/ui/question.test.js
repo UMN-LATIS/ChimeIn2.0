@@ -259,10 +259,14 @@ describe("question", () => {
 
         cy.get("[data-cy=question-editor]").type("Which numbers are prime?");
         cy.get("[data-cy=add-choice-button]").click();
-        cy.type("1{enter}");
-        cy.type("2{enter}");
-        cy.type("3{enter}");
-        cy.type("4{enter}");
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.focused().type("1{enter}");
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.focused().type("2{enter}");
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.focused().type("3{enter}");
+        // eslint-disable-next-line cypress/unsafe-to-chain-command
+        cy.focused().type("4{enter}");
 
         // mark 2 and 3 as correct
         cy.get(
