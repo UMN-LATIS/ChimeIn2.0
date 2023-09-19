@@ -32,7 +32,7 @@ describe("happy path", () => {
     cy.get("[data-cy=new-question-button]").click();
     cy.get("[data-cy=add-question-form] h3").should(
       "contain",
-      "Add a Question"
+      "Add a Question",
     );
 
     // select multiple choice (not a true select)
@@ -43,11 +43,11 @@ describe("happy path", () => {
 
     // add multiple choice options
     // new input should be focussed automatically after click and upon each {enter}
-    cy.get("[data-cy=add-choice-button]")
-      .click()
-      .type("Red{enter}")
-      .type("Green{enter}")
-      .type("Blue");
+    cy.get("[data-cy=add-choice-button]").click();
+
+    cy.get("#response-choice-item-0").type("Red{enter}");
+    cy.get("#response-choice-item-1").type("Green{enter}");
+    cy.get("#response-choice-item-2").type("Blue");
 
     cy.get(".multiple-choice-question-options")
       .should("contain", "Red")
@@ -59,7 +59,7 @@ describe("happy path", () => {
     // check that the question was created
     cy.get("[data-cy=question-list] .chime-card").should(
       "contain",
-      "What is your favorite color?"
+      "What is your favorite color?",
     );
 
     // open the question

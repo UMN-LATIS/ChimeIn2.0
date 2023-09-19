@@ -11,9 +11,13 @@
  * low level command used by `setSelection`
  */
 Cypress.Commands.add("selection", { prevSubject: true }, (subject, fn) => {
-  cy.wrap(subject).trigger("mousedown").then(fn).trigger("mouseup");
+  // Trigger mousedown and pass the subject to the provided function
+  cy.wrap(subject).trigger("mousedown");
+  fn(subject);
+  cy.wrap(subject).trigger("mouseup");
 
   cy.document().trigger("selectionchange");
+
   return cy.wrap(subject);
 });
 
@@ -57,7 +61,7 @@ Cypress.Commands.add(
         setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
       }
     });
-  }
+  },
 );
 
 /**
@@ -75,7 +79,7 @@ Cypress.Commands.add(
       document.getSelection().removeAllRanges();
       document.getSelection().collapse(node, offset);
     });
-  }
+  },
 );
 
 /**
@@ -95,7 +99,7 @@ Cypress.Commands.add(
   { prevSubject: true },
   (subject, query) => {
     cy.wrap(subject).setCursor(query, true);
-  }
+  },
 );
 
 /**
@@ -115,7 +119,7 @@ Cypress.Commands.add(
   { prevSubject: true },
   (subject, query) => {
     cy.wrap(subject).setCursor(query);
-  }
+  },
 );
 
 function getTextNode(el, match) {

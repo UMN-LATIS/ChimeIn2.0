@@ -1,4 +1,3 @@
-/* eslint-env node */
 require("@rushstack/eslint-patch/modern-module-resolution");
 
 module.exports = {
@@ -8,7 +7,6 @@ module.exports = {
     es2021: true,
     node: true,
     jest: true,
-    "vue/setup-compiler-macros": true,
   },
   extends: [
     "eslint:recommended",
@@ -16,7 +14,9 @@ module.exports = {
     "@vue/eslint-config-typescript",
     "prettier",
   ],
+  parser: "vue-eslint-parser",
   parserOptions: {
+    parser: "@typescript-eslint/parser",
     ecmaVersion: 13,
     sourceType: "module",
   },

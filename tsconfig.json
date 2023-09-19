@@ -11,6 +11,7 @@
     "esModuleInterop": true,
     "outDir": "./public/build",
     "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./resources/assets/js/*"]
     },
