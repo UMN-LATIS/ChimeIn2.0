@@ -41,7 +41,7 @@
           question.question_info.question_responses.image_alt ||
           question.question_info.question_responses.image_name
         "
-        @load="renderHeatMap"
+        @load="isImageLoaded = true"
       />
     </div>
     <div class="image-tools">
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { StyleValue, computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { StyleValue, computed, ref, watch } from "vue";
 import simpleheat from "simpleheat";
 import { ImageHeatmapQuestion, ImageHeatmapResponse } from "@/types";
 import { useResizeObserver, useElementSize } from "@vueuse/core";
@@ -88,6 +88,7 @@ const imageSaturation = ref(100);
 const imageOpacity = ref(100);
 const showHeatmap = ref(true);
 const showPins = ref(true);
+const isImageLoaded = ref(false);
 
 interface Point {
   x: number;
@@ -136,7 +137,7 @@ function getPinDropStyle(response: ImageHeatmapResponse): StyleValue {
 }
 
 function renderHeatMap() {
-  if (!targetCanvas.value || !targetImage.value) {
+  if (!targetCanvas.value || !targetImage.value || !isImageLoaded.value) {
     return;
   }
 
@@ -150,21 +151,31 @@ function renderHeatMap() {
       0.1,
     ];
   });
-  simpleheat("simpleheat")
-    .data(data)
-    .radius(
-      50 * Math.min(scaleX.value, scaleY.value),
-      20 * Math.min(scaleX.value, scaleY.value)
-    )
-    .draw();
+  try {
+    simpleheat(targetCanvas.value)
+      .data(data)
+      .radius(
+        50 * Math.min(scaleX.value, scaleY.value),
+        20 * Math.min(scaleX.value, scaleY.value),
+      )
+      .draw();
+  } catch (e) {
+    console.warn(`Error drawing heatmap: ${e}`);
+  }
 }
 
-onMounted(() => window.addEventListener("resize", renderHeatMap));
-onUnmounted(() => window.removeEventListener("resize", renderHeatMap));
+watch(
+  [() => props.responses, isImageLoaded],
+  () => {
+    if (!isImageLoaded.value) {
+      return;
+    }
+    renderHeatMap();
+  },
+  { immediate: true },
+);
 
 useResizeObserver(targetImage, renderHeatMap);
-
-watch(() => props.responses, renderHeatMap);
 </script>
 
 <style scoped lang="scss">
