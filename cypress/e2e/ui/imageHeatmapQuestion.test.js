@@ -167,12 +167,11 @@ describe("image heatmap", () => {
         cy.get("[data-cy=present-question-button]").click();
         cy.get("[data-cy=show-results-button]").click();
 
-        // to make it easier for tests to see, make img behind heatmap
-        // transparent
-        cy.get("[data-cy=image-heatmap-original]").then(($img) => {
-          $img.css("opacity", 0.1);
-          $img.css("filter", "grayscale(1)");
-        });
+        // set the opacity to 0.1
+        cy.get("[data-cy=opacity-slider]").setSliderValue(10);
+
+        // set the saturation to 0
+        cy.get("[data-cy=saturation-slider]").setSliderValue(0);
 
         cy.viewport(1920, 1080);
         cy.get(".overlay-container").matchImageSnapshot(

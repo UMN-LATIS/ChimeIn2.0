@@ -48,11 +48,23 @@
       <div>
         <label class="range-group">
           Saturation
-          <input v-model="imageSaturation" type="range" min="0" max="100" />
+          <input
+            v-model="imageSaturation"
+            type="range"
+            min="0"
+            max="100"
+            data-cy="saturation-slider"
+          />
         </label>
         <label class="range-group">
           Opacity
-          <input v-model="imageOpacity" type="range" min="0" max="100" />
+          <input
+            v-model="imageOpacity"
+            type="range"
+            min="0"
+            max="100"
+            data-cy="opacity-slider"
+          />
         </label>
       </div>
 
