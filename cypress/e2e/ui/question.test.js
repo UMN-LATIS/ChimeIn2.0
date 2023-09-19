@@ -298,7 +298,6 @@ describe("question", () => {
         // wait for rendering
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(3000);
-        cy.viewport(1920, 1080);
         cy.get("#app").matchImageSnapshot("multiple-response");
       });
   });

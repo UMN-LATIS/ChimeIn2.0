@@ -233,7 +233,6 @@ describe("multiple choice", () => {
         cy.get(".katex-html");
 
         // expect screenshot to look correct
-        cy.viewport(1920, 1080);
         cy.get("[data-cy=multiple-choice-options-list]").matchImageSnapshot(
           "presenter-equation-choices",
         );
@@ -311,7 +310,6 @@ describe("multiple choice", () => {
         // wait for rendering and animation to complete
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1500);
-        cy.viewport(1920, 1080);
         cy.get("#app").matchImageSnapshot(`mult-choice-stats-with-long-labels`);
       });
   });
@@ -359,7 +357,6 @@ describe("multiple choice", () => {
         // wait for rendering and animation to complete
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1500);
-        cy.viewport(1920, 1080);
         cy.get("#app").matchImageSnapshot(
           `mult-choice-stats-with-checkmark-on-correct`,
         );

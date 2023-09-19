@@ -36,7 +36,6 @@ Cypress.Commands.add("delayResponse", (url, delayInMs) => {
  * Fix for triggering native events on a range input
  * https://github.com/cypress-io/cypress/issues/1570#issuecomment-891244917
  */
-
 Cypress.Commands.add(
   "setSliderValue",
   { prevSubject: "element" },
@@ -52,9 +51,3 @@ Cypress.Commands.add(
     element.dispatchEvent(new Event("input", { bubbles: true }));
   },
 );
-
-// declare namespace Cypress {
-//     interface Chainable {
-//         setSliderValue(value: number): Chainable<void>
-//     }
-// }

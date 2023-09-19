@@ -112,9 +112,8 @@ describe("image heatmap", () => {
       })
       .then(() => {
         // check that the circle appears on user interface
-        cy.viewport(1920, 1080);
         cy.get("@image-heatmap-target").matchImageSnapshot(
-          `image-heatmap-response-view_1920x1080`,
+          `image-heatmap-response-view`,
         );
       })
       .then(() => {
@@ -173,7 +172,6 @@ describe("image heatmap", () => {
         // set the saturation to 0
         cy.get("[data-cy=saturation-slider]").setSliderValue(0);
 
-        cy.viewport(1920, 1080);
         cy.get(".overlay-container").matchImageSnapshot(
           `image-heatmap-present-view_1920x1080`,
         );
