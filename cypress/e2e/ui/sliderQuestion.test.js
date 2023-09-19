@@ -90,7 +90,7 @@ describe("slider", () => {
 
         // wait for animation to complete
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(1500);
+        cy.wait(2000);
 
         // expect the labels to be displayed
         cy.get("[data-cy=chart-container]")
@@ -116,7 +116,7 @@ describe("slider", () => {
 
           // all the rest should be short (0.5)
           expect(barHeights.filter((_, i) => i !== tallBarIndex)).to.deep.equal(
-            Array(15).fill(0.5)
+            Array(15).fill(0.5),
           );
         });
       });
