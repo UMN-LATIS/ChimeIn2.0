@@ -90,6 +90,7 @@ services:
   echo:
     image: oanhnn/laravel-echo-server
     container_name: laravel-echo
+    restart: unless-stopped
     ports:
       - 6001:6001
     depends_on:
