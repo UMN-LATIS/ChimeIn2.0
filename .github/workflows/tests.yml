@@ -48,7 +48,7 @@ jobs:
         run: docker-compose exec -T app yarn run test:unit
 
       - name: Run E2E tests with Cypress
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           wait-on: "http://localhost"
           browser: chrome
