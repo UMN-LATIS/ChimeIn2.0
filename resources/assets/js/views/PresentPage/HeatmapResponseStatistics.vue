@@ -99,7 +99,7 @@ const targetCanvas = ref<HTMLCanvasElement | null>(null);
 const imageSaturation = ref(100);
 const imageOpacity = ref(100);
 const showHeatmap = ref(true);
-const showPins = ref(true);
+const showPins = ref(false);
 const isImageLoaded = ref(false);
 
 interface Point {
