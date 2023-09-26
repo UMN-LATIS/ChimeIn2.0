@@ -66,7 +66,7 @@ describe("image heatmap", () => {
         // press down arrow to get the second "Heatmap" option.
         // This is brittle. Maybe rename "Heatmap" as "Image Heatmap" once
         // tests are working.
-        cy.get("[data-cy=question-type]").type("Image Heatmap{enter}");
+        cy.get("[data-cy=question-type]").type("Clickable Image{enter}");
         cy.get("[data-cy=question-editor]").type("Image heatmap question?");
 
         cy.get("[data-cy=image-dropzone]").attachFile("goldy-650x435.jpg");
