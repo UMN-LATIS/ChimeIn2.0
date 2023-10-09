@@ -10,8 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Chime extends Model
-{
+class Chime extends Model {
     use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $fillable = ['name', 'access_code', 'require_login', 'students_can_view', 'join_instructions', 'only_correct_answers_lti', 'resource_link_pk', 'lti_grade_mode', 'show_folder_title_to_participants'];
@@ -24,43 +23,37 @@ class Chime extends Model
         'require_login' => 'boolean',
         'students_can_view' => 'boolean',
         'join_instructions' => 'boolean',
-        'show_folder_title_to_participants' => 'boolean'
+        'show_folder_title_to_participants' => 'boolean',
+        'deleted_at' => 'datetime'
     ];
 
-    protected $dates = ['deleted_at'];
     protected $cascadeDeletes = ['folders'];
 
-    public function folders()
-    {
+    public function folders() {
         return $this->hasMany(Folder::class);
     }
 
-    public function users()
-    {
+    public function users() {
         return $this->belongsToMany(User::class)
             ->withPivot('permission_number')
             ->withTimestamps();
     }
 
-    public function participants()
-    {
+    public function participants() {
         return $this->belongsToMany(User::class)
             ->wherePivot('permission_number', '<', CHIMEIN_PRESENTER);
     }
 
-    public function presenters()
-    {
+    public function presenters() {
         return $this->belongsToMany(User::class)
             ->wherePivot('permission_number', CHIMEIN_PRESENTER);
     }
 
-    public function hasPresenter(User $user)
-    {
+    public function hasPresenter(User $user) {
         return $this->presenters->contains($user->id);
     }
 
-    public function sessions()
-    {
+    public function sessions() {
 
         $sessions = DB::table('sessions')->join('questions', 'sessions.question_id', '=', 'questions.id')->join('folders', 'questions.folder_id', '=', 'folders.id')->join('chimes', 'folders.chime_id', '=', 'chimes.id')->where('chimes.id', $this->id)->select("sessions.*")->get();
 
@@ -68,8 +61,7 @@ class Chime extends Model
         return $sessionModels;
     }
 
-    public function getUniqueCode()
-    {
+    public function getUniqueCode() {
         $accessCode = DB::select('SELECT LPAD(random_num, 6,0) as code
 FROM (
   SELECT FLOOR(RAND() * 999999) AS random_num from chimes limit 100
@@ -80,8 +72,7 @@ LIMIT 1');
     }
 
 
-    public function lti13_resource_link()
-    {
+    public function lti13_resource_link() {
         return $this->belongsTo(LTI13ResourceLink::class);
     }
 }

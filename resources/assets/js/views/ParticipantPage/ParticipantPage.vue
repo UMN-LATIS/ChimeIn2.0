@@ -157,7 +157,7 @@
 <script setup>
 import echoClient from "../../common/echoClient";
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import updateList from "ramda/es/update.js";
+import updateList from "ramda/es/update";
 import ErrorDialog from "../../components/ErrorDialog.vue";
 import ParticipantPrompt from "./ParticipantPrompt.vue";
 import Response from "./ParticipantResponse.vue";
@@ -221,12 +221,12 @@ const ltiLaunchWarning = computed(
     !forceLoad.value &&
     !inParticipantView.value &&
     !window.lti_launch &&
-    isCanvasChime.value
+    isCanvasChime.value,
 );
 
 function updateResponse(updatedResponse) {
   const responseIndex = responses.value.findIndex(
-    (response) => response.id === updatedResponse.id
+    (response) => response.id === updatedResponse.id,
   );
 
   const isNewResponse = responseIndex === -1;
@@ -254,7 +254,7 @@ function loadChime() {
         }
         store.commit(
           "message",
-          "Could not load Chime. You may not have permission to view this page. "
+          "Could not load Chime. You may not have permission to view this page. ",
         );
         console.error("error getting chime:", err);
       }
@@ -278,20 +278,20 @@ onMounted(() => {
       announcer.polite(
         "A new question has been open.  There are " +
           sessions.value.length +
-          " questions open"
+          " questions open",
       );
     })
     .listen("EndSession", (event) => {
       console.log("EndSession: participant", { event });
 
       const removeIndex = sessions.value.findIndex(
-        (s) => s.id == event.session.id
+        (s) => s.id == event.session.id,
       );
       sessions.value.splice(removeIndex, 1);
       announcer.polite(
         "A question has been closed.  There are " +
           sessions.value.length +
-          " questions open"
+          " questions open",
       );
     });
 

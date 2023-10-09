@@ -10,7 +10,12 @@
     "allowJs": true,
     "esModuleInterop": true,
     "outDir": "./public/build",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./resources/assets/js/*"]
+    },
+    "types": ["vite/client", "jest"]
   },
   "include": ["resources"],
   "exclude": ["vendor", "node_modules", "./public/build"]

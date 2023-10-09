@@ -152,7 +152,7 @@ export default {
         },
         {
           id: "heatmap_response",
-          label: "Image Heatmap",
+          label: "Clickable Image",
         },
         {
           id: "text_heatmap_response",

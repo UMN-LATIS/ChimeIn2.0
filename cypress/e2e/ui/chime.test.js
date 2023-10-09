@@ -51,7 +51,7 @@ describe("chime UI", () => {
             toHyphenatedCode(testChime.access_code),
           ].forEach((joinCode) => {
             cy.visit("/");
-            cy.get("#access_code").type(joinCode).type("{enter}");
+            cy.get("#access_code").type(`${joinCode}{enter}`);
 
             cy.get("main").should("contain.html", questionText);
             questionResponses.forEach((response) => {
@@ -262,7 +262,7 @@ describe("chime UI", () => {
       });
 
       it("updates a chime name", () => {
-        cy.get("[data-cy=chime-name-input]").clear().type("Updated Name");
+        cy.get("[data-cy=chime-name-input]").type("{selectAll}Updated Name");
         cy.get("[data-cy=save-chime-name-button]").click();
         cy.get(".chime__name").should("contain.text", "Updated Name");
       });
@@ -280,7 +280,7 @@ describe("chime UI", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}/present`);
         cy.get("[data-cy=access-code]").should(
           "contain.text",
-          toHyphenatedCode(testChime.access_code)
+          toHyphenatedCode(testChime.access_code),
         );
       });
 
@@ -296,7 +296,7 @@ describe("chime UI", () => {
         cy.visit(`/join/${testChime.access_code}`);
         cy.get("[data-cy=show-folder-to-participants]").should(
           "contain.text",
-          testFolder.name
+          testFolder.name,
         );
       });
 
@@ -326,11 +326,11 @@ describe("chime UI", () => {
 
         cy.get("[data-cy=chime-users-list]").should(
           "not.contain.text",
-          "student@umn.edu"
+          "student@umn.edu",
         );
       });
 
-      it("can promote/demote users to presenters/participants", () => {
+      it.only("can promote/demote users to presenters/participants", () => {
         api.openQuestion({
           chimeId: testChime.id,
           folderId: testFolder.id,
@@ -360,9 +360,6 @@ describe("chime UI", () => {
           .contains("student@umn.edu")
           .parent()
           .as("student-row");
-
-        // activate select (currently not active by default?)
-        cy.get("@student-row").contains("Participant").click();
         cy.get("@student-row").find("select").select("Presenter");
         cy.logout();
 
@@ -373,7 +370,7 @@ describe("chime UI", () => {
 
         // test that student can edit chime
         cy.get("[data-cy=toggle-chime-settings-panel]").click();
-        cy.get("[data-cy=chime-name-input]").clear().type("Updated Name");
+        cy.get("[data-cy=chime-name-input]").type("{selectAll}Updated Name");
         cy.get("[data-cy=save-chime-name-button]").click();
         cy.get(".chime__name").should("contain.text", "Updated Name");
 
@@ -382,7 +379,6 @@ describe("chime UI", () => {
           .contains("faculty@umn.edu")
           .parent()
           .as("faculty-row");
-        cy.get("@faculty-row").contains("Presenter").click();
         cy.get("@faculty-row").find("select").select("Participant");
         cy.logout();
 

@@ -2,7 +2,7 @@ import { onMounted, ref } from "vue";
 import Quill from "quill";
 import QuillImageUploader from "quill-image-uploader";
 import QuillBetterImage from "@umn-latis/quill-better-image-module";
-import mergeDeepRight from "ramda/es/mergeDeepRight.js";
+import mergeDeepRight from "ramda/es/mergeDeepRight";
 import "quill/dist/quill.snow.css";
 
 const defaultModules = [
@@ -45,7 +45,7 @@ export default function useQuill({
       imageUploader: {
         upload: (file) => {
           return Promise.all(
-            imageHandlers.value.map((handler) => handler(file))
+            imageHandlers.value.map((handler) => handler(file)),
           );
         },
       },
@@ -63,7 +63,7 @@ export default function useQuill({
     // return a function to remove handler
     return () => {
       textChangeHandlers.value = textChangeHandlers.value?.filter(
-        (handler) => handler !== fn
+        (handler) => handler !== fn,
       );
     };
   };
@@ -74,7 +74,7 @@ export default function useQuill({
     // return a function to remove image handler if needed
     return () => {
       imageHandlers.value = imageHandlers.value?.filter(
-        (handler) => handler !== fn
+        (handler) => handler !== fn,
       );
     };
   };
@@ -99,8 +99,8 @@ export default function useQuill({
     quill.value = new Quill(editorContainerRef.value, mergedOptions);
     quill.value.on("text-change", () =>
       textChangeHandlers.value.forEach((handler) =>
-        handler(quill.value?.root.innerHTML)
-      )
+        handler(quill.value?.root.innerHTML),
+      ),
     );
   });
 

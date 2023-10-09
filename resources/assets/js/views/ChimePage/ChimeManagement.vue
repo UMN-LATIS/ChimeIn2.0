@@ -89,28 +89,14 @@
                 <td>{{ u.name }}</td>
                 <td>{{ u.email }}</td>
                 <td data-cy="select-user-permissions-in-chime">
-                  <template v-if="u.editPermission">
-                    <select
-                      v-model="u.permission_number"
-                      class="form-control form-control-sm"
-                      @change="saveUsers"
-                    >
-                      <option value="100">Participant</option>
-                      <option value="300">Presenter</option>
-                    </select>
-                  </template>
-                  <span
-                    v-else
-                    class="clickToChange"
-                    @click="u.editPermission = !u.editPermission"
+                  <select
+                    v-model="u.permission_number"
+                    class="form-control form-control-sm"
+                    @change="saveUsers"
                   >
-                    <template v-if="u.permission_number == 300"
-                      >Presenter</template
-                    >
-                    <template v-if="u.permission_number == 100"
-                      >Participant</template
-                    >
-                  </span>
+                    <option value="100">Participant</option>
+                    <option value="300">Presenter</option>
+                  </select>
                 </td>
                 <td>
                   <button
