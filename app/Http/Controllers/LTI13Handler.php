@@ -424,6 +424,9 @@ class LTI13Handler extends Controller
 
     private function getSimilarChimes($chime) {
         $explodedName = explode(" ", $chime->name);
+        if(count($explodedName) < 2) {
+            return false;
+        }
         $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
         $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->where("chimes.id", "!=", $chime->id)->get();
         if($similarChimes->count() == 0) {
