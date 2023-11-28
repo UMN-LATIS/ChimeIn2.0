@@ -3,6 +3,7 @@
   "name": "docs",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "docs:dev": "vitepress dev",
@@ -11,11 +12,11 @@
     "docs:publish": "yarn docs:build && gh-pages -d .vitepress/dist"
   },
   "devDependencies": {
-    "vitepress": "^1.0.0-alpha.4",
-    "vue": "^3.2.37",
-    "gh-pages": "^4.0.0"
+    "vitepress": "^1.0.0-rc.31",
+    "vue": "^3.3.9",
+    "gh-pages": "^6.1.0"
   },
   "dependencies": {
-    "@umn-latis/vitepress-theme-umn": "^0.1.0-0"
+    "@umn-latis/vitepress-theme-umn": "^0.2.0-0"
   }
 }
