@@ -66,10 +66,8 @@ export default defineConfig({
       message: "Released under the MIT License.",
       copyright: "Copyright © 2019-present Evan You",
     },
-    // algolia: {
-    //   appId: "",
-    //   apiKey: "",
-    //   indexName: "",
-    // },
+    search: {
+      provider: "local",
+    },
   },
 });
