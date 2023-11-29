@@ -12,11 +12,12 @@
     "docs:publish": "yarn docs:build && gh-pages -d .vitepress/dist"
   },
   "devDependencies": {
+    "gh-pages": "^6.1.0",
     "vitepress": "^1.0.0-rc.31",
-    "vue": "^3.3.9",
-    "gh-pages": "^6.1.0"
+    "vue": "^3.3.9"
   },
   "dependencies": {
-    "@umn-latis/vitepress-theme-umn": "^0.2.0-0"
+    "@umn-latis/cla-vue-template": "^1.1.0",
+    "@umn-latis/vitepress-theme-umn": "^0.2.0-1"
   }
 }

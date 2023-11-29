@@ -6,6 +6,13 @@ export default defineConfig({
   base: "/ChimeIn2.0/",
   lastUpdated: true,
   appearance: false, // force light mode. UMN header looks bad in dark mode
+  vite: {
+    // building the theme will fail without this. Vitepress wants
+    // cla-vue-template to be ssr compatible, but it isn't.
+    ssr: {
+      noExternal: ["@umn-latis/cla-vue-template"],
+    },
+  },
   themeConfig: {
     sidebar: [
       {
