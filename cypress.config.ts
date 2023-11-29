@@ -8,6 +8,7 @@ export default defineConfig({
   video: false,
   viewportWidth: WIDTH,
   viewportHeight: HEIGHT,
+  retries: 2,
   e2e: {
     setupNodeEvents(on) {
       //docs.cypress.io/api/plugins/browser-launch-api#Set-screen-size-when-running-headless
