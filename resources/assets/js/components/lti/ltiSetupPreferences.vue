@@ -23,6 +23,7 @@
             name="lti_grade_mode"
             :img="choice.img"
             :title="choice.title"
+            :subtitle="choice.id === DEFAULT_PASSBACK ? '(Default)' : ''"
             :description="choice.description"
             :value="choice.id"
             :isActive="gradePassbackChoice === choice.id"
@@ -40,6 +41,9 @@
             :key="choice.id"
             :img="choice.img"
             :title="choice.title"
+            :subtitle="
+              choice.id === DEFAULT_PARTICIPATION_CREDIT ? '(Default)' : ''
+            "
             :description="choice.description"
             :value="choice.id"
             :isActive="gradeCalcChoice === choice.id"
@@ -104,21 +108,21 @@ const isSubmitDisabled = computed(() => {
 const gradePassbackChoices = [
   {
     id: PASSBACK.MULTIPLE_GRADE_COLUMNS,
-    title: "Multiple Grades",
+    title: "Multiple Grade Columns",
     description: "Separate grade column for each ChimeIn assignment in Canvas",
     img: {
-      src: "/images/passback-many.svg",
-      alt: "Illustration that each Chime In Assignment will have its own grade column. From left to right: Three checkmarks, then an arrow pointing right, then 3 stars the same size as the checkmarks.",
+      src: "/images/passback-mult-cols.svg",
+      alt: "multiple columns",
     },
   },
   {
     id: PASSBACK.ONE_GRADE_COLUMN,
-    title: "One Grade",
+    title: "One Grade Column",
     description:
-      "One grade column for all ChimeIn assignments in Canvas, totalling all participation.",
+      "One aggregated grade column for all ChimeIn assignments in Canvas, totalling all participation.",
     img: {
-      src: "/images/passback-one.svg",
-      alt: "Illustration that all assignment scores will be aggregated into one grade in Canvas. From left to right: Three checkmarks, then an arrow pointing right, then a single large star.",
+      src: "/images/passback-one-col.svg",
+      alt: "one column",
     },
   },
   {
@@ -126,8 +130,8 @@ const gradePassbackChoices = [
     title: "No Grades",
     description: "No participation grade will be recorded in Canvas.",
     img: {
-      src: "/images/passback-none.svg",
-      alt: "illustration that no participation will be recorded in Canvas. From left to right: Three check marks, then an arrow pointing right with an X over the arrow, then nothing to the right of the arrow.",
+      src: "/images/passback-no-cols.svg",
+      alt: "No columns",
     },
   },
 ];
@@ -202,6 +206,8 @@ function resetForm() {
 }
 
 .form-actions {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 </style>
