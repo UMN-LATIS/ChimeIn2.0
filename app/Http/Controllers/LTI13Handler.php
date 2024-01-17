@@ -411,9 +411,13 @@ class LTI13Handler extends Controller
         if($lisData["person_sourcedid"]== "SISIDformcfa0086") {
             $lisData["person_sourcedid"] = 2328381;
         }
-        // our dev instance sends this value. need to make it a real emplid
+        // our dev instance sends this value. need to make it a real emplid (elevator internetID)
         if($lisData["person_sourcedid"] == "SISID4elevator" || $lisData["person_sourcedid"]  == "Dx7a7sg9zz") {
             $lisData["person_sourcedid"] = 1111111;
+        }
+        // latistecharch internetID
+        if($lisData["person_sourcedid"]  == "D95saru5c2") {
+            $lisData["person_sourcedid"] = 1111113;
         }
         // our dev instance sends this value. need to make it a real emplid
         if($lisData["person_sourcedid"] == "emplidFORjohnsojr") {
