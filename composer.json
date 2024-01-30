@@ -49,7 +49,7 @@
     "packbackbooks/lti-1p3-tool": "dev-upstream-merge",
     "predis/predis": "^1.1",
     "razorbacks/laravel-shibboleth": "dev-umn",
-    "sentry/sentry-laravel": "^3.1",
+    "sentry/sentry-laravel": "^4.2",
     "symfony/http-client": "^6.0",
     "symfony/mailgun-mailer": "^6.0",
     "yadahan/laravel-authentication-log": "^1.3"
