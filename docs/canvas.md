@@ -32,6 +32,7 @@ Below is a set of a step-by-step instructions for making a ChimeIn assignment in
 | Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. |      ![Click Add Question button to add your questions](./step9-add-new-question.png)       |
 | **Don't forget to publish your assignment** when you're ready for your students to view it                                             |                                ![Load](./step10-publish.png)                                |
 
+
 ## Gradebook integration options
 
 When you first setup ChimeIn in Canvas, you'll be asked to select how you'd like ChimeIn to appear in the gradebook. You've got two options - you can either have a single gradebook entry for all of your ChimeIn responses, or you can have multiple assignments each with its own gradebook entry. You can also choose not to have any grades.
@@ -45,6 +46,11 @@ If you're using ChimeIn repeatedly throughout a course, there are a couple diffe
 When you're ready to share your questions with your students, remind them to follow the assignment link within Canvas. **This is important in order for them to receive credit in the gradebook.** As the instructor, you can follow the same link to present the questions. At that point, the process is the same as presenting ChimeIn outside of Canvas. We've got a [step by step cheatsheet you can refer to](cheatsheet).
 
 ChimeIn grades will be updated in Canvas approximately 3 hours after the last response is received. This is done to ensure that students don't get flooded with "grade update" notifications during a class. You can also use the "Force Canvas Sync" button, available under "Chime settings" or "Folder Settings" to force an instant update.
+
+
+::: tip Student View  
+The "Student View" option in Canvas won't work with a third party tool like ChimeIn. To see exactly what your students will see, you can use the "participant view" button in ChimeIn. 
+:::
 
 ## "Correct" answers and the gradebook
 
