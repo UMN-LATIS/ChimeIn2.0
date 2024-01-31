@@ -224,8 +224,11 @@ class LTI13Handler extends Controller
                     ]);
                 }
                 else {
-                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 100]]);
+                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 100]]);  
                 }
+
+                $chime->lti13_resource_link_id = $resourceLink->id;
+                $chime->save();
 
                 $folderId = null;
                 $folder = null;
