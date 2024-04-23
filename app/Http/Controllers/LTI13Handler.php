@@ -167,7 +167,7 @@ class LTI13Handler extends Controller
                 if(isset($endpointData["lineitem"]) && $chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
 
                     // check if the lineitem attached matches a folder
-                    $folder = \App\Folder::where("lti_lineitem", $endpointData["lineitem"])->first();
+                    $folder = $chime->folders()->where("lti_lineitem", $endpointData["lineitem"])->first();
                     
                     if(!$folder && $chime) {
                         // let's check if the chime has this folder created without a resource link
