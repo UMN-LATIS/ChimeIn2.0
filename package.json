@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "bundlewatch": "bundlewatch --config .bundlewatch.config.json",
     "dev": "vite",
