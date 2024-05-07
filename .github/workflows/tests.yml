@@ -1,6 +1,6 @@
 name: Tests
 
-on: [push, pull_request]
+on: [push]
 
 env:
   WWWGROUP: 1000
@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ['8.1']
-        node-version: ['16','18','20']
+        php-version: ["8.1"]
+        node-version: ["16", "18", "20"]
     name: PHP ${{ matrix.php-version }} + Node ${{ matrix.node-version }}
     steps:
       - name: Checkout code
@@ -26,7 +26,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
