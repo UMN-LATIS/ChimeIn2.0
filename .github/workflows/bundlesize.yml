@@ -4,14 +4,13 @@ on:
   push:
     branches-ignore:
       - "dependabot/**"
-  pull_request:
   workflow_dispatch:
 
 env:
   # check production bundle sizes
   VITE_APP_ENV: production
   FORCE_COLOR: 2
-  NODE: 18
+  NODE: 20
   CI_REPO_OWNER: umn-latis
   CI_REPO_NAME: chimein2.0
 
