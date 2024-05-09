@@ -1,6 +1,6 @@
 name: Tests
 
-on: [push, pull_request]
+on: [push]
 
 env:
   WWWGROUP: 1000
@@ -9,6 +9,11 @@ env:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ["8.1"]
+        node-version: ["20"]
+    name: PHP ${{ matrix.php-version }} + Node ${{ matrix.node-version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,7 +25,11 @@ jobs:
       - name: Setup PHP 8.1 to match server
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
+          php-version: ${{ matrix.php-version }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
 
