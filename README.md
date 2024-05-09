@@ -79,7 +79,7 @@ yarn run cypress
 | Enviroment Name | URL                                   |
 | --------------- | ------------------------------------- |
 | `dev`           | <https://cla-chimein-dev.cla.umn.edu> |
-| `stage`         | <https://cla-chimein-tst.cla.umn.edu> |
+| `stage`         | <https://cla-chimein-stage.cla.umn.edu> |
 | `prod`          | <https://chimein.umn.edu>             |
 
 ```sh
