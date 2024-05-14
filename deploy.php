@@ -13,6 +13,7 @@ set('update_code_strategy', 'clone');
 set('repository', 'https://github.com/UMN-LATIS/ChimeIn2.0.git');
 
 set('keep_releases', 5);
+set('default_timeout', 600);
 
 add('shared_files', []);
 add('shared_dirs', []);
