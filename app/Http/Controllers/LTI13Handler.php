@@ -13,6 +13,7 @@ use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\LtiException;
 use \App\LTI13ResourceLink;
 use \App\Library\LTI13Processor;
+use Log;
 
 class LTI13Handler extends Controller
 {
@@ -266,12 +267,15 @@ class LTI13Handler extends Controller
         }
         $ags = LTI13Processor::getAGS($chime);
         $lineItems = $ags->getLineItems();
+
         foreach($lineItems as $lineItem) {
-            if($lineItem["id"] == $resourceData["id"]) {
+            if($lineItem["resourceLinkId"] == $resourceData["id"]) {
+                Log::error("Resource data title was empty, so we're using the line item title", ["resourceData"=>$resourceData, "lineItem"=>$lineItem]);
                 $resourceData["title"] = $lineItem["label"];
                 return $resourceData;
             }
         }
+        return $resourceData;
 
     }
 
