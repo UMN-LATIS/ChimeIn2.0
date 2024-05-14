@@ -13,6 +13,7 @@ use Packback\Lti1p3\LtiMessageLaunch;
 use Packback\Lti1p3\LtiException;
 use \App\LTI13ResourceLink;
 use \App\Library\LTI13Processor;
+use Log;
 
 class LTI13Handler extends Controller
 {
@@ -98,6 +99,7 @@ class LTI13Handler extends Controller
         $contextData = $launchData["https://purl.imsglobal.org/spec/lti/claim/context"];
         $endpointData = $launchData["https://purl.imsglobal.org/spec/lti-ags/claim/endpoint"];
         $resourceData = $launchData["https://purl.imsglobal.org/spec/lti/claim/resource_link"];
+
         $presentationData = $launchData["https://purl.imsglobal.org/spec/lti/claim/launch_presentation"];
 
         $returnURL = explode("external_content", $presentationData["return_url"])[0];
@@ -162,7 +164,7 @@ class LTI13Handler extends Controller
                 $chime->lti_return_url = $returnURL;
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 $chime->save();
-
+                $resourceData = $this->fixResourceDataUsingAGS($chime, $resourceData);
                 // if they've launched from an assignment, we can get them to the right folder
                 if(isset($endpointData["lineitem"]) && $chime->lti_grade_mode == LTI13ResourceLink::LTI_GRADE_MODE_MULTIPLE_GRADES) {
 
@@ -194,7 +196,7 @@ class LTI13Handler extends Controller
                 $chime->save();
 
                 $similarChimes = $this->getSimilarChimes($chime);
-
+                $resourceData = $this->fixResourceDataUsingAGS($chime, $resourceData);
                 $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 300]]);
                 return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime, "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"], "saveTarget"=>'ltisettings13.update']);
             }
@@ -211,7 +213,7 @@ class LTI13Handler extends Controller
                 $chime->users()->attach(Auth::user(), ['permission_number' => 300]);
 ;       
                 $similarChimes = $this->getSimilarChimes($chime);
-
+                $resourceData = $this->fixResourceDataUsingAGS($chime, $resourceData);
                 // return \Redirect::to("/chime/" . $chime->id. "/folder/" . $folder->id);
                 return view("ltiSelectionPrompt", ["ltiLaunch"=>["similar_chimes"=>$similarChimes], "chime"=>$chime , "resource_link_pk"=>null, "lti_resource_title"=>$resourceData["title"], "saveTarget"=>'ltisettings13.update']);
             }                
@@ -224,12 +226,9 @@ class LTI13Handler extends Controller
                     ]);
                 }
                 else {
-                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 100]]);  
+                    $chime->users()->syncWithoutDetaching([Auth::user()->id=> ['permission_number' => 100]]);
                 }
-
-                $chime->lti13_resource_link_id = $resourceLink->id;
-                $chime->save();
-
+                $resourceData = $this->fixResourceDataUsingAGS($chime, $resourceData);
                 $folderId = null;
                 $folder = null;
                 $courseHasNonLTIFolders = false;
@@ -259,6 +258,24 @@ class LTI13Handler extends Controller
                 return view("errors.not_setup");
             }
         }
+
+    }
+
+    private function fixResourceDataUsingAGS(Chime $chime, array $resourceData) {
+        if(isset($resourceData['title']) && $resourceData['title'] != "") {
+            return $resourceData;
+        }
+        $ags = LTI13Processor::getAGS($chime);
+        $lineItems = $ags->getLineItems();
+
+        foreach($lineItems as $lineItem) {
+            if($lineItem["resourceLinkId"] == $resourceData["id"]) {
+                Log::error("Resource data title was empty, so we're using the line item title", ["resourceData"=>$resourceData, "lineItem"=>$lineItem]);
+                $resourceData["title"] = $lineItem["label"];
+                return $resourceData;
+            }
+        }
+        return $resourceData;
 
     }
 
