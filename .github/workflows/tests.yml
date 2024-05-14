@@ -35,17 +35,17 @@ jobs:
           docker-compose ps --all
 
       - run: docker-compose exec -T app ./bin/ci.sh
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
+      - run: npm ci
+      - run: npm run build
       - run: docker-compose exec -T app php artisan key:generate
       - run: docker-compose exec -T app php artisan migrate:fresh
       - run: docker-compose exec -T app php artisan db:seed
 
       - name: Lint code
-        run: docker-compose exec -T app yarn run lint
+        run: docker-compose exec -T app npm run lint
 
       - name: Run unit tests with Jest
-        run: docker-compose exec -T app yarn run test:unit
+        run: docker-compose exec -T app npm run test:unit
 
       - name: Run E2E tests with Cypress
         uses: cypress-io/github-action@v6
