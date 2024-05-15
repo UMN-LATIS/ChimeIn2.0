@@ -44,7 +44,7 @@
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
-    "vue-tsc": "^2.0.16"
+    "vue-tsc": "^2.0.18"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
