@@ -21,81 +21,23 @@
             :question="question"
           />
         </div>
-        <div
+        <PresentationControls
           v-if="!folder.student_view"
+          :showJoinInstructions="showJoinInstructions"
+          :chime="chime"
+          :folder="folder"
+          :currentSession="current_session"
+          :totalResponses="total_responses"
+          :usersCount="usersCount"
+          :showResults="show_results"
           class="col-sm-12 col-md-4 col-lg-3 presentationControls"
-        >
-          <JoinPanel
-            v-if="showJoinInstructions"
-            :chime="chime"
-            :includeFullUrl="false"
-            class="present-page__join-panel mb-2"
-          />
-
-          <div class="card">
-            <div class="card-body">
-              <button
-                v-if="!current_session"
-                class="btn btn-outline-primary align-items-center d-flex"
-                @click="start_session"
-              >
-                <i class="material-icons left">play_arrow</i>
-                Open Question
-              </button>
-              <button
-                v-else
-                :class="{ openSession: current_session }"
-                class="btn btn-outline-primary align-items-center d-flex"
-                @click="stop_session"
-              >
-                <i class="material-icons left">stop</i>
-                Close Question
-              </button>
-              <button
-                data-cy="show-results-button"
-                class="btn btn-outline-primary align-items-center d-flex"
-                @click="show_results = !show_results"
-              >
-                <i class="material-icons left">zoom_in</i>
-                <span v-if="show_results"> Hide Results </span>
-                <span v-else> View Results </span>
-              </button>
-              <button
-                v-if="folder.questions.length > 1"
-                class="btn btn-outline-primary align-items-center d-flex"
-                @click="$emit('nextQuestion')"
-              >
-                <i class="material-icons left">arrow_right</i>
-                Next Question
-              </button>
-              <button
-                v-if="folder.questions.length > 1"
-                class="btn btn-outline-primary align-items-center d-flex"
-                @click="$emit('previousQuestion')"
-              >
-                <i class="material-icons left">arrow_left</i>
-                Previous Question
-              </button>
-              <button
-                class="btn btn-outline-primary align-items-center d-flex"
-                @click="toggle"
-              >
-                <i class="material-icons left">fullscreen</i>
-                Fullscreen
-              </button>
-              <ul class="sessionStatus">
-                <li v-if="current_session">
-                  Session Responses:
-                  {{ current_session ? current_session.responses.length : 0 }}
-                </li>
-                <li>Total Responses: {{ total_responses }}</li>
-                <li>Connected Participants: {{ usersCount - 1 }}</li>
-              </ul>
-            </div>
-          </div>
-          <!-- card -->
-        </div>
-        <!-- presentationControls (sidebar) -->
+          @startSession="start_session"
+          @stopSession="stop_session"
+          @toggleShowResults="show_results = !show_results"
+          @toggleFullScreen="$emit('toggle')"
+          @nextQuestion="$emit('nextQuestion')"
+          @previousQuestion="$emit('previousQuestion')"
+        />
       </div>
     </div>
   </div>
@@ -104,14 +46,14 @@
 <script>
 import PresentPrompt from "./PresentPrompt.vue";
 import PresentResults from "./PresentResults.vue";
-import JoinPanel from "../../components/JoinPanel.vue";
+import PresentationControls from "@/components/PresentationControls.vue";
 import { openQuestion, closeQuestion } from "../../common/api";
 
 export default {
   components: {
     PresentPrompt,
     PresentResults,
-    JoinPanel,
+    PresentationControls,
   },
   props: {
     question: { type: Object, required: true },
@@ -129,7 +71,7 @@ export default {
     current_session: function () {
       if (this.question.current_session_id) {
         var session = this.question.sessions.find(
-          (s) => s.id == this.question.current_session_id
+          (s) => s.id == this.question.current_session_id,
         );
         return session;
       } else {
@@ -143,6 +85,9 @@ export default {
       return this.question.sessions.reduce(function (accumulator, session) {
         return accumulator + parseInt(session.responses.length);
       }, 0);
+    },
+    showJoinInstructions() {
+      return Boolean(this.chime.join_instructions);
     },
   },
   mounted() {
@@ -167,9 +112,6 @@ export default {
         folderId: this.folder.id,
         questionId: this.question.id,
       });
-    },
-    showJoinInstructions() {
-      return Boolean(this.chime.join_instructions);
     },
   },
 };
