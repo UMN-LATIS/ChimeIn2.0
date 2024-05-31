@@ -81,6 +81,16 @@
                 <i class="material-icons">preview</i>
                 Participant View
               </router-link>
+              <RouterLink
+                :to="{
+                  name: 'presentResults',
+                  params: { chimeId, folderId, questionIndex: 0 },
+                }"
+                class="btn"
+              >
+                <i class="material-icons">bar_chart</i>
+                Results
+              </RouterLink>
               <router-link
                 :to="{
                   name: 'present',
