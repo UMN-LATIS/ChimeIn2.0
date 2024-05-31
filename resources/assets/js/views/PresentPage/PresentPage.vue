@@ -22,7 +22,6 @@
             @sessionUpdated="refreshQuestions"
             @toggleFullScreen="isFullscreen = !isFullscreen"
             @reload="refreshQuestions"
-            @toggleShowResults="handleToggleShowResults"
           />
         </Fullscreen>
       </div>
@@ -105,19 +104,6 @@ function previousQuestion() {
       chimeId: props.chimeId,
       folderId: props.folderId,
       questionIndex: prevQuestionIndex,
-    },
-  });
-}
-
-function handleToggleShowResults() {
-  router.push({
-    name: "present",
-    params: {
-      chimeId: props.chimeId,
-      folderId: props.folderId,
-      questionIndex: props.questionIndex,
-      // if currently is showing results, then hide, otherwise show
-      isShowingResults: props.isShowingResults ? "" : "results",
     },
   });
 }

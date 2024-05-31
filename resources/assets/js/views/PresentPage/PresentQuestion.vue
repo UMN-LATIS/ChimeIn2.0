@@ -34,7 +34,6 @@
           class="col-sm-12 col-md-4 col-lg-3 presentationControls"
           @startSession="start_session"
           @stopSession="stop_session"
-          @toggleShowResults="$emit('toggleShowResults')"
           @toggleFullScreen="$emit('toggleFullScreen')"
           @nextQuestion="$emit('nextQuestion')"
           @previousQuestion="$emit('previousQuestion')"
@@ -66,13 +65,7 @@ export default {
     usersCount: { type: Number, required: true },
     isShowingResults: { type: Boolean, default: false },
   },
-  emits: [
-    "nextQuestion",
-    "previousQuestion",
-    "toggleFullScreen",
-    "toggleShowResults",
-    "reload",
-  ],
+  emits: ["nextQuestion", "previousQuestion", "toggleFullScreen", "reload"],
   computed: {
     current_session(): T.Session | null {
       if (!this.question.current_session_id) {

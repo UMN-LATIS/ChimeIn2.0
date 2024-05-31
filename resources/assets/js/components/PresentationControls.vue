@@ -26,26 +26,21 @@
           <i class="material-icons left">stop</i>
           Close Question
         </button>
-        <button
-          data-cy="show-results-button"
-          class="btn btn-outline-primary align-items-center d-flex"
-          @click="$emit('toggleShowResults')"
-        >
-          <i class="material-icons left">zoom_in</i>
-          <span v-if="showResults"> Hide Results </span>
-          <span v-else> View Results </span>
-        </button>
         <RouterLink
           v-if="showResults"
           :to="`/chime/${chime.id}/folder/${folder.id}/present/${questionIndex}`"
           class="btn btn-outline-primary align-items-center d-flex"
-          >Hide Results</RouterLink
+        >
+          <i class="material-icons left">zoom_in</i>
+          Hide Results</RouterLink
         >
         <RouterLink
           v-else
           :to="`/chime/${chime.id}/folder/${folder.id}/present/${questionIndex}/results`"
           class="btn btn-outline-primary align-items-center d-flex"
-          >Show Results</RouterLink
+        >
+          <i class="material-icons left">zoom_in</i>
+          Show Results</RouterLink
         >
         <button
           v-if="folder.questions.length > 1"
@@ -100,7 +95,6 @@ defineProps<{
 defineEmits<{
   (eventName: "startSession"): void;
   (eventName: "stopSession"): void;
-  (eventName: "toggleShowResults"): void;
   (eventName: "toggleFullScreen"): void;
   (eventName: "nextQuestion"): void;
   (eventName: "previousQuestion"): void;
