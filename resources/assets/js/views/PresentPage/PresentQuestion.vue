@@ -10,13 +10,13 @@
       <div class="row">
         <div class="col-sm-12 col-md-8 col-lg-9 present-question__inner">
           <PresentResults
-            v-if="show_results"
+            v-if="isShowingResults"
             :question="question"
             :chimeId="chime.id"
             @reload="$emit('reload')"
           />
           <PresentPrompt
-            v-if="!show_results"
+            v-if="!isShowingResults"
             :session="current_session"
             :question="question"
           />
@@ -29,11 +29,11 @@
           :currentSession="current_session"
           :totalResponses="total_responses"
           :usersCount="usersCount"
-          :showResults="show_results"
+          :showResults="isShowingResults"
           class="col-sm-12 col-md-4 col-lg-3 presentationControls"
           @startSession="start_session"
           @stopSession="stop_session"
-          @toggleShowResults="show_results = !show_results"
+          @toggleShowResults="$emit('toggleShowResults')"
           @toggleFullScreen="$emit('toggleFullScreen')"
           @nextQuestion="$emit('nextQuestion')"
           @previousQuestion="$emit('previousQuestion')"
@@ -60,13 +60,15 @@ export default {
     chime: { type: Object, required: true },
     folder: { type: Object, required: true },
     usersCount: { type: Number, required: true },
+    isShowingResults: { type: Boolean, default: false },
   },
-  emits: ["nextQuestion", "previousQuestion", "toggleFullScreen", "reload"],
-  data() {
-    return {
-      show_results: false,
-    };
-  },
+  emits: [
+    "nextQuestion",
+    "previousQuestion",
+    "toggleFullScreen",
+    "toggleShowResults",
+    "reload",
+  ],
   computed: {
     current_session: function () {
       if (this.question.current_session_id) {

@@ -8,18 +8,20 @@
 
       <Spinner v-if="!folder" />
       <div v-if="folder && chime" class="present-container">
-        <Fullscreen ref="fullscreenRef" @change="isFullscreen = !isFullscreen">
+        <Fullscreen v-model="isFullscreen">
           <PresentQuestion
             v-if="currentQuestion"
             :usersCount="usersCount"
             :question="currentQuestion"
             :chime="chime"
             :folder="folder"
+            :isShowingResults="isShowingResults"
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"
             @sessionUpdated="refreshQuestions"
-            @toggleFullScreen="() => fullscreenRef.toggle()"
+            @toggleFullScreen="isFullscreen = !isFullscreen"
             @reload="refreshQuestions"
+            @toggleShowResults="handleToggleShowResults"
           />
         </Fullscreen>
       </div>
@@ -27,7 +29,8 @@
   </DefaultLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import axios from "@/common/axiosClient";
 import { onMounted, ref, computed } from "vue";
 import { component as Fullscreen } from "vue-fullscreen";
 import useQuestionListener from "../../hooks/useQuestionListener";
@@ -56,6 +59,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  isShowingResults: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const {
@@ -70,12 +77,11 @@ const {
 });
 
 const isFullscreen = ref(false);
-const fullscreenRef = ref(null);
 
 const currentQuestion = computed(() => {
-  if (props.questionIndex >= questions.length) {
+  if (props.questionIndex >= questions.value.length) {
     console.error(
-      `No question exists at index ${props.questionIndex} in ${questions}`
+      `No question exists at index ${props.questionIndex} in ${questions}`,
     );
     return null;
   }
@@ -87,7 +93,7 @@ const router = useRouter();
 function nextQuestion() {
   const nextQuestionIndex = mathMod(
     props.questionIndex + 1,
-    questions.value.length
+    questions.value.length,
   );
 
   router.push({
@@ -103,7 +109,7 @@ function nextQuestion() {
 function previousQuestion() {
   const prevQuestionIndex = mathMod(
     props.questionIndex - 1,
-    questions.value.length
+    questions.value.length,
   );
 
   router.push({
@@ -112,6 +118,19 @@ function previousQuestion() {
       chimeId: props.chimeId,
       folderId: props.folderId,
       questionIndex: prevQuestionIndex,
+    },
+  });
+}
+
+function handleToggleShowResults() {
+  router.push({
+    name: "present",
+    params: {
+      chimeId: props.chimeId,
+      folderId: props.folderId,
+      questionIndex: props.questionIndex,
+      // if currently is showing results, then hide, otherwise show
+      isShowingResults: props.isShowingResults ? "" : "results",
     },
   });
 }

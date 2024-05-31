@@ -56,13 +56,17 @@ const routes: RouteRecordRaw[] = [
     }),
   },
   {
-    path: "/chime/:chimeId/folder/:folderId/present/:questionIndex?",
+    // TODO: make this into two separate routes. One for presenting
+    // and one for viewing results.
+    path: "/chime/:chimeId/folder/:folderId/present/:questionIndex?/:isShowingResults?",
     name: "present",
     component: PresentPage,
     props: (route) => ({
       chimeId: toInt(route.params.chimeId),
       folderId: toInt(route.params.folderId),
       questionIndex: toInt(route.params.questionIndex, 0),
+      isShowingResults:
+        route.params.isShowingResults === "results" ? true : false,
     }),
   },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundPage },
