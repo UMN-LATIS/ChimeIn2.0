@@ -30,6 +30,7 @@
           v-if="showResults"
           :to="`/chime/${chime.id}/folder/${folder.id}/present/${questionIndex}`"
           class="btn btn-outline-primary align-items-center d-flex"
+          data-cy="show-results-button"
         >
           <i class="material-icons left">zoom_in</i>
           Hide Results</RouterLink
@@ -38,10 +39,11 @@
           v-else
           :to="`/chime/${chime.id}/folder/${folder.id}/present/${questionIndex}/results`"
           class="btn btn-outline-primary align-items-center d-flex"
+          data-cy="show-results-button"
         >
           <i class="material-icons left">zoom_in</i>
-          Show Results</RouterLink
-        >
+          Show Results
+        </RouterLink>
         <button
           v-if="folder.questions.length > 1"
           class="btn btn-outline-primary align-items-center d-flex"
