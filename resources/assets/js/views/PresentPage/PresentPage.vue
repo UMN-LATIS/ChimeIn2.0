@@ -18,7 +18,7 @@
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"
             @sessionUpdated="refreshQuestions"
-            @toggle="() => fullscreenRef.toggle()"
+            @toggleFullScreen="() => fullscreenRef.toggle()"
             @reload="refreshQuestions"
           />
         </Fullscreen>

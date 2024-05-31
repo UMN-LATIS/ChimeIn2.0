@@ -34,7 +34,7 @@
           @startSession="start_session"
           @stopSession="stop_session"
           @toggleShowResults="show_results = !show_results"
-          @toggleFullScreen="$emit('toggle')"
+          @toggleFullScreen="$emit('toggleFullScreen')"
           @nextQuestion="$emit('nextQuestion')"
           @previousQuestion="$emit('previousQuestion')"
         />
@@ -61,7 +61,7 @@ export default {
     folder: { type: Object, required: true },
     usersCount: { type: Number, required: true },
   },
-  emits: ["nextQuestion", "previousQuestion", "toggle", "reload"],
+  emits: ["nextQuestion", "previousQuestion", "toggleFullScreen", "reload"],
   data() {
     return {
       show_results: false,
