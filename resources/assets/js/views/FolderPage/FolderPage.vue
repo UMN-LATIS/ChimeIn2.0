@@ -301,12 +301,11 @@ import {
 } from "../../common/api";
 import { useRouter } from "vue-router";
 import Icon from "../../components/Icon.vue";
-const QuestionForm = defineAsyncComponent(
-  () =>
-    import(
-      /* webpackChunkName: "QuestionForm" */
-      "../QuestionForm/QuestionForm.vue"
-    ),
+const QuestionForm = defineAsyncComponent(() =>
+  import(
+    /* webpackChunkName: "QuestionForm" */
+    "../QuestionForm/QuestionForm.vue"
+  )
 );
 
 const props = defineProps({
@@ -339,7 +338,7 @@ const {
 const otherFolderSessions = computed(() => {
   if (allSessions.value && folder.value) {
     return allSessions.value.filter(
-      (session) => session.question.folder_id !== folder.value.id,
+      (session) => session.question.folder_id !== folder.value.id
     );
   }
   return [];
@@ -361,7 +360,7 @@ onMounted(async () => {
   if (isParticipantView.value) {
     store.commit("message", "Unauthorized: Only presenters may edit chimes.");
     console.error(
-      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`,
+      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
     );
     return;
   }
@@ -372,7 +371,7 @@ onMounted(async () => {
 function reset() {
   if (
     confirm(
-      "Are you sure you want to wipe all the responses to questions in this folder?",
+      "Are you sure you want to wipe all the responses to questions in this folder?"
     )
   ) {
     const promises = questions.value.map((question) =>
@@ -380,7 +379,7 @@ function reset() {
         chimeId: props.chimeId,
         folderId: props.folderId,
         questionId: question.id,
-      }),
+      })
     );
     Promise.all(promises)
       .then(() => refreshFolder())
@@ -397,7 +396,7 @@ async function swap_question() {
       chimeId: props.chimeId,
       folderId: props.folderId,
     },
-    updatedOrder,
+    updatedOrder
   );
 
   refreshFolder();
@@ -413,7 +412,7 @@ async function edit_folder() {
     { chimeId: props.chimeId, folderId: props.folderId },
     {
       folder_name: folder.value.name,
-    },
+    }
   );
   show_edit_folder.value = false;
 }
@@ -451,7 +450,7 @@ function closeOthers() {
       chimeId: props.chimeId,
       folderId: openSession.question.folder_id,
       questionId: openSession.question.id,
-    }),
+    })
   );
   Promise.all(promises).catch((err) => {
     hideOpenAlert.value = true;
@@ -478,7 +477,7 @@ function update_folders() {
     .get("/api/chime/" + selected_chime.value)
     .then((res) => {
       const foldersWithoutCurrentOne = res.data.folders.filter(
-        (f) => f.id !== props.folderId,
+        (f) => f.id !== props.folderId
       );
 
       existing_folders.value = orderBy(foldersWithoutCurrentOne, "created_at", [
@@ -499,7 +498,7 @@ async function sync() {
   if (!synced.value) {
     store.commit(
       "message",
-      "Could not sync Chime. Please contact support at latistecharch@umn.edu.",
+      "Could not sync Chime. Please contact support at latistecharch@umn.edu."
     );
   }
 }
@@ -589,9 +588,7 @@ ul li {
   background-color: #fff;
   line-height: 1.5;
   border-radius: 0.25rem;
-  box-shadow:
-    0 1px 3px 0 rgb(0 0 0 / 0.1),
-    0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .folder-settings-panel__heading {
