@@ -41,29 +41,15 @@ import Spinner from "../../components/Spinner.vue";
 import { useRouter } from "vue-router";
 import { mathMod } from "ramda";
 import Back from "../../components/Back.vue";
+import * as T from "@/types";
 
-const props = defineProps({
-  user: {
-    type: Object,
-    required: true,
-  },
-  chimeId: {
-    type: Number,
-    required: true,
-  },
-  folderId: {
-    type: Number,
-    required: true,
-  },
-  questionIndex: {
-    type: Number,
-    default: 0,
-  },
-  isShowingResults: {
-    type: Boolean,
-    default: false,
-  },
-});
+const props = defineProps<{
+  user: T.User;
+  chimeId: number;
+  folderId: number;
+  questionIndex: number;
+  isShowingResults: boolean;
+}>();
 
 const {
   chime,
