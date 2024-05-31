@@ -56,8 +56,6 @@ const routes: RouteRecordRaw[] = [
     }),
   },
   {
-    // TODO: make this into two separate routes. One for presenting
-    // and one for viewing results.
     path: "/chime/:chimeId/folder/:folderId/present/:questionIndex/results",
     name: "presentResults",
     component: PresentPage,
@@ -69,8 +67,6 @@ const routes: RouteRecordRaw[] = [
     }),
   },
   {
-    // TODO: make this into two separate routes. One for presenting
-    // and one for viewing results.
     path: "/chime/:chimeId/folder/:folderId/present/:questionIndex?",
     name: "present",
     component: PresentPage,
