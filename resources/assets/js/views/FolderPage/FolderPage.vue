@@ -61,12 +61,6 @@
                 <Icon>grade</Icon>
                 Report
               </router-link>
-              <button class="btn" @click="openAll">
-                <i class="material-icons pointer">visibility</i> Open All
-              </button>
-              <button class="btn" @click="closeAll">
-                <i class="material-icons pointer">visibility_off</i> Close All
-              </button>
               <router-link
                 :to="{
                   name: 'chimeStudent',
@@ -205,14 +199,34 @@
 
         <div class="border-top mt-3 pt-3 folder-page__main">
           <div>
-            <button
-              data-cy="new-question-button"
-              class="btn btn-outline-primary align-items-center d-flex my-2"
-              @click="showModal = true"
-            >
-              <i class="material-icons pointer">add</i> Add Question
-            </button>
-            <div class="grid-cols-2">
+            <div class="grid-cols-2 mb-0">
+              <div class="d-flex justify-content-between align-items-center">
+                <button
+                  data-cy="new-question-button"
+                  class="btn btn-outline-primary align-items-center d-flex my-2"
+                  @click="showModal = true"
+                >
+                  <i class="material-icons pointer">add</i> Add Question
+                </button>
+
+                <div class="folder-page-header__button-group">
+                  <button
+                    class="btn btn-sm align-items-center d-flex gap-1 p-2"
+                    @click="openAll"
+                  >
+                    <i class="material-icons pointer">visibility</i> Open All
+                  </button>
+                  <button
+                    class="btn btn-sm align-items-center d-flex gap-1 p-2"
+                    @click="closeAll"
+                  >
+                    <i class="material-icons pointer">visibility_off</i> Close
+                    All
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="grid-cols-2 mt-0">
               <Draggable
                 v-model="questions"
                 itemKey="id"
@@ -271,6 +285,7 @@ import useQuestionListener from "../../hooks/useQuestionListener";
 import { useStore } from "vuex";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
+import { RouterLink } from "vue-router";
 import {
   getChimes,
   getOpenSessionsWithinChime,
@@ -286,11 +301,12 @@ import {
 } from "../../common/api";
 import { useRouter } from "vue-router";
 import Icon from "../../components/Icon.vue";
-const QuestionForm = defineAsyncComponent(() =>
-  import(
-    /* webpackChunkName: "QuestionForm" */
-    "../QuestionForm/QuestionForm.vue"
-  )
+const QuestionForm = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "QuestionForm" */
+      "../QuestionForm/QuestionForm.vue"
+    ),
 );
 
 const props = defineProps({
@@ -323,7 +339,7 @@ const {
 const otherFolderSessions = computed(() => {
   if (allSessions.value && folder.value) {
     return allSessions.value.filter(
-      (session) => session.question.folder_id !== folder.value.id
+      (session) => session.question.folder_id !== folder.value.id,
     );
   }
   return [];
@@ -345,7 +361,7 @@ onMounted(async () => {
   if (isParticipantView.value) {
     store.commit("message", "Unauthorized: Only presenters may edit chimes.");
     console.error(
-      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
+      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`,
     );
     return;
   }
@@ -356,7 +372,7 @@ onMounted(async () => {
 function reset() {
   if (
     confirm(
-      "Are you sure you want to wipe all the responses to questions in this folder?"
+      "Are you sure you want to wipe all the responses to questions in this folder?",
     )
   ) {
     const promises = questions.value.map((question) =>
@@ -364,7 +380,7 @@ function reset() {
         chimeId: props.chimeId,
         folderId: props.folderId,
         questionId: question.id,
-      })
+      }),
     );
     Promise.all(promises)
       .then(() => refreshFolder())
@@ -381,7 +397,7 @@ async function swap_question() {
       chimeId: props.chimeId,
       folderId: props.folderId,
     },
-    updatedOrder
+    updatedOrder,
   );
 
   refreshFolder();
@@ -397,7 +413,7 @@ async function edit_folder() {
     { chimeId: props.chimeId, folderId: props.folderId },
     {
       folder_name: folder.value.name,
-    }
+    },
   );
   show_edit_folder.value = false;
 }
@@ -435,7 +451,7 @@ function closeOthers() {
       chimeId: props.chimeId,
       folderId: openSession.question.folder_id,
       questionId: openSession.question.id,
-    })
+    }),
   );
   Promise.all(promises).catch((err) => {
     hideOpenAlert.value = true;
@@ -462,7 +478,7 @@ function update_folders() {
     .get("/api/chime/" + selected_chime.value)
     .then((res) => {
       const foldersWithoutCurrentOne = res.data.folders.filter(
-        (f) => f.id !== props.folderId
+        (f) => f.id !== props.folderId,
       );
 
       existing_folders.value = orderBy(foldersWithoutCurrentOne, "created_at", [
@@ -483,7 +499,7 @@ async function sync() {
   if (!synced.value) {
     store.commit(
       "message",
-      "Could not sync Chime. Please contact support at latistecharch@umn.edu."
+      "Could not sync Chime. Please contact support at latistecharch@umn.edu.",
     );
   }
 }
@@ -573,7 +589,9 @@ ul li {
   background-color: #fff;
   line-height: 1.5;
   border-radius: 0.25rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .folder-settings-panel__heading {
