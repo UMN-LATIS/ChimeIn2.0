@@ -96,9 +96,6 @@ export default {
     }
   },
   methods: {
-    toggle() {
-      this.$emit("toggle");
-    },
     start_session() {
       openQuestion({
         chimeId: this.chime.id,
