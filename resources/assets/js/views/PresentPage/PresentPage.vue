@@ -15,6 +15,7 @@
             :question="currentQuestion"
             :chime="chime"
             :folder="folder"
+            :questionIndex="questionIndex"
             :isShowingResults="isShowingResults"
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"

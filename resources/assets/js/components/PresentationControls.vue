@@ -35,6 +35,18 @@
           <span v-if="showResults"> Hide Results </span>
           <span v-else> View Results </span>
         </button>
+        <RouterLink
+          v-if="showResults"
+          :to="`/chime/${chime.id}/folder/${folder.id}/present/${questionIndex}`"
+          class="btn btn-outline-primary align-items-center d-flex"
+          >Hide Results</RouterLink
+        >
+        <RouterLink
+          v-else
+          :to="`/chime/${chime.id}/folder/${folder.id}/present/${questionIndex}/results`"
+          class="btn btn-outline-primary align-items-center d-flex"
+          >Show Results</RouterLink
+        >
         <button
           v-if="folder.questions.length > 1"
           class="btn btn-outline-primary align-items-center d-flex"
@@ -78,6 +90,7 @@ defineProps<{
   showJoinInstructions: boolean;
   chime: Chime;
   folder: FolderWithQuestions;
+  questionIndex: number;
   currentSession: Session | null;
   totalResponses: number;
   showResults: boolean;

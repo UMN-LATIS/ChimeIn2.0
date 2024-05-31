@@ -1,11 +1,11 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
 import { getFolderWithQuestions, getChime } from "../common/api";
 import echoClient from "../common/echoClient.js";
-import { Chime, Folder, Maybe, Question } from "../types";
+import { Chime, FolderWithQuestions, Maybe, Question } from "../types";
 
 export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
-  const folder = ref<Maybe<Folder>>(null);
+  const folder = ref<Maybe<FolderWithQuestions>>(null);
   const chime = ref<Maybe<Chime>>(null);
   const questions = computed<Question[]>({
     get() {
@@ -14,7 +14,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
     set(questions: Question[]) {
       if (!folder.value) {
         throw new Error(
-          "cannot set questions on folder when folder ref is null"
+          "cannot set questions on folder when folder ref is null",
         );
       }
       folder.value.questions = questions;
@@ -42,7 +42,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
       .listen("StartSession", function onEchoStartSession(event) {
         console.log("Start Session", { event });
         const question = questions.value.find(
-          (q) => q.id === event.session.question.id
+          (q) => q.id === event.session.question.id,
         );
 
         if (!question) return;
@@ -57,7 +57,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
       .listen("EndSession", function onEchoEndSession(event) {
         console.log("End Session", { event });
         const question = questions.value.find(
-          (q) => q.id === event.session.question_id
+          (q) => q.id === event.session.question_id,
         );
 
         if (!question) return;
@@ -71,29 +71,29 @@ export default function useQuestionListener({ chimeId, folderId }) {
       .listen("SubmitResponse", function onEchoSubmitResponse(event) {
         console.log("Submit Response", { event });
         const question = questions.value.find(
-          (q) => q.id === event.session.question.id
+          (q) => q.id === event.session.question.id,
         );
 
         if (!question) {
           console.error(
-            `Could not find question with id ${event.session.question.id}`
+            `Could not find question with id ${event.session.question.id}`,
           );
           return;
         }
 
         const session = question.sessions.find(
-          (s) => s.id === event.session.id
+          (s) => s.id === event.session.id,
         );
 
         if (!session) {
           console.error(
-            `Could not find session ${event.session.id} for question ${event.session.question.id}`
+            `Could not find session ${event.session.id} for question ${event.session.question.id}`,
           );
           return;
         }
 
         const responseIndexToUpdate = session.responses.findIndex(
-          (r) => r.id === event.response.id
+          (r) => r.id === event.response.id,
         );
 
         // if the response is not found, add it to the session responses

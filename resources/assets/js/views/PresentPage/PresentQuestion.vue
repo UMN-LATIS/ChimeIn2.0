@@ -26,6 +26,7 @@
           :showJoinInstructions="showJoinInstructions"
           :chime="chime"
           :folder="folder"
+          :questionIndex="questionIndex"
           :currentSession="current_session"
           :totalResponses="total_responses"
           :usersCount="usersCount"
@@ -43,11 +44,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import PresentPrompt from "./PresentPrompt.vue";
 import PresentResults from "./PresentResults.vue";
 import PresentationControls from "@/components/PresentationControls.vue";
 import { openQuestion, closeQuestion } from "../../common/api";
+import type { PropType } from "vue";
+import * as T from "@/types";
 
 export default {
   components: {
@@ -56,9 +59,10 @@ export default {
     PresentationControls,
   },
   props: {
-    question: { type: Object, required: true },
-    chime: { type: Object, required: true },
-    folder: { type: Object, required: true },
+    question: { type: Object as PropType<T.Question>, required: true },
+    chime: { type: Object as PropType<T.Chime>, required: true },
+    folder: { type: Object as PropType<T.FolderWithQuestions>, required: true },
+    questionIndex: { type: Number, required: true },
     usersCount: { type: Number, required: true },
     isShowingResults: { type: Boolean, default: false },
   },
@@ -70,22 +74,23 @@ export default {
     "reload",
   ],
   computed: {
-    current_session: function () {
-      if (this.question.current_session_id) {
-        var session = this.question.sessions.find(
-          (s) => s.id == this.question.current_session_id,
-        );
-        return session;
-      } else {
+    current_session(): T.Session | null {
+      if (!this.question.current_session_id) {
         return null;
       }
+
+      return (
+        this.question.sessions.find(
+          (s) => s.id == this.question.current_session_id,
+        ) ?? null
+      );
     },
     total_responses: function () {
       if (this.question.sessions.length == 0) {
         return 0;
       }
       return this.question.sessions.reduce(function (accumulator, session) {
-        return accumulator + parseInt(session.responses.length);
+        return accumulator + session.responses.length;
       }, 0);
     },
     showJoinInstructions() {
@@ -93,8 +98,15 @@ export default {
     },
   },
   mounted() {
-    if (this.folder.student_view) {
-      this.show_results = true;
+    if (this.folder.student_view && !this.isShowingResults) {
+      this.$router.push({
+        name: "presentResults",
+        params: {
+          chimeId: this.chime.id,
+          folderId: this.folder.id,
+          questionIndex: this.questionIndex,
+        },
+      });
     }
   },
   methods: {
