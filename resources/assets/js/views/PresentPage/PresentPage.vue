@@ -1,7 +1,10 @@
 <template>
   <DefaultLayout :user="user" class="bg-white">
     <template #navbar-left>
-      <Back :to="`/chime/${chimeId}/folder/${folderId}`">Back to Folder</Back>
+      <Back v-if="!isStudentView" :to="`/chime/${chimeId}/folder/${folderId}`"
+        >Back to Folder</Back
+      >
+      <Back v-else :to="`/chimeParticipant/${chimeId}/${folderId}`">Back</Back>
     </template>
     <div class="present-page">
       <ErrorDialog />
@@ -17,6 +20,7 @@
             :folder="folder"
             :questionIndex="questionIndex"
             :isShowingResults="isShowingResults"
+            :isStudentView="isStudentView"
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"
             @sessionUpdated="refreshQuestions"
@@ -80,6 +84,10 @@ const currentQuestion = computed(() => {
     return null;
   }
   return questions.value[props.questionIndex];
+});
+
+const isStudentView = computed((): boolean => {
+  return folder.value?.student_view ?? false;
 });
 
 const router = useRouter();

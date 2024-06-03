@@ -12,10 +12,10 @@
         :chime="chime"
       >
       </component>
-      <a
+      <RouterLink
         v-if="chime.students_can_view"
         class="pointer"
-        :href="
+        :to="
           '/chime/' +
           chime.id +
           '/folder/' +
@@ -23,8 +23,8 @@
           '/present/' +
           (response.session.question.order - 1)
         "
-        >View Responses</a
-      >
+        >View Responses
+      </RouterLink>
 
       <small v-if="chime.show_folder_title_to_participants" class="text-muted"
         ><strong>Folder</strong>: {{ response.session.question.folder.name }}
@@ -34,7 +34,7 @@
   </article>
 </template>
 
-<script>
+<script lang="ts">
 import MultipleChoice from "../../components/MultipleChoice/MultipleChoiceInputs.vue";
 import ImageResponse from "../../components/ImageResponse/ImageResponseInputs.vue";
 import FreeResponse from "../../components/FreeResponse/FreeResponseInputs.vue";

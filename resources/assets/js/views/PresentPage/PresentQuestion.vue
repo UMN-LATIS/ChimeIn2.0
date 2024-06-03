@@ -22,7 +22,7 @@
           />
         </div>
         <div
-          v-if="!folder.student_view"
+          v-if="!isStudentView"
           class="col-sm-12 col-md-4 col-lg-3 presentationControls"
         >
           <JoinPanel
@@ -122,6 +122,7 @@ export default {
     questionIndex: { type: Number, required: true },
     usersCount: { type: Number, required: true },
     isShowingResults: { type: Boolean, required: false, default: false },
+    isStudentView: { type: Boolean, required: true },
   },
   emits: ["nextQuestion", "previousQuestion", "toggle", "reload"],
   computed: {
@@ -148,10 +149,9 @@ export default {
     },
   },
   mounted() {
-    console.log(this.$props);
     // if this is a student view and we are not showing results,
     // redirect to the results page
-    if (this.folder.student_view && !this.isShowingResults) {
+    if (this.isStudentView && !this.isShowingResults) {
       this.$router.replace({
         name: "presentResults",
         params: {
