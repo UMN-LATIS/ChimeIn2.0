@@ -83,7 +83,7 @@
               </router-link>
               <router-link
                 :to="{
-                  name: 'present',
+                  name: 'presentResults',
                   params: { chimeId, folderId, isShowingResults: true },
                 }"
                 class="btn"
