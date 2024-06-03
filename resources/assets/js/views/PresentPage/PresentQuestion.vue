@@ -101,11 +101,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import PresentPrompt from "./PresentPrompt.vue";
 import PresentResults from "./PresentResults.vue";
 import JoinPanel from "../../components/JoinPanel.vue";
 import { openQuestion, closeQuestion } from "../../common/api";
+import { PropType } from "vue";
+import * as T from "@/types";
 
 export default {
   components: {
@@ -114,9 +116,9 @@ export default {
     JoinPanel,
   },
   props: {
-    question: { type: Object, required: true },
-    chime: { type: Object, required: true },
-    folder: { type: Object, required: true },
+    question: { type: Object as PropType<T.Question>, required: true },
+    chime: { type: Object as PropType<T.Chime>, required: true },
+    folder: { type: Object as PropType<T.FolderWithQuestions>, required: true },
     usersCount: { type: Number, required: true },
   },
   emits: ["nextQuestion", "previousQuestion", "toggle", "reload"],
@@ -141,8 +143,11 @@ export default {
         return 0;
       }
       return this.question.sessions.reduce(function (accumulator, session) {
-        return accumulator + parseInt(session.responses.length);
+        return accumulator + session.responses.length;
       }, 0);
+    },
+    showJoinInstructions() {
+      return Boolean(this.chime.join_instructions);
     },
   },
   mounted() {
@@ -167,9 +172,6 @@ export default {
         folderId: this.folder.id,
         questionId: this.question.id,
       });
-    },
-    showJoinInstructions() {
-      return Boolean(this.chime.join_instructions);
     },
   },
 };
