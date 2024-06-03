@@ -85,11 +85,4 @@ const router = createRouter({
   routes,
 });
 
-if (import.meta.env.DEV) {
-  router.beforeEach((to, from, next) => {
-    console.log(`Navigating to route: ${to.name?.toString()}`);
-    next();
-  });
-}
-
 export default router;

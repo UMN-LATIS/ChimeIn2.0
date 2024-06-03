@@ -46,7 +46,6 @@ import { mathMod } from "ramda";
 import Back from "../../components/Back.vue";
 import axios from "@/common/axiosClient";
 import * as T from "@/types";
-import { logUnwrappedProxy } from "@/helpers/logUnwrappedProxy";
 
 const props = withDefaults(
   defineProps<{
@@ -125,8 +124,6 @@ function previousQuestion() {
 }
 
 onMounted(() => {
-  logUnwrappedProxy("props", props);
-
   axios
     .get(`/api/chime/${props.chimeId}`)
     .then((res) => {
