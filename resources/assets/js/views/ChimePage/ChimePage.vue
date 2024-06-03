@@ -16,7 +16,7 @@
           >
             Canvas
           </Chip>
-          <div class="chime__header-container">
+          <div v-if="chime" class="chime__header-container">
             <h1 class="chime__name" data-cy="chime-name">
               {{ chime.name }}
             </h1>
@@ -27,44 +27,52 @@
             >
               <button
                 class="btn"
-                :class="{ 'btn--is-active': showSettings }"
+                :class="{ 'btn--is-active': openPanel === 'showSettings' }"
                 data-cy="toggle-chime-settings-panel"
-                @click="toggle('showSettings', { setToFalse: ['exportPanel'] })"
+                @click="
+                  openPanel === 'showSettings'
+                    ? (openPanel = null)
+                    : (openPanel = 'showSettings')
+                "
               >
                 <i class="material-icons">settings</i> Chime Settings
               </button>
 
               <button
                 class="btn"
-                :class="{ 'btn--is-active': exportPanel }"
+                :class="{ 'btn--is-active': openPanel === 'exportPanel' }"
                 data-cy="toggle-chime-export-panel"
-                @click="toggle('exportPanel', { setToFalse: ['showSettings'] })"
+                @click="
+                  openPanel === 'exportPanel'
+                    ? (openPanel = null)
+                    : (openPanel = 'exportPanel')
+                "
               >
                 <i class="material-icons">save_alt</i> Export
               </button>
             </div>
           </div>
           <div
-            v-if="isReady"
+            v-if="chime"
             class="chime-settings-panel"
             :class="{
-              'chime-settings-panel--isOpen': showSettings || exportPanel,
+              'chime-settings-panel--isOpen': openPanel,
             }"
           >
             <div class="chime-settings-panel__container">
               <ChimeManagement
-                v-if="showSettings"
+                v-if="openPanel === 'showSettings'"
                 :chime="chime"
                 @update:chime="handleChimeUpdate"
               />
-              <ChimeExport v-if="exportPanel" :chime="chime" />
+              <ChimeExport v-if="openPanel === 'exportPanel'" :chime="chime" />
             </div>
           </div>
         </header>
 
-        <Spinner v-if="!isReady" />
+        <Spinner v-if="!chime" />
 
-        <div v-if="isReady" class="chime__folder-wrapper">
+        <div v-if="chime" class="chime__folder-wrapper">
           <div class="chime__folder-list">
             <p v-if="!ordered_folders.length">
               You don't have any folders yet. Why not create one now?
@@ -110,7 +118,7 @@
   </DefaultLayout>
 </template>
 
-<script>
+<script lang="ts">
 import Draggable from "vuedraggable";
 import orderBy from "lodash/orderBy";
 import NewFolder from "./NewFolder.vue";
@@ -129,6 +137,10 @@ import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import * as api from "../../common/api";
 import Back from "../../components/Back.vue";
 import { isEmpty } from "ramda";
+import { PropType } from "vue";
+import * as T from "@/types";
+import axios from "@/common/axiosClient";
+import { useStore } from "vuex";
 
 export default {
   components: {
@@ -146,7 +158,7 @@ export default {
   },
   props: {
     user: {
-      type: Object,
+      type: Object as PropType<T.User | null>,
       required: false,
       default: null,
     },
@@ -157,12 +169,8 @@ export default {
   },
   data() {
     return {
-      isReady: false,
-      // FIXME: refactor so that `chime` is either a true
-      // chime object or null
-      chime: {},
-      showSettings: false,
-      exportPanel: false,
+      chime: null as T.Chime | null,
+      openPanel: null as "showSettings" | "exportPanel" | null,
     };
   },
   computed: {
@@ -174,13 +182,22 @@ export default {
         return orderBy(this.chime.folders, ["order", "id"], ["asc", "asc"]);
       },
       set(value) {
-        value.map((f, index) => (f.order = index + 1));
-        const url = "/api/chime/" + this.chime.id;
+        if (!this.chime) {
+          throw new Error(`Cannot set ordered_folders when chime is null`);
+        }
+
+        value.map((folder, index) => (folder.order = index + 1));
+
+        const url = "/api/chime/" + this.chimeId;
         axios
           .put(url, {
             folders: this.chime.folders,
           })
           .then(() => {
+            if (!this.chime) {
+              // this shouldn't happen
+              throw new Error(`Chime is null after updating folders`);
+            }
             this.chime.folders = value;
           })
           .catch((err) => {
@@ -189,30 +206,26 @@ export default {
       },
     },
     isCanvasChime() {
+      if (!this.chime) {
+        return false;
+      }
+
       return selectIsCanvasChime(this.chime);
     },
     canvasUrl() {
+      if (!this.chime) {
+        return new URL(`https://canvas.umn.edu`);
+      }
       const fullCanvasUrlString =
         selectCanvasCourseUrl(this.chime) || `https://canvas.umn.edu`;
       return new URL(fullCanvasUrlString);
     },
   },
   async mounted() {
-    this.isReady = false;
     await this.loadChime();
-    this.isReady = true;
   },
   methods: {
     isEmpty,
-    toggle(value, { setToFalse = [], setToTrue = [] } = {}) {
-      this[value] = !this[value];
-      setToFalse.forEach((key) => {
-        this[key] = false;
-      });
-      setToTrue.forEach((key) => {
-        this[key] = true;
-      });
-    },
     handleChimeUpdate(chimeUpdates) {
       // optimistically update chime
       this.chime = {
@@ -224,6 +237,10 @@ export default {
       this.loadChime();
     },
     create_folder: function (folder_name) {
+      if (!this.chime) {
+        throw new Error(`Cannot create folder when chime is null`);
+      }
+
       if (folder_name.length == 0) {
         alert("You must enter a name for this folder.");
         return;
@@ -243,6 +260,10 @@ export default {
           folder_name: folder_name,
         })
         .then((res) => {
+          if (!this.chime) {
+            throw new Error(`Cannot update chime folders when chime is null`);
+          }
+
           this.chime.folders.push(res.data);
         })
         .catch((err) => {
@@ -254,7 +275,8 @@ export default {
         this.chime = await api.getChime(this.chimeId);
         document.title = this.chime.name;
       } catch (err) {
-        this.$store.commit(
+        const store = useStore();
+        store.commit(
           "message",
           "Could not load Chime. You may not have permission to view this page. "
         );
@@ -348,7 +370,9 @@ export default {
   line-height: 1.5;
   border-radius: 0.25rem;
   overflow: auto;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 .chime-settings-panel--isOpen {
   display: block;
