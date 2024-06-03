@@ -18,7 +18,7 @@
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"
             @sessionUpdated="refreshQuestions"
-            @toggle="() => fullscreenRef.toggle()"
+            @toggle="isFullscreen = !isFullscreen"
             @reload="refreshQuestions"
           />
         </Fullscreen>
@@ -27,7 +27,7 @@
   </DefaultLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { component as Fullscreen } from "vue-fullscreen";
 import useQuestionListener from "../../hooks/useQuestionListener";
@@ -38,25 +38,22 @@ import Spinner from "../../components/Spinner.vue";
 import { useRouter } from "vue-router";
 import { mathMod } from "ramda";
 import Back from "../../components/Back.vue";
+import axios from "@/common/axiosClient";
+import * as T from "@/types";
 
-const props = defineProps({
-  user: {
-    type: Object,
-    required: true,
+const props = withDefaults(
+  defineProps<{
+    user: T.User;
+    chimeId: number;
+    folderId: number;
+    questionIndex?: number;
+    isShowingResults?: boolean;
+  }>(),
+  {
+    questionIndex: 0,
+    isShowingResults: false,
   },
-  chimeId: {
-    type: Number,
-    required: true,
-  },
-  folderId: {
-    type: Number,
-    required: true,
-  },
-  questionIndex: {
-    type: Number,
-    default: 0,
-  },
-});
+);
 
 const {
   chime,
@@ -73,9 +70,9 @@ const isFullscreen = ref(false);
 const fullscreenRef = ref(null);
 
 const currentQuestion = computed(() => {
-  if (props.questionIndex >= questions.length) {
+  if (props.questionIndex >= questions.value.length) {
     console.error(
-      `No question exists at index ${props.questionIndex} in ${questions}`
+      `No question exists at index ${props.questionIndex} in ${questions}`,
     );
     return null;
   }
@@ -87,7 +84,7 @@ const router = useRouter();
 function nextQuestion() {
   const nextQuestionIndex = mathMod(
     props.questionIndex + 1,
-    questions.value.length
+    questions.value.length,
   );
 
   router.push({
@@ -103,7 +100,7 @@ function nextQuestion() {
 function previousQuestion() {
   const prevQuestionIndex = mathMod(
     props.questionIndex - 1,
-    questions.value.length
+    questions.value.length,
   );
 
   router.push({
