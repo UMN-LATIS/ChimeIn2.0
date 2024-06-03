@@ -83,8 +83,22 @@
               </router-link>
               <router-link
                 :to="{
+                  name: 'presentResults',
+                  params: { chimeId, folderId, questionIndex: 0 },
+                }"
+                class="btn"
+              >
+                <i class="material-icons">bar_chart</i>
+                Results
+              </router-link>
+              <router-link
+                :to="{
                   name: 'present',
-                  params: { chimeId: chimeId, folderId: folderId },
+                  params: {
+                    chimeId: chimeId,
+                    folderId: folderId,
+                    questionIndex: 0,
+                  },
                 }"
                 class="btn"
               >
@@ -563,7 +577,9 @@ ul li {
   background-color: #fff;
   line-height: 1.5;
   border-radius: 0.25rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .folder-settings-panel__heading {
