@@ -61,12 +61,6 @@
                 <Icon>grade</Icon>
                 Report
               </router-link>
-              <button class="btn" @click="openAll">
-                <i class="material-icons pointer">visibility</i> Open All
-              </button>
-              <button class="btn" @click="closeAll">
-                <i class="material-icons pointer">visibility_off</i> Close All
-              </button>
               <router-link
                 :to="{
                   name: 'chimeStudent',
@@ -209,32 +203,47 @@
 
         <div class="border-top mt-3 pt-3 folder-page__main">
           <div>
-            <button
-              data-cy="new-question-button"
-              class="btn btn-outline-primary align-items-center d-flex my-2"
-              @click="showModal = true"
-            >
-              <i class="material-icons pointer">add</i> Add Question
-            </button>
             <div class="grid-cols-2">
-              <Draggable
-                v-model="questions"
-                itemKey="id"
-                data-cy="question-list"
-                class="question-list"
-                handle=".handle"
-                ghostClass="ghost"
-                @end="swap_question"
-              >
-                <template #item="{ element }">
-                  <QuestionCard
-                    :folder="folder"
-                    :question="element"
-                    :showMoveIcon="questions.length > 1"
-                    @change="refreshFolder"
-                  />
-                </template>
-              </Draggable>
+              <div class="grid-column">
+                <div
+                  class="d-flex align-items-center mb-2 justify-content-between"
+                >
+                  <button
+                    data-cy="new-question-button"
+                    class="btn btn-outline-primary align-items-center d-flex"
+                    @click="showModal = true"
+                  >
+                    <i class="material-icons pointer">add</i> Add Question
+                  </button>
+                  <div class="folder-page-header__button-group">
+                    <button class="btn" @click="openAll">
+                      <i class="material-icons pointer">visibility</i> Open All
+                    </button>
+                    <button class="btn" @click="closeAll">
+                      <i class="material-icons pointer">visibility_off</i> Close
+                      All
+                    </button>
+                  </div>
+                </div>
+                <Draggable
+                  v-model="questions"
+                  itemKey="id"
+                  data-cy="question-list"
+                  class="question-list"
+                  handle=".handle"
+                  ghostClass="ghost"
+                  @end="swap_question"
+                >
+                  <template #item="{ element }">
+                    <QuestionCard
+                      :folder="folder"
+                      :question="element"
+                      :showMoveIcon="questions.length > 1"
+                      @change="refreshFolder"
+                    />
+                  </template>
+                </Draggable>
+              </div>
               <JoinPanel :chime="chime" :includeFullUrl="true" />
             </div>
           </div>
