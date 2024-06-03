@@ -10,13 +10,13 @@
       <div class="row">
         <div class="col-sm-12 col-md-8 col-lg-9 present-question__inner">
           <PresentResults
-            v-if="show_results"
+            v-if="isShowingResults"
             :question="question"
             :chimeId="chime.id"
             @reload="$emit('reload')"
           />
           <PresentPrompt
-            v-if="!show_results"
+            v-if="!isShowingResults"
             :session="current_session"
             :question="question"
           />
@@ -54,10 +54,10 @@
               <button
                 data-cy="show-results-button"
                 class="btn btn-outline-primary align-items-center d-flex"
-                @click="show_results = !show_results"
+                @click="toggleShowResults"
               >
                 <i class="material-icons left">zoom_in</i>
-                <span v-if="show_results"> Hide Results </span>
+                <span v-if="isShowingResults"> Hide Results </span>
                 <span v-else> View Results </span>
               </button>
               <button
@@ -119,15 +119,11 @@ export default {
     question: { type: Object as PropType<T.Question>, required: true },
     chime: { type: Object as PropType<T.Chime>, required: true },
     folder: { type: Object as PropType<T.FolderWithQuestions>, required: true },
+    questionIndex: { type: Number, required: true },
     usersCount: { type: Number, required: true },
     isShowingResults: { type: Boolean, required: false, default: false },
   },
   emits: ["nextQuestion", "previousQuestion", "toggle", "reload"],
-  data() {
-    return {
-      show_results: false,
-    };
-  },
   computed: {
     current_session: function () {
       if (this.question.current_session_id) {
@@ -152,23 +148,46 @@ export default {
     },
   },
   mounted() {
-    if (this.folder.student_view) {
-      this.show_results = true;
+    console.log(this.$props);
+    // if this is a student view and we are not showing results,
+    // redirect to the results page
+    if (this.folder.student_view && !this.isShowingResults) {
+      this.$router.replace({
+        name: "presentResults",
+        params: {
+          chimeId: this.chime.id,
+          folderId: this.folder.id,
+          questionId: this.question.id,
+        },
+      });
     }
-    // if (this.folder.student_view && !this.isShowingResults) {
-    // this.$router.replace({
-    //   name: "presentResults",
-    //   params: {
-    //     chimeId: this.chime.id,
-    //     folderId: this.folder.id,
-    //     questionId: this.question.id,
-    //   },
-    // });
-    // }
   },
   methods: {
     toggle() {
       this.$emit("toggle");
+    },
+    showResults() {
+      this.$router.replace({
+        name: "presentResults",
+        params: {
+          chimeId: this.chime.id,
+          folderId: this.folder.id,
+          questionIndex: this.questionIndex,
+        },
+      });
+    },
+    showPrompt() {
+      this.$router.replace({
+        name: "present",
+        params: {
+          chimeId: this.chime.id,
+          folderId: this.folder.id,
+          questionIndex: this.questionIndex,
+        },
+      });
+    },
+    toggleShowResults() {
+      this.isShowingResults ? this.showPrompt() : this.showResults();
     },
     start_session() {
       openQuestion({

@@ -56,17 +56,16 @@ const routes: RouteRecordRaw[] = [
     }),
   },
   {
-    path: "/chime/:chimeId/folder/:folderId/present/:questionIndex?/results",
+    path: "/chime/:chimeId/folder/:folderId/present/:questionIndex/results",
     name: "presentResults",
     component: PresentPage,
     props: (route) => ({
       chimeId: toInt(route.params.chimeId),
       folderId: toInt(route.params.folderId),
       questionIndex: toInt(route.params.questionIndex, 0),
-      showResults: true,
+      isShowingResults: true,
     }),
   },
-
   {
     path: "/chime/:chimeId/folder/:folderId/present/:questionIndex?",
     name: "present",
@@ -75,6 +74,7 @@ const routes: RouteRecordRaw[] = [
       chimeId: toInt(route.params.chimeId),
       folderId: toInt(route.params.folderId),
       questionIndex: toInt(route.params.questionIndex, 0),
+      isShowingResults: false,
     }),
   },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundPage },

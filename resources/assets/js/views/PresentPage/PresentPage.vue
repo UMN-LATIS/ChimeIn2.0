@@ -15,7 +15,8 @@
             :question="currentQuestion"
             :chime="chime"
             :folder="folder"
-            :isShowingResults="props.isShowingResults"
+            :questionIndex="questionIndex"
+            :isShowingResults="isShowingResults"
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"
             @sessionUpdated="refreshQuestions"
@@ -41,6 +42,7 @@ import { mathMod } from "ramda";
 import Back from "../../components/Back.vue";
 import axios from "@/common/axiosClient";
 import * as T from "@/types";
+import { logUnwrappedProxy } from "@/helpers/logUnwrappedProxy";
 
 const props = withDefaults(
   defineProps<{
@@ -115,6 +117,8 @@ function previousQuestion() {
 }
 
 onMounted(() => {
+  logUnwrappedProxy("props", props);
+
   axios
     .get(`/api/chime/${props.chimeId}`)
     .then((res) => {
