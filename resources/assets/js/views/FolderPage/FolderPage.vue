@@ -84,7 +84,7 @@
               <router-link
                 :to="{
                   name: 'presentResults',
-                  params: { chimeId, folderId, isShowingResults: true },
+                  params: { chimeId, folderId, questionIndex: 0 },
                 }"
                 class="btn"
               >
@@ -94,7 +94,11 @@
               <router-link
                 :to="{
                   name: 'present',
-                  params: { chimeId: chimeId, folderId: folderId },
+                  params: {
+                    chimeId: chimeId,
+                    folderId: folderId,
+                    questionIndex: 0,
+                  },
                 }"
                 class="btn"
               >
@@ -291,7 +295,7 @@ const QuestionForm = defineAsyncComponent(
     import(
       /* webpackChunkName: "QuestionForm" */
       "../QuestionForm/QuestionForm.vue"
-    ),
+    )
 );
 
 const props = defineProps({
@@ -324,7 +328,7 @@ const {
 const otherFolderSessions = computed(() => {
   if (allSessions.value && folder.value) {
     return allSessions.value.filter(
-      (session) => session.question.folder_id !== folder.value.id,
+      (session) => session.question.folder_id !== folder.value.id
     );
   }
   return [];
@@ -346,7 +350,7 @@ onMounted(async () => {
   if (isParticipantView.value) {
     store.commit("message", "Unauthorized: Only presenters may edit chimes.");
     console.error(
-      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`,
+      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
     );
     return;
   }
@@ -357,7 +361,7 @@ onMounted(async () => {
 function reset() {
   if (
     confirm(
-      "Are you sure you want to wipe all the responses to questions in this folder?",
+      "Are you sure you want to wipe all the responses to questions in this folder?"
     )
   ) {
     const promises = questions.value.map((question) =>
@@ -365,7 +369,7 @@ function reset() {
         chimeId: props.chimeId,
         folderId: props.folderId,
         questionId: question.id,
-      }),
+      })
     );
     Promise.all(promises)
       .then(() => refreshFolder())
@@ -382,7 +386,7 @@ async function swap_question() {
       chimeId: props.chimeId,
       folderId: props.folderId,
     },
-    updatedOrder,
+    updatedOrder
   );
 
   refreshFolder();
@@ -398,7 +402,7 @@ async function edit_folder() {
     { chimeId: props.chimeId, folderId: props.folderId },
     {
       folder_name: folder.value.name,
-    },
+    }
   );
   show_edit_folder.value = false;
 }
@@ -436,7 +440,7 @@ function closeOthers() {
       chimeId: props.chimeId,
       folderId: openSession.question.folder_id,
       questionId: openSession.question.id,
-    }),
+    })
   );
   Promise.all(promises).catch((err) => {
     hideOpenAlert.value = true;
@@ -463,7 +467,7 @@ function update_folders() {
     .get("/api/chime/" + selected_chime.value)
     .then((res) => {
       const foldersWithoutCurrentOne = res.data.folders.filter(
-        (f) => f.id !== props.folderId,
+        (f) => f.id !== props.folderId
       );
 
       existing_folders.value = orderBy(foldersWithoutCurrentOne, "created_at", [
@@ -484,7 +488,7 @@ async function sync() {
   if (!synced.value) {
     store.commit(
       "message",
-      "Could not sync Chime. Please contact support at latistecharch@umn.edu.",
+      "Could not sync Chime. Please contact support at latistecharch@umn.edu."
     );
   }
 }
