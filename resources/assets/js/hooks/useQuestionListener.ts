@@ -1,11 +1,11 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
 import { getFolderWithQuestions, getChime } from "../common/api";
 import echoClient from "../common/echoClient.js";
-import { Chime, Folder, Maybe, Question } from "../types";
+import { Chime, FolderWithQuestions, Maybe, Question } from "../types";
 
 export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
-  const folder = ref<Maybe<Folder>>(null);
+  const folder = ref<Maybe<FolderWithQuestions>>(null);
   const chime = ref<Maybe<Chime>>(null);
   const questions = computed<Question[]>({
     get() {
