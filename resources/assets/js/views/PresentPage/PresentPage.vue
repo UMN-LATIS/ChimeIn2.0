@@ -1,7 +1,10 @@
 <template>
   <DefaultLayout :user="user" class="bg-white">
     <template #navbar-left>
-      <Back :to="`/chime/${chimeId}/folder/${folderId}`">Back to Folder</Back>
+      <Back v-if="!isStudentView" :to="`/chime/${chimeId}/folder/${folderId}`"
+        >Back to Folder</Back
+      >
+      <Back v-else :to="`/chimeParticipant/${chimeId}/${folderId}`">Back</Back>
     </template>
     <div class="present-page">
       <ErrorDialog />
@@ -15,6 +18,9 @@
             :question="currentQuestion"
             :chime="chime"
             :folder="folder"
+            :questionIndex="questionIndex"
+            :isShowingResults="isShowingResults"
+            :isStudentView="isStudentView"
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"
             @sessionUpdated="refreshQuestions"
@@ -26,7 +32,6 @@
     </div>
   </DefaultLayout>
 </template>
-
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { component as Fullscreen } from "vue-fullscreen";
@@ -47,9 +52,11 @@ const props = withDefaults(
     chimeId: number;
     folderId: number;
     questionIndex?: number;
+    isShowingResults?: boolean;
   }>(),
   {
     questionIndex: 0,
+    isShowingResults: false,
   }
 );
 
@@ -74,6 +81,10 @@ const currentQuestion = computed(() => {
     return null;
   }
   return questions.value[props.questionIndex];
+});
+
+const isStudentView = computed((): boolean => {
+  return folder.value?.student_view ?? false;
 });
 
 const router = useRouter();
