@@ -27,7 +27,7 @@
         </button>
       </div>
       <Spinner v-if="!isPageReady" />
-      <div v-if="isPageReady && !isParticipantView">
+      <div v-if="chime && folder && !isParticipantView">
         <header class="folder-page-header">
           <div class="folder-page-header__folder-name-group">
             <p class="folder-page-header__chime-name">
@@ -127,7 +127,7 @@
               </div>
               <div class="ml-auto col-12 btn-toolbar justify-content-end">
                 <button
-                  v-if="folder.resource_link_pk > 0 || folder.lti_lineitem"
+                  v-if="folder.resource_link_pk || folder.lti_lineitem"
                   class="mr-2 btn btn-success btn-sm align-items-center d-flex"
                   @click="sync"
                 >
@@ -160,7 +160,7 @@
                     <label for="chime_select">Select a Chime:</label>
                     <select
                       id="chime_select"
-                      v-model="selected_chime"
+                      v-model="selected_chime_id"
                       class="form-control"
                       @change="update_folders"
                     >
@@ -179,7 +179,7 @@
                     <label for="folder_select">Select a Folder:</label>
                     <select
                       id="folder_select"
-                      v-model="selected_folder"
+                      v-model="selected_folder_id"
                       class="form-control"
                     >
                       <option disabled>Select a Folder</option>
@@ -298,7 +298,10 @@ import {
   forceSyncGradesWithLMS,
 } from "../../common/api";
 import { useRouter } from "vue-router";
+import axios from "@/common/axiosClient";
+import * as T from "@/types";
 import Icon from "../../components/Icon.vue";
+
 const QuestionForm = defineAsyncComponent(
   () =>
     import(
@@ -307,19 +310,19 @@ const QuestionForm = defineAsyncComponent(
     )
 );
 
-const props = defineProps({
-  folderId: { type: Number, required: true },
-  chimeId: { type: Number, required: true },
-  user: { type: Object, required: true },
-});
+const props = defineProps<{
+  folderId: number;
+  chimeId: number;
+  user: T.User;
+}>();
 const showModal = ref(false);
 const show_edit_folder = ref(false);
-const allSessions = ref(null);
+const allSessions = ref<T.Session[] | null>(null);
 const hideOpenAlert = ref(false);
-const existing_chimes = ref([]);
-const existing_folders = ref([]);
-const selected_chime = ref(null);
-const selected_folder = ref(null);
+const existing_chimes = ref<T.Chime[]>([]);
+const existing_folders = ref<T.Folder[]>([]);
+const selected_chime_id = ref<number | null>(null);
+const selected_folder_id = ref<number | null>(null);
 const synced = ref(false);
 
 const store = useStore();
@@ -335,12 +338,12 @@ const {
 });
 
 const otherFolderSessions = computed(() => {
-  if (allSessions.value && folder.value) {
-    return allSessions.value.filter(
-      (session) => session.question.folder_id !== folder.value.id
-    );
+  if (!allSessions.value || !folder.value) {
+    return [];
   }
-  return [];
+  return allSessions.value.filter(
+    (session) => session.question.folder_id !== props.folderId
+  );
 });
 
 // each time we open the edit folder
@@ -417,6 +420,12 @@ async function edit_folder() {
 }
 
 async function delete_folder() {
+  if (!folder.value) {
+    throw new Error(
+      `Cannot delete folder: folder ${props.folderId} not found.`
+    );
+  }
+
   if (!confirm("Delete Folder " + folder.value.name + "?")) return;
 
   await deleteFolder({ chimeId: props.chimeId, folderId: props.folderId });
@@ -458,22 +467,28 @@ function closeOthers() {
 }
 
 function handleFolderNameInput(event) {
+  if (!folder.value) {
+    throw new Error(
+      `Cannot update folder name: folder ${props.folderId} not found.`
+    );
+  }
+
   folder.value.name = event.target.value;
 }
 
 async function do_import() {
-  if (!selected_chime.value || !selected_folder.value) return;
+  if (!selected_chime_id.value || !selected_folder_id.value) return;
   await importFolder({
     destinationChimeId: props.chimeId,
     destinationFolderId: props.folderId,
-    sourceFolderId: selected_folder.value,
+    sourceFolderId: selected_folder_id.value,
   });
   refreshFolder();
 }
 
 function update_folders() {
   axios
-    .get("/api/chime/" + selected_chime.value)
+    .get("/api/chime/" + selected_chime_id.value)
     .then((res) => {
       const foldersWithoutCurrentOne = res.data.folders.filter(
         (f) => f.id !== props.folderId
