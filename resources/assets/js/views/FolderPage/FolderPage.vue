@@ -271,7 +271,7 @@
   </DefaultLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import orderBy from "lodash/orderBy";
 import { defineAsyncComponent, ref, computed, watch, onMounted } from "vue";
 import Draggable from "vuedraggable";
@@ -299,11 +299,12 @@ import {
 } from "../../common/api";
 import { useRouter } from "vue-router";
 import Icon from "../../components/Icon.vue";
-const QuestionForm = defineAsyncComponent(() =>
-  import(
-    /* webpackChunkName: "QuestionForm" */
-    "../QuestionForm/QuestionForm.vue"
-  )
+const QuestionForm = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "QuestionForm" */
+      "../QuestionForm/QuestionForm.vue"
+    )
 );
 
 const props = defineProps({
