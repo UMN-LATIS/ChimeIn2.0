@@ -15,6 +15,7 @@
             :question="currentQuestion"
             :chime="chime"
             :folder="folder"
+            :isShowingResults="props.isShowingResults"
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"
             @sessionUpdated="refreshQuestions"
@@ -52,7 +53,7 @@ const props = withDefaults(
   {
     questionIndex: 0,
     isShowingResults: false,
-  },
+  }
 );
 
 const {
@@ -72,7 +73,7 @@ const fullscreenRef = ref(null);
 const currentQuestion = computed(() => {
   if (props.questionIndex >= questions.value.length) {
     console.error(
-      `No question exists at index ${props.questionIndex} in ${questions}`,
+      `No question exists at index ${props.questionIndex} in ${questions}`
     );
     return null;
   }
@@ -84,7 +85,7 @@ const router = useRouter();
 function nextQuestion() {
   const nextQuestionIndex = mathMod(
     props.questionIndex + 1,
-    questions.value.length,
+    questions.value.length
   );
 
   router.push({
@@ -100,7 +101,7 @@ function nextQuestion() {
 function previousQuestion() {
   const prevQuestionIndex = mathMod(
     props.questionIndex - 1,
-    questions.value.length,
+    questions.value.length
   );
 
   router.push({
