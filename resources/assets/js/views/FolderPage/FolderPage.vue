@@ -127,7 +127,9 @@
               </div>
               <div class="ml-auto col-12 btn-toolbar justify-content-end">
                 <button
-                  v-if="folder.resource_link_pk || folder.lti_lineitem"
+                  v-if="
+                    isCanvasChime && chime.lti_grade_mode === 'multiple_grades'
+                  "
                   class="mr-2 btn btn-success btn-sm align-items-center d-flex"
                   @click="sync"
                 >
@@ -301,6 +303,7 @@ import { useRouter } from "vue-router";
 import axios from "@/common/axiosClient";
 import * as T from "@/types";
 import Icon from "../../components/Icon.vue";
+import { selectIsCanvasChime } from "@/helpers/chimeSelectors";
 
 const QuestionForm = defineAsyncComponent(
   () =>
@@ -358,6 +361,10 @@ watch(show_edit_folder, function (newValue) {
 
 const isPageReady = computed(() => !!folder.value);
 const isParticipantView = computed(() => folder.value?.student_view ?? false);
+const isCanvasChime = computed(() =>
+  chime.value ? selectIsCanvasChime(chime.value) : false
+);
+
 onMounted(async () => {
   if (isParticipantView.value) {
     store.commit("message", "Unauthorized: Only presenters may edit chimes.");

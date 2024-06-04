@@ -45,7 +45,7 @@
             @update="handleUpdateChimeOptions"
           />
           <button
-            v-if="isCanvasChime"
+            v-if="isCanvasChime && chime.lti_grade_mode === 'one_grade'"
             class="btn btn-outline-success btn-sm align-items-center d-flex"
             @click="forceSyncGrades"
           >
@@ -272,7 +272,6 @@ ul {
 @keyframes spin {
   from {
     transform: rotate(360deg);
-    
   }
   to {
     transform: rotate(0deg);
