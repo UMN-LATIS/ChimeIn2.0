@@ -140,7 +140,7 @@ import { isEmpty } from "ramda";
 import { PropType } from "vue";
 import * as T from "@/types";
 import axios from "@/common/axiosClient";
-import { useStore } from "vuex";
+import store from "@/store";
 
 export default {
   components: {
@@ -275,7 +275,6 @@ export default {
         this.chime = await api.getChime(this.chimeId);
         document.title = this.chime.name;
       } catch (err) {
-        const store = useStore();
         store.commit(
           "message",
           "Could not load Chime. You may not have permission to view this page. "
