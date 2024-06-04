@@ -58,7 +58,7 @@
     "spatie/laravel-ignition": "^2.0",
     "appzcoder/crud-generator": "^3.0",
     "barryvdh/laravel-debugbar": "^3.2",
-    "barryvdh/laravel-ide-helper": "^2.10",
+    "barryvdh/laravel-ide-helper": "^3.0",
     "deployer/deployer": "^7.0",
     "filp/whoops": "~2.0",
     "laracasts/cypress": "^3.0",
