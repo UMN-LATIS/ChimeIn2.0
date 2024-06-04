@@ -99,7 +99,7 @@ export interface Session {
   created_at?: string;
   updated_at?: string;
   deleted_at?: string | null;
-  question_id: number;
+  question: Question;
   responses: Response[];
 }
 
