@@ -53,7 +53,7 @@
     "@vue-a11y/announcer": "^3.1.5",
     "axios": "^1.6",
     "bootstrap": "^4.6.0",
-    "chart.js": "^4.4.2",
+    "chart.js": "^4.4.3",
     "chartjs-chart-wordcloud": "^4.4.0",
     "color": "^4.2.3",
     "compromise": "^14.13.0",
