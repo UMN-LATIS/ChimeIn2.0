@@ -32,15 +32,15 @@
         variant="primary"
         @click="handleSaveOrUpdate"
       >
-        {{ maybeResponse?.id ? "Update" : "Save" }}
+        {{ isCreatingNewResponse ? "Save" : "Update" }}
       </button>
 
       <button
         v-if="
           !disabled &&
           question.allow_multiple &&
-          hasPreviouslySaved &&
-          !isAdditionalResponse
+          !isCreatingNewResponse &&
+          hasExistingResponse
         "
         class="btn btn-outline-primary"
         variant="primary"
@@ -58,7 +58,7 @@ import {
   Question,
   Response,
 } from "@/types";
-import { isEmpty } from "ramda";
+import { has, isEmpty } from "ramda";
 import { computed, reactive, ref, watch } from "vue";
 
 const props = defineProps<{
@@ -71,7 +71,8 @@ const emit = defineEmits<{
   (
     event: "recordresponse",
     response: NumericResponseResponseInfo,
-    isAdditionalResponse: boolean
+    // false = update, true = save as new
+    createAsNewResponse?: boolean
   ): void;
 }>();
 
@@ -85,20 +86,15 @@ const maybeResponse = computed(
   }
 );
 
-const hasPreviouslySaved = computed(() => {
-  return maybeResponse.value?.id !== undefined;
-});
+const hasExistingResponse = computed(() => !!maybeResponse.value?.id);
+
+const isCreatingNewResponse = ref(!hasExistingResponse.value);
 
 const localResponse = reactive<NumericResponseResponseInfo>({
   question_type: "numeric_response",
   x: 0,
   y: 0,
 });
-
-// if the question supports multiple responses, this will
-// be true when the user wants to submit a new response
-// rather than updating the existing one.
-const isAdditionalResponse = ref(false);
 
 watch(
   maybeResponse,
@@ -114,13 +110,22 @@ const questionOptions = computed(() => {
 });
 
 function handleSaveOrUpdate() {
-  emit("recordresponse", localResponse, isAdditionalResponse.value);
+  // if this is a new response, we need to save it
+  // and mark that we're not creating a new response anymore
+  if (isCreatingNewResponse.value) {
+    emit("recordresponse", localResponse, true);
+    isCreatingNewResponse.value = false;
+    return;
+  }
+
+  // otherwise, we're updating an existing response
+  emit("recordresponse", localResponse, false);
 }
 
 function handleClearAndStartNewResponse() {
   localResponse.x = 0;
   localResponse.y = 0;
-  isAdditionalResponse.value = true;
+  isCreatingNewResponse.value = true;
 }
 </script>
 <style scoped></style>
