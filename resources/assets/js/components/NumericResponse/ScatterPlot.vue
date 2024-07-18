@@ -33,6 +33,39 @@ const props = defineProps<{
 type TrendlineType = "none" | "linear" | "quadratic" | "cubic" | "exponential";
 const trendlineType = ref<TrendlineType>("none");
 
+const toTrendline = (type: TrendlineType) => {
+  const trendline = {
+    type,
+    color: "green",
+    lineWidth: 3,
+    opacity: 0.3,
+    showR2: true,
+    visibleInLegend: true,
+  };
+
+  if (type === "none") {
+    return null;
+  }
+
+  if (type === "quadratic") {
+    return {
+      ...trendline,
+      type: "polynomial",
+      degree: 2,
+    };
+  }
+
+  if (type === "cubic") {
+    return {
+      ...trendline,
+      type: "polynomial",
+      degree: 3,
+    };
+  }
+
+  return trendline;
+};
+
 const options = computed(
   (): GoogleChartOptions => ({
     animation: {
@@ -46,7 +79,7 @@ const options = computed(
     chartArea: {
       top: 30,
       left: 50,
-      bottom: 30,
+      bottom: 60,
       width: "100%",
     },
     vAxis: {
@@ -60,14 +93,7 @@ const options = computed(
       isHtml: false,
     },
     trendlines: {
-      0: {
-        type: "linear",
-        color: "green",
-        lineWidth: 3,
-        opacity: 0.3,
-        showR2: true,
-        visibleInLegend: true,
-      },
+      0: toTrendline(trendlineType.value),
     },
   })
 );
@@ -84,6 +110,7 @@ const options = computed(
   align-items: baseline;
   /* hack to reduce whitespace and make appear aligned with session dropdown */
   margin-top: -3.4rem;
+  margin-bottom: 0.25rem;
 }
 .chart-controls select {
   width: auto;
