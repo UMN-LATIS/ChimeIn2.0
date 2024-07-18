@@ -27,28 +27,36 @@
         />
       </div>
     </div>
-    <div class="mb-3">
+    <div class="mb-3 d-flex gap-2">
       <button
-        v-if="!disabled"
+        v-if="!disabled && (!hasExistingResponse || hasStartedNewResponse)"
+        class="btn btn-outline-primary"
+        @click="handleSave"
+      >
+        Save
+      </button>
+
+      <button
+        v-else-if="!disabled"
         class="btn btn-outline-primary"
         variant="primary"
-        @click="handleSaveOrUpdate"
+        @click="handleUpdate"
       >
-        {{ isCreatingNewResponse ? "Save" : "Update" }}
+        Update
       </button>
 
       <button
         v-if="
           !disabled &&
           question.allow_multiple &&
-          !isCreatingNewResponse &&
-          hasExistingResponse
+          hasExistingResponse &&
+          !hasStartedNewResponse
         "
         class="btn btn-outline-primary"
         variant="primary"
-        @click="saveAsNewResponse"
+        @click="handleClearAndStartNewResponse"
       >
-        Save as New Response
+        Clear and Start a New Response
       </button>
     </div>
   </article>
@@ -91,8 +99,6 @@ const maybeResponse = computed(
 
 const hasExistingResponse = computed(() => !!maybeResponse.value?.id);
 
-const isCreatingNewResponse = ref(!hasExistingResponse.value);
-
 const localResponse = reactive<NumericResponseResponseInfo>({
   question_type: "numeric_response",
   x: 0,
@@ -112,22 +118,28 @@ const questionOptions = computed(() => {
   return props.question.question_info.question_responses;
 });
 
-function handleSaveOrUpdate() {
-  // if this is a new response, we need to save it
-  // and mark that we're not creating a new response anymore
-  if (isCreatingNewResponse.value) {
-    emit("recordresponse", localResponse, true);
-    isCreatingNewResponse.value = false;
-    return;
-  }
+function handleSave() {
+  emit("recordresponse", localResponse, true);
+  hasStartedNewResponse.value = false;
+}
 
-  // otherwise, we're updating an existing response
+function handleUpdate() {
   emit("recordresponse", localResponse, false);
 }
 
-function saveAsNewResponse() {
-  emit("recordresponse", localResponse, true);
-  isCreatingNewResponse.value = false;
+const hasStartedNewResponse = ref(false);
+function handleClearAndStartNewResponse() {
+  localResponse.x = 0;
+  localResponse.y = 0;
+  hasStartedNewResponse.value = true;
 }
 </script>
-<style scoped></style>
+<style scoped>
+.btn.btn-tertiary {
+  display: block;
+  text-transform: uppercase;
+  font-size: 0.825rem;
+  color: #333;
+  background: #f3f3f3;
+}
+</style>
