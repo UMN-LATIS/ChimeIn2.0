@@ -62,4 +62,8 @@ const options = computed(
   })
 );
 </script>
-<style scoped></style>
+<style scoped>
+.googleChart {
+  min-height: 600px;
+}
+</style>
