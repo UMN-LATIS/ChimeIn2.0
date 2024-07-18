@@ -58,12 +58,13 @@ import {
   Question,
   Response,
 } from "@/types";
-import { has, isEmpty } from "ramda";
+import { isEmpty } from "ramda";
 import { computed, reactive, ref, watch } from "vue";
 
 const props = defineProps<{
   question: Question<NumericResponseQuestionInfo>;
   response: Response<NumericResponseResponseInfo> | {};
+  // whether inputs should be disabled, i.e. in the "Answered Questions" view
   disabled: boolean;
 }>();
 
