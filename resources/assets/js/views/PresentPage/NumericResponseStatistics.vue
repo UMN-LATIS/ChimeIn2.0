@@ -1,7 +1,11 @@
 <template>
   <div class="">
     <div v-if="chartType === 'bar'" class="chart-container">
-      <BarChart :data="barChartData" :label="questionOptions.x_axis_label" />
+      <BarChart
+        :data="barChartData"
+        :itemLabel="question.anonymous ? 'Response ID' : 'User'"
+        :valueLabel="questionOptions.x_axis_label"
+      />
     </div>
     <div v-else-if="chartType === 'scatter'">Scatter Chart</div>
   </div>
@@ -25,16 +29,20 @@ const chartType = computed(
   () => props.question.question_info.question_responses.chart_type
 );
 
-const responseInfo = computed(() => {
-  return props.responses.map((response) => response.response_info);
-});
-
 const questionOptions = computed(() => {
   return props.question.question_info.question_responses;
 });
 
-const barChartData = computed(() => {
-  return responseInfo.value.map((info) => info.x);
+const barChartData = computed((): [label: string, value: number][] => {
+  return props.responses.map((response, index) => {
+    // is this question anonymous? If so, then just label
+    // with the response id, otherwise use username
+    const label = props.question.anonymous
+      ? `Response ${index + 1}`
+      : response.user.name;
+
+    return [label, response.response_info.x];
+  });
 });
 </script>
 <style scoped></style>
