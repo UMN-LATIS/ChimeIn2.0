@@ -1,29 +1,31 @@
 <template>
   <article>
-    <div class="mb-3">
-      <label for="numeric-x-input" class="form-label">
-        {{ questionOptions.x_axis_label }}
-      </label>
-      <input
-        id="numeric-x-input"
-        v-model="localResponse.x"
-        type="number"
-        :disabled="props.disabled"
-        class="form-control"
-      />
-    </div>
+    <div class="mb-3 d-flex gap-3">
+      <div>
+        <label for="numeric-x-input" class="form-label">
+          {{ questionOptions.x_axis_label }}
+        </label>
+        <input
+          id="numeric-x-input"
+          v-model="localResponse.x"
+          type="number"
+          :disabled="props.disabled"
+          class="form-control"
+        />
+      </div>
 
-    <div v-if="questionOptions.chart_type === 'scatter'" class="mb-3">
-      <label for="numeric-y-input" class="form-label">
-        {{ questionOptions.y_axis_label }}
-      </label>
-      <input
-        id="numeric-y-input"
-        v-model="localResponse.y"
-        type="number"
-        :disabled="disabled"
-        class="form-control"
-      />
+      <div v-if="questionOptions.chart_type === 'scatter'">
+        <label for="numeric-y-input" class="form-label">
+          {{ questionOptions.y_axis_label }}
+        </label>
+        <input
+          id="numeric-y-input"
+          v-model="localResponse.y"
+          type="number"
+          :disabled="disabled"
+          class="form-control"
+        />
+      </div>
     </div>
     <div class="mb-3">
       <button
@@ -44,9 +46,9 @@
         "
         class="btn btn-outline-primary"
         variant="primary"
-        @click="handleClearAndStartNewResponse"
+        @click="saveAsNewResponse"
       >
-        Clear and Start a New Response
+        Save as New Response
       </button>
     </div>
   </article>
@@ -123,10 +125,9 @@ function handleSaveOrUpdate() {
   emit("recordresponse", localResponse, false);
 }
 
-function handleClearAndStartNewResponse() {
-  localResponse.x = 0;
-  localResponse.y = 0;
-  isCreatingNewResponse.value = true;
+function saveAsNewResponse() {
+  emit("recordresponse", localResponse, true);
+  isCreatingNewResponse.value = false;
 }
 </script>
 <style scoped></style>

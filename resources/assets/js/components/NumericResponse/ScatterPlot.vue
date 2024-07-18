@@ -1,9 +1,9 @@
 <template>
   <div>
     <GChart
-      type="Histogram"
+      type="ScatterChart"
       :resizeDebounce="100"
-      :data="gChartData"
+      :data="[[xAxisLabel, yAxisLabel], ...data]"
       :options="options"
       class="googleChart"
     />
@@ -15,23 +15,10 @@ import { GChart } from "vue-google-charts";
 import { GoogleChartOptions } from "vue-google-charts/dist/types";
 
 const props = defineProps<{
-  data: [label: string, value: number][];
-  itemLabel: string;
+  data: [x: number, y: number][];
   xAxisLabel: string;
+  yAxisLabel: string;
 }>();
-
-/**
- * Example data: first row is labels
- * [["User", "Cups of Coffee per day"],
- *  ["Alice", 0],
- *  ["Bob", 2],
- *  ["Charlie", 2],
- *  ...
- * ]
- */
-const gChartData = computed(() => {
-  return [[props.itemLabel, props.xAxisLabel], ...props.data];
-});
 
 const options = computed(
   (): GoogleChartOptions => ({
@@ -51,7 +38,7 @@ const options = computed(
     },
     vAxis: {
       baseline: 0,
-      title: "Responses",
+      title: props.yAxisLabel,
     },
     hAxis: {
       title: props.xAxisLabel,

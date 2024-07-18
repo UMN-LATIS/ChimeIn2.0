@@ -1,17 +1,22 @@
 <template>
   <div class="">
-    <div v-if="chartType === 'bar'" class="chart-container">
-      <BarChart
-        :data="barChartData"
-        :itemLabel="question.anonymous ? 'Response ID' : 'User'"
-        :valueLabel="questionOptions.x_axis_label"
-      />
-    </div>
-    <div v-else-if="chartType === 'scatter'">Scatter Chart</div>
+    <BarChart
+      v-if="chartType === 'bar'"
+      :data="barChartData"
+      :itemLabel="question.anonymous ? 'Response ID' : 'User'"
+      :xAxisLabel="questionOptions.x_axis_label"
+    />
+    <ScatterPlot
+      v-else-if="chartType === 'scatter'"
+      :data="scatterPlotData"
+      :xAxisLabel="questionOptions.x_axis_label || 'X'"
+      :yAxisLabel="questionOptions.y_axis_label || 'Y'"
+    />
   </div>
 </template>
 <script setup lang="ts">
 import BarChart from "@/components/NumericResponse/BarChart.vue";
+import ScatterPlot from "@/components/NumericResponse/ScatterPlot.vue";
 import type {
   NumericResponseResponseInfo,
   NumericResponseQuestionInfo,
@@ -43,6 +48,13 @@ const barChartData = computed((): [label: string, value: number][] => {
 
     return [label, response.response_info.x];
   });
+});
+
+const scatterPlotData = computed((): [x: number, y: number][] => {
+  return props.responses.map((response) => [
+    response.response_info.x,
+    response.response_info.y,
+  ]);
 });
 </script>
 <style scoped></style>
