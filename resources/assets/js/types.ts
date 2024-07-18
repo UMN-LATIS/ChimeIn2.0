@@ -86,6 +86,12 @@ export interface PinOnImageResponseResponseInfo extends ResponseInfo {
   };
 }
 
+export interface NumericResponseResponseInfo extends ResponseInfo {
+  question_type: "numeric_response";
+  x: number;
+  y: number;
+}
+
 export type MultipleChoiceResponse = Response<MultipleChoiceResponseInfo>;
 export type FreeResponse = Response<FreeResponseResponseInfo>;
 export type SliderResponse = Response<SliderResponseResponseInfo>;
@@ -111,7 +117,8 @@ export type QuestionType =
   | "heatmap_response"
   | "text_heatmap_response"
   | "pin_on_image_response"
-  | "no_response";
+  | "no_response"
+  | "numeric_response";
 
 export type HTMLString = string;
 
@@ -195,6 +202,15 @@ export interface PinOnImageQuestionInfo extends QuestionInfo {
   question_responses: {
     image: Filename; // "1jpqNOnV5Kig4FVwOf9tPIAarwvVl8nRvZrOiuLI.jpg"
     image_name: string; // alt attribute for image
+  };
+}
+
+export interface NumericResponseQuestionInfo extends QuestionInfo {
+  question_type: "numeric_response";
+  question_responses: {
+    chart_type: "bar" | "scatter";
+    x_axis_label: string;
+    y_axis_label?: string; // only for scatter
   };
 }
 

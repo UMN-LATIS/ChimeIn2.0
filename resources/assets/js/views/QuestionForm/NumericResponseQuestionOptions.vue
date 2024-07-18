@@ -9,11 +9,11 @@
           class="sr-only"
           name="chart-type"
           value="bar"
-          :checked="question_responses.type === 'bar'"
+          :checked="question_responses.chart_type === 'bar'"
           @change="
             $emit('update:question_responses', {
               ...question_responses,
-              type: 'bar',
+              chart_type: 'bar',
             })
           "
         />
@@ -29,11 +29,11 @@
           name="chart-type"
           value="scatter"
           class="sr-only"
-          :checked="question_responses.type === 'scatter'"
+          :checked="question_responses.chart_type === 'scatter'"
           @change="
             $emit('update:question_responses', {
               ...question_responses,
-              type: 'scatter',
+              chart_type: 'scatter',
             })
           "
         />
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <div v-if="question_responses.type === 'scatter'" class="row">
+    <div v-if="question_responses.chart_type === 'scatter'" class="row">
       <label for="x-axis-label" class="col-form-label col-sm-3">
         Y Axis Label
       </label>
@@ -72,7 +72,7 @@
           type="text"
           class="form-control"
           :value="question_responses.y_axis_label"
-          :required="question_responses.type === 'scatter'"
+          :required="question_responses.chart_type === 'scatter'"
           @input="
             (event) =>
               $emit('update:question_responses', {
@@ -86,24 +86,18 @@
   </section>
 </template>
 <script setup lang="ts">
-import VSelect from "@/components/VSelect.vue";
 import IconChartBar from "@/icons/IconChartBar.vue";
 import IconChartScatter from "@/icons/IconChartScatter.vue";
-
-interface NumericQuestionResponseOptions {
-  type: "bar" | "scatter";
-  x_axis_label: string;
-  y_axis_label: string;
-}
+import { NumericResponseQuestionInfo } from "@/types";
 
 withDefaults(
   defineProps<{
     // eslint-disable-next-line vue/prop-name-casing
-    question_responses: NumericQuestionResponseOptions;
+    question_responses: NumericResponseQuestionInfo["question_responses"];
   }>(),
   {
     question_responses: () => ({
-      type: "bar",
+      chart: "bar",
       x_axis_label: "",
       y_axis_label: "",
     }),
@@ -111,7 +105,10 @@ withDefaults(
 );
 
 defineEmits<{
-  (event: "update:question_responses", value: NumericQuestionResponseOptions);
+  (
+    event: "update:question_responses",
+    value: NumericResponseQuestionInfo["question_responses"]
+  ): void;
 }>();
 </script>
 <style scoped>
