@@ -38,47 +38,57 @@ import { defineAsyncComponent } from "vue";
 
 export default {
   components: {
-    slider_response_statistics: defineAsyncComponent(() =>
-      import(
-        /* webpackChunkName: "SliderResponseStatistics" */
-        "./SliderStatistics.vue"
-      )
+    slider_response_statistics: defineAsyncComponent(
+      () =>
+        import(
+          /* webpackChunkName: "SliderResponseStatistics" */
+          "./SliderStatistics.vue"
+        )
     ),
-    multiple_choice_statistics: defineAsyncComponent(() =>
-      import(
-        /* webpackChunkName: "MultipleChoiceStatistics" */
-        "./MultipleChoiceStatistics.vue"
-      )
+    multiple_choice_statistics: defineAsyncComponent(
+      () =>
+        import(
+          /* webpackChunkName: "MultipleChoiceStatistics" */
+          "./MultipleChoiceStatistics.vue"
+        )
     ),
-    image_response_statistics: defineAsyncComponent(() =>
-      import(
-        /* webpackChunkName: "ImageResponseStatistics" */
-        "./ImageResponseStatistics.vue"
-      )
+    image_response_statistics: defineAsyncComponent(
+      () =>
+        import(
+          /* webpackChunkName: "ImageResponseStatistics" */
+          "./ImageResponseStatistics.vue"
+        )
     ),
-    free_response_statistics: defineAsyncComponent(() =>
-      import(
-        /* webpackChunkName: "FreeResponseStatistics" */
-        "./FreeResponseStatistics.vue"
-      )
+    free_response_statistics: defineAsyncComponent(
+      () =>
+        import(
+          /* webpackChunkName: "FreeResponseStatistics" */
+          "./FreeResponseStatistics.vue"
+        )
     ),
-    text_heatmap_response_statistics: defineAsyncComponent(() =>
-      import(
-        /* webpackChunkName: "TextHeatmapresponseStatistics" */
-        "./TextHeatmapResponseStatistics.vue"
-      )
+    text_heatmap_response_statistics: defineAsyncComponent(
+      () =>
+        import(
+          /* webpackChunkName: "TextHeatmapresponseStatistics" */
+          "./TextHeatmapResponseStatistics.vue"
+        )
     ),
-    no_response_statistics: defineAsyncComponent(() =>
-      import(
-        /* webpackChunkName: "FreeResponseStatistics" */
-        "./FreeResponseStatistics.vue"
-      )
+    no_response_statistics: defineAsyncComponent(
+      () =>
+        import(
+          /* webpackChunkName: "FreeResponseStatistics" */
+          "./FreeResponseStatistics.vue"
+        )
     ),
-    heatmap_response_statistics: defineAsyncComponent(() =>
-      import(
-        /* webpackChunkName: "HeatmapResponseStatistics" */
-        "./HeatmapResponseStatistics.vue"
-      )
+    heatmap_response_statistics: defineAsyncComponent(
+      () =>
+        import(
+          /* webpackChunkName: "HeatmapResponseStatistics" */
+          "./HeatmapResponseStatistics.vue"
+        )
+    ),
+    numeric_response_statistics: defineAsyncComponent(
+      () => import("./NumericResponseStatistics.vue")
     ),
   },
   props: ["sessions", "session", "question", "chimeId"],
