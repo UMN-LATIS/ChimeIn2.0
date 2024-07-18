@@ -105,6 +105,7 @@ import FreeResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
 import TextHeatmapResponseQuestionOptions from "./TextHeatmapResponseQuestionOptions.vue";
 import HeatmapResponseQuestionOptions from "./HeatmapResponseQuestionOptions.vue";
 import NoResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
+import NumericResponseQuestionOptions from "./NumericResponseQuestionOptions.vue";
 import Modal from "../../components/Modal.vue";
 import VSelect from "../../components/VSelect.vue";
 import VEditor from "../../components/VEditor.vue";
@@ -118,6 +119,7 @@ export default {
     free_response_response: FreeResponseQuestionOptions,
     text_heatmap_response_response: TextHeatmapResponseQuestionOptions,
     heatmap_response_response: HeatmapResponseQuestionOptions,
+    numeric_response_response: NumericResponseQuestionOptions,
     no_response_response: NoResponseQuestionOptions,
     Modal,
   },
@@ -141,6 +143,10 @@ export default {
         {
           id: "free_response",
           label: "Free Response",
+        },
+        {
+          id: "numeric_response",
+          label: "Numeric",
         },
         {
           id: "slider_response",
