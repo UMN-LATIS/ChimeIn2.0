@@ -208,7 +208,7 @@ export interface PinOnImageQuestionInfo extends QuestionInfo {
 export interface NumericResponseQuestionInfo extends QuestionInfo {
   question_type: "numeric_response";
   question_responses: {
-    chart_type: "bar" | "scatter";
+    chart_type: "bar" | "scatter" | "range";
     x_axis_label: string;
     y_axis_label?: string; // only for scatter
   };

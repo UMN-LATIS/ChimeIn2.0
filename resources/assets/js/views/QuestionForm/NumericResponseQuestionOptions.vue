@@ -21,7 +21,6 @@
         <IconChartBar />
         Histogram
       </label>
-
       <label for="scatter-chart">
         <input
           id="scatter-chart"
@@ -39,6 +38,25 @@
         />
         <IconChartScatter />
         Scatter Plot
+      </label>
+
+      <label for="range-chart">
+        <input
+          id="range-chart"
+          type="radio"
+          name="chart-type"
+          value="range"
+          class="sr-only"
+          :checked="typedQuestionResponsesProp.chart_type === 'range'"
+          @change="
+            $emit('update:question_responses', {
+              ...typedQuestionResponsesProp,
+              chart_type: 'range',
+            })
+          "
+        />
+        <IconChartRange />
+        Range Chart
       </label>
     </fieldset>
 
@@ -88,6 +106,7 @@
 <script setup lang="ts">
 import IconChartBar from "@/icons/IconChartBar.vue";
 import IconChartScatter from "@/icons/IconChartScatter.vue";
+import IconChartRange from "@/icons/IconChartRange.vue";
 import { NumericResponseQuestionInfo } from "@/types";
 import { computed } from "vue";
 
@@ -140,7 +159,8 @@ const typedQuestionResponsesProp = computed(() => {
 </script>
 <style scoped>
 .type-select {
-  display: flex;
+  display: grid;
+  grid-template-columns: 25% repeat(3, 1fr);
   align-items: baseline;
   gap: 0.5rem;
 }
@@ -148,7 +168,6 @@ const typedQuestionResponsesProp = computed(() => {
 .type-select h2 {
   margin: 0;
   font-size: 1rem;
-  width: 25%;
 }
 
 .type-select label {
@@ -158,6 +177,7 @@ const typedQuestionResponsesProp = computed(() => {
   border: 1px solid #ced4da;
   padding: 0.5rem;
   border-radius: 4px;
+  font-size: 0.875rem;
 }
 
 .type-select label:has(input:checked) {
