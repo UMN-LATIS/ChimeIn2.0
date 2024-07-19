@@ -19,7 +19,7 @@
         />
 
         <IconChartBar />
-        Bar Chart
+        Histogram
       </label>
 
       <label for="scatter-chart">
