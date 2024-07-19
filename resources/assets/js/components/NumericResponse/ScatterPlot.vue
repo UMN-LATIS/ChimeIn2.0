@@ -93,11 +93,11 @@ const options = computed(
     chartArea: {
       top: 30,
       left: 50,
+      right: 8,
       bottom: 60,
       width: "100%",
     },
     vAxis: {
-      baseline: 0,
       title: props.yAxisLabel,
     },
     hAxis: {
