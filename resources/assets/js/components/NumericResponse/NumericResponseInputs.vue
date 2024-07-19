@@ -1,12 +1,14 @@
 <template>
   <article>
-    <BarChartResponseInputs
-      v-if="questionOptions.chart_type === 'bar'"
-      :questionOptions="questionOptions"
-      :disabled="disabled"
-      :responseInfo="localResponseInfo"
-      @update:responseInfo="localResponseInfo.x = $event.x"
-    />
+    <div class="mb-3">
+      <BarChartResponseInputs
+        v-if="questionOptions.chart_type === 'bar'"
+        :questionOptions="questionOptions"
+        :disabled="disabled"
+        :responseInfo="localResponseInfo"
+        @update:responseInfo="localResponseInfo.x = $event.x"
+      />
+    </div>
 
     <div
       v-if="questionOptions.chart_type === 'scatter'"
