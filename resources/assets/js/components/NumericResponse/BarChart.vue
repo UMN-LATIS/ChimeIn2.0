@@ -1,5 +1,17 @@
 <template>
   <div>
+    <div class="chart-controls">
+      <div>
+        <label class="form-label"> Bucket Size </label>
+        <input
+          v-model="bucketSize"
+          class="form-control"
+          type="number"
+          placeholder="auto"
+        />
+      </div>
+    </div>
+
     <GChart
       type="Histogram"
       :resizeDebounce="100"
@@ -10,7 +22,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { GChart } from "vue-google-charts";
 import { GoogleChartOptions } from "vue-google-charts/dist/types";
 
@@ -32,6 +44,9 @@ const props = defineProps<{
 const gChartData = computed(() => {
   return [[props.itemLabel, props.xAxisLabel], ...props.data];
 });
+
+// 0 = auto
+const bucketSize = ref<number | "">("");
 
 const options = computed(
   (): GoogleChartOptions => ({
@@ -59,11 +74,31 @@ const options = computed(
     tooltip: {
       isHtml: false,
     },
+    histogram: {
+      // '' or 0 = auto
+      bucketSize: !bucketSize.value ? undefined : bucketSize.value,
+    },
   })
 );
 </script>
 <style scoped>
 .googleChart {
   min-height: 600px;
+}
+
+.chart-controls {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: -4.75rem;
+  margin-bottom: 0.25rem;
+}
+.chart-controls label {
+  margin: 0;
+  font-size: 0.825rem;
+}
+.chart-controls input {
+  width: 8rem;
 }
 </style>
