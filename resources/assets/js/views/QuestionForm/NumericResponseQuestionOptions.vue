@@ -9,10 +9,10 @@
           class="sr-only"
           name="chart-type"
           value="bar"
-          :checked="question_responses.chart_type === 'bar'"
+          :checked="typedQuestionResponsesProp.chart_type === 'bar'"
           @change="
             $emit('update:question_responses', {
-              ...question_responses,
+              ...typedQuestionResponsesProp,
               chart_type: 'bar',
             })
           "
@@ -29,10 +29,10 @@
           name="chart-type"
           value="scatter"
           class="sr-only"
-          :checked="question_responses.chart_type === 'scatter'"
+          :checked="typedQuestionResponsesProp.chart_type === 'scatter'"
           @change="
             $emit('update:question_responses', {
-              ...question_responses,
+              ...typedQuestionResponsesProp,
               chart_type: 'scatter',
             })
           "
@@ -50,12 +50,12 @@
         <input
           type="text"
           class="form-control"
-          :value="question_responses.x_axis_label"
+          :value="typedQuestionResponsesProp.x_axis_label"
           required
           @input="
             (event) =>
               $emit('update:question_responses', {
-                ...question_responses,
+                ...typedQuestionResponsesProp,
                 x_axis_label: (event.target as HTMLInputElement).value,
               })
           "
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <div v-if="question_responses.chart_type === 'scatter'" class="row">
+    <div v-if="typedQuestionResponsesProp.chart_type === 'scatter'" class="row">
       <label for="x-axis-label" class="col-form-label col-sm-3">
         Y Axis Label
       </label>
@@ -71,12 +71,12 @@
         <input
           type="text"
           class="form-control"
-          :value="question_responses.y_axis_label"
-          :required="question_responses.chart_type === 'scatter'"
+          :value="typedQuestionResponsesProp.y_axis_label"
+          :required="typedQuestionResponsesProp.chart_type === 'scatter'"
           @input="
             (event) =>
               $emit('update:question_responses', {
-                ...question_responses,
+                ...typedQuestionResponsesProp,
                 y_axis_label: (event.target as HTMLInputElement).value,
               })
           "
@@ -89,20 +89,22 @@
 import IconChartBar from "@/icons/IconChartBar.vue";
 import IconChartScatter from "@/icons/IconChartScatter.vue";
 import { NumericResponseQuestionInfo } from "@/types";
+import { computed } from "vue";
 
-withDefaults(
-  defineProps<{
-    // eslint-disable-next-line vue/prop-name-casing
-    question_responses: NumericResponseQuestionInfo["question_responses"];
-  }>(),
-  {
-    question_responses: () => ({
-      chart: "bar",
-      x_axis_label: "",
-      y_axis_label: "",
-    }),
-  }
-);
+const props = defineProps<{
+  /**
+   * It's possible – likely even – that the passed question_responses prop will
+   * be a value like `[]` (the default set by a Multiple Choice) or some
+   * other value that doesn't match the NumericResponseQuestionInfo type.
+   *
+   * What this means is that we need to check that the question_responses prop
+   * is an object with the properties we expect.
+   */
+  // eslint-disable-next-line vue/prop-name-casing
+  question_responses:
+    | NumericResponseQuestionInfo["question_responses"]
+    | unknown;
+}>();
 
 defineEmits<{
   (
@@ -110,6 +112,31 @@ defineEmits<{
     value: NumericResponseQuestionInfo["question_responses"]
   ): void;
 }>();
+
+function isNumericResponseQuestionInfo(
+  question_responses:
+    | NumericResponseQuestionInfo["question_responses"]
+    | unknown
+): question_responses is NumericResponseQuestionInfo["question_responses"] {
+  return (
+    typeof question_responses === "object" &&
+    question_responses !== null &&
+    "chart_type" in question_responses &&
+    "x_axis_label" in question_responses &&
+    "y_axis_label" in question_responses
+  );
+}
+
+const typedQuestionResponsesProp = computed(() => {
+  if (isNumericResponseQuestionInfo(props.question_responses)) {
+    return props.question_responses;
+  }
+  return {
+    chart_type: "bar",
+    x_axis_label: "",
+    y_axis_label: "",
+  } as NumericResponseQuestionInfo["question_responses"];
+});
 </script>
 <style scoped>
 .type-select {
