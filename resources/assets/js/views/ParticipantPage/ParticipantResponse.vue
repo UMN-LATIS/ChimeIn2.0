@@ -42,6 +42,7 @@ import TextHeatmapResponse from "../../components/TextHeatmap/TextHeatmapRespons
 import NoResponse from "../../components/NoResponse/NoResponseInputs.vue";
 import SliderResponse from "../../components/SliderResponse/SliderResponseInputs.vue";
 import ImageHeatmapResponse from "../../components/ImageHeatmapResponse/ImageHeatmapResponseInputs.vue";
+import NumericResponse from "../../components/NumericResponse/NumericResponseInputs.vue";
 
 export default {
   components: {
@@ -52,6 +53,7 @@ export default {
     free_response: FreeResponse,
     slider_response: SliderResponse,
     heatmap_response: ImageHeatmapResponse,
+    numeric_response: NumericResponse,
   },
   props: {
     response: {
