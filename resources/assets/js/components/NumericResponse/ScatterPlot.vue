@@ -11,12 +11,26 @@
       </select>
     </div>
     <GChart
+      v-if="data.length"
       type="ScatterChart"
       :resizeDebounce="100"
       :data="[[xAxisLabel, yAxisLabel], ...data]"
       :options="options"
       class="googleChart"
     />
+    <p
+      v-else
+      style="
+        min-height: 10rem;
+        display: grid;
+        place-content: center;
+        background: #f3f3f3;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+      "
+    >
+      No data yet
+    </p>
   </div>
 </template>
 <script setup lang="ts">
