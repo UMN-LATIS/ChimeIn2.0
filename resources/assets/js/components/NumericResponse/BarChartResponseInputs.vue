@@ -2,7 +2,7 @@
   <NumInput
     :id="`numeric-x-input`"
     :label="questionOptions.x_axis_label"
-    :modelValue="responseInfo.x"
+    :modelValue="responseInfo.x ?? 0"
     @update:modelValue="
       $emit('update:responseInfo', { ...responseInfo, x: $event })
     "

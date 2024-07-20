@@ -8,37 +8,23 @@
         :responseInfo="localResponseInfo"
         @update:responseInfo="localResponseInfo.x = $event.x"
       />
-    </div>
-
-    <div
-      v-if="questionOptions.chart_type === 'scatter'"
-      class="mb-3 d-flex gap-3"
-    >
-      <div>
-        <label for="numeric-x-input" class="form-label">
-          {{ questionOptions.x_axis_label }}
-        </label>
-        <input
-          id="numeric-x-input"
-          v-model="localResponseInfo.x"
-          type="number"
-          :disabled="props.disabled"
-          class="form-control"
-        />
-      </div>
-
-      <div>
-        <label for="numeric-y-input" class="form-label">
-          {{ questionOptions.y_axis_label }}
-        </label>
-        <input
-          id="numeric-y-input"
-          v-model="localResponseInfo.y"
-          type="number"
-          :disabled="disabled"
-          class="form-control"
-        />
-      </div>
+      <ScatterPlotResponseInputs
+        v-else-if="questionOptions.chart_type === 'scatter'"
+        :questionOptions="questionOptions"
+        :disabled="disabled"
+        :responseInfo="localResponseInfo"
+        @update:responseInfo="
+          localResponseInfo.x = $event.x;
+          localResponseInfo.y = $event.y;
+        "
+      />
+      <RangeChartResponseInputs
+        v-else-if="questionOptions.chart_type === 'range'"
+        :questionOptions="questionOptions"
+        :disabled="disabled"
+        :responseInfo="localResponseInfo"
+        @update:responseInfo="localResponseInfo.xRange = $event.xRange"
+      />
     </div>
     <div class="mb-3 d-flex gap-2">
       <button
@@ -84,6 +70,8 @@ import {
 import { isEmpty } from "ramda";
 import { computed, reactive, ref, watch } from "vue";
 import BarChartResponseInputs from "./BarChartResponseInputs.vue";
+import ScatterPlotResponseInputs from "./ScatterPlotResponseInputs.vue";
+import RangeChartResponseInputs from "./RangeChartResponseInputs.vue";
 
 const props = defineProps<{
   question: Question<NumericResponseQuestionInfo>;
@@ -117,6 +105,7 @@ const localResponseInfo = reactive<NumericResponseResponseInfo>({
   question_type: "numeric_response",
   x: 0,
   y: 0,
+  xRange: [0, 0],
 });
 
 watch(

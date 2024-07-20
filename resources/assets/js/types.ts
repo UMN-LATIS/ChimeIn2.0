@@ -88,8 +88,10 @@ export interface PinOnImageResponseResponseInfo extends ResponseInfo {
 
 export interface NumericResponseResponseInfo extends ResponseInfo {
   question_type: "numeric_response";
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
+  xRange?: [number, number];
+  yRange?: [number, number];
 }
 
 export type MultipleChoiceResponse = Response<MultipleChoiceResponseInfo>;
