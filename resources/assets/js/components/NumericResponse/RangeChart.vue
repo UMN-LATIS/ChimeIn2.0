@@ -1,7 +1,5 @@
 <template>
   <div class="">
-    {{ data }}
-
     <GChart
       v-if="data.length"
       type="BarChart"
@@ -63,29 +61,32 @@ const chartData = computed(() => {
     ...props.data.map(([minX, maxX], index) => {
       const diff = maxX - minX;
 
+      const tooltip = `[${index + 1}] min: ${minX}, max: ${maxX}, Δ: ${diff}`;
+      const label = index + 1;
+
       // Case 1: 0 < minX < maxX
       if (minX >= 0) {
         return [
-          index.toString(),
+          label,
           minX,
           "opacity: 0",
-          `min: ${minX}`,
+          tooltip,
           diff,
           "opacity: 1",
-          `max: ${maxX}`,
+          tooltip,
         ];
       }
 
       // Case 2: minX < 0 < maxX
       if (minX < 0 && maxX >= 0) {
         return [
-          index.toString(),
+          label,
           minX,
           "opacity: 1",
-          `min: ${minX}`,
+          tooltip,
           maxX,
           "opacity: 1",
-          `max: ${maxX}`,
+          tooltip,
         ];
       }
 
@@ -95,15 +96,15 @@ const chartData = computed(() => {
         // we FIRST draw the transparent bar to the max
         // and THEN draw the diff
         return [
-          index.toString(),
+          label,
           maxX,
           "opacity: 0",
-          `max: ${maxX}`,
+          tooltip,
           // diff needs to be negated so that it's drawn
           // in the negative direction
           -1 * diff,
           "opacity: 1",
-          `min: ${minX}`,
+          tooltip,
         ];
       }
     }),
