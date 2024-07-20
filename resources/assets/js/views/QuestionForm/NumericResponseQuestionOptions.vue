@@ -37,7 +37,7 @@
           "
         />
         <IconChartScatter />
-        Scatter Plot
+        Scatter
       </label>
 
       <label for="range-chart">
@@ -56,7 +56,7 @@
           "
         />
         <IconChartRange />
-        Range Chart
+        Range
       </label>
     </fieldset>
 
