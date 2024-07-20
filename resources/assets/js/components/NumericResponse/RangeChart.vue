@@ -19,6 +19,15 @@
     >
       No data
     </p>
+
+    <GChart
+      v-if="data.length"
+      type="Table"
+      :data="[
+        ['Response', 'Min', 'Max'],
+        ...data.map(([min, max], index) => [index + 1, min, max]),
+      ]"
+    />
   </div>
 </template>
 <script setup lang="ts">
