@@ -207,10 +207,12 @@ export interface PinOnImageQuestionInfo extends QuestionInfo {
   };
 }
 
+export type NumericChartType = "bar" | "scatter" | "range";
+
 export interface NumericResponseQuestionInfo extends QuestionInfo {
   question_type: "numeric_response";
   question_responses: {
-    chart_type: "bar" | "scatter" | "range";
+    chart_type: NumericChartType;
     x_axis_label: string;
     y_axis_label?: string; // only for scatter
   };
