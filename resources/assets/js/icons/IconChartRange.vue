@@ -5,42 +5,58 @@
     viewBox="0 0 256 256"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <circle cx="69.3092" cy="53.31" r="20.6819" fill="currentColor" />
-    <circle cx="69.3092" cy="148.74" r="20.6819" fill="currentColor" />
     <rect
-      x="58.968"
-      y="54.3996"
+      x="24.9953"
+      y="209.551"
       width="20.6819"
-      height="94.3404"
+      height="134.522"
       rx="10.3409"
+      transform="rotate(-90 24.9953 209.551)"
       fill="currentColor"
     />
-    <circle cx="128" cy="104.469" r="20.6819" fill="currentColor" />
-    <circle cx="128" cy="188.276" r="20.6819" fill="currentColor" />
     <rect
-      x="117.659"
-      y="101.025"
+      x="91.4036"
+      y="173.946"
+      width="20.6819"
+      height="136.228"
+      rx="10.3409"
+      transform="rotate(-90 91.4036 173.946)"
+      fill="currentColor"
+    />
+    <rect
+      x="62.0968"
+      y="67.1312"
       width="20.6819"
       height="87.3507"
       rx="10.3409"
+      transform="rotate(-90 62.0968 67.1312)"
       fill="currentColor"
     />
-    <circle cx="186.691" cy="156.496" r="20.6819" fill="currentColor" />
-    <circle cx="186.691" cy="46.5086" r="20.6819" fill="currentColor" />
     <rect
-      x="176.35"
-      y="40.6864"
+      x="140.281"
+      y="102.736"
       width="20.6819"
-      height="121.86"
+      height="87.3507"
       rx="10.3409"
+      transform="rotate(-90 140.281 102.736)"
       fill="currentColor"
     />
     <rect
-      x="25.2252"
-      y="217.916"
-      width="205.549"
-      height="8"
+      x="62.0968"
+      y="138.341"
+      width="20.6819"
+      height="97.4209"
+      rx="10.3409"
+      transform="rotate(-90 62.0968 138.341)"
+      fill="currentColor"
+    />
+    <rect
+      x="128"
+      y="222.916"
+      width="8"
+      height="189.832"
       rx="4"
+      transform="rotate(-180 128 222.916)"
       fill="currentColor"
     />
   </svg>
