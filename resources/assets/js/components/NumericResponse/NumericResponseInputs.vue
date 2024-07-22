@@ -1,31 +1,30 @@
 <template>
   <article>
-    <div class="mb-3 d-flex gap-3">
-      <div>
-        <label for="numeric-x-input" class="form-label">
-          {{ questionOptions.x_axis_label }}
-        </label>
-        <input
-          id="numeric-x-input"
-          v-model="localResponse.x"
-          type="number"
-          :disabled="props.disabled"
-          class="form-control"
-        />
-      </div>
-
-      <div v-if="questionOptions.chart_type === 'scatter'">
-        <label for="numeric-y-input" class="form-label">
-          {{ questionOptions.y_axis_label }}
-        </label>
-        <input
-          id="numeric-y-input"
-          v-model="localResponse.y"
-          type="number"
-          :disabled="disabled"
-          class="form-control"
-        />
-      </div>
+    <div class="mb-3">
+      <BarChartResponseInputs
+        v-if="questionOptions.chart_type === 'bar'"
+        :questionOptions="questionOptions"
+        :disabled="disabled"
+        :responseInfo="localResponseInfo"
+        @update:responseInfo="localResponseInfo.x = $event.x"
+      />
+      <ScatterPlotResponseInputs
+        v-else-if="questionOptions.chart_type === 'scatter'"
+        :questionOptions="questionOptions"
+        :disabled="disabled"
+        :responseInfo="localResponseInfo"
+        @update:responseInfo="
+          localResponseInfo.x = $event.x;
+          localResponseInfo.y = $event.y;
+        "
+      />
+      <RangeChartResponseInputs
+        v-else-if="questionOptions.chart_type === 'range'"
+        :questionOptions="questionOptions"
+        :disabled="disabled"
+        :responseInfo="localResponseInfo"
+        @update:responseInfo="localResponseInfo.xRange = $event.xRange"
+      />
     </div>
     <div class="mb-3 d-flex gap-2">
       <button
@@ -70,6 +69,9 @@ import {
 } from "@/types";
 import { isEmpty } from "ramda";
 import { computed, reactive, ref, watch } from "vue";
+import BarChartResponseInputs from "./BarChartResponseInputs.vue";
+import ScatterPlotResponseInputs from "./ScatterPlotResponseInputs.vue";
+import RangeChartResponseInputs from "./RangeChartResponseInputs.vue";
 
 const props = defineProps<{
   question: Question<NumericResponseQuestionInfo>;
@@ -81,7 +83,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (
     event: "recordresponse",
-    response: NumericResponseResponseInfo,
+    responseInfo: NumericResponseResponseInfo,
     // false = update, true = save as new
     createAsNewResponse?: boolean
   ): void;
@@ -99,17 +101,26 @@ const maybeResponse = computed(
 
 const hasExistingResponse = computed(() => !!maybeResponse.value?.id);
 
-const localResponse = reactive<NumericResponseResponseInfo>({
+const localResponseInfo = reactive<NumericResponseResponseInfo>({
   question_type: "numeric_response",
   x: 0,
   y: 0,
+  xRange: [0, 0],
 });
+
+watch(
+  localResponseInfo,
+  () => {
+    console.log({ localResponseInfo });
+  },
+  { deep: true, immediate: true }
+);
 
 watch(
   maybeResponse,
   () => {
-    localResponse.x = maybeResponse.value?.response_info?.x ?? 0;
-    localResponse.y = maybeResponse.value?.response_info?.y ?? 0;
+    localResponseInfo.x = maybeResponse.value?.response_info?.x ?? 0;
+    localResponseInfo.y = maybeResponse.value?.response_info?.y ?? 0;
   },
   { immediate: true }
 );
@@ -119,18 +130,18 @@ const questionOptions = computed(() => {
 });
 
 function handleSave() {
-  emit("recordresponse", localResponse, true);
+  emit("recordresponse", localResponseInfo, true);
   hasStartedNewResponse.value = false;
 }
 
 function handleUpdate() {
-  emit("recordresponse", localResponse, false);
+  emit("recordresponse", localResponseInfo, false);
 }
 
 const hasStartedNewResponse = ref(false);
 function handleClearAndStartNewResponse() {
-  localResponse.x = 0;
-  localResponse.y = 0;
+  localResponseInfo.x = 0;
+  localResponseInfo.y = 0;
   hasStartedNewResponse.value = true;
 }
 </script>

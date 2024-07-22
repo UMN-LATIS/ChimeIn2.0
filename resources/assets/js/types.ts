@@ -88,8 +88,10 @@ export interface PinOnImageResponseResponseInfo extends ResponseInfo {
 
 export interface NumericResponseResponseInfo extends ResponseInfo {
   question_type: "numeric_response";
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
+  xRange?: [number, number];
+  yRange?: [number, number];
 }
 
 export type MultipleChoiceResponse = Response<MultipleChoiceResponseInfo>;
@@ -205,10 +207,12 @@ export interface PinOnImageQuestionInfo extends QuestionInfo {
   };
 }
 
+export type NumericChartType = "bar" | "scatter" | "range";
+
 export interface NumericResponseQuestionInfo extends QuestionInfo {
   question_type: "numeric_response";
   question_responses: {
-    chart_type: "bar" | "scatter";
+    chart_type: NumericChartType;
     x_axis_label: string;
     y_axis_label?: string; // only for scatter
   };
