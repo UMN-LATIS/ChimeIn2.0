@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { GChart } from "vue-google-charts";
-import { GoogleChartOptions } from "vue-google-charts/dist/types";
+import { GoogleChartOptions } from "vue-google-charts/dist/types.d";
 
 const props = defineProps<{
   data: [x: number, y: number][];
