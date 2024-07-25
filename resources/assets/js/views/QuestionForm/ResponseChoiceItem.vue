@@ -67,8 +67,8 @@ const options = {
     toolbar: ["formula"],
     keyboard: {
       bindings: {
-        13: {
-          key: 13,
+        Enter: {
+          key: "Enter",
           handler: () => {
             emit("enter");
           },
