@@ -77,6 +77,11 @@ const routes: RouteRecordRaw[] = [
       isShowingResults: false,
     }),
   },
+  {
+    path: "/test/editor",
+    name: "test.editor",
+    component: () => import("./views/TestEditorPage/TestEditorPage.vue"),
+  },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFoundPage },
 ];
 
