@@ -5,6 +5,11 @@
       v-model="content"
       :imageUploadUrl="`/api/chime/${chimeId}/image`"
     />
+
+    <div class="mt-5">
+      <h2>Content</h2>
+      <pre>{{ content }}</pre>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -12,7 +17,7 @@ import QuillEditor from "@/components/QuillEditor.vue";
 
 import { ref } from "vue";
 
-const content = ref<string>("This is initial content");
+const content = ref("This is initial content");
 
 // just a dummy chime id for testing
 const chimeId = 1;
