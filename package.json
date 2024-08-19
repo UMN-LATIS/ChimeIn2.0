@@ -73,7 +73,6 @@
     "pusher-js": "^8.3.0",
     "query-string": "^9.0.0",
     "quill": "^2.0.2",
-    "quill-image-uploader": "git+https://github.com/umn-cla/quill-image-uploader",
     "ramda": "^0.30.0",
     "set-clustering": "^1.1.0",
     "simpleheat": "^0.4.0",
