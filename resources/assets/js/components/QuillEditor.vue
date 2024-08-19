@@ -2,7 +2,7 @@
   <div ref="editorContainerRef" class="v-editor"></div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Quill, { QuillOptions, Range } from "quill";
 import { Delta } from "quill/core";
 import Emitter from "quill/core/emitter";
@@ -26,6 +26,7 @@ const emit = defineEmits<{
 }>();
 
 const editorContainerRef = ref<HTMLElement | null>(null);
+const editorHtml = ref<string>(props.modelValue);
 
 // using a ref causes errors
 // @see: https://github.com/slab/quill/issues/4293
@@ -92,9 +93,46 @@ onMounted(() => {
   }
 
   const mergedOptions = mergeDeepRight(defaultOptions, props.options);
-
   quill = new Quill(editorContainerRef.value, mergedOptions);
+
+  quill.on("text-change", () => {
+    editorHtml.value = quill?.root.innerHTML ?? "";
+    emit("update:modelValue", editorHtml.value);
+  });
 });
+
+// Convert modelValue HTML to Delta and replace editor content
+const pasteHTML = (content: string, quillInstance: Quill) => {
+  const delta = quillInstance.clipboard.convert({ html: content ?? "" });
+  quillInstance.setContents(delta);
+  return delta;
+};
+
+// Watch modelValue and update the editor content
+// if the modelValue is changed from outside
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (!quill) {
+      return;
+    }
+
+    // if the value is the same as the editorHtml
+    if (newValue === editorHtml.value) {
+      return;
+    }
+
+    // if changed update the editorHtml
+    editorHtml.value = newValue;
+
+    if (!newValue) {
+      quill.setContents([]);
+      return;
+    }
+
+    pasteHTML(newValue, quill);
+  }
+);
 </script>
 <style>
 .ql-editor {
