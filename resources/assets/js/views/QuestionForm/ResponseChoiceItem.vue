@@ -10,7 +10,9 @@
       <input
         :checked="correct"
         type="checkbox"
-        @change="handleUpdate({ correct: $event.target.checked })"
+        @change="
+          handleUpdate({ correct: ($event.target as HTMLInputElement).checked })
+        "
       />
       <label class="visually-hidden">Correct?</label>
     </div>
@@ -20,10 +22,10 @@
         :options="options"
         class="response-choice-item__text"
         :modelValue="text"
+        :imageUploadUrl="`/api/chime/${chime_id}/image`"
         @update:modelValue="
           (updatedText) => handleUpdate({ text: updatedText })
         "
-        @ready="(q) => (quill = q)"
       />
 
       <button
@@ -36,20 +38,21 @@
     </div>
   </div>
 </template>
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
 import QuillEditor from "@/components/QuillEditor.vue";
 
-const props = defineProps({
-  text: {
-    type: String,
-    default: "",
-  },
-  correct: {
-    type: Boolean,
-    default: false,
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    text: string;
+    correct: boolean;
+    // eslint-disable-next-line vue/prop-name-casing
+    chime_id: number;
+  }>(),
+  {
+    text: "",
+    correct: false,
+  }
+);
 
 function handleUpdate(update) {
   return emit("update", {
@@ -58,13 +61,22 @@ function handleUpdate(update) {
   });
 }
 
-const emit = defineEmits(["update", "enter", "remove"]);
-const quill = ref(null);
+const emit = defineEmits<{
+  (
+    eventName: "update",
+    value: {
+      text: string;
+      correct: boolean;
+    }
+  ): void;
+  (eventName: "enter"): void;
+  (eventName: "remove"): void;
+}>();
 
 const options = {
   bounds: ".modal-body",
   modules: {
-    toolbar: ["formula"],
+    toolbar: ["image", "formula"],
     keyboard: {
       bindings: {
         Enter: {
