@@ -43,7 +43,14 @@ const defaultOptions = {
       ["link", "image"],
     ],
     uploader: {
-      mimetypes: ["image/png", "image/jpeg", "image/jpg"],
+      mimetypes: [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/webp",
+        "image/svg+xml",
+        "image/gif",
+      ],
       async handler(range: Range, files: File[]) {
         if (!props.imageUploadUrl) {
           throw new Error("Image upload URL is not set");
