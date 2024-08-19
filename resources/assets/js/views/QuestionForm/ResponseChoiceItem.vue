@@ -16,7 +16,7 @@
     </div>
     <div class="response-choice-item__contents">
       <label class="visually-hidden">Response Text</label>
-      <VEditor
+      <QuillEditor
         :options="options"
         class="response-choice-item__text"
         :modelValue="text"
@@ -38,7 +38,7 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import VEditor from "../../components/VEditor.vue";
+import QuillEditor from "@/components/QuillEditor.vue";
 
 const props = defineProps({
   text: {
