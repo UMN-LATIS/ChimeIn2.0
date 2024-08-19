@@ -1,5 +1,5 @@
 <template>
-  <div ref="editorContainerRef" class="v-editor"></div>
+  <div ref="editorContainerRef" class="quill-editor"></div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
