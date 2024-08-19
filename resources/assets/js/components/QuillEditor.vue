@@ -26,7 +26,7 @@ const emit = defineEmits<{
 }>();
 
 const editorContainerRef = ref<HTMLElement | null>(null);
-const editorHtml = ref<string>(props.modelValue);
+const editorHtml = ref("");
 
 // using a ref causes errors
 // @see: https://github.com/slab/quill/issues/4293
@@ -94,6 +94,11 @@ onMounted(() => {
 
   const mergedOptions = mergeDeepRight(defaultOptions, props.options);
   quill = new Quill(editorContainerRef.value, mergedOptions);
+
+  // set the initial value
+  if (props.modelValue) {
+    pasteHTML(props.modelValue, quill);
+  }
 
   quill.on("text-change", () => {
     editorHtml.value = quill?.root.innerHTML ?? "";
