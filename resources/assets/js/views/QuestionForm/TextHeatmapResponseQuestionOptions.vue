@@ -1,11 +1,9 @@
 <template>
   <div class="text-heatmap-response-question-options">
     <label>Heatmap Text</label>
-    <VEditor
-      :modelValue="question_responses.heatmap_text"
+    <QuillEditor
+      :modelValue="question_responses.heatmap_text ?? ''"
       data-cy="heatmap-text-editor"
-      placeholder="Heatmap Text"
-      :toolbar="toolbar"
       :options="editorOptions"
       @update:modelValue="
         (updatedText) =>
@@ -18,7 +16,7 @@
 </template>
 
 <script setup>
-import VEditor from "../../components/VEditor.vue";
+import QuillEditor from "@/components/QuillEditor.vue";
 defineProps({
   // eslint-disable-next-line vue/prop-name-casing
   question_responses: {
@@ -39,14 +37,7 @@ const toolbar = [
 const editorOptions = {
   bounds: ".modal-body",
   modules: {
-    formula: true,
-    keyboard: {
-      bindings: {
-        "list autofill": {
-          prefix: /^\s{0,}(1){1,1}(\.|-|\*|\[ ?\]|\[x\])$/,
-        },
-      },
-    },
+    toolbar,
   },
 };
 </script>
