@@ -56,7 +56,8 @@ const props = withDefaults(
 
 function handleUpdate(update) {
   return emit("update", {
-    ...props,
+    text: props.text,
+    correct: props.correct,
     ...update,
   });
 }
