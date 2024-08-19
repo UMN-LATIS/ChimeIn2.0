@@ -8,6 +8,8 @@ import { Delta } from "quill/core";
 import Emitter from "quill/core/emitter";
 import { mergeDeepRight } from "ramda";
 import axios from "@/common/axiosClient";
+import QuillBetterImage from "@umn-latis/quill-better-image-module";
+import "quill/dist/quill.snow.css";
 
 const props = withDefaults(
   defineProps<{
@@ -87,12 +89,21 @@ const defaultOptions = {
   theme: "snow",
 };
 
+function registerQuillModules() {
+  // suppress warning
+  Quill.register(`modules/betterImage`, QuillBetterImage, true);
+}
+
 onMounted(() => {
   if (!editorContainerRef.value) {
     throw new Error("Editor container ref is not set");
   }
 
   const mergedOptions = mergeDeepRight(defaultOptions, props.options);
+
+  // todo: make better image module self-registering
+  registerQuillModules();
+
   quill = new Quill(editorContainerRef.value, mergedOptions);
 
   // set the initial value
