@@ -67,15 +67,6 @@ const defaultOptions = {
 
         const imageUrl = `/storage/${res.data.image}`;
 
-        // Validate the range object
-        if (
-          !range ||
-          typeof range.index !== "number" ||
-          typeof range.length !== "number"
-        ) {
-          throw new Error("Invalid range object");
-        }
-
         const imageDelta = new Delta()
           .retain(range.index) // Retain the text before the range
           .delete(range.length) // Delete the selected text
@@ -119,6 +110,16 @@ onMounted(() => {
   }
 
   quill.on("text-change", () => {
+    // HACK: remove style attribute from images
+    // this is a workaround to make sure image resize styles
+    // aren't emitted in the html – which causes them to show up
+    // when rendered outside the editor.
+    // There's probably a better solution but this works for now.
+    const images = quill?.root.querySelectorAll("img");
+    images?.forEach((img) => {
+      img.removeAttribute("style");
+    });
+
     editorHtml.value = quill?.root.innerHTML ?? "";
     emit("update:modelValue", editorHtml.value);
   });
