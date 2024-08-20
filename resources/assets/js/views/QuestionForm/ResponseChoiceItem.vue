@@ -77,7 +77,7 @@ const emit = defineEmits<{
 const options = {
   bounds: ".modal-body",
   modules: {
-    toolbar: ["formula"],
+    toolbar: ["image", "formula"],
     keyboard: {
       bindings: {
         Enter: {
@@ -87,6 +87,9 @@ const options = {
           },
         },
       },
+    },
+    betterImage: {
+      modules: ["AltText"],
     },
   },
 };
@@ -182,5 +185,10 @@ const options = {
 }
 .response-choice-item .ql-toolbar.ql-snow .ql-formats {
   margin: 0;
+}
+.response-choice-item img {
+  max-height: 10rem;
+  width: auto;
+  height: auto;
 }
 </style>
