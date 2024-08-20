@@ -62,7 +62,7 @@
         </div>
       </div>
       <hr />
-      <VEditor
+      <QuillEditor
         v-model="question_text"
         data-cy="question-editor"
         placeholder="Question Text"
@@ -108,11 +108,11 @@ import NoResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
 import NumericResponseQuestionOptions from "./NumericResponseQuestionOptions.vue";
 import Modal from "../../components/Modal.vue";
 import VSelect from "../../components/VSelect.vue";
-import VEditor from "../../components/VEditor.vue";
+import QuillEditor from "@/components/QuillEditor.vue";
 
 export default {
   components: {
-    VEditor,
+    QuillEditor,
     VSelect,
     multiple_choice_response: MultipleChoiceQuestionOptions,
     slider_response_response: SliderResponseQuestionOptions,
@@ -172,16 +172,6 @@ export default {
       ],
       editorOptions: {
         bounds: ".modal-body",
-        modules: {
-          formula: true,
-          keyboard: {
-            bindings: {
-              "list autofill": {
-                prefix: /^\s{0,}(1){1,1}(\.|-|\*|\[ ?\]|\[x\])$/,
-              },
-            },
-          },
-        },
       },
     };
   },

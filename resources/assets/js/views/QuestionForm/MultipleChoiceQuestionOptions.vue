@@ -34,6 +34,7 @@
               :id="`response-choice-item-${index}`"
               :text="element.text"
               :correct="element.correct"
+              :chime_id="chime_id"
               @update="(updatedChoice) => handleUpdate(index, updatedChoice)"
               @remove="handleRemove(index)"
               @enter="addChoice"
@@ -63,6 +64,11 @@ const props = defineProps({
   question_responses: {
     type: Array,
     default: () => [],
+  },
+  // eslint-disable-next-line vue/prop-name-casing
+  chime_id: {
+    type: Number,
+    required: true,
   },
 });
 

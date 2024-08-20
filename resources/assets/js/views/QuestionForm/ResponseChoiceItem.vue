@@ -10,20 +10,22 @@
       <input
         :checked="correct"
         type="checkbox"
-        @change="handleUpdate({ correct: $event.target.checked })"
+        @change="
+          handleUpdate({ correct: ($event.target as HTMLInputElement).checked })
+        "
       />
       <label class="visually-hidden">Correct?</label>
     </div>
     <div class="response-choice-item__contents">
       <label class="visually-hidden">Response Text</label>
-      <VEditor
+      <QuillEditor
         :options="options"
         class="response-choice-item__text"
         :modelValue="text"
+        :imageUploadUrl="`/api/chime/${chime_id}/image`"
         @update:modelValue="
           (updatedText) => handleUpdate({ text: updatedText })
         "
-        @ready="(q) => (quill = q)"
       />
 
       <button
@@ -36,30 +38,41 @@
     </div>
   </div>
 </template>
-<script setup>
-import { ref } from "vue";
-import VEditor from "../../components/VEditor.vue";
+<script setup lang="ts">
+import QuillEditor from "@/components/QuillEditor.vue";
 
-const props = defineProps({
-  text: {
-    type: String,
-    default: "",
-  },
-  correct: {
-    type: Boolean,
-    default: false,
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    text: string;
+    correct: boolean;
+    // eslint-disable-next-line vue/prop-name-casing
+    chime_id: number;
+  }>(),
+  {
+    text: "",
+    correct: false,
+  }
+);
 
 function handleUpdate(update) {
   return emit("update", {
-    ...props,
+    text: props.text,
+    correct: props.correct,
     ...update,
   });
 }
 
-const emit = defineEmits(["update", "enter", "remove"]);
-const quill = ref(null);
+const emit = defineEmits<{
+  (
+    eventName: "update",
+    value: {
+      text: string;
+      correct: boolean;
+    }
+  ): void;
+  (eventName: "enter"): void;
+  (eventName: "remove"): void;
+}>();
 
 const options = {
   bounds: ".modal-body",
