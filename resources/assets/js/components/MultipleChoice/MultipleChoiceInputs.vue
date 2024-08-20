@@ -5,7 +5,11 @@
       role="radiogroup"
       :aria-labelledby="`question-${question.id}-heading`"
     >
-      <div v-for="(option, key) in selectOptions" :key="key" class="form-check">
+      <div
+        v-for="(option, key) in selectOptions"
+        :key="key"
+        class="form-check multiple-choice-input-group"
+      >
         <input
           :id="'radio' + question.id + '_' + key"
           v-model="selected"
@@ -71,3 +75,10 @@ export default {
   },
 };
 </script>
+<style>
+.multiple-choice-input-group img {
+  max-height: 10rem;
+  height: auto;
+  width: auto;
+}
+</style>

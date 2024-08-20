@@ -88,6 +88,9 @@ const options = {
         },
       },
     },
+    betterImage: {
+      modules: ["AltText"],
+    },
   },
 };
 </script>
@@ -182,5 +185,10 @@ const options = {
 }
 .response-choice-item .ql-toolbar.ql-snow .ql-formats {
   margin: 0;
+}
+.response-choice-item img {
+  max-height: 10rem;
+  width: auto;
+  height: auto;
 }
 </style>
