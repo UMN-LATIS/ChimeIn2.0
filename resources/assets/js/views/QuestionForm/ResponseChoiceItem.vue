@@ -77,7 +77,7 @@ const emit = defineEmits<{
 const options = {
   bounds: ".modal-body",
   modules: {
-    toolbar: ["formula"],
+    toolbar: ["image", "formula"],
     keyboard: {
       bindings: {
         Enter: {
