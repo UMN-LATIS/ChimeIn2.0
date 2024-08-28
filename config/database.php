@@ -52,7 +52,10 @@ return [
             'prefix' => '',
             'strict' => true,
             'engine' => null,
-            'timezone'  => '+00:00'
+            'timezone'  => '+00:00',
+            'options'   => array(
+                'sort_buffer_size' => '100M'
+            ),
         ],
 
         'pgsql' => [

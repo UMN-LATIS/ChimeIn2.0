@@ -108,6 +108,16 @@ Image upload responses can be used both in class and out of class. An example fo
 - Take a picture of your work and submit it for full credit.
 - Take a picture of an example of neoclassical architecture you see on campus. Submit your picture by 5pm on Tuesday.
 
+### Numeric
+
+The numeric question type provides a variety of ways to collect and display numeric data. When selecting this question type, you'll be able to select from one of three chart types, and then provide labels for one or more axes for that chart.
+
+The histogram chart will collect a single value from participants and display it using histogram binning. 
+
+The scatter chart will collect two values, one of the x axis and one for the y axis. 
+
+The range chart will collect a "min" and "max" value from participants, and display a stacked set of range bars. 
+
 ## Question Sessions
 
 Each time you open a question, a session is created to hold responses. When viewing results, you can use the dropdown to select between sessions. By default, results are aggregated and displayed.
