@@ -17,7 +17,7 @@ class LimitJsonSize
     {
         $requestSize = strlen($request->getContent());
 
-        if ($request->isJson() && $requestSize > $maxSize) {
+        if ($requestSize > $maxSize && $request->isJson()) {
             return response()->json([
                 'message' => 'The JSON data must not be larger than'
                     . ($maxSize / 1024) . 'KB.'
