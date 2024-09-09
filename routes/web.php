@@ -91,8 +91,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
     Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion')
         ->middleware('limit.json.size');
-    Route::post('/api/chime/{chime}/folder/{folder}/import', 'FolderController@importQuestions')
-        ->middleware('limit.json.size');
+    Route::post('/api/chime/{chime}/folder/{folder}/import', 'FolderController@importQuestions');
     Route::post('/api/chime/{chime}/folder/{folder}/sync', 'FolderController@forceSync');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion')
         ->middleware('limit.json.size');
