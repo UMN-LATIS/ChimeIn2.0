@@ -49,7 +49,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@umn-latis/cla-vue-template": "^1.1.0",
-    "@umn-latis/quill-better-image-module": "^0.2.0",
+    "@umn-latis/quill-better-image-module": "^0.2.1",
     "@vue-a11y/announcer": "^3.1.5",
     "axios": "^1.6",
     "bootstrap": "^4.6.0",
