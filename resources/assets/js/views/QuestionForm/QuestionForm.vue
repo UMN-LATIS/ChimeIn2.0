@@ -175,6 +175,13 @@ export default {
       },
     };
   },
+  watch: {
+    question_type() {
+      // Reset `question_responses` if the question type changes
+      // to prevent mismatched options. See issue #918
+      this.question_responses = [];
+    },
+  },
   mounted() {
     axios
       .get("/api/chime/" + this.folder.chime_id)
