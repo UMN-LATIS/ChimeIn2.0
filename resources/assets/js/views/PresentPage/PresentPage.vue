@@ -11,7 +11,7 @@
 
       <Spinner v-if="!folder" />
       <div v-if="folder && chime" class="present-container">
-        <Fullscreen @change="isFullscreen = !isFullscreen">
+        <Fullscreen v-model="isFullscreen">
           <PresentQuestion
             v-if="currentQuestion"
             :usersCount="usersCount"

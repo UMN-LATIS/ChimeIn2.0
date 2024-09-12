@@ -25,3 +25,10 @@ export default {
   },
 };
 </script>
+<style>
+.mult-choice-display img {
+  max-height: 10rem;
+  height: auto;
+  width: auto;
+}
+</style>

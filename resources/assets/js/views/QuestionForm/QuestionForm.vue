@@ -62,7 +62,7 @@
         </div>
       </div>
       <hr />
-      <VEditor
+      <QuillEditor
         v-model="question_text"
         data-cy="question-editor"
         placeholder="Question Text"
@@ -105,19 +105,21 @@ import FreeResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
 import TextHeatmapResponseQuestionOptions from "./TextHeatmapResponseQuestionOptions.vue";
 import HeatmapResponseQuestionOptions from "./HeatmapResponseQuestionOptions.vue";
 import NoResponseQuestionOptions from "./FreeResponseQuestionOptions.vue";
+import NumericResponseQuestionOptions from "./NumericResponseQuestionOptions.vue";
 import Modal from "../../components/Modal.vue";
 import VSelect from "../../components/VSelect.vue";
-import VEditor from "../../components/VEditor.vue";
+import QuillEditor from "@/components/QuillEditor.vue";
 
 export default {
   components: {
-    VEditor,
+    QuillEditor,
     VSelect,
     multiple_choice_response: MultipleChoiceQuestionOptions,
     slider_response_response: SliderResponseQuestionOptions,
     free_response_response: FreeResponseQuestionOptions,
     text_heatmap_response_response: TextHeatmapResponseQuestionOptions,
     heatmap_response_response: HeatmapResponseQuestionOptions,
+    numeric_response_response: NumericResponseQuestionOptions,
     no_response_response: NoResponseQuestionOptions,
     Modal,
   },
@@ -143,6 +145,10 @@ export default {
           label: "Free Response",
         },
         {
+          id: "numeric_response",
+          label: "Numeric",
+        },
+        {
           id: "slider_response",
           label: "Slider",
         },
@@ -166,18 +172,15 @@ export default {
       ],
       editorOptions: {
         bounds: ".modal-body",
-        modules: {
-          formula: true,
-          keyboard: {
-            bindings: {
-              "list autofill": {
-                prefix: /^\s{0,}(1){1,1}(\.|-|\*|\[ ?\]|\[x\])$/,
-              },
-            },
-          },
-        },
       },
     };
+  },
+  watch: {
+    question_type() {
+      // Reset `question_responses` if the question type changes
+      // to prevent mismatched options. See issue #918
+      this.question_responses = [];
+    },
   },
   mounted() {
     axios
