@@ -452,7 +452,7 @@ class LTI13Handler extends Controller
             return false;
         }
         $courseName = $explodedName[0] . " " . $explodedName[1] . "%";
-        $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->where("chimes.id", "!=", $chime->id)->get();
+        $similarChimes = Auth::user()->chimes()->where("name", "like", $courseName)->where("chimes.id", "!=", $chime->id)->whereNotNull('lti_course_title')->get();
         if($similarChimes->count() == 0) {
             return false;
         }
