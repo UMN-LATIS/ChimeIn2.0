@@ -16,7 +16,7 @@
             :aria-valuemax="right_choice_text"
             :aria-valuetext="inputValueText"
             data-cy="slider-response-input"
-            @change="valueChanged($event.target.value)"
+            @change="valueChanged(($event.target as HTMLInputElement).value)"
           />
           <output v-if="isQuantitative" class="bubble" :style="customStyle">
             {{ bubbleValue }}
@@ -39,19 +39,34 @@
     </div>
   </div>
 </template>
-<script>
-import get from "lodash/get";
+<script lang="ts">
+import { PropType } from "vue";
+import * as T from "@/types";
 
 export default {
-  // eslint-disable-next-line vue/require-prop-types
-  props: ["question", "response", "disabled"],
+  // props: ["question", "response", "disabled"],
+  props: {
+    question: {
+      type: Object as PropType<T.Question<T.SliderResponseQuestionInfo>>,
+      required: true,
+    },
+    response: {
+      type: Object as PropType<T.Response<T.SliderResponseResponseInfo> | null>,
+      required: false,
+      default: null,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
   emits: ["recordresponse"],
   data() {
     return {
       create_new_response: false,
       customStyle: {
         left: "0px",
-        right: "0px",
       },
       bubbleValue: "",
       bubbleOffset: 0,
@@ -68,18 +83,10 @@ export default {
       }
     },
     left_choice_text() {
-      return get(
-        this.question,
-        "question_info.question_responses.left_choice_text",
-        null
-      );
+      return this.question.question_info.question_responses.left_choice_text;
     },
     right_choice_text() {
-      return get(
-        this.question,
-        "question_info.question_responses.right_choice_text",
-        null
-      );
+      return this.question.question_info.question_responses.right_choice_text;
     },
     isQuantitative() {
       return (
@@ -116,10 +123,12 @@ export default {
     updateRange: function (newValue) {
       let range =
         parseInt(this.right_choice_text) - parseInt(this.left_choice_text);
-      this.bubbleValue =
+      const bubbleValueNum =
         parseInt(this.left_choice_text) + (range * newValue) / 100;
-      var computed = newValue;
-      var otherValue = 7 - computed * 0.15;
+      this.bubbleValue = String(bubbleValueNum.toFixed(2));
+      const computed = newValue;
+
+      const otherValue = 7 - computed * 0.15;
       this.customStyle = {
         left: `calc(${computed}% + (${otherValue}px))`,
       };

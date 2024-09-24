@@ -5,11 +5,11 @@
         <img
           data-cy="image-response-thumbnail"
           class="responsive-img imageContainer"
-          :src="'/storage/' + response.response_info.image"
-          :alt="response.response_info.image_alt"
+          :src="'/storage/' + response?.response_info.image"
+          :alt="response?.response_info.image_alt"
         />
         <figcaption
-          v-if="response.response_info.image_alt"
+          v-if="response?.response_info.image_alt"
           class="response__figcaption"
         >
           {{ response.response_info.image_alt }}
@@ -23,7 +23,7 @@
           v-if="chime"
           :aria-labelledby="`question-${question.id}-heading`"
           class="dropbox-group__uploader"
-          :imageSrc="tempImagePath"
+          :imageSrc="tempImagePath ?? undefined"
           :uploadTo="`/api/chime/${chime.id}/image`"
           @imageUploaded="handleImageUploaded"
           @removePreviewImage="handlePreviewRemoveImage"
@@ -64,34 +64,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import ImageUploadDropbox from "./ImageUploadDropbox.vue";
 import TextAreaInput from "../TextAreaInput.vue";
-import { get } from "lodash";
+import { PropType } from "vue";
+import * as T from "@/types";
 
 export default {
   components: { ImageUploadDropbox, TextAreaInput },
   props: {
-    chime: { type: Object, required: true },
-    question: { type: Object, required: true },
-    response: { type: Object, required: true },
+    chime: {
+      type: Object as PropType<T.Chime>,
+      required: true,
+    },
+    question: {
+      type: Object as PropType<T.Question<T.ImageResponseQuestionInfo>>,
+      required: true,
+    },
+    response: {
+      type: Object as PropType<T.Response<T.ImageResponseResponseInfo> | null>,
+      required: false,
+      default: null,
+    },
     disabled: { type: Boolean, default: false },
   },
   emits: ["recordresponse"],
   data() {
     return {
       isSaving: false,
-      tempImageSrc: null,
-      tempImageName: null,
+      tempImageSrc: null as string | null,
+      tempImageName: null as string | null,
       imageAlt: "",
     };
   },
   computed: {
     responseImage() {
-      const filename = get(this.response, "response_info.image", null);
+      const filename = this.response?.response_info.image;
       return {
         src: filename ? `/storage/${filename}` : null,
-        alt: get(this.response, "response_info.image_alt", ""),
+        alt: this.response?.response_info.image_alt || "",
       };
     },
     shouldAddNewResponse() {
