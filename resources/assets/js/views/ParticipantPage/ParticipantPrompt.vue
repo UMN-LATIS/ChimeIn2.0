@@ -34,7 +34,7 @@
       </Chip>
     </div>
     <div class="tw-pl-6">
-      <div class="prompt-question-container">
+      <div class="prompt-question-container tw-mb-2">
         <div
           :id="`question-${question.id}-heading`"
           role="heading"
