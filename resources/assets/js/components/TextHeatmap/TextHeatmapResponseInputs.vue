@@ -7,7 +7,7 @@
     />
     <div class="d-flex">
       <button
-        v-if="(!disabled && !response.id) || create_new_response"
+        v-if="(!disabled && !response?.id) || create_new_response"
         class="btn btn-outline-primary"
         variant="primary"
         :disabled="disableSubmission"
@@ -18,7 +18,7 @@
       <button
         v-if="
           !disabled &&
-          response.id &&
+          response?.id &&
           !create_new_response &&
           response.response_info.startOffset < 0
         "
@@ -32,7 +32,7 @@
       <button
         v-if="
           !disabled &&
-          response.id &&
+          response?.id &&
           !create_new_response &&
           response.response_info.startOffset >= 0
         "
@@ -45,7 +45,7 @@
       <button
         v-if="
           !disabled &&
-          response.id &&
+          response?.id &&
           !create_new_response &&
           question.allow_multiple
         "
@@ -59,15 +59,33 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { PropType } from "vue";
+import * as T from "@/types";
+
 export default {
-  props: ["question", "response", "disabled"],
+  // props: ["question", "response", "disabled"],
+  props: {
+    question: {
+      type: Object as PropType<T.Question<T.TextHeatmapQuestionInfo>>,
+      required: true,
+    },
+    response: {
+      type: Object as PropType<T.Response<T.TextHeatmapResponseResponseInfo> | null>,
+      required: false,
+      default: null,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+    },
+  },
   emits: ["recordresponse"],
   data() {
     return {
       create_new_response: false,
       disableSubmission: true,
-      stored_response: null,
+      stored_response: null as null | T.TextHeatmapResponseResponseInfo,
     };
   },
   computed: {
@@ -103,7 +121,7 @@ export default {
 
         // super easy way to make a heatmap gradient based on https://stackoverflow.com/questions/12875486/what-is-the-algorithm-to-create-colors-for-a-heatmap
 
-        var backgroundColor = null;
+        let backgroundColor = null as null | string;
         if (i < this.startOffset) {
           backgroundColor = "";
         } else if (i >= this.startOffset && i < this.endOffset) {
@@ -148,11 +166,14 @@ export default {
       var startOffset = 0;
       var endOffset = 0;
       // if the selection is not empty (aka does not have same start and end point), grab the offsets
-      if (!mySelection.isCollapsed) {
-        var range = window.getSelection().getRangeAt(0);
+      if (!mySelection?.isCollapsed) {
+        let range = window.getSelection()?.getRangeAt(0);
+        if (!range) {
+          throw new Error("Cannot store response: range is null");
+        }
 
         // document fragment with html for selection
-        var fragment = range.cloneContents();
+        let fragment = range.cloneContents();
         // make new element, insert document fragment, then get innerHTML!
         var div = document.createElement("div");
         div.appendChild(fragment.cloneNode(true));
@@ -164,7 +185,7 @@ export default {
           this.question.question_info.question_responses.heatmap_text;
         startOffset = div2.innerHTML.indexOf(html);
         endOffset = startOffset + html.length;
-        const response = {
+        const response: T.TextHeatmapResponseResponseInfo = {
           question_type: "text_heatmap_response",
           startOffset: startOffset,
           endOffset: endOffset,
@@ -185,8 +206,8 @@ export default {
       }
     },
     resetSelection() {
-      window.getSelection().removeAllRanges();
-      const response = {
+      window.getSelection()?.removeAllRanges();
+      const response: T.TextHeatmapResponseResponseInfo = {
         question_type: "text_heatmap_response",
         startOffset: -1,
         endOffset: -1,
@@ -200,7 +221,7 @@ export default {
       return;
     },
     new_response: function () {
-      window.getSelection().removeAllRanges();
+      window.getSelection()?.removeAllRanges();
       this.create_new_response = true;
     },
     testForHighlight: function (e) {
@@ -210,7 +231,7 @@ export default {
         return;
       }
       const mySelection = window.getSelection();
-      if (mySelection.isCollapsed) {
+      if (mySelection?.isCollapsed) {
         this.disableSubmission = true;
       } else {
         this.store_response();
