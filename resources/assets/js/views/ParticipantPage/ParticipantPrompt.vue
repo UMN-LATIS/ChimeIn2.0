@@ -50,12 +50,12 @@
       v-if="chime.show_folder_title_to_participants"
       class="text-muted"
       data-cy="show-folder-to-participants"
-      ><strong>Folder</strong>: {{ session.question.folder.name }}
+      ><strong>Folder</strong>: {{ session.question.folder?.name }}
     </small>
   </article>
 </template>
 
-<script>
+<script lang="ts">
 import MultipleChoice from "../../components/MultipleChoice/MultipleChoiceInputs.vue";
 import ImageResponse from "../../components/ImageResponse/ImageResponseInputs.vue";
 import FreeResponse from "../../components/FreeResponse/FreeResponseInputs.vue";
@@ -64,6 +64,9 @@ import NoResponse from "../../components/NoResponse/NoResponseInputs.vue";
 import SliderResponse from "../../components/SliderResponse/SliderResponseInputs.vue";
 import ImageHeatmapResponse from "../../components/ImageHeatmapResponse/ImageHeatmapResponseInputs.vue";
 import NumericResponse from "../../components/NumericResponse/NumericResponseInputs.vue";
+import { PropType } from "vue";
+import * as T from "@/types";
+import axios from "@/common/axiosClient";
 
 export default {
   components: {
@@ -78,15 +81,15 @@ export default {
   },
   props: {
     session: {
-      type: Object,
+      type: Object as PropType<T.Session>,
       required: true,
     },
     chime: {
-      type: Object,
+      type: Object as PropType<T.Chime>,
       required: true,
     },
     responses: {
-      type: Array,
+      type: Array as PropType<T.Response[]>,
       required: true,
     },
   },
@@ -97,26 +100,26 @@ export default {
       saveSucceeded: false,
       saveFailed: false,
       isSaving: false,
-      error: null,
-      question: {
-        question_info: "",
-      },
+      error: null as null | string,
     };
   },
   computed: {
-    hasPreviouslySaved() {
+    question(): T.Question {
+      return this.session.question;
+    },
+    hasPreviouslySaved(): boolean {
       if (!this.responses) return false;
 
       const sessionResponses = this.responses.filter(
         (response) => response.session_id === this.session.id
       );
 
-      return sessionResponses.length;
+      return Boolean(sessionResponses.length);
     },
-    response: function () {
+    response(): T.Response | null {
       if (this.responses.length > 0 && this.session) {
-        var foundResponse = null;
-        var sessionResponses = this.responses.filter(
+        let foundResponse = null as null | T.Response;
+        let sessionResponses = this.responses.filter(
           (r) => r.session_id == this.session.id
         );
         if (sessionResponses.length > 0) {
@@ -130,7 +133,7 @@ export default {
         }
       }
 
-      return {};
+      return null;
     },
     questionType() {
       return this.question.question_info.question_type;
@@ -155,19 +158,16 @@ export default {
       return "";
     },
   },
-  created: function () {
-    this.question = this.session.question;
-  },
   methods: {
     record_response: function (response, newResponse = false) {
-      var url =
+      let url =
         "/api/chime/" +
         this.chime.id +
         "/session/" +
         this.session.id +
         "/response";
 
-      if (this.response.id && !newResponse) {
+      if (this.response?.id && !newResponse) {
         url = url + "/" + this.response.id;
       }
 

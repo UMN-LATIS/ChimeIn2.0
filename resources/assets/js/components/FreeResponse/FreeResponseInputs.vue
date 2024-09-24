@@ -23,7 +23,7 @@
     </div>
     <div class="mb-3">
       <button
-        v-if="(!disabled && !response.id) || create_new_response"
+        v-if="(!disabled && !response?.id) || create_new_response"
         class="btn btn-outline-primary"
         variant="primary"
         :disabled="isEmpty || isLargerThanMaxChars"
@@ -32,7 +32,7 @@
         Save
       </button>
       <button
-        v-if="!disabled && response.id && !create_new_response"
+        v-if="!disabled && response?.id && !create_new_response"
         class="btn btn-outline-primary"
         variant="primary"
         :disabled="isEmpty || isLargerThanMaxChars"
@@ -43,7 +43,7 @@
       <button
         v-if="
           !disabled &&
-          response.id &&
+          response?.id &&
           !create_new_response &&
           question.allow_multiple
         "
@@ -61,13 +61,28 @@
   </div>
 </template>
 
-<script>
-import get from "lodash/get";
+<script lang="ts">
+import { PropType } from "vue";
+import * as T from "@/types";
+
 const MAX_CHARS = 10000;
 
 export default {
-  // eslint-disable-next-line vue/require-prop-types
-  props: ["question", "response", "disabled"],
+  props: {
+    question: {
+      type: Object as PropType<T.Question<T.FreeResponseQuestionInfo>>,
+      required: true,
+    },
+    response: {
+      type: Object as PropType<T.Response<T.FreeResponseResponseInfo> | null>,
+      required: false,
+      default: null,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+    },
+  },
   emits: ["recordresponse"],
   data() {
     return {
@@ -92,7 +107,7 @@ export default {
     },
   },
   mounted() {
-    this.response_text = get(this, "response.response_info.text", "");
+    this.response_text = this.response?.response_info.text ?? "";
   },
   methods: {
     record_response: function () {
