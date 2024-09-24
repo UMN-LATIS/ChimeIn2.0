@@ -26,7 +26,12 @@
         saveStatusMessage || questionTypeString
       }}</span>
 
-      <Chip v-if="!hasPreviouslySaved"> Unanswered </Chip>
+      <Chip
+        v-if="saveStatus !== 'success'"
+        class="!tw-text-umn-maroon !tw-border-umn-maroon"
+      >
+        Unanswered
+      </Chip>
     </div>
     <div class="tw-pl-6">
       <div class="prompt-question-container">
