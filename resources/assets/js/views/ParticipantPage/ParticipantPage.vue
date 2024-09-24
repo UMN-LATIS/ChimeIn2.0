@@ -185,7 +185,6 @@ import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import Back from "../../components/Back.vue";
 import * as T from "@/types";
 import Chip from "@/components/Chip.vue";
-import { filter } from "ramda";
 
 const props = withDefaults(
   defineProps<{
