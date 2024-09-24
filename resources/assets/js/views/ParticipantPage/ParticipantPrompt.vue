@@ -1,57 +1,74 @@
 <template>
   <article
     v-if="question.question_info.question_type"
-    class="participant-prompt"
+    class="participant-prompt tw-relative tw-mb-8 sm:tw-px-8"
     :aria-label="`${questionTypeString} Question`"
     :class="{
-      'save-succeeded': hasPreviouslySaved || saveSucceeded,
-      'save-failed': saveFailed,
-      'is-saving': isSaving,
+      'save-succeeded': hasPreviouslySaved || saveStatus === 'success',
+      'save-failed': saveStatus === 'error',
+      'is-saving': saveStatus === 'saving',
     }"
   >
-    <div class="prompt-question-container">
-      <div class="prompt-status">
-        {{ saveStatus || questionTypeString }}
+    <div
+      class="tw-flex tw-gap-2 tw-items-center tw-mb-2"
+      :class="{
+        'tw-text-green-600': saveStatus === 'success',
+        'tw-text-red-500': saveStatus === 'error',
+        'tw-text-amber-600': saveStatus === 'saving',
+        'tw-text-neutral-400': !saveStatus,
+      }"
+    >
+      <IconCheckboxChecked v-if="saveStatus === 'success'" />
+      <IconLoading v-else-if="saveStatus === 'saving'" />
+      <IconWarningSquare v-else-if="saveStatus === 'error'" />
+      <IconCheckboxUnchecked v-else />
+      <span class="tw-text-xs tw-uppercase tw-font-bold">{{
+        saveStatusMessage || questionTypeString
+      }}</span>
+
+      <Chip v-if="!hasPreviouslySaved"> Unanswered </Chip>
+    </div>
+    <div class="tw-pl-6">
+      <div class="prompt-question-container">
+        <div
+          :id="`question-${question.id}-heading`"
+          role="heading"
+          aria-level="3"
+        >
+          <div class="question-text" v-html="question.text" />
+        </div>
       </div>
 
-      <div
-        :id="`question-${question.id}-heading`"
-        role="heading"
-        aria-level="3"
-      >
-        <div class="question-text" v-html="question.text" />
+      <div class="prompt-response-area">
+        <component
+          :is="question.question_info.question_type"
+          :question="question"
+          :response="response"
+          :chime="chime"
+          :disabled="false"
+          @recordresponse="record_response"
+        />
       </div>
-    </div>
 
-    <div class="prompt-response-area">
-      <component
-        :is="question.question_info.question_type"
-        :question="question"
-        :response="response"
-        :chime="chime"
-        :disabled="false"
-        @recordresponse="record_response"
-      />
-    </div>
+      <Transition name="fade">
+        <p v-if="responseUpdated" class="updated-alert alert alert-info">
+          Response Updated
+        </p>
+      </Transition>
 
-    <Transition name="fade">
-      <p v-if="responseUpdated" class="updated-alert alert alert-info">
-        Response Updated
+      <p v-if="error" class="alert alert-danger">
+        {{ error }} Please try reloading the page, or contact
+        <a href="mailto:help@umn.edu">help@umn.edu</a>. If possible, include a
+        screenshot of this error.
       </p>
-    </Transition>
 
-    <p v-if="error" class="alert alert-danger">
-      {{ error }} Please try reloading the page, or contact
-      <a href="mailto:help@umn.edu">help@umn.edu</a>. If possible, include a
-      screenshot of this error.
-    </p>
-
-    <small
-      v-if="chime.show_folder_title_to_participants"
-      class="text-muted"
-      data-cy="show-folder-to-participants"
-      ><strong>Folder</strong>: {{ session.question.folder?.name }}
-    </small>
+      <small
+        v-if="chime.show_folder_title_to_participants"
+        class="text-muted"
+        data-cy="show-folder-to-participants"
+        ><strong>Folder</strong>: {{ session.question.folder?.name }}
+      </small>
+    </div>
   </article>
 </template>
 
@@ -67,6 +84,13 @@ import NumericResponse from "../../components/NumericResponse/NumericResponseInp
 import { PropType } from "vue";
 import * as T from "@/types";
 import axios from "@/common/axiosClient";
+import Chip from "@/components/Chip.vue";
+import {
+  IconCheckboxChecked,
+  IconCheckboxUnchecked,
+  IconLoading,
+  IconWarningSquare,
+} from "@/icons";
 
 export default {
   components: {
@@ -78,6 +102,11 @@ export default {
     slider_response: SliderResponse,
     heatmap_response: ImageHeatmapResponse,
     numeric_response: NumericResponse,
+    Chip,
+    IconCheckboxChecked,
+    IconCheckboxUnchecked,
+    IconLoading,
+    IconWarningSquare,
   },
   props: {
     session: {
@@ -97,9 +126,7 @@ export default {
   data: function () {
     return {
       responseUpdated: false,
-      saveSucceeded: false,
-      saveFailed: false,
-      isSaving: false,
+      saveStatus: null as "success" | "error" | "saving" | null,
       error: null as null | string,
     };
   },
@@ -144,18 +171,31 @@ export default {
         .map((str) => str.charAt(0).toUpperCase() + str.slice(1))
         .join(" ");
     },
-    saveStatus() {
-      if (this.isSaving) {
-        return "Saving...";
-      }
-      if (this.saveFailed) {
-        return "Error";
-      }
-      if (this.hasPreviouslySaved || this.saveSucceeded) {
-        return "Saved";
-      }
+    saveStatusMessage(): string | null {
+      const statusToMessage = {
+        saving: "Saving...",
+        error: "Error",
+        success: "Saved",
+      };
 
-      return "";
+      return this.saveStatus ? statusToMessage[this.saveStatus] : null;
+    },
+  },
+  watch: {
+    responses: {
+      handler() {
+        if (!this.responses) return;
+        console.log("hasPreviouslySaved", {
+          hasPreviouslySaved: this.hasPreviouslySaved,
+          chime: this.chime,
+          session: this.session,
+          responses: this.responses,
+        });
+
+        // initialize the save status
+        this.saveStatus = this.hasPreviouslySaved ? "success" : null;
+      },
+      immediate: true,
     },
   },
   methods: {
@@ -171,15 +211,12 @@ export default {
         url = url + "/" + this.response.id;
       }
 
-      this.isSaving = true;
-      this.saveSucceeded = false;
-      this.saveFailed = false;
+      this.saveStatus = "saving";
 
       axios
         .put(url, { response_info: response })
         .then((res) => {
-          this.isSaving = false;
-          this.saveSucceeded = true;
+          this.saveStatus = "success";
           this.$emit("updateResponse", res.data);
           this.responseUpdated = true;
           setTimeout(() => {
@@ -187,8 +224,7 @@ export default {
           }, 1500);
         })
         .catch((err) => {
-          this.isSaving = false;
-          this.saveFailed = true;
+          this.saveStatus = "error";
           console.error("error", "error recording response", err.response);
           if (!err.response) {
             this.error =
@@ -207,54 +243,6 @@ export default {
 </script>
 
 <style scoped>
-.participant-prompt {
-  position: relative;
-  margin-bottom: 2rem;
-  padding-left: 1.25rem;
-}
-.participant-prompt:before {
-  content: "";
-  display: block;
-  height: 0.8rem;
-  width: 0.8rem;
-  background: var(--neutral-300);
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.save-succeeded.participant-prompt:before {
-  background: #3cc03c;
-}
-.is-saving.participant-prompt:before {
-  background: var(--gold);
-}
-.save-failed.participant-prompt:before {
-  background: var(--red);
-}
-
-.prompt-status {
-  line-height: 1;
-  position: relative;
-  text-transform: uppercase;
-  font-weight: bold;
-  color: var(--neutral-500);
-  font-size: 0.8rem;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-
-.save-succeeded .prompt-status {
-  color: #008d22;
-}
-.is-saving .prompt-status {
-  color: var(--gold);
-}
-.save-failed .prompt-status {
-  color: var(--red);
-}
-
 .updated-alert {
   position: absolute;
   bottom: 0.5rem;
