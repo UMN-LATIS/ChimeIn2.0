@@ -32,6 +32,13 @@
                   @click="setActiveTab('open-questions')"
                 >
                   Open Questions
+                  <Chip
+                    v-if="filteredSession.length > 0"
+                    :solid="true"
+                    color="black"
+                    :aria-label="`${openQuestionCount} open questions`"
+                    >{{ openQuestionCount }}</Chip
+                  >
                 </button>
               </li>
               <li class="nav-item" role="none">
@@ -177,6 +184,8 @@ import { useRoute } from "vue-router";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import Back from "../../components/Back.vue";
 import * as T from "@/types";
+import Chip from "@/components/Chip.vue";
+import { filter } from "ramda";
 
 const props = withDefaults(
   defineProps<{
@@ -236,6 +245,10 @@ const ltiLaunchWarning = computed(
     !window.lti_launch &&
     isCanvasChime.value
 );
+
+const openQuestionCount = computed(() => {
+  return filteredSession.value.length;
+});
 
 function updateResponse(updatedResponse) {
   const responseIndex = responses.value.findIndex(
