@@ -24,6 +24,7 @@ export default {
         "green",
         "yellow",
         "red",
+        "black",
       ].reduce(
         (acc, colorName) => ({
           ...acc,
@@ -88,5 +89,9 @@ export default {
 .chip--solid {
   background: var(--color);
   color: var(--color-inverse);
+}
+.chip--black {
+  --color: #333;
+  --color-inverse: #fff;
 }
 </style>

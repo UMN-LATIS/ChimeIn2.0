@@ -163,7 +163,7 @@ describe("free response question", () => {
       cy.contains("Save").invoke("removeAttr", "disabled").click();
 
       // check that the server's error message is displayed
-      cy.get(".participant-prompt > .alert").should(
+      cy.get(".participant-prompt .alert").should(
         "contain",
         `cannot be longer than ${MAX_RESPONSE_LENGTH.toLocaleString()} characters`
       );
