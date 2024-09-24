@@ -17,7 +17,7 @@
       <div class="container" role="none">
         <section class="card">
           <!-- nav tabs -->
-          <div class="card-header">
+          <div class="card-header tw-text-xs sm:tw-text-sm">
             <h2 class="visually-hidden">Chime Questions</h2>
             <ul class="nav nav-tabs card-header-tabs" role="tablist">
               <li class="nav-item" role="none">
@@ -32,6 +32,13 @@
                   @click="setActiveTab('open-questions')"
                 >
                   Open Questions
+                  <Chip
+                    v-if="filteredSession.length > 0"
+                    :solid="true"
+                    color="black"
+                    :aria-label="`${openQuestionCount} open questions`"
+                    >{{ openQuestionCount }}</Chip
+                  >
                 </button>
               </li>
               <li class="nav-item" role="none">
@@ -177,6 +184,7 @@ import { useRoute } from "vue-router";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import Back from "../../components/Back.vue";
 import * as T from "@/types";
+import Chip from "@/components/Chip.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -236,6 +244,10 @@ const ltiLaunchWarning = computed(
     !window.lti_launch &&
     isCanvasChime.value
 );
+
+const openQuestionCount = computed(() => {
+  return filteredSession.value.length;
+});
 
 function updateResponse(updatedResponse) {
   const responseIndex = responses.value.findIndex(
