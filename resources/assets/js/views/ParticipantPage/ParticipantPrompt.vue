@@ -21,7 +21,7 @@
       <IconCheckboxChecked v-if="saveStatus === 'success'" />
       <IconLoading v-else-if="saveStatus === 'saving'" />
       <IconWarningSquare v-else-if="saveStatus === 'error'" />
-      <IconCheckboxUnchecked v-else />
+      <span v-else>•</span>
       <span class="tw-text-xs tw-uppercase tw-font-bold">{{
         saveStatusMessage || questionTypeString
       }}</span>
