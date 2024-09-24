@@ -9,7 +9,6 @@
         :canvasUrl="canvasCourseUrl"
         :joinUrl="joinUrl"
       />
-      <!-- <NavBar :title="isCanvasChime ? null : 'Home'" :user="user" link="/" /> -->
       <ErrorDialog />
       <div v-if="error" class="alert alert-warning" role="alert">
         {{ error }}
@@ -52,7 +51,7 @@
             </ul>
           </div>
 
-          <div class="tab-content">
+          <div v-if="chime" class="tab-content">
             <Transition>
               <div
                 v-if="activeTab === 'open-questions'"
@@ -72,7 +71,11 @@
                     chime by clicking the assignment link in your Canvas course.
                   </p>
 
-                  <a class="btn btn-primary" :href="canvasCourseUrl">
+                  <a
+                    v-if="canvasCourseUrl"
+                    class="btn btn-primary"
+                    :href="canvasCourseUrl"
+                  >
                     Go to Canvas
                   </a>
                   <p class="mt-3">
@@ -154,8 +157,9 @@
   </DefaultLayout>
 </template>
 
-<script setup>
-import echoClient from "../../common/echoClient";
+<script setup lang="ts">
+import echoClient from "@/common/echoClient";
+import axiosClient from "@/common/axiosClient";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import updateList from "ramda/es/update";
 import ErrorDialog from "../../components/ErrorDialog.vue";
@@ -172,44 +176,53 @@ import { useAnnouncer } from "@vue-a11y/announcer";
 import { useRoute } from "vue-router";
 import DefaultLayout from "../../layouts/DefaultLayout.vue";
 import Back from "../../components/Back.vue";
+import * as T from "@/types";
 
-const props = defineProps({
-  user: {
-    type: Object,
-    required: false,
-    default: null,
-  },
-  chimeId: {
-    type: Number,
-    required: true,
-  },
-  folderId: {
-    type: Number,
-    required: true,
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    user: T.User | null;
+    chimeId: T.Chime["id"];
+    folderId: T.Folder["id"];
+  }>(),
+  {
+    user: null,
+  }
+);
 
-const chime = ref({});
-const sessions = ref([]);
-const responses = ref([]);
-const error = ref(null);
-const timeout = ref(null);
-const loadTime = ref(null);
+const chime = ref<T.Chime | null>(null);
+const sessions = ref<T.Session[]>([]);
+const responses = ref<T.Response[]>([]);
+const error = ref<string | null>(null);
+const timeout = ref<ReturnType<typeof setTimeout> | null>(null);
+const loadTime = ref<Date | null>(null);
 const forceLoad = ref(false);
 const store = useStore();
 const announcer = useAnnouncer();
 const route = useRoute();
 const activeTab = ref("open-questions");
 
-const canvasCourseUrl = computed(() => selectCanvasCourseUrl(chime.value));
-const joinUrl = computed(() => selectJoinUrl(chime.value));
-const isCanvasChime = computed(() => selectIsCanvasChime(chime.value));
+const canvasCourseUrl = computed(() =>
+  chime.value ? selectCanvasCourseUrl(chime.value) : null
+);
+
+const joinUrl = computed(() =>
+  chime.value ? selectJoinUrl(chime.value) : null
+);
+
+const isCanvasChime = computed(() =>
+  chime.value ? selectIsCanvasChime(chime.value) : null
+);
+
 const inParticipantView = computed(() => {
   const viewMode = route?.query?.viewMode ?? false;
-  if (!viewMode) return false;
+
+  if (!viewMode || typeof viewMode !== "string") {
+    return false;
+  }
 
   return viewMode.toLowerCase() === "participant";
 });
+
 const filteredSession = computed(() => {
   return props.folderId
     ? sessions.value.filter((s) => s.question.folder_id === props.folderId)
@@ -221,12 +234,12 @@ const ltiLaunchWarning = computed(
     !forceLoad.value &&
     !inParticipantView.value &&
     !window.lti_launch &&
-    isCanvasChime.value,
+    isCanvasChime.value
 );
 
 function updateResponse(updatedResponse) {
   const responseIndex = responses.value.findIndex(
-    (response) => response.id === updatedResponse.id,
+    (response) => response.id === updatedResponse.id
   );
 
   const isNewResponse = responseIndex === -1;
@@ -237,16 +250,16 @@ function updateResponse(updatedResponse) {
 }
 
 function loadChime() {
-  axios
+  axiosClient
     .get(`/api/chime/${props.chimeId}/openQuestions`)
     .then((res) => {
       chime.value = res.data.chime;
-      document.title = chime.value.name;
+      document.title = chime.value?.name ?? "Chime";
       sessions.value = res.data.sessions;
     })
     .catch((err) => {
       if (err.response.data.status == "AttemptAuth") {
-        window.location =
+        window.location.href =
           "/loginAndRedirect?target=" + window.location.pathname;
       } else {
         if (err.response.data.message) {
@@ -254,16 +267,18 @@ function loadChime() {
         }
         store.commit(
           "message",
-          "Could not load Chime. You may not have permission to view this page. ",
+          "Could not load Chime. You may not have permission to view this page. "
         );
         console.error("error getting chime:", err);
       }
     })
     .then(() => {
       // hmmm... why not load responses in parallel with chime?
-      return axios.get(`/api/chime/${props.chimeId}/responses`).then((res) => {
-        responses.value = res.data;
-      });
+      return axiosClient
+        .get(`/api/chime/${props.chimeId}/responses`)
+        .then((res) => {
+          responses.value = res.data;
+        });
     });
 }
 
@@ -278,20 +293,20 @@ onMounted(() => {
       announcer.polite(
         "A new question has been open.  There are " +
           sessions.value.length +
-          " questions open",
+          " questions open"
       );
     })
     .listen("EndSession", (event) => {
       console.log("EndSession: participant", { event });
 
       const removeIndex = sessions.value.findIndex(
-        (s) => s.id == event.session.id,
+        (s) => s.id == event.session.id
       );
       sessions.value.splice(removeIndex, 1);
       announcer.polite(
         "A question has been closed.  There are " +
           sessions.value.length +
-          " questions open",
+          " questions open"
       );
     });
 
@@ -300,7 +315,12 @@ onMounted(() => {
 
     if (timeout.value) clearTimeout(timeout.value);
 
-    const hoursSinceLoad = (new Date() - loadTime.value) / 1000 / 60 / 60;
+    if (!loadTime.value) {
+      throw new Error("loadTime should be set before reconnect");
+    }
+
+    const hoursSinceLoad =
+      (new Date().getTime() - loadTime.value.getTime()) / 1000 / 60 / 60;
     if (hoursSinceLoad >= 8) {
       echoClient.leave(`session-status.${props.chimeId}`);
       echoClient.connector.socket.off("reconnect");

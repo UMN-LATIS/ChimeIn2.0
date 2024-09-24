@@ -18,6 +18,7 @@ declare global {
   interface Window {
     axios: typeof axiosClient;
     Echo: typeof echoClient;
+    lti_launch?: unknown;
   }
 }
 
