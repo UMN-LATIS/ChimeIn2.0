@@ -17,7 +17,7 @@
       <div class="container" role="none">
         <section class="card">
           <!-- nav tabs -->
-          <div class="card-header">
+          <div class="card-header tw-text-xs sm:tw-text-sm">
             <h2 class="visually-hidden">Chime Questions</h2>
             <ul class="nav nav-tabs card-header-tabs" role="tablist">
               <li class="nav-item" role="none">
