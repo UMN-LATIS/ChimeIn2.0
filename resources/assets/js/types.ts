@@ -138,6 +138,7 @@ export interface Question<T extends QuestionInfo = QuestionInfo> {
   anonymous: boolean;
   allow_multiple: boolean;
   sessions: Session[];
+  folder?: Folder;
 }
 
 export interface QuestionInfo {

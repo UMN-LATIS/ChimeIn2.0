@@ -280,7 +280,7 @@ describe("chime UI", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}/present`);
         cy.get("[data-cy=access-code]").should(
           "contain.text",
-          toHyphenatedCode(testChime.access_code),
+          toHyphenatedCode(testChime.access_code)
         );
       });
 
@@ -296,7 +296,7 @@ describe("chime UI", () => {
         cy.visit(`/join/${testChime.access_code}`);
         cy.get("[data-cy=show-folder-to-participants]").should(
           "contain.text",
-          testFolder.name,
+          testFolder.name
         );
       });
 
@@ -326,11 +326,11 @@ describe("chime UI", () => {
 
         cy.get("[data-cy=chime-users-list]").should(
           "not.contain.text",
-          "student@umn.edu",
+          "student@umn.edu"
         );
       });
 
-      it.only("can promote/demote users to presenters/participants", () => {
+      it("can promote/demote users to presenters/participants", () => {
         api.openQuestion({
           chimeId: testChime.id,
           folderId: testFolder.id,
