@@ -56,7 +56,6 @@ return [
             'options' => extension_loaded('pdo_mysql')
                 ? array_filter([
                     'sort_buffer_size' => '100M',
-                    PDO::ATTR_PERSISTENT => true,
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
                 ])
                 : [],
