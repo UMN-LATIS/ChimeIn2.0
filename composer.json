@@ -48,7 +48,7 @@
     "orangehill/iseed": "^3.0",
     "packbackbooks/lti-1p3-tool": "dev-upstream-merge-2",
     "predis/predis": "^1.1",
-    "razorbacks/laravel-shibboleth": "dev-umn",
+    "razorbacks/laravel-shibboleth": "dev-umn#c76b00864b3c586e7ca0d3a59b3df258870c3964",
     "sentry/sentry-laravel": "^3.1",
     "symfony/http-client": "^6.0",
     "symfony/mailgun-mailer": "^6.0",
