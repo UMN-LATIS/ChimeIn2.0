@@ -3,32 +3,30 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\HasManyThrough;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 
-class User extends Resource
+class Chime extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\User>
+     * @var class-string<\App\Chime>
      */
-    public static $model = \App\User::class;
+    public static $model = \App\Chime::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -36,7 +34,9 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'email', 'umndid'
+        'id',
+        'name',
+        'access_code',
     ];
 
     /**
@@ -50,32 +50,19 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Gravatar::make()->maxWidth(50),
+            Number::make('Access Code')->sortable()->rules('required', 'max:10'),
 
-            Text::make('Name')
-                ->sortable()
-                ->rules('required', 'max:255'),
+            Text::make('Name')->sortable()->rules('required', 'max:255'),
 
-            Text::make('Email')
-                ->sortable()
-                ->rules('required', 'email', 'max:254')
-                ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
+            Text::make('Presenters', function () {
+                return $this->presenters()->count();
+            })->onlyOnIndex(),
 
-            Text::make('UMNDID')
-                ->sortable()
-                ->filterable()
-                ->rules('required', 'max:255'),
+            Text::make('Participants', function () {
+                return $this->participants()->count();
+            })->onlyOnIndex(),
 
-            Boolean::make('Guest User')
-                ->filterable()
-                ->sortable(),
-
-            Boolean::make('Global Admin')
-                ->filterable()
-                ->sortable(),
-
-            BelongsToMany::make('Chimes')->fields(function () {
+            BelongsToMany::make('Users')->fields(function () {
                 return [
                     Select::make('Permission Number')->options([
                         100 => 'Participant',
@@ -83,6 +70,7 @@ class User extends Resource
                     ])->displayUsingLabels(),
                 ];
             }),
+
         ];
     }
 
