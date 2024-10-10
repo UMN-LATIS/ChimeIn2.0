@@ -36,8 +36,6 @@ Route::get("/ltiSelectionPromptDemo", function() {
 });
 
 Route::group(['middleware' => ['shibinjection']], function () {
-    
-    Route::resource('admin/users', 'Admin\UsersController');
 
     Route::get('/api/users/self', 'UsersController@getCurrentUser');
 
