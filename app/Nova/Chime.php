@@ -2,9 +2,8 @@
 
 namespace App\Nova;
 
+use App\Constants\LTIGradeMode;
 use App\Constants\LTIGradeOptions;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
@@ -40,7 +39,6 @@ class Chime extends Resource
     public static $search = [
         'id',
         'name',
-        'access_code',
     ];
 
     /**
@@ -53,25 +51,23 @@ class Chime extends Resource
         return [
             ID::make()->sortable(),
 
-            Number::make('Access Code')->sortable()->rules('required', 'max:10'),
-
-            Text::make('Name')->sortable()->rules('required', 'max:255'),
-
-            Url::make('Join URL', fn () => "/join/{$this->access_code}"
+            Url::make('Access Code', fn () => "/join/{$this->access_code}"
             )
                 ->sortable()
                 ->rules('required', 'max:255')
                 ->displayUsing(fn () => $this->access_code),
 
-            Text::make('Presenters', function () {
+            Text::make('Name')->sortable()->rules('required', 'max:255'),
+
+            Number::make('Presenters', function () {
                 return $this->presenters()->count();
             })->onlyOnIndex(),
 
-            Text::make('Participants', function () {
+            Number::make('Participants', function () {
                 return $this->participants()->count();
             })->onlyOnIndex(),
 
-            Boolean::make('Canvas Chime', 'lti_return_url')->sortable()->filterable(),
+            Boolean::make('Canvas Chime', 'lti_return_url'),
 
             Panel::make('Chime Settings', $this->chimeSettingsPanel()),
 
@@ -91,38 +87,55 @@ class Chime extends Resource
     public function chimeSettingsPanel()
     {
         return [
-            Boolean::make('Require Login')->sortable()->filterable()->onlyOnDetail(),
 
-            Boolean::make('Students Can View')->sortable()->filterable()->onlyOnDetail(),
+            Boolean::make('Require Login')->onlyOnDetail(),
 
-            Boolean::make('Join Instructions')->sortable()->filterable()->onlyOnDetail(),
+            Boolean::make('Participants Can View Results', 'students_can_view')->onlyOnDetail(),
+
+            Boolean::make('Show Folder Title to Participants')
+                ->onlyOnDetail(),
+
+            Boolean::make('Show Join Instructions', 'join_instructions')->onlyOnDetail(),
         ];
     }
 
     public function ltiConfigurationPanel()
     {
         return [
-            URL::make('LTI Return URL')->sortable()->filterable()->onlyOnDetail(),
+            URL::make('LTI Return URL')
+                ->displayUsing(fn () => $this->lti_return_url)
+                ->onlyOnDetail(),
 
-            Text::make('LTI Course Title')->displayUsing(function () {
-                return Str::limit($this->lti_course_title, 20);
-            })->sortable()->filterable()->onlyOnDetail(),
+            Text::make('LTI Course Title')->sortable()->filterable()->onlyOnDetail(),
 
-            Text::make('LTI Course ID')->displayUsing(function () {
-                return Str::limit($this->lti_course_id, 10);
-            })->onlyOnDetail(),
+            Text::make('LTI Course ID')->onlyOnDetail(),
 
-            Select::make('LTI - Credit for Incorrect', 'only_correct_answers_lti')->options([
-                LTIGradeOptions::FULL_CREDIT_FOR_INCORRECT => '100%',
-                LTIGradeOptions::HALF_CREDIT_FOR_INCORRECT => '50%',
-                LTIGradeOptions::NO_CREDIT_FOR_INCORRECT => '0%',
-            ])->displayUsingLabels()->sortable()->filterable()->onlyOnDetail(),
+            Select::make('LTI Credit for Incorrect', 'only_correct_answers_lti')
+                ->options([
+                    LTIGradeOptions::FULL_CREDIT_FOR_INCORRECT => '100%',
+                    LTIGradeOptions::HALF_CREDIT_FOR_INCORRECT => '50%',
+                    LTIGradeOptions::NO_CREDIT_FOR_INCORRECT => '0%',
+                ])
+                ->displayUsingLabels()
+                ->onlyOnDetail(),
 
-            Boolean::make('LTI Setup Complete')->sortable()->filterable()->onlyOnDetail(),
+            Select::make('LTI Grade Mode', 'lti_grade_mode')
+                ->options([
+                    LTIGradeMode::NO_GRADES => 'No Grades',
+                    LTIGradeMode::ONE_GRADE => 'One Grade',
+                    LTIGradeMode::MULTIPLE_GRADES => 'Multiple Grades',
+                ])
+                ->displayUsingLabels()
+                ->onlyOnDetail(),
 
-            Text::make('Resource Link PK')->sortable()->filterable()->onlyOnDetail(),
+            Boolean::make('LTI Setup Complete')
+                ->onlyOnDetail(),
 
-            BelongsTo::make('LTI13 Resource Link', 'lti13_resource_link', LTI13ResourceLink::class)->sortable()->nullable(),
+            BelongsTo::make('LTI13 Resource Link', 'lti13_resource_link', LTI13ResourceLink::class)
+                ->sortable()->nullable()->onlyOnDetail(),
+
+            Text::make('LTI Resource Link PK (deprecated)')
+                ->onlyOnDetail(),
         ];
     }
 
