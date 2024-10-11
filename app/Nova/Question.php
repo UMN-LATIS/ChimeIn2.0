@@ -25,7 +25,13 @@ class Question extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    // public static $title = 'id';
+    public function title()
+    {
+        $text = strip_tags($this->text);
+
+        return str_limit($text, 50);
+    }
 
     /**
      * The columns that should be searched.
@@ -54,6 +60,7 @@ class Question extends Resource
             Boolean::make('Anonymous'),
             Boolean::make('Allow Multiple'),
             BelongsTo::make('Current Session', 'current_session', Session::class),
+            BelongsTo::make('Folder'),
             Code::make('Question Info', 'question_info')->json(),
             DateTime::make('Created At')->sortable(),
             DateTime::make('Updated At')->sortable(),

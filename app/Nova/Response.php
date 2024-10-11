@@ -4,19 +4,20 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasOneThrough;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Session extends Resource
+class Response extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Session>
+     * @var class-string<\App\Response>
      */
-    public static $model = \App\Session::class;
+    public static $model = \App\Response::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -43,14 +44,14 @@ class Session extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Question'),
-
-            // response count
-            Number::make('Response Count', function () {
-                return $this->responses->count();
-            })->sortable(),
-
-            HasMany::make('Responses'),
+            BelongsTo::make('Session')->searchable(),
+            // BelongsTo::make('Question'),
+            HasOneThrough::make('Question', 'session', 'App\Nova\Question'),
+            BelongsTo::make('User')->searchable(),
+            Code::make('Response Info')->json(),
+            DateTime::make('Created At'),
+            DateTime::make('Updated At'),
+            DateTime::make('Deleted At'),
         ];
     }
 

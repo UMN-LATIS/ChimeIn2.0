@@ -27,7 +27,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'email';
 
     /**
      * The columns that should be searched.
@@ -86,14 +86,14 @@ class User extends Resource
 
             MorphMany::make('Auths', 'authentications', AuthenticationLog::class),
 
-            DateTime::make('Created At')->sortable(),
-            DateTime::make('Updated At')->sortable(),
+            DateTime::make('Created At')->sortable()->onlyOnDetail(),
+            DateTime::make('Updated At')->sortable()->onlyOnDetail(),
             DateTime::make('Last Login At', function () {
                 return $this->lastLoginAt();
-            })->sortable(),
+            })->sortable()->onlyOnDetail(),
             Text::make('Last Login IP', function () {
                 return $this->lastLoginIP();
-            })->sortable(),
+            })->sortable()->onlyOnDetail(),
         ];
     }
 
