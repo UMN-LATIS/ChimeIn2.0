@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Constants\LTIGradeOptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
@@ -121,7 +122,7 @@ class Chime extends Resource
 
             Text::make('Resource Link PK')->sortable()->filterable()->onlyOnDetail(),
 
-            Text::make('LTI13 Resource Link ID')->sortable()->filterable()->onlyOnDetail(),
+            BelongsTo::make('LTI13 Resource Link', 'lti13_resource_link', LTI13ResourceLink::class)->sortable()->nullable(),
         ];
     }
 
