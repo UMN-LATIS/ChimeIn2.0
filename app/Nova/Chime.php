@@ -7,6 +7,8 @@ use App\Constants\LTIGradeOptions;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
@@ -29,7 +31,7 @@ class Chime extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -73,6 +75,8 @@ class Chime extends Resource
 
             Panel::make('LTI Configuration', $this->ltiConfigurationPanel()),
 
+            HasMany::make('Folders'),
+
             BelongsToMany::make('Users')->fields(function () {
                 return [
                     Select::make('Role', 'permission_number')->options([
@@ -81,6 +85,8 @@ class Chime extends Resource
                     ])->displayUsingLabels()->sortable()->filterable(),
                 ];
             }),
+            DateTime::make('Created At')->sortable(),
+            DateTime::make('Updated At')->sortable(),
         ];
     }
 
