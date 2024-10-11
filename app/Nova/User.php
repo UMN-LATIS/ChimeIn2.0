@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphMany;
@@ -84,6 +85,15 @@ class User extends Resource
             }),
 
             MorphMany::make('Auths', 'authentications', AuthenticationLog::class),
+
+            DateTime::make('Created At')->sortable(),
+            DateTime::make('Updated At')->sortable(),
+            DateTime::make('Last Login At', function () {
+                return $this->lastLoginAt();
+            })->sortable(),
+            Text::make('Last Login IP', function () {
+                return $this->lastLoginIP();
+            })->sortable(),
         ];
     }
 
