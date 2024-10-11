@@ -2,15 +2,18 @@
 
 namespace App\Nova;
 
+use App\Constants\LTIGradeOptions;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\HasManyThrough;
-use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\URL;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 
 class Chime extends Resource
 {
@@ -42,7 +45,6 @@ class Chime extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function fields(NovaRequest $request)
@@ -54,6 +56,12 @@ class Chime extends Resource
 
             Text::make('Name')->sortable()->rules('required', 'max:255'),
 
+            Url::make('Join URL', fn () => "/join/{$this->access_code}"
+            )
+                ->sortable()
+                ->rules('required', 'max:255')
+                ->displayUsing(fn () => $this->access_code),
+
             Text::make('Presenters', function () {
                 return $this->presenters()->count();
             })->onlyOnIndex(),
@@ -62,22 +70,64 @@ class Chime extends Resource
                 return $this->participants()->count();
             })->onlyOnIndex(),
 
+            Boolean::make('Canvas Chime', 'lti_return_url')->sortable()->filterable(),
+
+            Panel::make('Chime Settings', $this->chimeSettingsPanel()),
+
+            Panel::make('LTI Configuration', $this->ltiConfigurationPanel()),
+
             BelongsToMany::make('Users')->fields(function () {
                 return [
-                    Select::make('Permission Number')->options([
+                    Select::make('Role', 'permission_number')->options([
                         100 => 'Participant',
                         300 => 'Presenter',
-                    ])->displayUsingLabels(),
+                    ])->displayUsingLabels()->sortable()->filterable(),
                 ];
             }),
+        ];
+    }
 
+    public function chimeSettingsPanel()
+    {
+        return [
+            Boolean::make('Require Login')->sortable()->filterable()->onlyOnDetail(),
+
+            Boolean::make('Students Can View')->sortable()->filterable()->onlyOnDetail(),
+
+            Boolean::make('Join Instructions')->sortable()->filterable()->onlyOnDetail(),
+        ];
+    }
+
+    public function ltiConfigurationPanel()
+    {
+        return [
+            URL::make('LTI Return URL')->sortable()->filterable()->onlyOnDetail(),
+
+            Text::make('LTI Course Title')->displayUsing(function () {
+                return Str::limit($this->lti_course_title, 20);
+            })->sortable()->filterable()->onlyOnDetail(),
+
+            Text::make('LTI Course ID')->displayUsing(function () {
+                return Str::limit($this->lti_course_id, 10);
+            })->onlyOnDetail(),
+
+            Select::make('LTI - Credit for Incorrect', 'only_correct_answers_lti')->options([
+                LTIGradeOptions::FULL_CREDIT_FOR_INCORRECT => '100%',
+                LTIGradeOptions::HALF_CREDIT_FOR_INCORRECT => '50%',
+                LTIGradeOptions::NO_CREDIT_FOR_INCORRECT => '0%',
+            ])->displayUsingLabels()->sortable()->filterable()->onlyOnDetail(),
+
+            Boolean::make('LTI Setup Complete')->sortable()->filterable()->onlyOnDetail(),
+
+            Text::make('Resource Link PK')->sortable()->filterable()->onlyOnDetail(),
+
+            Text::make('LTI13 Resource Link ID')->sortable()->filterable()->onlyOnDetail(),
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function cards(NovaRequest $request)
@@ -88,7 +138,6 @@ class Chime extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function filters(NovaRequest $request)
@@ -99,7 +148,6 @@ class Chime extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function lenses(NovaRequest $request)
@@ -110,7 +158,6 @@ class Chime extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function actions(NovaRequest $request)
