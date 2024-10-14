@@ -7,6 +7,8 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\HasManyThrough;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -60,6 +62,8 @@ class Question extends Resource
             Boolean::make('Anonymous'),
             Boolean::make('Allow Multiple'),
             BelongsTo::make('Current Session', 'current_session', Session::class),
+            HasMany::make('Sessions'),
+            HasManyThrough::make('Responses'),
             BelongsTo::make('Folder'),
             Code::make('Question Info', 'question_info')->json(),
             DateTime::make('Created At')->sortable(),
