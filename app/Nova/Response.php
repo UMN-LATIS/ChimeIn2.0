@@ -45,8 +45,7 @@ class Response extends Resource
         return [
             ID::make()->sortable(),
             BelongsTo::make('Session')->searchable(),
-            // BelongsTo::make('Question'),
-            HasOneThrough::make('Question', 'session', 'App\Nova\Question'),
+            BelongsTo::make('Question'),
             BelongsTo::make('User')->searchable(),
             Code::make('Response Info')->json(),
             DateTime::make('Created At'),
