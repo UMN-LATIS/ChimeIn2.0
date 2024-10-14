@@ -78,7 +78,7 @@ after('artisan:migrate', 'artisan:queue:restart');
 task('composer:private', function() {
     cd('{{release_path}}');
     run('source .env && /swadm/var/www/html/.dep/composer.phar config "http-basic.nova.laravel.com" "$NOVA_USERNAME" "$NOVA_LICENSE_KEY"');
-  });
+});
   
 before('deploy:vendors', 'composer:private');
 
