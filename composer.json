@@ -31,6 +31,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/cmcfadden/lti-1-3-php-library"
+    },
+    {
+      "type": "composer",
+      "url": "https://nova.laravel.com"
     }
   ],
   "require": {
@@ -48,11 +52,12 @@
     "orangehill/iseed": "^3.0",
     "packbackbooks/lti-1p3-tool": "dev-upstream-merge-2",
     "predis/predis": "^1.1",
-    "razorbacks/laravel-shibboleth": "dev-umn",
+    "razorbacks/laravel-shibboleth": "dev-umn#c76b00864b3c586e7ca0d3a59b3df258870c3964",
     "sentry/sentry-laravel": "^3.1",
     "symfony/http-client": "^6.0",
     "symfony/mailgun-mailer": "^6.0",
-    "yadahan/laravel-authentication-log": "^1.3"
+    "yadahan/laravel-authentication-log": "^1.3",
+    "laravel/nova": "^4.0"
   },
   "require-dev": {
     "spatie/laravel-ignition": "^2.0",
