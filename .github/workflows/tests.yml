@@ -31,7 +31,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
+      - run: |
+          php --version
+          composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_USERNAME }}" "${{ secrets.NOVA_LICENSE_KEY }}"
+          composer install --no-interaction --prefer-dist --ignore-platform-reqs
 
       - name: Build
         run: docker compose build
