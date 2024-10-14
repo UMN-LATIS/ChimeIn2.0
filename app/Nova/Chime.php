@@ -43,6 +43,11 @@ class Chime extends Resource
         'name',
     ];
 
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->withCount(['presenters', 'participants']);
+    }
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -62,11 +67,11 @@ class Chime extends Resource
             Text::make('Name')->sortable()->rules('required', 'max:255'),
 
             Number::make('Presenters', function () {
-                return $this->presenters()->count();
+                return $this->presenters_count;
             })->onlyOnIndex(),
 
             Number::make('Participants', function () {
-                return $this->participants()->count();
+                return $this->participants_count;
             })->onlyOnIndex(),
 
             Boolean::make('Canvas Chime', 'lti_return_url'),
