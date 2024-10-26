@@ -79,7 +79,8 @@ Route::group(['middleware' => ['shibinjection']], function () {
     // Response subroutes
     Route::get('/api/chime/{chime_id}/responses', 'ResponseController@getResponse');
     Route::get('/api/chime/{chime_id}/session/{session_id}/question', 'ResponseController@getQuestion');
-    Route::put('/api/chime/{chime}/session/{session}/response/{response?}', 'ResponseController@createOrUpdateResponse');
+    Route::put('/api/chime/{chime}/session/{session}/response/{response?}', 'ResponseController@createOrUpdateResponse')
+        ->middleware('limit.json.size');
 
     Route::post('/api/chime/{chime}/folder/{folder}/question/startAll', 'PresentController@startAllQuestions');
     Route::put('/api/chime/{chime}/folder/{folder}/question/stopAll', 'PresentController@stopAllQuestions');
@@ -88,10 +89,12 @@ Route::group(['middleware' => ['shibinjection']], function () {
     // TODO: Change `includeQuestions to a query string param 
     // `include_questions=true`
     Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
-    Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion');
+    Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion')
+        ->middleware('limit.json.size');
     Route::post('/api/chime/{chime}/folder/{folder}/import', 'FolderController@importQuestions');
     Route::post('/api/chime/{chime}/folder/{folder}/sync', 'FolderController@forceSync');
-    Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion');
+    Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@updateQuestion')
+        ->middleware('limit.json.size');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'FolderController@deleteQuestion');
     Route::delete('/api/chime/{chime}/folder/{folder}/question/{question}/responses', 'FolderController@resetQuestion');

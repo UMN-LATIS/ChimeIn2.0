@@ -1,24 +1,30 @@
 <template>
   <DefaultLayout :user="user" class="bg-white">
     <template #navbar-left>
-      <Back :to="`/chime/${chimeId}/folder/${folderId}`">Back to Folder</Back>
+      <Back v-if="!isStudentView" :to="`/chime/${chimeId}/folder/${folderId}`"
+        >Back to Folder</Back
+      >
+      <Back v-else :to="`/chimeParticipant/${chimeId}/${folderId}`">Back</Back>
     </template>
     <div class="present-page">
       <ErrorDialog />
 
       <Spinner v-if="!folder" />
       <div v-if="folder && chime" class="present-container">
-        <Fullscreen ref="fullscreenRef" @change="isFullscreen = !isFullscreen">
+        <Fullscreen v-model="isFullscreen">
           <PresentQuestion
             v-if="currentQuestion"
             :usersCount="usersCount"
             :question="currentQuestion"
             :chime="chime"
             :folder="folder"
+            :questionIndex="questionIndex"
+            :isShowingResults="isShowingResults"
+            :isStudentView="isStudentView"
             @nextQuestion="nextQuestion"
             @previousQuestion="previousQuestion"
             @sessionUpdated="refreshQuestions"
-            @toggle="() => fullscreenRef.toggle()"
+            @toggle="isFullscreen = !isFullscreen"
             @reload="refreshQuestions"
           />
         </Fullscreen>
@@ -26,8 +32,7 @@
     </div>
   </DefaultLayout>
 </template>
-
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
 import { component as Fullscreen } from "vue-fullscreen";
 import useQuestionListener from "../../hooks/useQuestionListener";
@@ -38,25 +43,22 @@ import Spinner from "../../components/Spinner.vue";
 import { useRouter } from "vue-router";
 import { mathMod } from "ramda";
 import Back from "../../components/Back.vue";
+import * as T from "@/types";
+import axios from "@/common/axiosClient";
 
-const props = defineProps({
-  user: {
-    type: Object,
-    required: true,
-  },
-  chimeId: {
-    type: Number,
-    required: true,
-  },
-  folderId: {
-    type: Number,
-    required: true,
-  },
-  questionIndex: {
-    type: Number,
-    default: 0,
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    user: T.User;
+    chimeId: number;
+    folderId: number;
+    questionIndex?: number;
+    isShowingResults?: boolean;
+  }>(),
+  {
+    questionIndex: 0,
+    isShowingResults: false,
+  }
+);
 
 const {
   chime,
@@ -70,16 +72,19 @@ const {
 });
 
 const isFullscreen = ref(false);
-const fullscreenRef = ref(null);
 
 const currentQuestion = computed(() => {
-  if (props.questionIndex >= questions.length) {
+  if (props.questionIndex >= questions.value.length) {
     console.error(
       `No question exists at index ${props.questionIndex} in ${questions}`
     );
     return null;
   }
   return questions.value[props.questionIndex];
+});
+
+const isStudentView = computed((): boolean => {
+  return folder.value?.student_view ?? false;
 });
 
 const router = useRouter();

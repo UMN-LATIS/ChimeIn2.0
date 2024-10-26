@@ -23,7 +23,7 @@
       <button
         v-if="
           !disabled &&
-          response.id &&
+          response?.id &&
           !create_new_response &&
           question.allow_multiple
         "
@@ -37,17 +37,36 @@
   </div>
 </template>
 
-<script>
-import get from "lodash/get";
+<script lang="ts">
+import { PropType } from "vue";
+import * as T from "@/types";
+
+interface ImageCoordinates {
+  coordinate_x: number;
+  coordinate_y: number;
+}
 
 export default {
-  // eslint-disable-next-line vue/require-prop-types
-  props: ["question", "response", "disabled"],
+  props: {
+    question: {
+      type: Object as PropType<T.Question<T.ImageHeatmapQuestionInfo>>,
+      required: true,
+    },
+    response: {
+      type: Object as PropType<T.Response<T.ImageHeatmapResponseResponseInfo> | null>,
+      required: false,
+      default: null,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+    },
+  },
   emits: ["recordresponse"],
   data() {
     return {
       targetImageLoaded: false,
-      image_coordinates: null,
+      image_coordinates: null as ImageCoordinates | null,
       create_new_response: false,
     };
   },
@@ -68,11 +87,12 @@ export default {
       this.updateScaledCoordinates();
     },
     updateScaledCoordinates() {
-      const targetImage = this.$refs["targetImage"];
-      const imageCoordinates = get(
-        this,
-        "response.response_info.image_coordinates"
-      );
+      if (!this.response?.response_info) {
+        return;
+      }
+
+      const targetImage = this.$refs["targetImage"] as HTMLImageElement;
+      const imageCoordinates = this.response.response_info.image_coordinates;
 
       if (!imageCoordinates || !targetImage) {
         return;

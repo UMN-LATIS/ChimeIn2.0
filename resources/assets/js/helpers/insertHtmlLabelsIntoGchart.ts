@@ -9,13 +9,17 @@ export default function insertHtmlLabelsIntoGchart(gChartEl, htmlLabelsArray) {
     (el) => /<p>/.test(el.textContent)
   );
 
+  const currentForeignObjectLabels = gChartEl.querySelectorAll("foreignObject");
+
+  const allLabels = [...currentTextLabels, ...currentForeignObjectLabels];
+
   // we'll use the chart bars to help with positioning
   // getting bars by stroke color... a bit hacky, but it works
   const bars = [...gChartEl.querySelectorAll('[stroke="#36a2eb"]')];
 
   // replace each text node with a `<foreignObject>` element
   // containing the HTML
-  currentTextLabels.forEach((label, index) => {
+  allLabels.forEach((label, index) => {
     const bar = bars[index];
 
     // if no bar, don't bother with the label

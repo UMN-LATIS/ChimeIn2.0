@@ -5,7 +5,11 @@
       role="radiogroup"
       :aria-labelledby="`question-${question.id}-heading`"
     >
-      <div v-for="(option, key) in selectOptions" :key="key" class="form-check">
+      <div
+        v-for="(option, key) in selectOptions"
+        :key="key"
+        class="form-check multiple-choice-input-group"
+      >
         <input
           :id="'radio' + question.id + '_' + key"
           v-model="selected"
@@ -24,15 +28,31 @@
   </div>
 </template>
 
-<script>
-import get from "lodash/get";
+<script lang="ts">
+import { PropType } from "vue";
+import * as T from "@/types";
+
 export default {
-  // eslint-disable-next-line vue/require-prop-types
-  props: ["question", "response", "disabled"],
+  props: {
+    question: {
+      type: Object as PropType<T.Question<T.MultipleChoiceQuestionInfo>>,
+      required: true,
+    },
+    response: {
+      type: Object as PropType<T.Response<T.MultipleChoiceResponseInfo> | null>,
+      required: false,
+      default: null,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
   emits: ["recordresponse"],
   data() {
     return {
-      selected: [],
+      selected: [] as string | string[],
     };
   },
   computed: {
@@ -67,7 +87,14 @@ export default {
     },
   },
   mounted() {
-    this.selected = get(this, "response.response_info.choice", this.selected);
+    this.selected = this.response?.response_info.choice || this.selected;
   },
 };
 </script>
+<style>
+.multiple-choice-input-group img {
+  max-height: 10rem;
+  height: auto;
+  width: auto;
+}
+</style>

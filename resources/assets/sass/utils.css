@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.tw-border {
+  border-width: 1px;
+  border-style: solid;
+}

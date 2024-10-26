@@ -52,7 +52,13 @@ return [
             'prefix' => '',
             'strict' => true,
             'engine' => null,
-            'timezone'  => '+00:00'
+            'timezone'  => '+00:00',
+            'options' => extension_loaded('pdo_mysql')
+                ? array_filter([
+                    'sort_buffer_size' => '100M',
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                ])
+                : [],
         ],
 
         'pgsql' => [

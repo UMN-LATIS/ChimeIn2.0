@@ -135,6 +135,13 @@ export default {
         createChoiceLabelHtml(prependCheckIfCorrect)
       );
 
+      const replaceImgWithPlaceholder = (html) => {
+        return html.replace(
+          /<img[^>]*>/gi,
+          `<div style="background: #ddd; width: 100px; height: 100px;"></div>`
+        );
+      };
+
       // when animations are turned on, these labels will be overwritten, so we reinsert the labels with each animation frame
       let start;
       const updateLabels = (timestamp) => {
@@ -144,8 +151,18 @@ export default {
         const elapsed = timestamp - start;
         // stop looping a bit after animation duration completes
         if (elapsed < ANIMATION_DURATION * 1.25) {
-          insertHtmlLabelsIntoGchart(chart, htmlLabels);
+          // images may be used as labels, and to avoid
+          // flashing and repeated image requests, scrub
+          // the images from the labels during animation
+          // and reinsert them after the animation completes
+          const labelsWithoutImages = htmlLabels.map(replaceImgWithPlaceholder);
+
+          insertHtmlLabelsIntoGchart(chart, labelsWithoutImages);
           window.requestAnimationFrame(updateLabels);
+        } else {
+          // on last frame, insert the original labels with
+          // images back into the chart
+          insertHtmlLabelsIntoGchart(chart, htmlLabels);
         }
       };
       window.requestAnimationFrame(updateLabels);

@@ -27,7 +27,7 @@
         </button>
       </div>
       <Spinner v-if="!isPageReady" />
-      <div v-if="isPageReady && !isParticipantView">
+      <div v-if="chime && folder && !isParticipantView">
         <header class="folder-page-header">
           <div class="folder-page-header__folder-name-group">
             <p class="folder-page-header__chime-name">
@@ -61,12 +61,6 @@
                 <Icon>grade</Icon>
                 Report
               </router-link>
-              <button class="btn" @click="openAll">
-                <i class="material-icons pointer">visibility</i> Open All
-              </button>
-              <button class="btn" @click="closeAll">
-                <i class="material-icons pointer">visibility_off</i> Close All
-              </button>
               <router-link
                 :to="{
                   name: 'chimeStudent',
@@ -83,8 +77,22 @@
               </router-link>
               <router-link
                 :to="{
+                  name: 'presentResults',
+                  params: { chimeId, folderId, questionIndex: 0 },
+                }"
+                class="btn"
+              >
+                <i class="material-icons">bar_chart</i>
+                Results
+              </router-link>
+              <router-link
+                :to="{
                   name: 'present',
-                  params: { chimeId: chimeId, folderId: folderId },
+                  params: {
+                    chimeId: chimeId,
+                    folderId: folderId,
+                    questionIndex: 0,
+                  },
                 }"
                 class="btn"
               >
@@ -119,7 +127,9 @@
               </div>
               <div class="ml-auto col-12 btn-toolbar justify-content-end">
                 <button
-                  v-if="folder.resource_link_pk > 0 || folder.lti_lineitem"
+                  v-if="
+                    isCanvasChime && chime.lti_grade_mode === 'multiple_grades'
+                  "
                   class="mr-2 btn btn-success btn-sm align-items-center d-flex"
                   @click="sync"
                 >
@@ -152,7 +162,7 @@
                     <label for="chime_select">Select a Chime:</label>
                     <select
                       id="chime_select"
-                      v-model="selected_chime"
+                      v-model="selected_chime_id"
                       class="form-control"
                       @change="update_folders"
                     >
@@ -171,7 +181,7 @@
                     <label for="folder_select">Select a Folder:</label>
                     <select
                       id="folder_select"
-                      v-model="selected_folder"
+                      v-model="selected_folder_id"
                       class="form-control"
                     >
                       <option disabled>Select a Folder</option>
@@ -195,32 +205,47 @@
 
         <div class="border-top mt-3 pt-3 folder-page__main">
           <div>
-            <button
-              data-cy="new-question-button"
-              class="btn btn-outline-primary align-items-center d-flex my-2"
-              @click="showModal = true"
-            >
-              <i class="material-icons pointer">add</i> Add Question
-            </button>
             <div class="grid-cols-2">
-              <Draggable
-                v-model="questions"
-                itemKey="id"
-                data-cy="question-list"
-                class="question-list"
-                handle=".handle"
-                ghostClass="ghost"
-                @end="swap_question"
-              >
-                <template #item="{ element }">
-                  <QuestionCard
-                    :folder="folder"
-                    :question="element"
-                    :showMoveIcon="questions.length > 1"
-                    @change="refreshFolder"
-                  />
-                </template>
-              </Draggable>
+              <div class="grid-column">
+                <div
+                  class="d-flex align-items-center mb-2 justify-content-between"
+                >
+                  <button
+                    data-cy="new-question-button"
+                    class="btn btn-outline-primary align-items-center d-flex"
+                    @click="showModal = true"
+                  >
+                    <i class="material-icons pointer">add</i> Add Question
+                  </button>
+                  <div class="folder-page-header__button-group">
+                    <button class="btn" @click="openAll">
+                      <i class="material-icons pointer">visibility</i> Open All
+                    </button>
+                    <button class="btn" @click="closeAll">
+                      <i class="material-icons pointer">visibility_off</i> Close
+                      All
+                    </button>
+                  </div>
+                </div>
+                <Draggable
+                  v-model="questions"
+                  itemKey="id"
+                  data-cy="question-list"
+                  class="question-list"
+                  handle=".handle"
+                  ghostClass="ghost"
+                  @end="swap_question"
+                >
+                  <template #item="{ element }">
+                    <QuestionCard
+                      :folder="folder"
+                      :question="element"
+                      :showMoveIcon="questions.length > 1"
+                      @change="refreshFolder"
+                    />
+                  </template>
+                </Draggable>
+              </div>
               <JoinPanel :chime="chime" :includeFullUrl="true" />
             </div>
           </div>
@@ -248,7 +273,7 @@
   </DefaultLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import orderBy from "lodash/orderBy";
 import { defineAsyncComponent, ref, computed, watch, onMounted } from "vue";
 import Draggable from "vuedraggable";
@@ -275,27 +300,32 @@ import {
   forceSyncGradesWithLMS,
 } from "../../common/api";
 import { useRouter } from "vue-router";
+import axios from "@/common/axiosClient";
+import * as T from "@/types";
 import Icon from "../../components/Icon.vue";
-const QuestionForm = defineAsyncComponent(() =>
-  import(
-    /* webpackChunkName: "QuestionForm" */
-    "../QuestionForm/QuestionForm.vue"
-  )
+import { selectIsCanvasChime } from "@/helpers/chimeSelectors";
+
+const QuestionForm = defineAsyncComponent(
+  () =>
+    import(
+      /* webpackChunkName: "QuestionForm" */
+      "../QuestionForm/QuestionForm.vue"
+    )
 );
 
-const props = defineProps({
-  folderId: { type: Number, required: true },
-  chimeId: { type: Number, required: true },
-  user: { type: Object, required: true },
-});
+const props = defineProps<{
+  folderId: number;
+  chimeId: number;
+  user: T.User;
+}>();
 const showModal = ref(false);
 const show_edit_folder = ref(false);
-const allSessions = ref(null);
+const allSessions = ref<T.Session[] | null>(null);
 const hideOpenAlert = ref(false);
-const existing_chimes = ref([]);
-const existing_folders = ref([]);
-const selected_chime = ref(null);
-const selected_folder = ref(null);
+const existing_chimes = ref<T.Chime[]>([]);
+const existing_folders = ref<T.Folder[]>([]);
+const selected_chime_id = ref<number | null>(null);
+const selected_folder_id = ref<number | null>(null);
 const synced = ref(false);
 
 const store = useStore();
@@ -311,12 +341,12 @@ const {
 });
 
 const otherFolderSessions = computed(() => {
-  if (allSessions.value && folder.value) {
-    return allSessions.value.filter(
-      (session) => session.question.folder_id !== folder.value.id
-    );
+  if (!allSessions.value || !folder.value) {
+    return [];
   }
-  return [];
+  return allSessions.value.filter(
+    (session) => session.question.folder_id !== props.folderId
+  );
 });
 
 // each time we open the edit folder
@@ -331,6 +361,10 @@ watch(show_edit_folder, function (newValue) {
 
 const isPageReady = computed(() => !!folder.value);
 const isParticipantView = computed(() => folder.value?.student_view ?? false);
+const isCanvasChime = computed(() =>
+  chime.value ? selectIsCanvasChime(chime.value) : false
+);
+
 onMounted(async () => {
   if (isParticipantView.value) {
     store.commit("message", "Unauthorized: Only presenters may edit chimes.");
@@ -393,6 +427,12 @@ async function edit_folder() {
 }
 
 async function delete_folder() {
+  if (!folder.value) {
+    throw new Error(
+      `Cannot delete folder: folder ${props.folderId} not found.`
+    );
+  }
+
   if (!confirm("Delete Folder " + folder.value.name + "?")) return;
 
   await deleteFolder({ chimeId: props.chimeId, folderId: props.folderId });
@@ -434,22 +474,28 @@ function closeOthers() {
 }
 
 function handleFolderNameInput(event) {
+  if (!folder.value) {
+    throw new Error(
+      `Cannot update folder name: folder ${props.folderId} not found.`
+    );
+  }
+
   folder.value.name = event.target.value;
 }
 
 async function do_import() {
-  if (!selected_chime.value || !selected_folder.value) return;
+  if (!selected_chime_id.value || !selected_folder_id.value) return;
   await importFolder({
     destinationChimeId: props.chimeId,
     destinationFolderId: props.folderId,
-    sourceFolderId: selected_folder.value,
+    sourceFolderId: selected_folder_id.value,
   });
   refreshFolder();
 }
 
 function update_folders() {
   axios
-    .get("/api/chime/" + selected_chime.value)
+    .get("/api/chime/" + selected_chime_id.value)
     .then((res) => {
       const foldersWithoutCurrentOne = res.data.folders.filter(
         (f) => f.id !== props.folderId
@@ -563,7 +609,9 @@ ul li {
   background-color: #fff;
   line-height: 1.5;
   border-radius: 0.25rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 .folder-settings-panel__heading {
