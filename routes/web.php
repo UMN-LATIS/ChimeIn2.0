@@ -22,13 +22,6 @@ use App\Http\Controllers\UsersController;
 |
 */
 
-// Home Page Routes
-// 
-// 
-
-// this might be wrong
-Route::impersonate();
-
 Route::get("/ltiSelectionPromptDemo", function() {
     $chime = \App\Chime::first();
     $chimes = \App\Chime::all();
