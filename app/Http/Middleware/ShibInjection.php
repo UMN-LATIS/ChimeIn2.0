@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Auth;
+use Laravel\Nova\Contracts\ImpersonatesUsers;
 
 class ShibInjection
 {
@@ -16,6 +17,12 @@ class ShibInjection
      */
     public function handle($request, Closure $next)
     {
+        // skip shib injection if we're impersonating
+        $impersonator = app(ImpersonatesUsers::class);
+        if ($impersonator->impersonating($request)) {
+            return $next($request);
+        }
+
         foreach (config('shibboleth.user') as $local => $server) {
             $map[$local] = $this->getServerVariable($server);
         }
