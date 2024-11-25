@@ -9,6 +9,7 @@ use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\PresentController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ImpersonateController;
 
 
 /*
@@ -99,7 +100,8 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
     
-    
+    Route::get('/impersonate/stop', [ImpersonateController::class, 'stop'])->name('impersonate.stop');
+
 });
     // Auth::routes();
 
