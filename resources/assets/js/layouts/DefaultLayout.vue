@@ -1,5 +1,6 @@
 <template>
   <div class="default-layout d-flex flex-column">
+    <ImpersonationBanner v-if="user?.isImpersonated" :user="user" />
     <AppHeader>
       <template #app-link>
         <router-link to="/">ChimeIn</router-link>
@@ -27,12 +28,13 @@
 </template>
 <script setup lang="ts">
 import { AppHeader, AppFooter, NavbarItem } from "@umn-latis/cla-vue-template";
+import ImpersonationBanner from "@/components/ImpersonationBanner.vue";
 import { computed } from "vue";
-import type { User } from "../types";
+import type { CurrentUser } from "../types";
 
 const props = withDefaults(
   defineProps<{
-    user?: User | null;
+    user?: CurrentUser | null;
   }>(),
   {
     user: null,

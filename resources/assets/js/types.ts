@@ -14,6 +14,10 @@ export interface User {
   [key: string]: any;
 }
 
+export interface CurrentUser extends User {
+  isImpersonated: boolean;
+}
+
 export interface SortableUser extends User {
   lastName: string;
   firstName: string;

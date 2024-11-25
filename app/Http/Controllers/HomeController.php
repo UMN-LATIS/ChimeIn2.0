@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Chime;
 use Auth;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
 
-    public function index(Request $req)
+    public function index(Request $request)
     {
-        return view('app', ['user' => $req->user()]);
+        return view('app', ['user' => $request->user()]);
     }
-
 
     // call this URL with target=<target> to force a login and redirect
     public function loginAndRedirect(Request $req)
