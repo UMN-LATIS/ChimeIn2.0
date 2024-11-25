@@ -17,9 +17,10 @@ class ShibInjection
      */
     public function handle($request, Closure $next)
     {
+        Auth::user()->isImpersonated = app(ImpersonatesUsers::class)->impersonating($request);
+        
         // skip shib injection if we're impersonating
-        $impersonator = app(ImpersonatesUsers::class);
-        if ($impersonator->impersonating($request)) {
+        if (Auth::user()->isImpersonated) {
             return $next($request);
         }
 

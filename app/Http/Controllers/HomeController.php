@@ -4,17 +4,13 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
-use Laravel\Nova\Contracts\ImpersonatesUsers;
 
 class HomeController extends Controller
 {
 
-    public function index(Request $request, ImpersonatesUsers $impersonator)
+    public function index(Request $request)
     {
-        $user = $request->user();
-        $user->isImpersonated = $impersonator->impersonating($request);
-
-        return view('app', ['user' => $user]);
+        return view('app', ['user' => $request->user()]);
     }
 
     // call this URL with target=<target> to force a login and redirect
