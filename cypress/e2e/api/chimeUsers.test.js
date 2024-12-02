@@ -54,7 +54,7 @@ describe("chimeUser api", () => {
       });
   });
 
-  it("does not allow participants/guests to change role", () => {
+  it("does not allow participants/guests to update a single user role", () => {
     let student = null;
 
     cy.logout();
@@ -84,6 +84,53 @@ describe("chimeUser api", () => {
         );
       })
       .then((response) => {
+        expect(response.status).to.equal(403);
+      });
+  });
+
+  it('allows presenters to "sync" users', () => {
+    cy.logout();
+    cy.login("student");
+    cy.visit("/join/" + testChime.access_code);
+    cy.login("faculty");
+
+    api
+      .getChimeUsers({ chimeId: testChime.id })
+      .then((users) => {
+        expect(users).to.have.length(2);
+        // promote a student to presenter
+        return api.syncChimeUsers({
+          chimeId: testChime.id,
+          users: [
+            ...users,
+            {
+              id: users[1].id,
+              permission_number: 300,
+            },
+          ],
+        });
+      })
+      .then(() => {
+        return api.getChimeUsers({ chimeId: testChime.id });
+      })
+      .then((users) => {
+        expect(users).to.have.length(2);
+        expect(users[1].permission_number).to.equal(300);
+      });
+  });
+
+  it('does not allow participants/guests to "sync" users', () => {
+    cy.logout();
+    cy.login("student");
+    cy.visit("/join/" + testChime.access_code);
+
+    api
+      .syncChimeUsers(
+        { chimeId: testChime.id, users: [] },
+        { failOnStatusCode: false }
+      )
+      .then((response) => {
+        console.log({ response });
         expect(response.status).to.equal(403);
       });
   });
