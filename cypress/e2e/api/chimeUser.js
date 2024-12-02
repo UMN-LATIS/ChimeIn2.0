@@ -35,6 +35,25 @@ export function updateChimeUser(
   );
 }
 
+export function syncChimeUsers({ chimeId, users }, options) {
+  return cy.csrfToken().then((_token) => {
+    return cy
+      .request({
+        method: "PUT",
+        url: `/api/chime/${chimeId}/users`,
+        body: {
+          _token,
+          users,
+        },
+        ...options,
+      })
+      .then((req) => {
+        if (req.status !== 200) return req;
+        return req.body;
+      });
+  });
+}
+
 export function removeChimeUser({ chimeId, userId }, opts) {
   return cy.csrfToken().then((_token) => {
     cy.request({
