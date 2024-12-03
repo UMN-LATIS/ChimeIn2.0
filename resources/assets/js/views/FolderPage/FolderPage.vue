@@ -491,6 +491,10 @@ async function do_import() {
     sourceFolderId: selected_folder_id.value,
   });
   refreshFolder();
+
+  // close the folder settings panel so the user has some signal
+  // that the import was successful
+  show_edit_folder.value = false;
 }
 
 function update_folders() {
