@@ -203,7 +203,8 @@ class ChimeController extends Controller
     public function updateChimeUser(Request $request, Chime $chime, User $user) 
     {
       abort_unless(Auth::user()->canEditChime($chime->id), 403);
-      $request->validate([
+      
+      $validated = $request->validate([
         'permission_number' => [
           'required', 
           'integer', 
@@ -215,7 +216,7 @@ class ChimeController extends Controller
       ]);
 
       $chime->users()->updateExistingPivot($user->id, [
-        'permission_number' => $request->input('permission_number')
+        'permission_number' => $validated['permission_number']
       ]);
 
       return response()->json(["success"=>true]);

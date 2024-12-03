@@ -247,13 +247,28 @@ export function getChimeUsers(chimeId: number): Promise<User[]> {
     });
 }
 
-export function updateChimeUsers(
+export async function updateChimeUserPermissions({
+  chimeId, userId, permissionNumber
+}: {
   chimeId: number,
-  users: User[]
-): Promise<MessageEvent> {
-  return axios.put(`/api/chime/${chimeId}/users`, { users }).then((res) => {
-    return res.data;
+  userId: number,
+  permissionNumber: number
+}) {
+  const res = await axios.put<{ success: boolean}>(`/api/chime/${chimeId}/users/${userId}`, {
+    permission_number: permissionNumber
   });
+  
+  return res.data;
+}
+
+export async function removeChimeUser({
+  chimeId, userId
+}: {
+  chimeId: number,
+  userId: number
+}) {
+  const res = await axios.delete<{ success: boolean}>(`/api/chime/${chimeId}/users/${userId}`);
+  return res.data;
 }
 
 export function getChime(chimeId: number): Promise<Chime> {

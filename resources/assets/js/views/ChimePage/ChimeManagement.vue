@@ -85,14 +85,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(u, index) in sortedUsers" :key="index">
-                <td>{{ u.name }}</td>
-                <td>{{ u.email }}</td>
+              <tr v-for="(user, index) in sortedUsers" :key="index">
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
                 <td data-cy="select-user-permissions-in-chime">
                   <select
-                    v-model="u.permission_number"
+                    v-model="user.permission_number"
                     class="form-control form-control-sm"
-                    @change="saveUsers"
+                    @change="updateChimeUserPermissions(user.id, user.permission_number)"
                   >
                     <option value="100">Participant</option>
                     <option value="300">Presenter</option>
@@ -102,7 +102,7 @@
                   <button
                     data-cy="remove-user-from-chime-button"
                     class="btn btn-sm btn-danger"
-                    @click="deleteUser(u.id)"
+                    @click="removeChimeUser(user.id)"
                   >
                     Remove User
                   </button>
@@ -195,19 +195,32 @@ async function saveChime(
   }
 }
 
-async function saveUsers() {
+async function updateChimeUserPermissions(userId: number, permissionNumber: number) {
   try {
-    await api.updateChimeUsers(props.chime.id, users.value);
-    users.value = await api.getChimeUsers(props.chime.id);
+    api.updateChimeUserPermissions({
+      chimeId: props.chime.id,
+      userId,
+      permissionNumber,
+    })
   } catch (err) {
-    console.error(err);
+    store.commit("message", "Could not update user permissions.");
   }
 }
 
-function deleteUser(userId) {
+async function removeChimeUser(userId) {
   if (!confirm("Are you sure you want to remove this user?")) return;
+  const initialUsers = users.value;
   users.value = users.value.filter((u) => u.id !== userId);
-  saveUsers();
+
+  try {
+    api.removeChimeUser({
+      chimeId: props.chime.id,
+      userId,
+    });
+  } catch (err) {
+    users.value = initialUsers;
+    store.commit("message", "Could not remove user.");
+  }
 }
 
 async function forceSyncGrades() {
