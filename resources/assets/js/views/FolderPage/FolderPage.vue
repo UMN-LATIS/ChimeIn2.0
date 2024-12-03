@@ -316,7 +316,7 @@ const QuestionForm = defineAsyncComponent(
 const props = defineProps<{
   folderId: number;
   chimeId: number;
-  user: T.User;
+  user: T.CurrentUser;
 }>();
 const showModal = ref(false);
 const show_edit_folder = ref(false);
