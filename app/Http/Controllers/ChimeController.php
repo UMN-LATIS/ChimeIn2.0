@@ -176,30 +176,6 @@ class ChimeController extends Controller
         }
     }
 
-    public function syncUsers(Chime $chime, Request $req) {
-        $user = Auth::user();
-
-        if (! $user->canEditChime($chime->id)) {
-            return response()->json(["error" => "You do not have permission to edit this chime"], 403);
-        }
-
-        $validated = $req->validate([
-            'users' => 'required|array',
-            'users.*.id' => 'required|integer|exists:users,id',
-            'users.*.permission_number' => 'required|integer|numeric|multiple_of:100|min:0|max:300'
-        ]);
-
-        $users = $validated['users'];
-        $mappedUsers = array_reduce($users, function($result, $u) {
-            $result[$u['id']] = ["permission_number" => $u['permission_number']];
-            return $result;
-        });        
-
-        $chime->users()->sync($mappedUsers);
-        $chime->save();
-        return response()->json(["success"=>true]);
-    }
-
     public function updateChimeUser(Request $request, Chime $chime, User $user) 
     {
       abort_unless(Auth::user()->canEditChime($chime->id), 403);
