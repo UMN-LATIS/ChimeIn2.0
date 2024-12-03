@@ -24,6 +24,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
   });
 
   async function refresh() {
+    fetchError.value = null;
     try {
       folder.value = await getFolderWithQuestions({
         chimeId,
