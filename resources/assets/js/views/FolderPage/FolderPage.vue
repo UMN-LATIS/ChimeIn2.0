@@ -335,7 +335,7 @@ const {
   folder,
   questions,
   refresh: refreshFolder,
-  error: fetchFolderError,
+  fetchError: fetchFolderError,
 } = useQuestionListener({
   chimeId: props.chimeId,
   folderId: props.folderId,
@@ -360,15 +360,13 @@ watch(show_edit_folder, function (newValue) {
   }
 });
 
-watch(fetchFolderError, function (newValue) {
-  if (!newValue) {
-    return;
+watch(fetchFolderError, function (hasError) {
+  if (hasError) {
+    store.commit(
+      "message",
+      "Cannot view this folder. Make sure you're logged in and have presenter access for this chime."
+    );
   }
-
-  store.commit(
-    "message",
-    "Cannot view this folder. Make sure you're logged in and have presenter access for this chime."
-  );
 });
 
 const isPageReady = computed(() => !!folder.value);

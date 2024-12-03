@@ -7,7 +7,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
   const folder = ref<Maybe<FolderWithQuestions>>(null);
   const chime = ref<Maybe<Chime>>(null);
-  const error = ref<Maybe<Error>>(null);
+  const fetchError = ref<Maybe<Error>>(null);
 
   const questions = computed<Question[]>({
     get() {
@@ -30,7 +30,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
         folderId,
       });
     } catch (err) {
-      error.value = err as Error;
+      fetchError.value = err as Error;
     }
   }
 
@@ -41,7 +41,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
         getChime(chimeId),
       ]);
     } catch (err) {
-      error.value = err as Error;
+      fetchError.value = err as Error;
       return;
     }
 
@@ -128,6 +128,6 @@ export default function useQuestionListener({ chimeId, folderId }) {
     questions,
     usersCount,
     refresh,
-    error,
+    fetchError,
   };
 }
