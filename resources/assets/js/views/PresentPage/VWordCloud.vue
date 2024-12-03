@@ -1,10 +1,24 @@
 <template>
-  <div class="wordcloud" data-cy="word-cloud">
+  <div class="wordcloud tw-rounded-md" data-cy="word-cloud">
     <div class="position-relative wordcloud-wrap">
-      <button class="wordcloud__refresh-btn btn" @click="renderWordcloud">
-        <i class="material-icons">refresh</i>
-        <span class="sr-only">Refresh</span>
-      </button>
+      <div
+        class="tw-flex tw-items-center tw-justify-end tw-relative tw-z-10 tw-p-1 gap-1"
+      >
+        <button
+          class="tw-border-none tw-p-2 tw-bg-black/5 hover:tw-bg-black/10 tw-transition-colors tw-rounded tw-inline-flex tw-items-center tw-justify-center"
+          @click="renderWordcloud"
+        >
+          <i class="material-icons">shuffle</i>
+          <span class="sr-only">Shuffle Wordcloud</span>
+        </button>
+        <button
+          class="tw-border-none tw-p-2 tw-bg-black/5 hover:tw-bg-black/10 tw-transition-colors tw-rounded tw-inline-flex tw-items-center tw-justify-center"
+          @click="handleReloadPage"
+        >
+          <i class="material-icons">refresh</i>
+          <span class="sr-only">Refresh Page</span>
+        </button>
+      </div>
       <div ref="canvasRoot" class="canvas-container"></div>
       <div class="slot-wrap">
         <slot></slot>
@@ -139,6 +153,11 @@ function renderWordcloud() {
   });
 }
 
+function handleReloadPage() {
+  // in case the websocket connection breaks, reload the page
+  window.location.reload();
+}
+
 watchEffect(renderWordcloud);
 onMounted(renderWordcloud);
 </script>
@@ -151,12 +170,6 @@ onMounted(renderWordcloud);
   height: 500px;
   max-height: 70vh;
   position: relative;
-}
-.wordcloud__refresh-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 1;
 }
 .canvas-container {
   position: absolute;
