@@ -99,7 +99,7 @@ class FolderController extends Controller
             $newQuestion = $question->replicate();
             $newQuestion->folder()->associate($folder);
             $newQuestion->current_session_id = null;
-            $newQuestion->order = ++$currentOrderIndex;
+            $newQuestion->order = $currentOrderIndex;
             $newQuestion->save();
         }
 
