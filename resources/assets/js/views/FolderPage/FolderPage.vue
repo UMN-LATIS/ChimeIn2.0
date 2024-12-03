@@ -378,14 +378,6 @@ const isCanvasChime = computed(() =>
 );
 
 onMounted(async () => {
-  if (isParticipantView.value) {
-    store.commit("message", "Unauthorized: Only presenters may edit chimes.");
-    console.error(
-      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
-    );
-    return;
-  }
-
   allSessions.value = await getOpenSessionsWithinChime(props.chimeId);
 });
 
