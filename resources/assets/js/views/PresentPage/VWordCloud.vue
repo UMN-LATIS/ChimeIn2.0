@@ -5,14 +5,14 @@
         class="tw-flex tw-items-center tw-justify-end tw-relative tw-z-10 tw-p-1 gap-1"
       >
         <button
-          class="tw-border-none tw-p-2 tw-bg-black/5 hover:tw-bg-black/10 tw-transition-colors tw-rounded tw-inline-flex tw-items-center tw-justify-center"
+          class="tw-border tw-p-2 tw-bg-black/5 hover:tw-bg-black/10 tw-transition-colors tw-rounded tw-inline-flex tw-items-center tw-justify-center tw-backdrop-blur-sm tw-border-neutral-200"
           @click="renderWordcloud"
         >
           <i class="material-icons">shuffle</i>
           <span class="sr-only">Shuffle Wordcloud</span>
         </button>
         <button
-          class="tw-border-none tw-p-2 tw-bg-black/5 hover:tw-bg-black/10 tw-transition-colors tw-rounded tw-inline-flex tw-items-center tw-justify-center"
+          class="tw-p-2 tw-bg-black/5 tw-backdrop-blur-sm hover:tw-bg-black/10 tw-transition-colors tw-rounded tw-inline-flex tw-items-center tw-justify-center tw-border tw-border-neutral-200"
           @click="handleReloadPage"
         >
           <i class="material-icons">refresh</i>
