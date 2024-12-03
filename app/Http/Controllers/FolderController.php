@@ -93,7 +93,7 @@ class FolderController extends Controller
 
         $currentOrderIndex = $folder->questions->max('order') ?? 0;
 
-        foreach ($sourceFolder->questions as $question) {
+        foreach ($sourceFolder->questions->sortBy('order') as $question) {
             $currentOrderIndex += 1;
 
             $newQuestion = $question->replicate();
