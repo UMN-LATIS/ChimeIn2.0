@@ -341,8 +341,16 @@ const {
   folderId: props.folderId,
 });
 
-watch(fetchFolderError, function (newValue) {
-  if (newValue) handleUnauthorizedUser();
+watch(fetchFolderError, function (hasError) {
+  if (hasError) {
+    store.commit(
+      "message",
+      "Cannot view this folder. Make sure you're logged in and have presenter access for this chime."
+    );
+    console.error(
+      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
+    );
+  }
 });
 
 const otherFolderSessions = computed(() => {
@@ -371,23 +379,8 @@ const isCanvasChime = computed(() =>
 );
 
 onMounted(async () => {
-  if (props.user.guest_user) {
-    handleUnauthorizedUser();
-    return;
-  }
-
   allSessions.value = await getOpenSessionsWithinChime(props.chimeId);
 });
-
-function handleUnauthorizedUser() {
-  store.commit(
-    "message",
-    "Cannot view this folder. Make sure you're logged in and have presenter access for this chime."
-  );
-  console.error(
-    `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
-  );
-}
 
 function reset() {
   if (
