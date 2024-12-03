@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Chime;
 use Illuminate\Http\Request;
 use App\Events\EndSession;
+use App\Folder;
+use Illuminate\Support\Facades\Auth;
+
 class FolderController extends Controller
 {
 
@@ -73,34 +77,33 @@ class FolderController extends Controller
         }
     }
 
-    public function importQuestions(Request $req, $chime, $folder) {
-        $user = $req->user();
-        $localChime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $chime->id)
-            ->first());
-        
-        if ($localChime != null && $localChime->pivot->permission_number >= 300) {
+    public function importQuestions(Request $req, Chime $chime, Folder $folder)
+    {
+        $validated = $req->validate([
+            'folder_id' => 'required|integer|exists:folders,id'
+        ]);
 
-            $sourceFolder = \App\Folder::find($req->get("folder_id"));
-            if(!$sourceFolder) {
-                return response('Could not find source folder', 403);
-            }
-            foreach($sourceFolder->questions as $question) {
-                $newQuestion = $question->replicate();
-                $newQuestion->folder()->associate($folder);
-                $newQuestion->current_session_id = null;
-                $newQuestion->save();
+        $user = Auth::user();
+        $sourceFolder = Folder::find($validated['folder_id']);
+        $sourceChime = $sourceFolder->chime;
 
-            }
-            return response()->json(["success" => true]);
+        // verify that the user has edit permissions on
+        // both the current folder and the source folder
+        abort_unless($user->canEditChime($chime->id) && $user->canEditChime($sourceChime->id), 403, 'Invalid Permissions to Import Questions');
 
-        }
-        else {
-            return response('Invalid Permissions to Import Questions', 403);
+        $currentOrderIndex = $folder->questions->max('order') ?? 0;
+
+        foreach ($sourceFolder->questions as $question) {
+            $currentOrderIndex += 1;
+
+            $newQuestion = $question->replicate();
+            $newQuestion->folder()->associate($folder);
+            $newQuestion->current_session_id = null;
+            $newQuestion->order = ++$currentOrderIndex;
+            $newQuestion->save();
         }
 
+        return response()->json(["success" => true]);
     }
 
     public function updateQuestion(Request $req) {
