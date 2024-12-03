@@ -7,7 +7,6 @@ export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
   const folder = ref<Maybe<FolderWithQuestions>>(null);
   const chime = ref<Maybe<Chime>>(null);
-  const fetchStatus = ref("idle") as Ref<"idle" | "loading" | "error">;
   const error = ref<Maybe<Error>>(null);
 
   const questions = computed<Question[]>({
@@ -25,30 +24,23 @@ export default function useQuestionListener({ chimeId, folderId }) {
   });
 
   async function refresh() {
-    fetchStatus.value = "loading";
-
     try {
       folder.value = await getFolderWithQuestions({
         chimeId,
         folderId,
       });
-      fetchStatus.value = "idle";
     } catch (err) {
-      fetchStatus.value = "error";
       error.value = err as Error;
     }
   }
 
   onMounted(async () => {
-    fetchStatus.value = "loading";
     try {
       [folder.value, chime.value] = await Promise.all([
         getFolderWithQuestions({ chimeId, folderId }),
         getChime(chimeId),
       ]);
-      fetchStatus.value = "idle";
     } catch (err) {
-      fetchStatus.value = "error";
       error.value = err as Error;
       return;
     }
@@ -136,7 +128,6 @@ export default function useQuestionListener({ chimeId, folderId }) {
     questions,
     usersCount,
     refresh,
-    fetchStatus,
     error,
   };
 }
