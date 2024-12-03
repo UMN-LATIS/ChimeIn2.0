@@ -49,7 +49,6 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/api/chime/{chime_id}', 'ChimeController@getChime');
     Route::get('/api/chime/{chime_id}/users', 'ChimeController@getUsers');
     Route::post('/api/chime/{chime}/sync', 'ChimeController@forceSync');
-    Route::put('/api/chime/{chime}/users', 'ChimeController@syncUsers');
     Route::put('/api/chime/{chime}/users/{user}', [ChimeController::class, 'updateChimeUser']);
     Route::delete('/api/chime/{chime_id}/users/{user_id}', [ChimeController::class, 'removeChimeUser']);
 
