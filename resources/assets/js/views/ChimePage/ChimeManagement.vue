@@ -208,7 +208,6 @@ async function updateChimeUserPermissions(
   userId: number,
   permissionNumber: number
 ) {
-  console.log({ userId, permissionNumber });
   try {
     api.updateChimeUserPermissions({
       chimeId: props.chime.id,
