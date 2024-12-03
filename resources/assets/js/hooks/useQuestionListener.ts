@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, computed, type Ref } from "vue";
+import { onMounted, onUnmounted, ref, computed } from "vue";
 import { getFolderWithQuestions, getChime } from "../common/api";
 import echoClient from "../common/echoClient.js";
 import { Chime, FolderWithQuestions, Maybe, Question } from "../types";
