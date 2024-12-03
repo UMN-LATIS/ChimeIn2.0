@@ -316,7 +316,7 @@ const QuestionForm = defineAsyncComponent(
 const props = defineProps<{
   folderId: number;
   chimeId: number;
-  user: T.User;
+  user: T.CurrentUser;
 }>();
 const showModal = ref(false);
 const show_edit_folder = ref(false);
@@ -335,6 +335,7 @@ const {
   folder,
   questions,
   refresh: refreshFolder,
+  error: fetchFolderError,
 } = useQuestionListener({
   chimeId: props.chimeId,
   folderId: props.folderId,
@@ -357,6 +358,17 @@ watch(show_edit_folder, function (newValue) {
   if (newValue) {
     loadExistingChimes();
   }
+});
+
+watch(fetchFolderError, function (newValue) {
+  if (!newValue) {
+    return;
+  }
+
+  store.commit(
+    "message",
+    "Cannot view this folder. Make sure you're logged in and have presenter access for this chime."
+  );
 });
 
 const isPageReady = computed(() => !!folder.value);

@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, computed } from "vue";
+import { onMounted, onUnmounted, ref, computed, type Ref } from "vue";
 import { getFolderWithQuestions, getChime } from "../common/api";
 import echoClient from "../common/echoClient.js";
 import { Chime, FolderWithQuestions, Maybe, Question } from "../types";
@@ -7,6 +7,9 @@ export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
   const folder = ref<Maybe<FolderWithQuestions>>(null);
   const chime = ref<Maybe<Chime>>(null);
+  const fetchStatus = ref("idle") as Ref<"idle" | "loading" | "error">;
+  const error = ref<Maybe<Error>>(null);
+
   const questions = computed<Question[]>({
     get() {
       return folder.value?.questions ?? [];
@@ -22,17 +25,33 @@ export default function useQuestionListener({ chimeId, folderId }) {
   });
 
   async function refresh() {
-    folder.value = await getFolderWithQuestions({
-      chimeId,
-      folderId,
-    });
+    fetchStatus.value = "loading";
+
+    try {
+      folder.value = await getFolderWithQuestions({
+        chimeId,
+        folderId,
+      });
+      fetchStatus.value = "idle";
+    } catch (err) {
+      fetchStatus.value = "error";
+      error.value = err as Error;
+    }
   }
 
   onMounted(async () => {
-    [folder.value, chime.value] = await Promise.all([
-      getFolderWithQuestions({ chimeId, folderId }),
-      getChime(chimeId),
-    ]);
+    fetchStatus.value = "loading";
+    try {
+      [folder.value, chime.value] = await Promise.all([
+        getFolderWithQuestions({ chimeId, folderId }),
+        getChime(chimeId),
+      ]);
+      fetchStatus.value = "idle";
+    } catch (err) {
+      fetchStatus.value = "error";
+      error.value = err as Error;
+      return;
+    }
 
     echoClient
       .join(`session-status.${chimeId}`)
@@ -117,5 +136,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
     questions,
     usersCount,
     refresh,
+    fetchStatus,
+    error,
   };
 }
