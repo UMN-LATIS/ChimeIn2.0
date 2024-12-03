@@ -92,7 +92,16 @@
                   <select
                     v-model="user.permission_number"
                     class="form-control form-control-sm"
-                    @change="updateChimeUserPermissions(user.id, user.permission_number)"
+                    @change="
+                      (event) =>
+                        updateChimeUserPermissions(
+                          user.id,
+                          parseInt(
+                            (event.target as HTMLSelectElement).value,
+                            10
+                          )
+                        )
+                    "
                   >
                     <option value="100">Participant</option>
                     <option value="300">Presenter</option>
@@ -195,13 +204,17 @@ async function saveChime(
   }
 }
 
-async function updateChimeUserPermissions(userId: number, permissionNumber: number) {
+async function updateChimeUserPermissions(
+  userId: number,
+  permissionNumber: number
+) {
+  console.log({ userId, permissionNumber });
   try {
     api.updateChimeUserPermissions({
       chimeId: props.chime.id,
       userId,
       permissionNumber,
-    })
+    });
   } catch (err) {
     store.commit("message", "Could not update user permissions.");
   }
