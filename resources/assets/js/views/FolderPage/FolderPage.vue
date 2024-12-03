@@ -335,9 +335,14 @@ const {
   folder,
   questions,
   refresh: refreshFolder,
+  fetchError: fetchFolderError,
 } = useQuestionListener({
   chimeId: props.chimeId,
   folderId: props.folderId,
+});
+
+watch(fetchFolderError, function (newValue) {
+  if (newValue) handleUnauthorizedUser();
 });
 
 const otherFolderSessions = computed(() => {
@@ -366,16 +371,23 @@ const isCanvasChime = computed(() =>
 );
 
 onMounted(async () => {
-  if (isParticipantView.value) {
-    store.commit("message", "Unauthorized: Only presenters may edit chimes.");
-    console.error(
-      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
-    );
+  if (props.user.guest_user) {
+    handleUnauthorizedUser();
     return;
   }
 
   allSessions.value = await getOpenSessionsWithinChime(props.chimeId);
 });
+
+function handleUnauthorizedUser() {
+  store.commit(
+    "message",
+    "Cannot view this folder. Make sure you're logged in and have presenter access for this chime."
+  );
+  console.error(
+    `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
+  );
+}
 
 function reset() {
   if (
