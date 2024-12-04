@@ -3,8 +3,11 @@ import { WordFrequencyLookup } from "../../types";
 
 const quotedRegex = /"(?<quoted>[^"]*)"/g;
 
-function removeQuotedStrings(text: string) {
-  return text.replace(quotedRegex, "");
+export function removeQuotedStrings(text: string) {
+  return text
+    .replace(quotedRegex, "") // remove quoted strings
+    .replace(/\s+/g, " ") // remove extra whitespace
+    .trim(); // remove leading/trailing whitespace
 }
 
 export function getQuotedStrings(text): string[] {
@@ -12,7 +15,7 @@ export function getQuotedStrings(text): string[] {
   return [...text.matchAll(quotedRegex)].map((m) => m[1]);
 }
 
-function getSingleWords(text) {
+export function getSingleWords(text) {
   return (
     text
       .toLowerCase()
@@ -23,19 +26,23 @@ function getSingleWords(text) {
   );
 }
 
-function getWordsFromText(
+export function getWordsFromText(
   text: string,
   filteredWords: string[] = []
 ): string[] {
+  // remove extra whitespace
+  text = text.replace(/\s+/g, " ").trim();
+
+  const filteredWordsSet = new Set(filteredWords);
   const textWithoutQuotedStrings = removeQuotedStrings(text);
   const singleWords = getSingleWords(textWithoutQuotedStrings);
 
   // remove stopwords and filtered words
-  const normalizedSingleWords = removeStopwords(singleWords).filter(
-    (word) => !filteredWords.includes(word)
-  );
+  const normalizedSingleWords = removeStopwords(singleWords);
 
-  return [...getQuotedStrings(text), ...normalizedSingleWords];
+  return [...getQuotedStrings(text), ...normalizedSingleWords]
+    .map((word) => word.trim())
+    .filter((word) => word !== "" && !filteredWordsSet.has(word));
 }
 
 function isNotEmpty<TValue>(value: TValue | null | undefined): value is TValue {
