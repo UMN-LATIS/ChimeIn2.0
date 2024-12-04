@@ -33,15 +33,16 @@ export function getWordsFromText(
   // remove extra whitespace
   text = text.replace(/\s+/g, " ").trim();
 
+  const filteredWordsSet = new Set(filteredWords);
   const textWithoutQuotedStrings = removeQuotedStrings(text);
   const singleWords = getSingleWords(textWithoutQuotedStrings);
 
   // remove stopwords and filtered words
-  const normalizedSingleWords = removeStopwords(singleWords).filter(
-    (word) => !filteredWords.includes(word)
-  );
+  const normalizedSingleWords = removeStopwords(singleWords);
 
-  return [...getQuotedStrings(text), ...normalizedSingleWords];
+  return [...getQuotedStrings(text), ...normalizedSingleWords]
+    .map((word) => word.trim())
+    .filter((word) => word !== "" && !filteredWordsSet.has(word));
 }
 
 function isNotEmpty<TValue>(value: TValue | null | undefined): value is TValue {
@@ -52,18 +53,12 @@ export default function toWordFrequencyLookup(
   responseTexts: (string | null)[],
   filteredWords: string[] = []
 ): WordFrequencyLookup {
-  const filteredWordsSet = new Set(filteredWords);
-
   return (
     responseTexts
       // remove null responses
       .filter(isNotEmpty)
       .flatMap((text) => getWordsFromText(text, filteredWords))
       .reduce((acc, word) => {
-        if (word === "" || filteredWordsSet.has(word)) {
-          return acc;
-        }
-
         const prevWordCount = acc[word] || 0;
         return {
           ...acc,
