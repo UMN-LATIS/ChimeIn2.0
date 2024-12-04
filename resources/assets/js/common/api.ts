@@ -11,23 +11,21 @@ import type {
   ChimeFolderParticipationSummary,
 } from "../types";
 
-export function getFolderWithQuestions({
+export async function getFolderWithQuestions({
   chimeId,
   folderId,
 }: {
   chimeId: number;
   folderId: number;
 }): Promise<FolderWithQuestions> {
-  return axios
-    .get(`/api/chime/${chimeId}/folder/${folderId}?include_questions=true`)
-    .then((res) => {
-      return {
-        ...res.data,
-        // sort the questions within the folder by their order
-        questions: res.data.questions.sort((a, b) => a.order - b.order),
-      };
-    })
-    .catch((err) => console.error(err));
+  const res = await axios.get(
+    `/api/chime/${chimeId}/folder/${folderId}?include_questions=true`
+  );
+  return {
+    ...res.data,
+    // sort the questions within the folder by their order
+    questions: res.data.questions.sort((a, b) => a.order - b.order),
+  };
 }
 
 export function removeResponsesForQuestion({
@@ -72,20 +70,14 @@ export function updateQuestionOrderInFolder(
     .catch((err) => console.error(err));
 }
 
-export function getOpenSessionsWithinChime(
+export async function getOpenSessionsWithinChime(
   chimeId: number
 ): Promise<Session[]> {
   // Note: the api endpoint is `/openQuestions` but apparently
   // this does not get a list of questions (open or otherwise)
   // instead the enpoint returns the chime and openSessions
-  return axios
-    .get("/api/chime/" + chimeId + "/openQuestions")
-    .then((res) => {
-      return res.data.sessions;
-    })
-    .catch((err) =>
-      console.error(`Error loading folder: ${err.message}`, err.response)
-    );
+  const res = await axios.get("/api/chime/" + chimeId + "/openQuestions");
+  return res.data.sessions;
 }
 
 export function getChimes(): Promise<Chime[]> {
@@ -248,26 +240,34 @@ export function getChimeUsers(chimeId: number): Promise<User[]> {
 }
 
 export async function updateChimeUserPermissions({
-  chimeId, userId, permissionNumber
+  chimeId,
+  userId,
+  permissionNumber,
 }: {
-  chimeId: number,
-  userId: number,
-  permissionNumber: number
+  chimeId: number;
+  userId: number;
+  permissionNumber: number;
 }) {
-  const res = await axios.put<{ success: boolean}>(`/api/chime/${chimeId}/users/${userId}`, {
-    permission_number: permissionNumber
-  });
-  
+  const res = await axios.put<{ success: boolean }>(
+    `/api/chime/${chimeId}/users/${userId}`,
+    {
+      permission_number: permissionNumber,
+    }
+  );
+
   return res.data;
 }
 
 export async function removeChimeUser({
-  chimeId, userId
+  chimeId,
+  userId,
 }: {
-  chimeId: number,
-  userId: number
+  chimeId: number;
+  userId: number;
 }) {
-  const res = await axios.delete<{ success: boolean}>(`/api/chime/${chimeId}/users/${userId}`);
+  const res = await axios.delete<{ success: boolean }>(
+    `/api/chime/${chimeId}/users/${userId}`
+  );
   return res.data;
 }
 

@@ -7,6 +7,8 @@ export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
   const folder = ref<Maybe<FolderWithQuestions>>(null);
   const chime = ref<Maybe<Chime>>(null);
+  const fetchError = ref<Maybe<Error>>(null);
+
   const questions = computed<Question[]>({
     get() {
       return folder.value?.questions ?? [];
@@ -22,17 +24,26 @@ export default function useQuestionListener({ chimeId, folderId }) {
   });
 
   async function refresh() {
-    folder.value = await getFolderWithQuestions({
-      chimeId,
-      folderId,
-    });
+    fetchError.value = null;
+    try {
+      folder.value = await getFolderWithQuestions({
+        chimeId,
+        folderId,
+      });
+    } catch (error) {
+      fetchError.value = error as Error;
+    }
   }
 
   onMounted(async () => {
-    [folder.value, chime.value] = await Promise.all([
-      getFolderWithQuestions({ chimeId, folderId }),
-      getChime(chimeId),
-    ]);
+    try {
+      [folder.value, chime.value] = await Promise.all([
+        getFolderWithQuestions({ chimeId, folderId }),
+        getChime(chimeId),
+      ]);
+    } catch (error) {
+      fetchError.value = error as Error;
+    }
 
     echoClient
       .join(`session-status.${chimeId}`)
@@ -117,5 +128,6 @@ export default function useQuestionListener({ chimeId, folderId }) {
     questions,
     usersCount,
     refresh,
+    fetchError,
   };
 }
