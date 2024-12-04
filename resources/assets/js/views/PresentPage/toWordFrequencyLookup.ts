@@ -3,8 +3,11 @@ import { WordFrequencyLookup } from "../../types";
 
 const quotedRegex = /"(?<quoted>[^"]*)"/g;
 
-function removeQuotedStrings(text: string) {
-  return text.replace(quotedRegex, "");
+export function removeQuotedStrings(text: string) {
+  return text
+    .replace(quotedRegex, "") // remove quoted strings
+    .replace(/\s+/g, " ") // remove extra whitespace
+    .trim(); // remove leading/trailing whitespace
 }
 
 export function getQuotedStrings(text): string[] {
@@ -12,7 +15,7 @@ export function getQuotedStrings(text): string[] {
   return [...text.matchAll(quotedRegex)].map((m) => m[1]);
 }
 
-function getSingleWords(text) {
+export function getSingleWords(text) {
   return (
     text
       .toLowerCase()
@@ -23,10 +26,13 @@ function getSingleWords(text) {
   );
 }
 
-function getWordsFromText(
+export function getWordsFromText(
   text: string,
   filteredWords: string[] = []
 ): string[] {
+  // remove extra whitespace
+  text = text.replace(/\s+/g, " ").trim();
+
   const textWithoutQuotedStrings = removeQuotedStrings(text);
   const singleWords = getSingleWords(textWithoutQuotedStrings);
 
@@ -46,12 +52,18 @@ export default function toWordFrequencyLookup(
   responseTexts: (string | null)[],
   filteredWords: string[] = []
 ): WordFrequencyLookup {
+  const filteredWordsSet = new Set(filteredWords);
+
   return (
     responseTexts
       // remove null responses
       .filter(isNotEmpty)
       .flatMap((text) => getWordsFromText(text, filteredWords))
       .reduce((acc, word) => {
+        if (word === "" || filteredWordsSet.has(word)) {
+          return acc;
+        }
+
         const prevWordCount = acc[word] || 0;
         return {
           ...acc,
