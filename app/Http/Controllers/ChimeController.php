@@ -546,6 +546,11 @@ class ChimeController extends Controller
 
             $headers = ['Student', 'ID', 'SIS User ID', 'SIS Login ID', 'Section'];
             $secondHeaders = ['Points Possible', '','','',''];
+            // add response date info to question_full and session responses, since those aren't canvas compatible anyways
+            if($exportType == "question_full" || $exportType == "question_sessions") {
+                $headers[] = 'Latest Response Date';
+                $secondHeaders[] = '';
+            }
             
 
             switch ($exportType) {
@@ -616,13 +621,21 @@ class ChimeController extends Controller
                         $row[] = '';
                         $row[] = $participant->email;
                         $row[] = '';
+                        $mostRecentDate = null;
+                        $userResponseRows = array();
                         foreach($folderArray as $folderId => $folderInfo) {
                             foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
                                 $userResponses = $question->sessions->flatmap(function($value) use ($participant) {
                                     return $value->responses->where("user_id", $participant->id);
                                 });
-                                $row[] = $this->getRowForResponses($userResponses);
+                                $mostRecentDate = max($mostRecentDate, $userResponses->max("created_at"));
+                                $userResponseRows[] = $this->getRowForResponses($userResponses);
                             }
+                        }
+                        // we have to shift how we write these to avoid some copy pasta with our loops
+                        $row[] = $mostRecentDate;
+                        foreach($userResponseRows as $response) {
+                            $row[] = $response;
                         }
                         fputcsv($file, $row);
                     }
@@ -655,16 +668,22 @@ class ChimeController extends Controller
                             $row[] = '';
                             $row[] = $participant->email;
                             $row[] = '';
+                            $mostRecentDate = null;
+                            $userResponseRows = array();
                             foreach($folderArray as $folderId => $folderInfo) {
                                 foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
                                     
                                     foreach($question->sessions as $session) {
                                         $userResponses = $session->responses->where("user_id", $participant->id);
-                                        $row[] = $this->getRowForResponses($userResponses);
-
+                                        $userResponseRows[] = $this->getRowForResponses($userResponses);
+                                        $mostRecentDate = max($mostRecentDate, $userResponses->max('created_at'));
                                     }
                                     
                                 }
+                            }
+                            $row[] = $mostRecentDate;
+                            foreach($userResponseRows as $response) {
+                                $row[] = $response;
                             }
                             fputcsv($file, $row);
                         }
