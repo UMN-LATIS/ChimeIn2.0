@@ -640,7 +640,7 @@ class ChimeController extends Controller
                         fputcsv($file, $row);
                     }
                     break;
-                    case 'question_only':
+                case 'question_only':
                         foreach($folderArray as $folderId => $folderInfo) {
                             
                             foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
@@ -652,7 +652,7 @@ class ChimeController extends Controller
                             
                         }
                     break;
-                    case 'question_sessions':
+                case 'question_sessions':
 
                         foreach($questionArray as $questionId => $questionText) {
                             $headers[] = $questionText;
