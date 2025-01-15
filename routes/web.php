@@ -9,6 +9,7 @@ use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\PresentController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ImpersonateController;
 
 
 /*
@@ -22,13 +23,6 @@ use App\Http\Controllers\UsersController;
 |
 */
 
-// Home Page Routes
-// 
-// 
-
-// this might be wrong
-Route::impersonate();
-
 Route::get("/ltiSelectionPromptDemo", function() {
     $chime = \App\Chime::first();
     $chimes = \App\Chime::all();
@@ -36,8 +30,6 @@ Route::get("/ltiSelectionPromptDemo", function() {
 });
 
 Route::group(['middleware' => ['shibinjection']], function () {
-    
-    Route::resource('admin/users', 'Admin\UsersController');
 
     Route::get('/api/users/self', 'UsersController@getCurrentUser');
 
@@ -57,7 +49,6 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::get('/api/chime/{chime_id}', 'ChimeController@getChime');
     Route::get('/api/chime/{chime_id}/users', 'ChimeController@getUsers');
     Route::post('/api/chime/{chime}/sync', 'ChimeController@forceSync');
-    Route::put('/api/chime/{chime}/users', 'ChimeController@syncUsers');
     Route::put('/api/chime/{chime}/users/{user}', [ChimeController::class, 'updateChimeUser']);
     Route::delete('/api/chime/{chime_id}/users/{user_id}', [ChimeController::class, 'removeChimeUser']);
 
@@ -108,7 +99,8 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
     
-    
+    Route::get('/impersonate/stop', [ImpersonateController::class, 'stop'])->name('impersonate.stop');
+
 });
     // Auth::routes();
 

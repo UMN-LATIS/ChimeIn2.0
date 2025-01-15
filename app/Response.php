@@ -27,6 +27,18 @@ class Response extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function question()
+    {
+        return $this->hasOneThrough(
+            Question::class,
+            Session::class,
+            'id', // Foreign key on the sessions table
+            'id', // Foreign key on the questions table
+            'session_id', // Local key on the responses table
+            'question_id' // Local key on the sessions table
+        );
+    }
+
     public function getQuestion(): Question
     {
         return $this->session->question;

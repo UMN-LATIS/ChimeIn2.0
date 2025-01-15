@@ -38,6 +38,18 @@ class Question extends Model {
         return $this->belongsTo('\App\Session', 'current_session_id');
     }
 
+    public function responses()
+    {
+        return $this->hasManyThrough(
+            Response::class, // the final hasMany calss
+            Session::class,  // the through class
+            'question_id',   // fk on sessions
+            'session_id',    // fk on responses
+            'id',            // Local key on questions table
+            'id'             // Local key on sessions table
+        );
+    }
+
     public function getQuestionType(): string {
         return $this->question_info['question_type'];
     }

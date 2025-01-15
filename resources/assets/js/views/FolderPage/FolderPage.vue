@@ -316,7 +316,7 @@ const QuestionForm = defineAsyncComponent(
 const props = defineProps<{
   folderId: number;
   chimeId: number;
-  user: T.User;
+  user: T.CurrentUser;
 }>();
 const showModal = ref(false);
 const show_edit_folder = ref(false);
@@ -335,9 +335,22 @@ const {
   folder,
   questions,
   refresh: refreshFolder,
+  fetchError: fetchFolderError,
 } = useQuestionListener({
   chimeId: props.chimeId,
   folderId: props.folderId,
+});
+
+watch(fetchFolderError, function (hasError) {
+  if (hasError) {
+    store.commit(
+      "message",
+      "Cannot view this folder. Make sure you're logged in and have presenter access for this chime."
+    );
+    console.error(
+      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
+    );
+  }
 });
 
 const otherFolderSessions = computed(() => {
@@ -366,14 +379,6 @@ const isCanvasChime = computed(() =>
 );
 
 onMounted(async () => {
-  if (isParticipantView.value) {
-    store.commit("message", "Unauthorized: Only presenters may edit chimes.");
-    console.error(
-      `User ${JSON.stringify(props.user)} is not a presenter for this chime.`
-    );
-    return;
-  }
-
   allSessions.value = await getOpenSessionsWithinChime(props.chimeId);
 });
 
@@ -491,6 +496,10 @@ async function do_import() {
     sourceFolderId: selected_folder_id.value,
   });
   refreshFolder();
+
+  // close the folder settings panel so the user has some signal
+  // that the import was successful
+  show_edit_folder.value = false;
 }
 
 function update_folders() {

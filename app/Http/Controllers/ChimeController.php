@@ -176,25 +176,11 @@ class ChimeController extends Controller
         }
     }
 
-    public function syncUsers(Chime $chime, Request $req) {
-        $user = Auth::user();
-        // check perm
-
-        $users = $req->get('users');
-        $mappedUsers = array_reduce($users, function($result, $u) {
-            $result[$u['id']] = ["permission_number" => $u['permission_number']];
-            return $result;
-        });        
-
-        $chime->users()->sync($mappedUsers);
-        $chime->save();
-        return response()->json(["success"=>true]);
-    }
-
     public function updateChimeUser(Request $request, Chime $chime, User $user) 
     {
       abort_unless(Auth::user()->canEditChime($chime->id), 403);
-      $request->validate([
+      
+      $validated = $request->validate([
         'permission_number' => [
           'required', 
           'integer', 
@@ -206,7 +192,7 @@ class ChimeController extends Controller
       ]);
 
       $chime->users()->updateExistingPivot($user->id, [
-        'permission_number' => $request->input('permission_number')
+        'permission_number' => $validated['permission_number']
       ]);
 
       return response()->json(["success"=>true]);
@@ -560,6 +546,11 @@ class ChimeController extends Controller
 
             $headers = ['Student', 'ID', 'SIS User ID', 'SIS Login ID', 'Section'];
             $secondHeaders = ['Points Possible', '','','',''];
+            // add response date info to question_full and session responses, since those aren't canvas compatible anyways
+            if($exportType == "question_full" || $exportType == "question_sessions") {
+                $headers[] = 'Latest Response Date';
+                $secondHeaders[] = '';
+            }
             
 
             switch ($exportType) {
@@ -630,18 +621,26 @@ class ChimeController extends Controller
                         $row[] = '';
                         $row[] = $participant->email;
                         $row[] = '';
+                        $mostRecentDate = null;
+                        $userResponseRows = array();
                         foreach($folderArray as $folderId => $folderInfo) {
                             foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
                                 $userResponses = $question->sessions->flatmap(function($value) use ($participant) {
                                     return $value->responses->where("user_id", $participant->id);
                                 });
-                                $row[] = $this->getRowForResponses($userResponses);
+                                $mostRecentDate = max($mostRecentDate, $userResponses->max("created_at"));
+                                $userResponseRows[] = $this->getRowForResponses($userResponses);
                             }
+                        }
+                        // we have to shift how we write these to avoid some copy pasta with our loops
+                        $row[] = $mostRecentDate;
+                        foreach($userResponseRows as $response) {
+                            $row[] = $response;
                         }
                         fputcsv($file, $row);
                     }
                     break;
-                    case 'question_only':
+                case 'question_only':
                         foreach($folderArray as $folderId => $folderInfo) {
                             
                             foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
@@ -653,7 +652,7 @@ class ChimeController extends Controller
                             
                         }
                     break;
-                    case 'question_sessions':
+                case 'question_sessions':
 
                         foreach($questionArray as $questionId => $questionText) {
                             $headers[] = $questionText;
@@ -669,16 +668,22 @@ class ChimeController extends Controller
                             $row[] = '';
                             $row[] = $participant->email;
                             $row[] = '';
+                            $mostRecentDate = null;
+                            $userResponseRows = array();
                             foreach($folderArray as $folderId => $folderInfo) {
                                 foreach($folderInfo["folder"]->questions()->orderBy("order")->get() as $question) { 
                                     
                                     foreach($question->sessions as $session) {
                                         $userResponses = $session->responses->where("user_id", $participant->id);
-                                        $row[] = $this->getRowForResponses($userResponses);
-
+                                        $userResponseRows[] = $this->getRowForResponses($userResponses);
+                                        $mostRecentDate = max($mostRecentDate, $userResponses->max('created_at'));
                                     }
                                     
                                 }
+                            }
+                            $row[] = $mostRecentDate;
+                            foreach($userResponseRows as $response) {
+                                $row[] = $response;
                             }
                             fputcsv($file, $row);
                         }

@@ -54,7 +54,7 @@ describe("chimeUser api", () => {
       });
   });
 
-  it("does not allow participants/guests to change role", () => {
+  it("does not allow participants/guests to update a single user role", () => {
     let student = null;
 
     cy.logout();

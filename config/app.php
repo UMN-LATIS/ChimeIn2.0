@@ -176,11 +176,11 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
         StudentAffairsUwm\Shibboleth\ShibbolethServiceProvider::class,
         StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
-        Lab404\Impersonate\ImpersonateServiceProvider::class,
     ],
 
     /*

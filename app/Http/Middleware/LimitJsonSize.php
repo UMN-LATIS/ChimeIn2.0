@@ -13,7 +13,7 @@ class LimitJsonSize
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, ?int $maxSize = 10240): Response
+    public function handle(Request $request, Closure $next, ?int $maxSize = 40960): Response
     {
         $requestSize = strlen($request->getContent());
 
