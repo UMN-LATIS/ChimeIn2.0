@@ -1,4 +1,4 @@
-# ChimeIn 2 Cheatsheet
+# ChimeIn Cheatsheet
 
 Need a quick reminder about how to use ChimeIn when it comes time to actually ask questions? This page is an in-the-moment cheatsheet for you.
 
