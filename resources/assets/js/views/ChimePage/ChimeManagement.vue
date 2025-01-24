@@ -85,7 +85,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(user, index) in sortedUsers" :key="index">
+              <tr v-for="(user, index) in sortedUsers" :key="user.id">
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
                 <td data-cy="select-user-permissions-in-chime">
