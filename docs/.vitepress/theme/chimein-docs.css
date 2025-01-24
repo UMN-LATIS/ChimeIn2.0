@@ -1,0 +1,29 @@
+/* some hacky accordion styles */
+.vp-doc summary {
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.vp-doc h1:has(+ details) {
+  margin-bottom: 2rem;
+}
+
+.vp-doc details :is(h2, h3, h4, h5, h6) {
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+.vp-doc details[open] {
+  background: #f3f3f3;
+  padding: 1rem;
+  transform: translateX(-1rem);
+}
+
+.vp-doc details[open] summary {
+  margin-top: 0;
+}
+
+.vp-doc details[open] > *:not(summary) {
+  padding-left: 1rem;
+}

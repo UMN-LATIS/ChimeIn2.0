@@ -24,14 +24,13 @@ Below is a set of a step-by-step instructions for making a ChimeIn assignment in
 | Set a point value and grading basis if you'd like                                                                                      |                            ![Grading basis](./step2-grades.png)                             |
 | Set "Submission Type" to "External Tool"                                                                                               |                       ![Submission Type](./step3-submission-type.png)                       |
 | Click "Find"                                                                                                                           |                               ![Click Find](./step4-find.png)                               |
-| Select "ChimeIn" in the list and click **Select**                                                                                    |                           ![Select ChimeIn](./step5-chimein.png)                            |
+| Select "ChimeIn" in the list and click **Select**                                                                                      |                           ![Select ChimeIn](./step5-chimein.png)                            |
 | Check the box for "open in a new tab" (**important**)                                                                                  |                         ![Load in a new tab](./step6-checkbox.png)                          |
 | Verify that Submission Attempts is set to "Unlimited"                                                                                  | ![Submission Attempts set to Unlimited](./step6.1-canvas-submission-attempts-unlimited.png) |
 | Click "save" at the bottom of the page                                                                                                 |                            ![Save and Display](./step7-save.png)                            |
 | Click the "load" button to open ChimeIn                                                                                                |                                  ![Load](./step8-load.png)                                  |
 | Add your questions within ChimeIn. If you have co-instructors, they will automatically be granted the access to add questions as well. |      ![Click Add Question button to add your questions](./step9-add-new-question.png)       |
 | **Don't forget to publish your assignment** when you're ready for your students to view it                                             |                                ![Load](./step10-publish.png)                                |
-
 
 ## Gradebook integration options
 
@@ -47,9 +46,8 @@ When you're ready to share your questions with your students, remind them to fol
 
 ChimeIn grades will be updated in Canvas approximately 3 hours after the last response is received. This is done to ensure that students don't get flooded with "grade update" notifications during a class. You can also use the "Force Canvas Sync" button, available under "Chime settings" or "Folder Settings" to force an instant update.
 
-
 ::: tip Student View  
-The "Student View" option in Canvas won't work with a third party tool like ChimeIn. To see exactly what your students will see, you can use the "participant view" button in ChimeIn. 
+The "Student View" option in Canvas won't work with a third party tool like ChimeIn. To see exactly what your students will see, you can use the "participant view" button in ChimeIn.
 :::
 
 ## "Correct" answers and the gradebook
@@ -61,13 +59,3 @@ ChimeIn is most often used to check engagement or collect feedback on a topic, r
 If you've cloned a Canvas course from a previous semester, and would like to re-use your ChimeIn questions, simply click on one of your ChimeIn assignments. ChimeIn will ask if you'd like to import the questions and folders from a previous Chime.
 
 We recommend click through each of your ChimeIn assignments from Canvas to ensure they're linked correctly, but that should generally happen automatically.
-
-## Drop Lowest Canvas Chime Assignments from Grades
-
-It's common to use ChimeIn with Canvas to track participation in the gradebook. In some cases, you might want to set up Canvas to allow students to miss a certain number of Chimes before it impacts their grades.
-
-You can use [Canvas assignment groups](https://community.canvaslms.com/t5/Instructor-Guide/How-do-I-add-an-assignment-group-in-a-course/ta-p/970) to group all your chime assignments together, and then [create a rule to drop the lowest X chimes](https://community.canvaslms.com/t5/Instructor-Guide/How-do-I-create-rules-for-an-assignment-group/ta-p/848).
-
-Here's a demo:
-
-<iframe width="100%" height="420" src="https://www.youtube.com/embed/RXczYrezKmY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
