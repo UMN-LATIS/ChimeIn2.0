@@ -35,6 +35,10 @@ export default defineConfig({
             link: "/canvas",
           },
           {
+            text: "Canvas Grading FAQ",
+            link: "/grading-faq",
+          },
+          {
             text: "Cheatsheet",
             link: "/cheatsheet",
           },
