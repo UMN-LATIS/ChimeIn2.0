@@ -244,3 +244,7 @@ ul {
 .min-h-full {
   min-height: 100%;
 }
+
+li[data-list="bullet"] {
+  list-style-type: disc;
+}
