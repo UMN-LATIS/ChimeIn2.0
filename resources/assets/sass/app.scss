@@ -245,6 +245,10 @@ ul {
   min-height: 100%;
 }
 
-li[data-list="bullet"] {
+// This is a fix for unordered lists appearing as ordered lists
+// in the quill editor. Quill v2 always uses ordered lists.
+// when rendering, make sure the bullet style is disc,
+// but let the quill editor handle it's own bullet style
+li[data-list="bullet"]:not(.ql-editor li[data-list="bullet"]) {
   list-style-type: disc;
 }
