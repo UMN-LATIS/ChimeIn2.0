@@ -302,20 +302,24 @@ describe("question", () => {
       });
   });
 
-  it('moves a question to a different folder', () => {
+  it("moves a question to a different folder", () => {
     // create a chime with two folders
     let testChime;
     let testFolder1;
     let testFolder2;
 
-    api.createChime({ name: "Test Chime" })
+    api
+      .createChime({ name: "Test Chime" })
       .then((chime) => {
         testChime = chime;
         return api.createFolder({ name: "Test Folder 1", chimeId: chime.id });
       })
       .then((folder) => {
         testFolder1 = folder;
-        return api.createFolder({ name: "Test Folder 2", chimeId: testChime.id });
+        return api.createFolder({
+          name: "Test Folder 2",
+          chimeId: testChime.id,
+        });
       })
       .then((folder) => {
         testFolder2 = folder;
@@ -332,29 +336,44 @@ describe("question", () => {
               question_responses: [],
             },
           });
-        })        
+        });
       })
       .then(() => {
         // go to the first folder
         cy.visit(`/chime/${testChime.id}/folder/${testFolder1.id}`);
         // verify that there are 3 questions
-        cy.get("[data-cy=question-list] .question-card").should("have.length", 3);
-      }).then(() => {
+        cy.get("[data-cy=question-list] .question-card").should(
+          "have.length",
+          3
+        );
+      })
+      .then(() => {
         // move the second question to the second folder
-        cy.get("[data-cy=question-list] .question-card:nth-child(2)").within(() => {
-          cy.contains("Edit").click();
-        });
-        cy.get("[data-cy=folder-select]").type("{selectAll}Test Folder 2{enter}");
+        cy.get("[data-cy=question-list] .question-card:nth-child(2)").within(
+          () => {
+            cy.contains("Edit").click();
+          }
+        );
+        cy.get("[data-cy=folder-select]").type(
+          "{selectAll}Test Folder 2{enter}"
+        );
         cy.contains("Save").click();
       })
       .then(() => {
         // verify that there are 2 questions in the first folder
         cy.visit(`/chime/${testChime.id}/folder/${testFolder1.id}`);
-        cy.get("[data-cy=question-list] .question-card").should("have.length", 2);
-      }).then(() => {
+        cy.get("[data-cy=question-list] .question-card").should(
+          "have.length",
+          2
+        );
+      })
+      .then(() => {
         // verify that there is 1 question in the second folder
         cy.visit(`/chime/${testChime.id}/folder/${testFolder2.id}`);
-        cy.get("[data-cy=question-list] .question-card").should("have.length", 1);
+        cy.get("[data-cy=question-list] .question-card").should(
+          "have.length",
+          1
+        );
 
         // click the present button
         cy.get("[data-cy=present-question-button]").click();
@@ -363,7 +382,6 @@ describe("question", () => {
         // checks that nothing went screwy with the ordering
         cy.contains("Question 2");
       });
-
   });
 
   it("supports rich text formatting in the question text");
