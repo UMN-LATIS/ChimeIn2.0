@@ -134,8 +134,6 @@ class FolderController extends Controller
             $questionOrder = $question->order;
             if ($currentFolderId !== $destFolderId) {
                 $destFolder = $chime->folders()->find($destFolderId);
-                                $currentFolder->normalizeQuestionOrder();
-                $destFolder->normalizeQuestionOrder();
                 $questionOrder = $destFolder->questions()->max('order') + 1;
             }
 
