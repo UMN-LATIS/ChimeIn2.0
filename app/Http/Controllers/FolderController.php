@@ -31,10 +31,13 @@ class FolderController extends Controller
                 $folder->load("questions.sessions.responses.user");
 
                 // normalize the question order property
-                $folder->questions = $folder->questions->sortBy('order')->map(function ($question, $index) {
-                    $question->order = $index + 1;
-                    return $question;
-                });
+                $folder->questions = $folder->questions
+                    ->sortBy('order')
+                    ->values()
+                    ->map(function ($question, $index) {
+                        $question->order = $index + 1;
+                        return $question;
+                    });
             }
             return response()->json($folder);
         }
