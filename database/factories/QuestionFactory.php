@@ -21,7 +21,7 @@ class QuestionFactory extends Factory
 
         return [
             "text" => fake()->sentence(),
-            "order" => 1,
+            "order" => fake()->unique()->numberBetween(1, 100),
             "question_info" => [
                 "question_type" => Question::MULTIPLE_CHOICE_TYPE,
                 "question_responses" => [
