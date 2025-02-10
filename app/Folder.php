@@ -33,9 +33,12 @@ class Folder extends Model {
      **/
     public function normalizeQuestionOrder()
     {
-        $this->questions->sortBy('order')->each(function ($question, $index) {
-            $question->order = $index + 1;
-            $question->save();
-        });
+        $this->questions
+            ->sortBy('order')
+            ->values()
+            ->each(function ($question, $index) {
+                $question->order = $index + 1;
+                $question->save();
+            });
     }
 }
