@@ -16,6 +16,7 @@
               label="name"
               :reduce="(folder) => folder.id"
               :clearable="false"
+              data-cy="folder-select"
             ></VSelect>
           </div>
         </div>

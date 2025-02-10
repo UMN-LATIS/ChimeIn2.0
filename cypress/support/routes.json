@@ -48,6 +48,15 @@
       "DELETE"
     ]
   },
+  "debugbar.queries.explain": {
+    "name": "debugbar.queries.explain",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\QueriesController@explain",
+    "uri": "_debugbar/queries/explain",
+    "method": [
+      "POST"
+    ]
+  },
   "cypress.factory": {
     "name": "cypress.factory",
     "domain": null,
@@ -117,6 +126,15 @@
     "domain": null,
     "action": "Laracasts\\Cypress\\Controllers\\CypressController@currentUser",
     "uri": "__cypress__/current-user",
+    "method": [
+      "POST"
+    ]
+  },
+  "nova.api.": {
+    "name": "nova.api.",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\MorphedResourceAttachController",
+    "uri": "nova-api/{resource}/{resourceId}/attach-morphed/{relatedResource}",
     "method": [
       "POST"
     ]
@@ -194,92 +212,167 @@
       "OPTIONS"
     ]
   },
-  "impersonate": {
-    "name": "impersonate",
+  "nova.pages.login": {
+    "name": "nova.pages.login",
     "domain": null,
-    "action": "\\Lab404\\Impersonate\\Controllers\\ImpersonateController@take",
-    "uri": "impersonate/take/{id}/{guardName?}",
+    "action": "Laravel\\Nova\\Http\\Controllers\\LoginController@showLoginForm",
+    "uri": "admin/login",
     "method": [
       "GET",
       "HEAD"
     ]
   },
-  "impersonate.leave": {
-    "name": "impersonate.leave",
+  "nova.login": {
+    "name": "nova.login",
     "domain": null,
-    "action": "\\Lab404\\Impersonate\\Controllers\\ImpersonateController@leave",
-    "uri": "impersonate/leave",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "users.index": {
-    "name": "users.index",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\Admin\\UsersController@index",
-    "uri": "admin/users",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "users.create": {
-    "name": "users.create",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\Admin\\UsersController@create",
-    "uri": "admin/users/create",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "users.store": {
-    "name": "users.store",
-    "domain": null,
-    "action": "App\\Http\\Controllers\\Admin\\UsersController@store",
-    "uri": "admin/users",
+    "action": "Laravel\\Nova\\Http\\Controllers\\LoginController@login",
+    "uri": "admin/login",
     "method": [
       "POST"
     ]
   },
-  "users.show": {
-    "name": "users.show",
+  "nova.logout": {
+    "name": "nova.logout",
     "domain": null,
-    "action": "App\\Http\\Controllers\\Admin\\UsersController@show",
-    "uri": "admin/users/{user}",
+    "action": "Laravel\\Nova\\Http\\Controllers\\LoginController@logout",
+    "uri": "admin/logout",
+    "method": [
+      "POST"
+    ]
+  },
+  "nova.pages.403": {
+    "name": "nova.pages.403",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\Error403Controller",
+    "uri": "admin/403",
     "method": [
       "GET",
       "HEAD"
     ]
   },
-  "users.edit": {
-    "name": "users.edit",
+  "nova.pages.404": {
+    "name": "nova.pages.404",
     "domain": null,
-    "action": "App\\Http\\Controllers\\Admin\\UsersController@edit",
-    "uri": "admin/users/{user}/edit",
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\Error404Controller",
+    "uri": "admin/404",
     "method": [
       "GET",
       "HEAD"
     ]
   },
-  "users.update": {
-    "name": "users.update",
+  "nova.pages.home": {
+    "name": "nova.pages.home",
     "domain": null,
-    "action": "App\\Http\\Controllers\\Admin\\UsersController@update",
-    "uri": "admin/users/{user}",
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\HomeController",
+    "uri": "admin",
     "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.dashboard": {
+    "name": "nova.pages.dashboard",
+    "domain": null,
+    "action": "\\Illuminate\\Routing\\RedirectController",
+    "uri": "admin/dashboard",
+    "method": [
+      "GET",
+      "HEAD",
+      "POST",
       "PUT",
-      "PATCH"
+      "PATCH",
+      "DELETE",
+      "OPTIONS"
     ]
   },
-  "users.destroy": {
-    "name": "users.destroy",
+  "nova.pages.dashboard.custom": {
+    "name": "nova.pages.dashboard.custom",
     "domain": null,
-    "action": "App\\Http\\Controllers\\Admin\\UsersController@destroy",
-    "uri": "admin/users/{user}",
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\DashboardController",
+    "uri": "admin/dashboards/{name}",
     "method": [
-      "DELETE"
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.index": {
+    "name": "nova.pages.index",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\ResourceIndexController",
+    "uri": "admin/resources/{resource}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.create": {
+    "name": "nova.pages.create",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\ResourceCreateController",
+    "uri": "admin/resources/{resource}/new",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.detail": {
+    "name": "nova.pages.detail",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\ResourceDetailController",
+    "uri": "admin/resources/{resource}/{resourceId}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.edit": {
+    "name": "nova.pages.edit",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\ResourceUpdateController",
+    "uri": "admin/resources/{resource}/{resourceId}/edit",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.replicate": {
+    "name": "nova.pages.replicate",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\ResourceReplicateController",
+    "uri": "admin/resources/{resource}/{resourceId}/replicate",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.lens": {
+    "name": "nova.pages.lens",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\LensController",
+    "uri": "admin/resources/{resource}/lens/{lens}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.attach": {
+    "name": "nova.pages.attach",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\AttachableController",
+    "uri": "admin/resources/{resource}/{resourceId}/attach/{relatedResource}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "nova.pages.edit-attached": {
+    "name": "nova.pages.edit-attached",
+    "domain": null,
+    "action": "Laravel\\Nova\\Http\\Controllers\\Pages\\AttachedResourceUpdateController",
+    "uri": "admin/resources/{resource}/{resourceId}/edit-attached/{relatedResource}/{relatedResourceId}",
+    "method": [
+      "GET",
+      "HEAD"
     ]
   },
   "home": {
@@ -287,6 +380,16 @@
     "domain": null,
     "action": "App\\Http\\Controllers\\HomeController@index",
     "uri": "/",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "impersonate.stop": {
+    "name": "impersonate.stop",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ImpersonateController@stop",
+    "uri": "impersonate/stop",
     "method": [
       "GET",
       "HEAD"
