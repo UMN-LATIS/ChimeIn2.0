@@ -137,8 +137,6 @@ class FolderController extends Controller
                 'order' => $questionOrder,
             ]);
 
-            $question->refresh();
-
             return response()->json($question);
         } else {
             return response('Invalid Permissions to Update Question', 403);
