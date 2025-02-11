@@ -236,11 +236,10 @@
                   ghostClass="ghost"
                   @end="swap_question"
                 >
-                  <template #item="{ element, index }">
+                  <template #item="{ element }">
                     <QuestionCard
                       :folder="folder"
                       :question="element"
-                      :questionIndex="index"
                       :showMoveIcon="questions.length > 1"
                       @change="refreshFolder"
                     />

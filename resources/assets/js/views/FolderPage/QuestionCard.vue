@@ -7,7 +7,7 @@
     <header class="question-card__header">
       <h2 class="question-card__question-type">
         <router-link
-          :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${questionIndex}`"
+          :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${question.index}`"
         >
           {{ questionTypeToString }}
         </router-link>
@@ -19,7 +19,7 @@
     </header>
 
     <router-link
-      :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${questionIndex}`"
+      :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${question.index}`"
     >
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="flow-text question_list_text" v-html="question.text" />
@@ -81,7 +81,7 @@
               class="dropdown-item question-card__action-button"
               data-cy="present-question-button"
               icon="play_circle_outline"
-              :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${questionIndex}`"
+              :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${question.index}`"
               >Present</CardActionButton
             >
           </li>
@@ -100,7 +100,7 @@
   </Card>
 </template>
 
-<script>
+<script lang="ts">
 import Card from "../../components/Card.vue";
 import Chip from "../../components/Chip.vue";
 import CardActionButton from "../../components/CardActionButton.vue";
@@ -111,6 +111,9 @@ import HeatmapResponseDisplay from "../../components/ImageHeatmapResponse/ImageH
 import hasSpecializedQuestionDisplay from "../../helpers/hasSpecializedQuestionDisplay";
 import TextHeatmapResponseDisplay from "../../components/TextHeatmap/TextHeatmapResponseDisplay.vue";
 import pluralize from "../../common/pluralize";
+import { PropType } from "vue";
+import { Question, Folder } from "@/types";
+import axios from "@/common/axiosClient";
 
 export default {
   components: {
@@ -125,15 +128,11 @@ export default {
   },
   props: {
     folder: {
-      type: Object,
+      type: Object as PropType<Folder>,
       required: true,
     },
     question: {
-      type: Object,
-      required: true,
-    },
-    questionIndex: {
-      type: Number,
+      type: Object as PropType<Question>,
       required: true,
     },
     showMoveIcon: {

@@ -24,7 +24,12 @@ export async function getFolderWithQuestions({
   return {
     ...res.data,
     // sort the questions within the folder by their order
-    questions: res.data.questions.sort((a, b) => a.order - b.order),
+    questions: res.data.questions.sort((a, b) => a.order - b.order).map((q, i) => {
+      return {
+        ...q,
+        index: i,
+      };
+    }),
   };
 }
 
