@@ -27,18 +27,4 @@ class Folder extends Model {
     public function lti13_resource_link() {
         return $this->belongsTo(LTI13ResourceLink::class);
     }
-    /**
-     * updates order attribute for each question in the folder
-     * so that they are from 1 to n in order
-     **/
-    public function normalizeQuestionOrder()
-    {
-        $this->questions
-            ->sortBy('order')
-            ->values()
-            ->each(function ($question, $index) {
-                $question->order = $index + 1;
-                $question->save();
-            });
-    }
 }

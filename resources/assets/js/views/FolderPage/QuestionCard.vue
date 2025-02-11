@@ -7,7 +7,7 @@
     <header class="question-card__header">
       <h2 class="question-card__question-type">
         <router-link
-          :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
+          :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${questionIndex}`"
         >
           {{ questionTypeToString }}
         </router-link>
@@ -19,7 +19,7 @@
     </header>
 
     <router-link
-      :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
+      :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${questionIndex}`"
     >
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="flow-text question_list_text" v-html="question.text" />
@@ -81,7 +81,7 @@
               class="dropdown-item question-card__action-button"
               data-cy="present-question-button"
               icon="play_circle_outline"
-              :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${orderedQuestionIndex}`"
+              :to="`/chime/${folder.chime_id}/folder/${folder.id}/present/${questionIndex}`"
               >Present</CardActionButton
             >
           </li>
@@ -132,6 +132,10 @@ export default {
       type: Object,
       required: true,
     },
+    questionIndex: {
+      type: Number,
+      required: true,
+    },
     showMoveIcon: {
       type: Boolean,
       required: true,
@@ -145,9 +149,6 @@ export default {
     };
   },
   computed: {
-    orderedQuestionIndex() {
-      return this.question.order - 1;
-    },
     questionType() {
       return this.question.question_info.question_type;
     },

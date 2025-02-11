@@ -29,15 +29,6 @@ class FolderController extends Controller
                 // $folder->load("questions.sessions");
                 $folder->load("questions.sessions.responses");
                 $folder->load("questions.sessions.responses.user");
-
-                // normalize the question order property
-                $folder->questions = $folder->questions
-                    ->sortBy('order')
-                    ->values()
-                    ->map(function ($question, $index) {
-                        $question->order = $index + 1;
-                        return $question;
-                    });
             }
             return response()->json($folder);
         }
@@ -146,11 +137,7 @@ class FolderController extends Controller
                 'order' => $questionOrder,
             ]);
 
-            // re-normalize the order if moved
-            if ($currentFolderId !== $destFolderId) {
-                $currentFolder->normalizeQuestionOrder();
-                $destFolder->normalizeQuestionOrder();
-            }
+            $question->refresh();
 
             return response()->json($question);
         } else {
