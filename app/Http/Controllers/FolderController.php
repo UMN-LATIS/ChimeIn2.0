@@ -116,16 +116,25 @@ class FolderController extends Controller
             ->first());
         
         if ($chime != null && $chime->pivot->permission_number >= 300) {
+            $currentFolderId = $req->route('folder_id');
+            $destFolderId = $req->get('folder_id');
+            $currentFolder = $chime->folders()->find($currentFolderId);
+            $question = $currentFolder->questions()->find($req->route('question_id'));
 
-            $folder = $chime->folders()->find($req->route('folder_id'));
-            $question = $folder->questions()->find($req->route('question_id'));
-            
+            // if moving folders, we need to update the order
+            $questionOrder = $question->order;
+            if ($currentFolderId !== $destFolderId) {
+                $destFolder = $chime->folders()->find($destFolderId);
+                $questionOrder = $destFolder->questions()->max('order') + 1;
+            }
+
             $question->update([
                 'text' => $req->get('question_text'),
                 'question_info' => $req->get('question_info'),
                 'anonymous'=>$req->get('anonymous')?$req->get('anonymous'):0,
                 'folder_id'=>$req->get('folder_id'),
-                'allow_multiple' => $req->get('allow_multiple')?$req->get('allow_multiple'):0
+                'allow_multiple' => $req->get('allow_multiple')?$req->get('allow_multiple'):0,
+                'order' => $questionOrder,
             ]);
 
             return response()->json($question);
