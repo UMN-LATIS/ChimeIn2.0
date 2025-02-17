@@ -1,7 +1,7 @@
 <template>
   <NumInput
     :id="`numeric-x-input`"
-    :label="questionOptions.x_axis_label ?? 'X'"
+    :label="questionOptions.x_axis_label || 'X'"
     :modelValue="responseInfo.x ?? 0"
     @update:modelValue="
       $emit('update:responseInfo', { ...responseInfo, x: $event })
@@ -12,11 +12,11 @@
 import NumInput from "@/components/NumberInputGroup.vue";
 import {
   NumericResponseResponseInfo,
-  NumericResponseQuestionInfo,
+  NormalizedNumericQuestionOptions,
 } from "@/types";
 
 defineProps<{
-  questionOptions: NumericResponseQuestionInfo["question_responses"];
+  questionOptions: NormalizedNumericQuestionOptions;
   disabled: boolean;
   responseInfo: NumericResponseResponseInfo;
 }>();

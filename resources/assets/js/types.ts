@@ -215,13 +215,17 @@ export interface PinOnImageQuestionInfo extends QuestionInfo {
 
 export type NumericChartType = "bar" | "scatter" | "range";
 
+export interface NormalizedNumericQuestionOptions {
+  chart_type: NumericChartType;
+  x_axis_label: string;
+  y_axis_label: string;
+}
+
+export type RawNumericQuestionOptions = NormalizedNumericQuestionOptions | []; // `[]` may happen if no chart type or label was set;
+
 export interface NumericResponseQuestionInfo extends QuestionInfo {
   question_type: "numeric_response";
-  question_responses: {
-    chart_type: NumericChartType;
-    x_axis_label?: string;
-    y_axis_label?: string; // only for scatter
-  };
+  question_responses: RawNumericQuestionOptions;
 }
 
 export type MultipleChoiceQuestion = Question<MultipleChoiceQuestionInfo>;
