@@ -1,5 +1,12 @@
 <template>
-  <button class="btn btn-outline-success btn-sm align-items-center d-flex">
+  <button
+    class="btn btn-sm tw-flex tw-items-center tw-justify-center gap-1"
+    type="button"
+    :class="{
+      'btn-outline-secondary': props.forceSyncState === 'error',
+      'btn-success': props.forceSyncState !== 'error',
+    }"
+  >
     <slot />
     <span
       class="sync-status md-18 material-icons"
