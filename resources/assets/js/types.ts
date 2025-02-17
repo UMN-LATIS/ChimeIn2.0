@@ -138,7 +138,7 @@ export interface Question<T extends QuestionInfo = QuestionInfo> {
   text: HTMLString;
   folder_id: number;
   order: number; // could be non-consecutive, like (3, 5, 6, 10)
-  index: number; // 0-based consecutive order (0, 1, 2, 3) 
+  index: number; // 0-based consecutive order (0, 1, 2, 3)
   question_info: T;
   anonymous: boolean;
   allow_multiple: boolean;
@@ -326,3 +326,5 @@ export interface ChimeFolderParticipationSummary {
 export type PartialNested<T> = {
   [P in keyof T]?: PartialNested<T[P]>;
 };
+
+export type AsyncActionState = "idle" | "inProgress" | "success" | "error";

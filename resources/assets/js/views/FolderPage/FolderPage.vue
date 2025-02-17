@@ -126,18 +126,17 @@
                 </div>
               </div>
               <div class="ml-auto col-12 btn-toolbar justify-content-end">
-                <button
+                <ForceSyncButton
                   v-if="
                     isCanvasChime && chime.lti_grade_mode === 'multiple_grades'
                   "
-                  class="mr-2 btn btn-success btn-sm align-items-center d-flex"
+                  :forceSyncState="forceSyncState"
+                  class="mr-2 btn btn-sm align-items-center d-flex"
                   @click="sync"
                 >
                   Force Sync with Canvas
-                  <span v-if="synced" class="material-icons md-18"
-                    >check_circle</span
-                  >
-                </button>
+                </ForceSyncButton>
+
                 <button
                   class="mr-2 btn btn-warning btn-sm align-items-center d-flex"
                   @click="reset"
@@ -304,6 +303,7 @@ import axios from "@/common/axiosClient";
 import * as T from "@/types";
 import Icon from "../../components/Icon.vue";
 import { selectIsCanvasChime } from "@/helpers/chimeSelectors";
+import ForceSyncButton from "@/components/ForceSyncButton.vue";
 
 const QuestionForm = defineAsyncComponent(
   () =>
@@ -326,7 +326,8 @@ const existing_chimes = ref<T.Chime[]>([]);
 const existing_folders = ref<T.Folder[]>([]);
 const selected_chime_id = ref<number | null>(null);
 const selected_folder_id = ref<number | null>(null);
-const synced = ref(false);
+type ForceSyncState = "idle" | "inProgress" | "success" | "error";
+const forceSyncState = ref<ForceSyncState>("idle");
 
 const store = useStore();
 const router = useRouter();
@@ -520,16 +521,22 @@ function update_folders() {
 }
 
 async function sync() {
-  synced.value = await forceSyncGradesWithLMS({
-    chimeId: props.chimeId,
-    folderId: props.folderId,
-  });
-
-  if (!synced.value) {
-    store.commit(
-      "message",
-      "Could not sync Chime. Please contact support at latistecharch@umn.edu."
-    );
+  forceSyncState.value = "inProgress";
+  try {
+    const response = await forceSyncGradesWithLMS({
+      chimeId: props.chimeId,
+      folderId: props.folderId,
+    });
+    forceSyncState.value = response ? "success" : "error";
+  } catch (err) {
+    forceSyncState.value = "error";
+  } finally {
+    if (forceSyncState.value !== "success") {
+      store.commit(
+        "message",
+        "Could not sync Chime. Please contact support at latistecharch@umn.edu."
+      );
+    }
   }
 }
 </script>
