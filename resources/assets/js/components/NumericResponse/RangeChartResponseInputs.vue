@@ -25,12 +25,12 @@
 import NumInput from "@/components/NumberInputGroup.vue";
 import {
   NumericResponseResponseInfo,
-  NumericResponseQuestionInfo,
+  NormalizedNumericQuestionOptions,
 } from "@/types";
 import { computed } from "vue";
 
 const props = defineProps<{
-  questionOptions: NumericResponseQuestionInfo["question_responses"];
+  questionOptions: NormalizedNumericQuestionOptions;
   disabled: boolean;
   responseInfo: Pick<NumericResponseResponseInfo, "question_type" | "xRange">;
 }>();
