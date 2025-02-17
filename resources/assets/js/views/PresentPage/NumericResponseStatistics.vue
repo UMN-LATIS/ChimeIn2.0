@@ -4,7 +4,7 @@
       v-if="chartType === 'bar'"
       :data="barChartData"
       :itemLabel="question.anonymous ? 'Response ID' : 'User'"
-      :xAxisLabel="questionOptions.x_axis_label"
+      :xAxisLabel="questionOptions.x_axis_label || 'X'"
     />
     <ScatterPlot
       v-else-if="chartType === 'scatter'"
@@ -15,7 +15,7 @@
     <RangeChart
       v-else-if="chartType === 'range'"
       :data="rangeChartData"
-      :xAxisLabel="questionOptions.x_axis_label"
+      :xAxisLabel="questionOptions.x_axis_label || 'X'"
     />
   </div>
 </template>
