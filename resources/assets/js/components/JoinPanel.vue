@@ -17,7 +17,7 @@
     <div v-if="isCanvasChime" class="tw-flex tw-flex-col tw-gap-4">
       <p class="tw-text-center">
         Find your assignment in Canvas
-        <a data-cy="chime-host" :href="canvasUrl?.host" class="tw-font-mono">{{
+        <a data-cy="canvas-host" :href="canvasUrl?.host" class="tw-font-mono">{{
           canvasUrl?.host
         }}</a
         >.
