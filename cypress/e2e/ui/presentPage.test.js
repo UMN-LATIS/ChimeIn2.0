@@ -73,6 +73,9 @@ describe("presentPage", () => {
         cy.contains("Present").click();
         cy.get("[data-cy=canvas-host]").should("contain", "canvas.umn.edu");
 
+        // toggle guest join instructions
+        cy.contains("Instructions for Ungraded Guest").click();
+
         // get join instructions
         cy.get("[data-cy=chime-host]").should("contain", "localhost");
         cy.get("[data-cy=access-code]").should(
