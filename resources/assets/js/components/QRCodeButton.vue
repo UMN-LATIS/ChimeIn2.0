@@ -6,9 +6,11 @@
     </template>
 
     <QRCode :url="url" class="tw-w-full" />
-    <a :href="url" target="_blank" rel="noopener noreferrer" class="tw-hidden">
-      {{ prettyUrl }}
-    </a>
+    <p class="tw-text-center tw-text-xs tw-p-2 tw-m-0">
+      <a :href="url" target="_blank" rel="noopener noreferrer">
+        {{ prettyUrl }}
+      </a>
+    </p>
   </ToggleablePanel>
 </template>
 <script setup lang="ts">
