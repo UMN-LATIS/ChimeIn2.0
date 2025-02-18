@@ -29,11 +29,6 @@
 
       <div class="row">
         <div class="col-sm-12">
-          <JoinPanel
-            class="chime-management__join-panel"
-            :chime="chime"
-            :includeFullUrl="true"
-          />
           <ChimeManagementOptions
             :require_login="chime.require_login"
             :students_can_view="chime.students_can_view"
@@ -120,7 +115,6 @@
 import { computed, onMounted, ref } from "vue";
 import * as api from "../../common/api";
 import ChimeManagementOptions from "../../components/ChimeManagementOptions.vue";
-import JoinPanel from "../../components/JoinPanel.vue";
 import { useStore } from "vuex";
 import { selectIsCanvasChime } from "../../helpers/chimeSelectors";
 import type { Chime, ChimeOptions, User, Partial } from "../../types";
