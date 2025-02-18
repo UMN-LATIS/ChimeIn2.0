@@ -62,6 +62,7 @@
 </template>
 <script setup lang="ts">
 import {
+  NormalizedNumericQuestionOptions,
   NumericResponseQuestionInfo,
   NumericResponseResponseInfo,
   Question,
@@ -72,6 +73,7 @@ import { computed, reactive, ref, watch } from "vue";
 import BarChartResponseInputs from "./BarChartResponseInputs.vue";
 import ScatterPlotResponseInputs from "./ScatterPlotResponseInputs.vue";
 import RangeChartResponseInputs from "./RangeChartResponseInputs.vue";
+import { normalizeNumericQuestionOptions } from "@/helpers/getNormedNumericQuestionOptions";
 
 const props = defineProps<{
   question: Question<NumericResponseQuestionInfo>;
@@ -125,8 +127,10 @@ watch(
   { immediate: true }
 );
 
-const questionOptions = computed(() => {
-  return props.question.question_info.question_responses;
+const questionOptions = computed((): NormalizedNumericQuestionOptions => {
+  return normalizeNumericQuestionOptions(
+    props.question.question_info.question_responses
+  );
 });
 
 function handleSave() {

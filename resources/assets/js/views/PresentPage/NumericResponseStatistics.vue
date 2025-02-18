@@ -9,8 +9,8 @@
     <ScatterPlot
       v-else-if="chartType === 'scatter'"
       :data="scatterPlotData"
-      :xAxisLabel="questionOptions.x_axis_label || 'X'"
-      :yAxisLabel="questionOptions.y_axis_label || 'Y'"
+      :xAxisLabel="questionOptions.x_axis_label"
+      :yAxisLabel="questionOptions.y_axis_label"
     />
     <RangeChart
       v-else-if="chartType === 'range'"
@@ -28,21 +28,23 @@ import type {
   NumericResponseQuestionInfo,
   Question,
   Response,
+  NormalizedNumericQuestionOptions,
 } from "@/types";
 import { computed } from "vue";
+import { normalizeNumericQuestionOptions } from "@/helpers/getNormedNumericQuestionOptions";
 
 const props = defineProps<{
   responses: Response<NumericResponseResponseInfo>[];
   question: Question<NumericResponseQuestionInfo>;
 }>();
 
-const chartType = computed(
-  () => props.question.question_info.question_responses.chart_type
-);
-
-const questionOptions = computed(() => {
-  return props.question.question_info.question_responses;
+const questionOptions = computed((): NormalizedNumericQuestionOptions => {
+  return normalizeNumericQuestionOptions(
+    props.question.question_info.question_responses
+  );
 });
+
+const chartType = computed(() => questionOptions.value.chart_type);
 
 const barChartData = computed((): [label: string, value: number][] => {
   return props.responses.map((response, index) => {
