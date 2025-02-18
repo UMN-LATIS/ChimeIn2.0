@@ -14,15 +14,16 @@
       </h2>
     </header>
 
-    <template v-if="isCanvasChime">
-      <QRCode v-if="canvasUrl" :url="canvasUrl.href" />
-      <p class="tw-text-center !tw-mb-6">
+    <div v-if="isCanvasChime" class="tw-flex tw-flex-col tw-gap-4">
+      <p class="tw-text-center">
         Find your assignment in Canvas
         <a data-cy="chime-host" :href="canvasUrl?.host" class="tw-font-mono">{{
           canvasUrl?.host
         }}</a
         >.
       </p>
+
+      <QRCode v-if="canvasUrl" :url="canvasUrl.href" />
 
       <details class="tw-bg-black/5 tw-rounded">
         <summary
@@ -47,11 +48,9 @@
           </p>
         </div>
       </details>
-    </template>
+    </div>
 
-    <template v-else>
-      <QRCode :url="joinUrl" />
-
+    <div v-else class="tw-flex tw-flex-col tw-gap-4">
       <div class="join-panel__instructions">
         <p class="tw-text-center">
           Visit
@@ -64,7 +63,9 @@
           >
         </p>
       </div>
-    </template>
+
+      <QRCode :url="joinUrl" />
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -111,7 +112,6 @@ const { location } = window;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
 }
 .join-panel__title {
   font-size: 0.9rem;
