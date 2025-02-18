@@ -60,6 +60,9 @@
             >{{ toHyphenatedCode(chime.access_code) }}</b
           >
         </p>
+        <p v-if="includeFullURL" class="tw-text-center tw-text-xs">
+          <a :href="joinUrl">{{ joinUrl }}</a>
+        </p>
       </div>
 
       <QRCodeButton :url="joinUrl" />
@@ -78,9 +81,15 @@ import { Chime } from "@/types";
 import QRCodeButton from "./QRCodeButton.vue";
 import ToggleablePanel from "./ToggleablePanel.vue";
 
-const props = defineProps<{
-  chime: Chime;
-}>();
+const props = withDefaults(
+  defineProps<{
+    chime: Chime;
+    includeFullURL: boolean;
+  }>(),
+  {
+    includeFullURL: false,
+  }
+);
 
 const isCanvasChime = computed(() => selectIsCanvasChime(props.chime));
 
