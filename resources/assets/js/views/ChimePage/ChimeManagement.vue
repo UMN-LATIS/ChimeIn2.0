@@ -44,23 +44,14 @@
             "
             @update="handleUpdateChimeOptions"
           />
-          <button
+          <ForceSyncButton
             v-if="isCanvasChime && chime.lti_grade_mode === 'one_grade'"
-            class="btn btn-outline-success btn-sm align-items-center d-flex"
+            :forceSyncState="forceSyncState"
+            class="!btn-outline-success"
             @click="forceSyncGrades"
           >
             Force Sync with Canvas
-            <span
-              v-if="forceSyncState === 'success'"
-              class="material-icons sync-status sync-status--is-success md-18"
-              >check_circle</span
-            >
-            <span
-              v-if="forceSyncState === 'inProgress'"
-              class="material-icons sync-status sync-status--is-inprogress md-18"
-              >sync</span
-            >
-          </button>
+          </ForceSyncButton>
           <div
             v-if="forceSyncState === 'error'"
             class="sync-status sync-status--is-error"
@@ -133,6 +124,7 @@ import JoinPanel from "../../components/JoinPanel.vue";
 import { useStore } from "vuex";
 import { selectIsCanvasChime } from "../../helpers/chimeSelectors";
 import type { Chime, ChimeOptions, User, Partial } from "../../types";
+import ForceSyncButton from "@/components/ForceSyncButton.vue";
 
 const props = defineProps<{
   chime: Chime;
