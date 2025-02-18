@@ -4,4 +4,5 @@ export { default as IconChartScatter } from "./IconChartScatter.vue";
 export { default as IconCheckboxChecked } from "./IconCheckboxChecked.vue";
 export { default as IconCheckboxUnchecked } from "./IconCheckboxUnchecked.vue";
 export { default as IconLoading } from "./IconLoading.vue";
+export { default as IconQRCode } from "./IconQRCode.vue";
 export { default as IconWarningSquare } from "./IconWarningSquare.vue";

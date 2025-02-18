@@ -14,7 +14,7 @@
       </h2>
     </header>
 
-    <div v-if="isCanvasChime" class="tw-flex tw-flex-col tw-gap-4">
+    <div v-if="isCanvasChime" class="tw-flex tw-flex-col tw-gap-2">
       <p class="tw-text-center">
         Find your assignment in Canvas
         <a data-cy="canvas-host" :href="canvasUrl?.host" class="tw-font-mono">{{
@@ -23,31 +23,29 @@
         >.
       </p>
 
-      <QRCode v-if="canvasUrl" :url="canvasUrl.href" />
+      <QRCodeButton v-if="canvasUrl" :url="canvasUrl.href" />
 
-      <details class="tw-bg-black/5 tw-rounded">
-        <summary
-          class="tw-bg-black/5 tw-px-2 tw-py-1 tw-flex tw-justify-center tw-rounded"
-        >
-          Instructions for Ungraded Guest
-        </summary>
-        <div class="join-panel__instructions">
-          <p>
-            Guests may also join this Chime. They will NOT recieve grades in
-            Canvas if they join with the code below.
-          </p>
-          <p class="tw-text-center">
-            Visit
-            <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
-            enter code
-            <b
-              class="tw-font-mono tw-flex tw-justify-center tw-text-2xl"
-              data-cy="access-code"
-              >{{ toHyphenatedCode(chime.access_code) }}</b
-            >
-          </p>
-        </div>
-      </details>
+      <ToggleablePanel>
+        <template #trigger>
+          <span class="tw-text-xs tw-text-neutral-500">
+            Instructions for Ungraded Guest
+          </span>
+        </template>
+        <p>
+          Guests may also join this Chime. They will NOT recieve grades in
+          Canvas if they join with the code below.
+        </p>
+        <p class="tw-text-center">
+          Visit
+          <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
+          enter code
+          <b
+            class="tw-font-mono tw-flex tw-justify-center tw-text-2xl"
+            data-cy="access-code"
+            >{{ toHyphenatedCode(chime.access_code) }}</b
+          >
+        </p>
+      </ToggleablePanel>
     </div>
 
     <div v-else class="tw-flex tw-flex-col tw-gap-4">
@@ -64,26 +62,25 @@
         </p>
       </div>
 
-      <QRCode :url="joinUrl" />
+      <QRCodeButton :url="joinUrl" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import {
   selectCanvasCourseUrl,
   selectIsCanvasChime,
   selectJoinUrl,
 } from "@/helpers/chimeSelectors";
 import toHyphenatedCode from "@/helpers/toHyphenatedCode";
-import QRCode from "@/components/QRCode.vue";
 import { Chime } from "@/types";
+import QRCodeButton from "./QRCodeButton.vue";
+import ToggleablePanel from "./ToggleablePanel.vue";
 
 const props = defineProps<{
   chime: Chime;
 }>();
-
-const isJoinForUngradedOpen = ref(false);
 
 const isCanvasChime = computed(() => selectIsCanvasChime(props.chime));
 
