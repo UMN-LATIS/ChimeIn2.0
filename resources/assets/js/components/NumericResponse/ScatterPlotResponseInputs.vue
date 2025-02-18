@@ -2,7 +2,7 @@
   <div class="d-flex gap-3">
     <NumInput
       id="numeric-x-input"
-      :label="questionOptions.x_axis_label || 'X'"
+      :label="questionOptions.x_axis_label"
       :modelValue="responseInfo.x ?? 0"
       :disabled="disabled"
       @update:modelValue="
@@ -11,7 +11,7 @@
     />
     <NumInput
       id="numeric-y-input"
-      :label="questionOptions.y_axis_label || 'Y'"
+      :label="questionOptions.y_axis_label"
       :modelValue="responseInfo.y ?? 0"
       :disabled="disabled"
       @update:modelValue="

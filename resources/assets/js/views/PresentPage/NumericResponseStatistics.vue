@@ -4,18 +4,18 @@
       v-if="chartType === 'bar'"
       :data="barChartData"
       :itemLabel="question.anonymous ? 'Response ID' : 'User'"
-      :xAxisLabel="questionOptions.x_axis_label || 'X'"
+      :xAxisLabel="questionOptions.x_axis_label"
     />
     <ScatterPlot
       v-else-if="chartType === 'scatter'"
       :data="scatterPlotData"
-      :xAxisLabel="questionOptions.x_axis_label || 'X'"
-      :yAxisLabel="questionOptions.y_axis_label || 'Y'"
+      :xAxisLabel="questionOptions.x_axis_label"
+      :yAxisLabel="questionOptions.y_axis_label"
     />
     <RangeChart
       v-else-if="chartType === 'range'"
       :data="rangeChartData"
-      :xAxisLabel="questionOptions.x_axis_label || 'X'"
+      :xAxisLabel="questionOptions.x_axis_label"
     />
   </div>
 </template>
