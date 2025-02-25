@@ -116,7 +116,7 @@ class FolderController extends Controller
             ->first());
         
         if ($chime != null && $chime->pivot->permission_number >= 300) {
-            $currentFolderId = $req->route('folder_id');
+            $currentFolderId = (int) $req->route('folder_id');
             $destFolderId = $req->get('folder_id');
             $currentFolder = $chime->folders()->find($currentFolderId);
             $question = $currentFolder->questions()->find($req->route('question_id'));
