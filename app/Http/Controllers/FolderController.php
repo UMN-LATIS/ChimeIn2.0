@@ -105,27 +105,6 @@ class FolderController extends Controller
         }
     }
 
-    public function resetQuestion(Request $req, $chime, $folder, $question) {
-        $user = $req->user();
-        $chime = (
-            $user
-            ->chimes()
-            ->where('chime_id', $chime->id)
-            ->first());
-        
-        if ($chime != null && $chime->pivot->permission_number >= 300) {
-            
-            $question->sessions()->delete();
-            $question->current_session_id = null;
-            $question->save();
-
-
-            return response('Question Reset', 200);
-        } else {
-            return response('Invalid Permissions to Reset Question', 403);
-        }
-    }
-
     public function forceSync(Request $req, $chime, $folder) {
         if($folder->resource_link_pk > 0) {
             if(\App\Library\LTIProcessor::syncFolder($folder)) {

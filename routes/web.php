@@ -88,7 +88,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
         ->middleware('limit.json.size');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', [QuestionController::class, 'destroy']);
-    Route::delete('/api/chime/{chime}/folder/{folder}/question/{question}/responses', 'FolderController@resetQuestion');
+    Route::delete('/api/chime/{chime}/folder/{folder}/question/{question}/responses', [QuestionController::class, 'reset'] );
     
     Route::delete('/api/chime/{chime}/folder/{folder}/response/{response}', 'ResponseController@deleteResponse');
 
