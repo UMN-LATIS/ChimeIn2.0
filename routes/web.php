@@ -10,7 +10,7 @@ use App\Http\Controllers\FolderController;
 use App\Http\Controllers\PresentController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImpersonateController;
-
+use App\Http\Controllers\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     // TODO: Change `includeQuestions to a query string param 
     // `include_questions=true`
     Route::get('/api/chime/{chime}/folder/{folder}/{includeQuestions?}',  'FolderController@show');
-    Route::post('/api/chime/{chime_id}/folder/{folder_id}', 'FolderController@createQuestion')
+    Route::post('/api/chime/{chime_id}/folder/{folder_id}', [QuestionController::class, 'store'])
         ->middleware('limit.json.size');
     Route::post('/api/chime/{chime}/folder/{folder}/import', 'FolderController@importQuestions');
     Route::post('/api/chime/{chime}/folder/{folder}/sync', 'FolderController@forceSync');
