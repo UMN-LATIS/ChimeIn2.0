@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Chime;
 use App\Events\EndSession;
+use App\Folder;
+use App\Question;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -10,41 +13,31 @@ class QuestionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $req)
+    public function store(Request $request, Chime $chime, Folder $folder)
     {
-        $user = $req->user();
-        $chime = (
-            $user
-                ->chimes()
-                ->where('chime_id', $req->route('chime_id'))
-                ->first());
+        $user = $request->user();
 
-        if ($chime != null && $chime->pivot->permission_number >= 300) {
-            $folder = $chime->folders()->find($req->route('folder_id'));
-            $highest = $folder->questions()->max('order');
-            $order_num = 1;
+        abort_unless($user->canEditChime($chime->id), 403, 'Invalid Permissions to Create Question');
 
-            if ($highest != null) {
-                $order_num = $highest + 1;
-            }
+        $validated = $request->validate([
+            'question_text' => ['required', 'string'],
+            'question_info' => ['required', 'array'],
+            'anonymous' => ['nullable', 'boolean'],
+            'allow_multiple' => ['nullable', 'boolean'],
+        ]);
 
-            if (! $req->get('question_text')) {
-                return response('Question Text Cannot be Blank', 500);
-            }
+        $maxQuestionOrder = $folder->questions()->max('order') ?? 0;
 
-            $new_question = \App\Question::create([
-                'text' => $req->get('question_text'),
-                'order' => $order_num,
-                'question_info' => $req->get('question_info'),
-                'anonymous' => $req->get('anonymous') ? $req->get('anonymous') : 0,
-                'folder_id' => $req->get('folder_id'),
-                'allow_multiple' => $req->get('allow_multiple') ? $req->get('allow_multiple') : 0,
-            ]);
+        $question = Question::create([
+            'text' => $validated['question_text'],
+            'order' => $maxQuestionOrder + 1,
+            'question_info' => $validated['question_info'],
+            'anonymous' => $validated['anonymous'] ?? false,
+            'folder_id' => $folder->id,
+            'allow_multiple' => $validated['allow_multiple'] ?? false,
+        ]);
 
-            return response()->json($new_question);
-        } else {
-            return response('Invalid Permissions to Create Question', 403);
-        }
+        return response()->json($question);
     }
 
     /**
