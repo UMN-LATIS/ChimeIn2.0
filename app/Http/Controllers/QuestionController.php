@@ -2,21 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Question;
 use Illuminate\Http\Request;
 use App\Events\EndSession;
 
 
 class QuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -55,14 +46,6 @@ class QuestionController extends Controller
         } else {
             return response('Invalid Permissions to Create Question', 403);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Question $question)
-    {
-        //
     }
 
     /**
