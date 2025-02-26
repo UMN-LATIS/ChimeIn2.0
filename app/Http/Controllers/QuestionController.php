@@ -86,42 +86,29 @@ class QuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $req)
+    public function destroy(Request $request, Chime $chime, Folder $folder, Question $question)
     {
-        $user = $req->user();
-        $chime = (
-            $user
-                ->chimes()
-                ->where('chime_id', $req->route('chime_id'))
-                ->first());
+        $user = $request->user();
 
-        if ($chime != null && $chime->pivot->permission_number >= 300) {
-            $folder = $chime->folders()->find($req->route('folder_id'));
+        abort_unless($user->canEditChime($chime->id), 403, 'Invalid Permissions to Delete Question');
 
-            $question = $folder->questions()->find($req->route('question_id'));
-
-            $currentSession = $question->current_session;
-            if ($currentSession) {
-                $currentSession->touch();
-                $question->current_session()->dissociate();
-                $question->save();
-                event(new EndSession($chime, $currentSession));
-            }
-
-            $question->delete();
-
-            $i = 1;
-
-            foreach ($folder->questions as $question) {
-                $question->order = $i;
-                $question->save();
-                $i++;
-            }
-
-            return response('Question Deleted', 200);
-        } else {
-            return response('Invalid Permissions to Delete Question', 403);
+        $currentSession = $question->current_session;
+        if ($currentSession) {
+            $currentSession->touch();
+            $question->current_session()->dissociate();
+            $question->save();
+            event(new EndSession($chime, $currentSession));
         }
+
+        $question->delete();
+
+        // Reorder remaining questions in the folder
+        $folder->questions->each(function ($q, $i) {
+            $q->order = $i + 1;
+            $q->save();
+        });
+
+        return response('Question Deleted', 200);
     }
 
     public function reset(Request $req, $chime, $folder, $question)
