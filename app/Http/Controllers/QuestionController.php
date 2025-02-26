@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Events\EndSession;
-
+use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
@@ -16,10 +15,10 @@ class QuestionController extends Controller
         $user = $req->user();
         $chime = (
             $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-        
+                ->chimes()
+                ->where('chime_id', $req->route('chime_id'))
+                ->first());
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $highest = $folder->questions()->max('order');
@@ -29,7 +28,7 @@ class QuestionController extends Controller
                 $order_num = $highest + 1;
             }
 
-            if(!$req->get('question_text')) {
+            if (! $req->get('question_text')) {
                 return response('Question Text Cannot be Blank', 500);
             }
 
@@ -37,11 +36,11 @@ class QuestionController extends Controller
                 'text' => $req->get('question_text'),
                 'order' => $order_num,
                 'question_info' => $req->get('question_info'),
-                'anonymous'=>$req->get('anonymous')?$req->get('anonymous'):0,
-                'folder_id'=>$req->get('folder_id'),
-                'allow_multiple' => $req->get('allow_multiple')?$req->get('allow_multiple'):0
+                'anonymous' => $req->get('anonymous') ? $req->get('anonymous') : 0,
+                'folder_id' => $req->get('folder_id'),
+                'allow_multiple' => $req->get('allow_multiple') ? $req->get('allow_multiple') : 0,
             ]);
-                    
+
             return response()->json($new_question);
         } else {
             return response('Invalid Permissions to Create Question', 403);
@@ -53,14 +52,14 @@ class QuestionController extends Controller
      */
     public function update(Request $req)
     {
-        
+
         $user = $req->user();
         $chime = (
             $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-        
+                ->chimes()
+                ->where('chime_id', $req->route('chime_id'))
+                ->first());
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $currentFolderId = (int) $req->route('folder_id');
             $destFolderId = $req->get('folder_id');
@@ -77,9 +76,9 @@ class QuestionController extends Controller
             $question->update([
                 'text' => $req->get('question_text'),
                 'question_info' => $req->get('question_info'),
-                'anonymous'=>$req->get('anonymous')?$req->get('anonymous'):0,
-                'folder_id'=>$req->get('folder_id'),
-                'allow_multiple' => $req->get('allow_multiple')?$req->get('allow_multiple'):0,
+                'anonymous' => $req->get('anonymous') ? $req->get('anonymous') : 0,
+                'folder_id' => $req->get('folder_id'),
+                'allow_multiple' => $req->get('allow_multiple') ? $req->get('allow_multiple') : 0,
                 'order' => $questionOrder,
             ]);
 
@@ -97,34 +96,32 @@ class QuestionController extends Controller
         $user = $req->user();
         $chime = (
             $user
-            ->chimes()
-            ->where('chime_id', $req->route('chime_id'))
-            ->first());
-        
+                ->chimes()
+                ->where('chime_id', $req->route('chime_id'))
+                ->first());
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
-            
-            
+
             $question = $folder->questions()->find($req->route('question_id'));
 
             $currentSession = $question->current_session;
-            if($currentSession) {
+            if ($currentSession) {
                 $currentSession->touch();
                 $question->current_session()->dissociate();
                 $question->save();
                 event(new EndSession($chime, $currentSession));
             }
-            
+
             $question->delete();
-            
+
             $i = 1;
 
-            foreach($folder->questions as $question) {
+            foreach ($folder->questions as $question) {
                 $question->order = $i;
                 $question->save();
                 $i++;
             }
-
 
             return response('Question Deleted', 200);
         } else {
@@ -132,20 +129,20 @@ class QuestionController extends Controller
         }
     }
 
-    public function reset(Request $req, $chime, $folder, $question) {
+    public function reset(Request $req, $chime, $folder, $question)
+    {
         $user = $req->user();
         $chime = (
             $user
-            ->chimes()
-            ->where('chime_id', $chime->id)
-            ->first());
-        
+                ->chimes()
+                ->where('chime_id', $chime->id)
+                ->first());
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
-            
+
             $question->sessions()->delete();
             $question->current_session_id = null;
             $question->save();
-
 
             return response('Question Reset', 200);
         } else {
