@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Question;
 use Illuminate\Http\Request;
+use App\Events\EndSession;
+
 
 class QuestionController extends Controller
 {
@@ -66,16 +68,84 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Question $question)
+    public function update(Request $req)
     {
-        //
+        
+        $user = $req->user();
+        $chime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $req->route('chime_id'))
+            ->first());
+        
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
+            $currentFolderId = (int) $req->route('folder_id');
+            $destFolderId = $req->get('folder_id');
+            $currentFolder = $chime->folders()->find($currentFolderId);
+            $question = $currentFolder->questions()->find($req->route('question_id'));
+
+            // if moving folders, we need to update the order
+            $questionOrder = $question->order;
+            if ($currentFolderId !== $destFolderId) {
+                $destFolder = $chime->folders()->find($destFolderId);
+                $questionOrder = $destFolder->questions()->max('order') + 1;
+            }
+
+            $question->update([
+                'text' => $req->get('question_text'),
+                'question_info' => $req->get('question_info'),
+                'anonymous'=>$req->get('anonymous')?$req->get('anonymous'):0,
+                'folder_id'=>$req->get('folder_id'),
+                'allow_multiple' => $req->get('allow_multiple')?$req->get('allow_multiple'):0,
+                'order' => $questionOrder,
+            ]);
+
+            return response()->json($question);
+        } else {
+            return response('Invalid Permissions to Update Question', 403);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Question $question)
+    public function destroy(Request $req)
     {
-        //
+        $user = $req->user();
+        $chime = (
+            $user
+            ->chimes()
+            ->where('chime_id', $req->route('chime_id'))
+            ->first());
+        
+        if ($chime != null && $chime->pivot->permission_number >= 300) {
+            $folder = $chime->folders()->find($req->route('folder_id'));
+            
+            
+            $question = $folder->questions()->find($req->route('question_id'));
+
+            $currentSession = $question->current_session;
+            if($currentSession) {
+                $currentSession->touch();
+                $question->current_session()->dissociate();
+                $question->save();
+                event(new EndSession($chime, $currentSession));
+            }
+            
+            $question->delete();
+            
+            $i = 1;
+
+            foreach($folder->questions as $question) {
+                $question->order = $i;
+                $question->save();
+                $i++;
+            }
+
+
+            return response('Question Deleted', 200);
+        } else {
+            return response('Invalid Permissions to Delete Question', 403);
+        }
     }
 }
