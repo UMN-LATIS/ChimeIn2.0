@@ -43,13 +43,13 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $req, Chime $chime, Folder $folder, Question $question)
+    public function update(Request $request, Chime $chime, Folder $folder, Question $question)
     {
-        $user = $req->user();
+        $user = $request->user();
 
         abort_unless($user->canEditChime($chime->id), 403, 'Invalid Permissions to Update Question');
 
-        $validated = $req->validate([
+        $validated = $request->validate([
             'question_text' => ['required', 'string'],
             'question_info' => ['required', 'array'],
             'anonymous' => ['nullable', 'boolean'],
