@@ -43,42 +43,44 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $req)
+    public function update(Request $req, Chime $chime, Folder $folder, Question $question)
     {
-
         $user = $req->user();
-        $chime = (
-            $user
-                ->chimes()
-                ->where('chime_id', $req->route('chime_id'))
-                ->first());
 
-        if ($chime != null && $chime->pivot->permission_number >= 300) {
-            $currentFolderId = (int) $req->route('folder_id');
-            $destFolderId = $req->get('folder_id');
-            $currentFolder = $chime->folders()->find($currentFolderId);
-            $question = $currentFolder->questions()->find($req->route('question_id'));
+        abort_unless($user->canEditChime($chime->id), 403, 'Invalid Permissions to Update Question');
 
-            // if moving folders, we need to update the order
-            $questionOrder = $question->order;
-            if ($currentFolderId !== $destFolderId) {
-                $destFolder = $chime->folders()->find($destFolderId);
-                $questionOrder = $destFolder->questions()->max('order') + 1;
-            }
+        $validated = $req->validate([
+            'question_text' => ['required', 'string'],
+            'question_info' => ['required', 'array'],
+            'anonymous' => ['nullable', 'boolean'],
+            'allow_multiple' => ['nullable', 'boolean'],
+            'folder_id' => ['required', 'integer', 'exists:folders,id'],
+        ]);
 
-            $question->update([
-                'text' => $req->get('question_text'),
-                'question_info' => $req->get('question_info'),
-                'anonymous' => $req->get('anonymous') ? $req->get('anonymous') : 0,
-                'folder_id' => $req->get('folder_id'),
-                'allow_multiple' => $req->get('allow_multiple') ? $req->get('allow_multiple') : 0,
-                'order' => $questionOrder,
-            ]);
+        $currentFolderId = $folder->id;
+        $destFolderId = $validated['folder_id'];
+        $isMovingFolders = $currentFolderId !== $destFolderId;
+        $destFolder = $isMovingFolders
+            ? $chime->folders()->find($destFolderId)
+            : $folder;
 
-            return response()->json($question);
-        } else {
-            return response('Invalid Permissions to Update Question', 403);
-        }
+        abort_unless($destFolder, 400, 'Valid destination folder not found');
+
+        // If moving folders, moved to the end of the dest folder
+        $questionOrder = $isMovingFolders
+            ? ($destFolder->questions()->max('order') ?? 0) + 1
+            : $question->order;
+
+        $question->update([
+            'text' => $validated['question_text'],
+            'question_info' => $validated['question_info'],
+            'anonymous' => $validated['anonymous'] ?? false,
+            'folder_id' => $destFolderId,
+            'allow_multiple' => $validated['allow_multiple'] ?? false,
+            'order' => $questionOrder,
+        ]);
+
+        return response()->json($question);
     }
 
     /**
