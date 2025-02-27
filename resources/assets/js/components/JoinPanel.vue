@@ -14,101 +14,95 @@
       </h2>
     </header>
 
-    <div v-if="isCanvasChime" class="join-panel__instructions">
-      <p>Visit your course in Canvas:</p>
-      <a :href="canvasUrl.origin" data-cy="canvas-host" target="_blank">{{
-        canvasUrl.host
-      }}</a>
+    <div v-if="isCanvasChime" class="tw-flex tw-flex-col tw-gap-2">
+      <p class="tw-text-center">
+        Find your assignment in Canvas
+        <a data-cy="canvas-host" :href="canvasUrl?.host" class="tw-font-mono">{{
+          canvasUrl?.host
+        }}</a
+        >.
+      </p>
 
-      <details>
-        <summary>Join Instructions for Ungraded Guests</summary>
-        <ol>
-          <li>
-            Go to:
-            <a data-cy="chime-host" :href="joinUrl">{{ joinUrl }}</a>
-          </li>
-          <li>
-            Or: visit
-            <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
-            enter:
-            <b class="join-panel__access-code" data-cy="access-code">{{
-              toHyphenatedCode(chime.access_code)
-            }}</b>
-          </li>
-        </ol>
-      </details>
+      <QRCodeButton v-if="canvasUrl" :url="canvasUrl.href" />
+
+      <ToggleablePanel>
+        <template #trigger>
+          <span class="tw-text-xs tw-text-neutral-500">
+            Instructions for Ungraded Guest
+          </span>
+        </template>
+        <p>
+          Guests may also join this Chime. They will NOT recieve grades in
+          Canvas if they join with the code below.
+        </p>
+        <p class="tw-text-center">
+          Visit
+          <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
+          enter code
+          <b
+            class="tw-font-mono tw-flex tw-justify-center tw-text-2xl"
+            data-cy="access-code"
+            >{{ toHyphenatedCode(chime.access_code) }}</b
+          >
+        </p>
+      </ToggleablePanel>
     </div>
 
-    <div v-else class="join-panel__instructions">
-      <ol v-if="includeFullUrl">
-        <li>
-          Go to:
-          <a data-cy="chime-host" :href="joinUrl">{{ joinUrl }}</a>
-        </li>
-        <li>
-          Or: visit
+    <div v-else class="tw-flex tw-flex-col tw-gap-4">
+      <div class="join-panel__instructions">
+        <p class="tw-text-center">
+          Visit
           <a data-cy="chime-host" :href="joinUrl">{{ location.host }}</a> and
-          enter
-          <b class="join-panel__access-code" data-cy="access-code">{{
-            toHyphenatedCode(chime.access_code)
-          }}</b>
-        </li>
-      </ol>
-      <ol v-else>
-        <li>
-          Go to:
-          <a data-cy="chime-host" :href="location.origin">{{
-            location.host
-          }}</a>
-        </li>
-        <li>
-          Enter Code
-          <b class="join-panel__access-code" data-cy="access-code">{{
-            toHyphenatedCode(chime.access_code)
-          }}</b>
-        </li>
-      </ol>
+          enter code
+          <b
+            class="tw-font-mono tw-flex tw-justify-center tw-text-2xl"
+            data-cy="access-code"
+            >{{ toHyphenatedCode(chime.access_code) }}</b
+          >
+        </p>
+        <p v-if="includeFullURL" class="tw-text-center tw-text-xs">
+          <a :href="joinUrl">{{ joinUrl }}</a>
+        </p>
+      </div>
+
+      <QRCodeButton :url="joinUrl" />
     </div>
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from "vue";
 import {
   selectCanvasCourseUrl,
   selectIsCanvasChime,
   selectJoinUrl,
-} from "../helpers/chimeSelectors";
-import toHyphenatedCode from "../helpers/toHyphenatedCode";
+} from "@/helpers/chimeSelectors";
+import toHyphenatedCode from "@/helpers/toHyphenatedCode";
+import { Chime } from "@/types";
+import QRCodeButton from "./QRCodeButton.vue";
+import ToggleablePanel from "./ToggleablePanel.vue";
 
-export default {
-  props: {
-    chime: {
-      type: Object,
-      required: true,
-    },
-    includeFullUrl: {
-      type: Boolean,
-      require: false,
-    },
-  },
-  computed: {
-    isCanvasChime() {
-      return selectIsCanvasChime(this.chime);
-    },
-    canvasUrl() {
-      const fullCanvasUrlString = selectCanvasCourseUrl(this.chime);
-      return new URL(fullCanvasUrlString);
-    },
-    joinUrl() {
-      return selectJoinUrl(this.chime);
-    },
-    location() {
-      return window.location;
-    },
-  },
-  methods: {
-    toHyphenatedCode,
-  },
-};
+const props = withDefaults(
+  defineProps<{
+    chime: Chime;
+    includeFullURL: boolean;
+  }>(),
+  {
+    includeFullURL: false,
+  }
+);
+
+const isCanvasChime = computed(() => selectIsCanvasChime(props.chime));
+
+const canvasUrl = computed(() => {
+  const fullCanvasUrlString = selectCanvasCourseUrl(props.chime);
+
+  if (!fullCanvasUrlString) return null;
+  return new URL(fullCanvasUrlString);
+});
+
+const joinUrl = computed(() => selectJoinUrl(props.chime));
+
+const { location } = window;
 </script>
 <style scoped>
 .join-panel {
@@ -124,7 +118,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
 }
 .join-panel__title {
   font-size: 0.9rem;

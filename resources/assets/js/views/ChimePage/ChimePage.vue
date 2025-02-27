@@ -74,9 +74,6 @@
 
         <div v-if="chime" class="chime__folder-wrapper">
           <div class="chime__folder-list">
-            <p v-if="!ordered_folders.length">
-              You don't have any folders yet. Why not create one now?
-            </p>
             <NewFolder
               class="chime__create-folder"
               :chime="chime"
@@ -105,6 +102,9 @@
                   </div>
                 </template>
               </Draggable>
+              <p v-else>
+                You don't have any folders yet. Why not create one now?
+              </p>
               <JoinPanel
                 v-if="!isEmpty(chime)"
                 :chime="chime"
