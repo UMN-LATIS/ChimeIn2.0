@@ -39,53 +39,25 @@ import { defineAsyncComponent } from "vue";
 export default {
   components: {
     slider_response_statistics: defineAsyncComponent(
-      () =>
-        import(
-          /* webpackChunkName: "SliderResponseStatistics" */
-          "./SliderStatistics.vue"
-        )
+      () => import("./SliderStatistics.vue")
     ),
     multiple_choice_statistics: defineAsyncComponent(
-      () =>
-        import(
-          /* webpackChunkName: "MultipleChoiceStatistics" */
-          "./MultipleChoiceStatistics.vue"
-        )
+      () => import("./MultipleChoiceStatistics.vue")
     ),
     image_response_statistics: defineAsyncComponent(
-      () =>
-        import(
-          /* webpackChunkName: "ImageResponseStatistics" */
-          "./ImageResponseStatistics.vue"
-        )
+      () => import("./ImageResponseStatistics.vue")
     ),
     free_response_statistics: defineAsyncComponent(
-      () =>
-        import(
-          /* webpackChunkName: "FreeResponseStatistics" */
-          "./FreeResponseStatistics.vue"
-        )
+      () => import("./FreeResponseStatistics.vue")
     ),
     text_heatmap_response_statistics: defineAsyncComponent(
-      () =>
-        import(
-          /* webpackChunkName: "TextHeatmapresponseStatistics" */
-          "./TextHeatmapResponseStatistics.vue"
-        )
+      () => import("./TextHeatmapResponseStatistics.vue")
     ),
     no_response_statistics: defineAsyncComponent(
-      () =>
-        import(
-          /* webpackChunkName: "FreeResponseStatistics" */
-          "./FreeResponseStatistics.vue"
-        )
+      () => import("./FreeResponseStatistics.vue")
     ),
     heatmap_response_statistics: defineAsyncComponent(
-      () =>
-        import(
-          /* webpackChunkName: "HeatmapResponseStatistics" */
-          "./HeatmapResponseStatistics.vue"
-        )
+      () => import("./HeatmapResponseStatistics.vue")
     ),
     numeric_response_statistics: defineAsyncComponent(
       () => import("./NumericResponseStatistics.vue")
