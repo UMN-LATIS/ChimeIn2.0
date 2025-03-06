@@ -33,7 +33,6 @@ export interface Response<T extends ResponseInfo = ResponseInfo> {
   session_id: number;
   user_id: number;
   response_info: T;
-  user: User;
 }
 
 export interface ResponseInfo {
