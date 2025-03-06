@@ -6,13 +6,13 @@
       <template v-if="question.sessions.length > 0">
         <select v-model="selected" class="mb-3 form-control col-6">
           <option
-            v-for="question in question.sessions
+            v-for="q in question.sessions
               .map((el) => ({ value: el.id, text: el.created_at }))
               .concat({ value: 0, text: 'All' })"
-            :key="question.id"
-            :value="question.value"
+            :key="q.id"
+            :value="q.value"
           >
-            {{ question.text }}
+            {{ q.text }}
           </option>
         </select>
 
