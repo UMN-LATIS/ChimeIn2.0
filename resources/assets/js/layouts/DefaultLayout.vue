@@ -30,11 +30,11 @@
 import { AppHeader, AppFooter, NavbarItem } from "@umn-latis/cla-vue-template";
 import ImpersonationBanner from "@/components/ImpersonationBanner.vue";
 import { computed } from "vue";
-import type { CurrentUser } from "../types";
+import type { CurrentUser, User } from "../types";
 
 const props = withDefaults(
   defineProps<{
-    user?: CurrentUser | null;
+    user?: CurrentUser | User | null;
   }>(),
   {
     user: null,
