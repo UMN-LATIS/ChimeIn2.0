@@ -30,12 +30,13 @@
       >
     </td>
     <td class="text-right text-monospace text-muted text-sm align-middle">
-      <div class="tw-flex tw-flex-col  tw-justify-center tw-gap-1">
+      <div v-if="numberOfActiveQuestions > 0" class="tw-flex tw-flex-col  tw-justify-center tw-gap-1">
         <div>
           <div class="tw-font-bold">{{ percentScore }}</div>
           <div class="tw-text-xs tw-text-neutral-400">{{ totalQuestionScores }}/{{ numberOfActiveQuestions }}</div>
         </div>
       </div>
+      <span v-else>-</span>
     </td>
   </tr>
 </template>
