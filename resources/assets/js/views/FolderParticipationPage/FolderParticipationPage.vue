@@ -22,7 +22,11 @@
           </BreadcrumbNav>
           <div v-if="folder">
             <h2>Participation Report</h2>
-            <p>Participation for all questions within this folder.</p>
+            <p>
+              Partipation scores are based on the total number of
+              <b>active questions</b>, which is the number of questions with at
+              least one response from participants.
+            </p>
           </div>
         </header>
       </div>
