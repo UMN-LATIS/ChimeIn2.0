@@ -35,6 +35,11 @@ export interface Response<T extends ResponseInfo = ResponseInfo> {
   response_info: T;
 }
 
+export interface ResponseWithUser<T extends ResponseInfo = ResponseInfo>
+  extends Response<T> {
+  user: User;
+}
+
 export interface ResponseInfo {
   question_type: QuestionType;
   [key: string]: unknown;
@@ -334,8 +339,7 @@ export type AsyncActionState = "idle" | "inProgress" | "success" | "error";
 
 export interface SubmitResponseEvent {
   chime: Chime;
-  response: Response;
+  response: ResponseWithUser;
   session: Session;
-  user: User;
   isEdit: boolean;
 }

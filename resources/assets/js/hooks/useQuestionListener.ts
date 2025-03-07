@@ -121,7 +121,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
           }
 
           // add the user to the user lookup
-          userLookup.value.set(event.user.id, event.user);
+          userLookup.value.set(event.response.user.id, event.response.user);
 
           const responseIndexToUpdate = session.responses.findIndex(
             (r) => r.id === event.response.id

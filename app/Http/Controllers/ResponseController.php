@@ -80,7 +80,7 @@ class ResponseController extends Controller
 
         $response->save();
         
-        event(new SubmitResponse(chime: $chime, session: $session, response: $response, user: $user, isEdit: true));
+        event(new SubmitResponse($chime, $session, $response, $isEdit=true));
 
         return response()->json($response->load("session.question", "session.question.folder"));
     }

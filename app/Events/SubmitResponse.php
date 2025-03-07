@@ -2,41 +2,32 @@
 
 namespace App\Events;
 
-use App\Chime;
-use App\Response;
-use App\Session;
-use App\User;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Chime;
+use App\Session;
+use App\Response;
 
 class SubmitResponse implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $chime;
-
-    public $session;
-
-    public $response;
-
-    public $user;
-
-    public $isEdit;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Chime $chime, Session $session, Response $response, User $user, $isEdit = false)
+    public function __construct(Chime $chime, Session $session, Response $response, $isEdit=false)
     {
         $this->chime = $chime;
         $this->session = $session;
+        $response->load("user");
         $this->response = $response;
-        $this->user = $user;
         $this->isEdit = $isEdit;
     }
 
@@ -47,6 +38,11 @@ class SubmitResponse implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('session-response.'.$this->chime->id);
+        return new PrivateChannel('session-response.' .$this->chime->id);
     }
+
+    public $chime;
+    public $session;
+    public $response;
+    public $isEdit;
 }
