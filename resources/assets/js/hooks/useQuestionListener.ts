@@ -1,13 +1,22 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
-import { getFolderWithQuestions, getChime } from "../common/api";
+import { getFolderWithQuestions, getChime, getChimeUsers } from "../common/api";
 import echoClient from "../common/echoClient.js";
-import { Chime, FolderWithQuestions, Maybe, Question } from "../types";
+import {
+  Chime,
+  FolderWithQuestions,
+  Maybe,
+  Question,
+  User,
+  Session,
+  SubmitResponseEvent,
+} from "../types";
 
 export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
   const folder = ref<Maybe<FolderWithQuestions>>(null);
   const chime = ref<Maybe<Chime>>(null);
   const fetchError = ref<Maybe<Error>>(null);
+  const userLookup = ref<Map<User["id"], User>>(new Map());
 
   const questions = computed<Question[]>({
     get() {
@@ -26,10 +35,17 @@ export default function useQuestionListener({ chimeId, folderId }) {
   async function refresh() {
     fetchError.value = null;
     try {
-      folder.value = await getFolderWithQuestions({
-        chimeId,
-        folderId,
-      });
+      let users;
+      [folder.value, users] = await Promise.all([
+        getFolderWithQuestions({
+          chimeId,
+          folderId,
+        }),
+        getChimeUsers(chimeId),
+      ]);
+
+      // reinitialize the user lookup map
+      userLookup.value = new Map(users.map((u) => [u.id, u]));
     } catch (error) {
       fetchError.value = error as Error;
     }
@@ -37,10 +53,15 @@ export default function useQuestionListener({ chimeId, folderId }) {
 
   onMounted(async () => {
     try {
-      [folder.value, chime.value] = await Promise.all([
+      let users;
+      [folder.value, chime.value, users] = await Promise.all([
         getFolderWithQuestions({ chimeId, folderId }),
         getChime(chimeId),
+        getChimeUsers(chimeId),
       ]);
+
+      // reinitialize the user lookup map
+      userLookup.value = new Map(users.map((u) => [u.id, u]));
     } catch (error) {
       fetchError.value = error as Error;
     }
@@ -48,7 +69,9 @@ export default function useQuestionListener({ chimeId, folderId }) {
     echoClient
       .join(`session-status.${chimeId}`)
       .here((users) => (usersCount.value = users.length))
-      .joining(() => (usersCount.value += 1))
+      .joining(() => {
+        usersCount.value += 1;
+      })
       .leaving(() => (usersCount.value -= 1))
       .listen("StartSession", function onEchoStartSession(event) {
         console.log("Start Session", { event });
@@ -79,42 +102,48 @@ export default function useQuestionListener({ chimeId, folderId }) {
 
     echoClient
       .private(`session-response.${chimeId}`)
-      .listen("SubmitResponse", function onEchoSubmitResponse(event) {
-        console.log("Submit Response", { event });
-        const question = questions.value.find(
-          (q) => q.id === event.session.question.id
-        );
-
-        if (!question) {
-          console.error(
-            `Could not find question with id ${event.session.question.id}`
+      .listen(
+        "SubmitResponse",
+        function onEchoSubmitResponse(event: SubmitResponseEvent) {
+          console.log("Submit Response", { event });
+          const question = questions.value.find(
+            (q) => q.id === event.session.question.id
           );
-          return;
-        }
 
-        const session = question.sessions.find(
-          (s) => s.id === event.session.id
-        );
+          if (!question) {
+            console.error(
+              `Could not find question with id ${event.session.question.id}`
+            );
+            return;
+          }
 
-        if (!session) {
-          console.error(
-            `Could not find session ${event.session.id} for question ${event.session.question.id}`
+          const session = question.sessions.find(
+            (s) => s.id === event.session.id
           );
-          return;
-        }
 
-        const responseIndexToUpdate = session.responses.findIndex(
-          (r) => r.id === event.response.id
-        );
+          if (!session) {
+            console.error(
+              `Could not find session ${event.session.id} for question ${event.session.question.id}`
+            );
+            return;
+          }
 
-        // if the response is not found, add it to the session responses
-        if (responseIndexToUpdate === -1) {
-          session.responses.push(event.response);
-          return;
+          // add the user to the user lookup
+          userLookup.value.set(event.user.id, event.user);
+
+          const responseIndexToUpdate = session.responses.findIndex(
+            (r) => r.id === event.response.id
+          );
+
+          // if the response is not found, add it to the session responses
+          if (responseIndexToUpdate === -1) {
+            session.responses.push(event.response);
+            return;
+          }
+          // otherwise, update the response
+          session.responses[responseIndexToUpdate] = event.response;
         }
-        // otherwise, update the response
-        session.responses[responseIndexToUpdate] = event.response;
-      });
+      );
   });
 
   onUnmounted(() => {
@@ -129,5 +158,6 @@ export default function useQuestionListener({ chimeId, folderId }) {
     usersCount,
     refresh,
     fetchError,
+    userLookup,
   };
 }
