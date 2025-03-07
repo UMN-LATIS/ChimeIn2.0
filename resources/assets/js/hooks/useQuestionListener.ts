@@ -1,28 +1,20 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
 import { getFolderWithQuestions, getChime, getChimeUsers } from "../common/api";
 import echoClient from "../common/echoClient.js";
-import {
-  Chime,
-  FolderWithQuestions,
-  Maybe,
-  Question,
-  User,
-  Session,
-  SubmitResponseEvent,
-} from "../types";
+import * as T from "@/types";
 
 export default function useQuestionListener({ chimeId, folderId }) {
   const usersCount = ref(0);
-  const folder = ref<Maybe<FolderWithQuestions>>(null);
-  const chime = ref<Maybe<Chime>>(null);
-  const fetchError = ref<Maybe<Error>>(null);
-  const userLookup = ref<Map<User["id"], User>>(new Map());
+  const folder = ref<T.Maybe<T.FolderWithQuestions>>(null);
+  const chime = ref<T.Maybe<T.Chime>>(null);
+  const fetchError = ref<T.Maybe<Error>>(null);
+  const userLookup = ref<Map<T.User["id"], T.User>>(new Map());
 
-  const questions = computed<Question[]>({
+  const questions = computed<T.Question[]>({
     get() {
       return folder.value?.questions ?? [];
     },
-    set(questions: Question[]) {
+    set(questions: T.Question[]) {
       if (!folder.value) {
         throw new Error(
           "cannot set questions on folder when folder ref is null"
@@ -104,7 +96,7 @@ export default function useQuestionListener({ chimeId, folderId }) {
       .private(`session-response.${chimeId}`)
       .listen(
         "SubmitResponse",
-        function onEchoSubmitResponse(event: SubmitResponseEvent) {
+        function onEchoSubmitResponse(event: T.SubmitResponseEvent) {
           console.log("Submit Response", { event });
           const question = questions.value.find(
             (q) => q.id === event.session.question.id
