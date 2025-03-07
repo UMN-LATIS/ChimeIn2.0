@@ -308,3 +308,15 @@ export function getChimeFolderParticipation({
     )
     .then((res) => res.data);
 }
+
+export async function getChimeChannel(chimeId: number, channelName: string): Promise<{
+  chime_id: number;
+  channel_name: string;
+  user_ids: number[];
+  user_count: number;
+}> {
+  const res = await axios
+    .get(`/api/chime/${chimeId}/channels/${channelName}`);
+
+  return res.data;
+}
