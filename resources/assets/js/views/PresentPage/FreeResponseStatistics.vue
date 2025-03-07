@@ -53,7 +53,7 @@
             <TransitionGroup name="fade">
               <tr v-for="response in responsesByMostRecent" :key="response.id">
                 <th scope="row">
-                  {{ question.anonymous ? "Anonymous" : response.user.name }}
+                  {{ question.anonymous ? "Anonymous" : userLookup.get(response.user_id)?.name ?? "-" }}
                 </th>
                 <td>
                   <p>{{ response.response_info.text }}</p>
@@ -76,6 +76,7 @@ import toWordFrequencyLookup from "./toWordFrequencyLookup";
 import type {
   FreeResponse,
   FreeResponseQuestion,
+  User,
   WordFrequencyLookup,
 } from "../../types";
 import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
@@ -83,6 +84,7 @@ import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
 interface Props {
   responses: FreeResponse[];
   question: FreeResponseQuestion;
+  userLookup: Map<User["id"], User>;
 }
 
 const props = defineProps<Props>();

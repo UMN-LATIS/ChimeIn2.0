@@ -4,16 +4,15 @@
       <h1 v-html="question.text"></h1>
 
       <template v-if="question.sessions.length > 0">
-        <select v-model="selected" class="mb-3 form-control col-6">
+        <select v-model="selectedSessionId" class="mb-3 form-control col-6">
           <option
-            v-for="q in question.sessions
-              .map((el) => ({ value: el.id, text: el.created_at }))
-              .concat({ value: 0, text: 'All' })"
-            :key="q.id"
-            :value="q.value"
+            v-for="questionSession in question.sessions"
+            :key="questionSession.id"
+            :value="questionSession.id"
           >
-            {{ q.text }}
+            {{ questionSession.created_at }}
           </option>
+          <option :value="0">All</option>
         </select>
 
         <component
@@ -22,6 +21,7 @@
           :responses="selected_session.responses"
           :question="question"
           :chimeId="chimeId"
+          :userLookup="userLookup"
           @removeResponse="removeResponse($event)"
         >
         </component>
@@ -33,8 +33,10 @@
   </div>
 </template>
 
-<script>
-import { defineAsyncComponent } from "vue";
+<script lang="ts">
+import { defineAsyncComponent, PropType } from "vue";
+import * as T from "@/types";
+import axios from "@/common/axiosClient";
 
 export default {
   components: {
@@ -63,37 +65,54 @@ export default {
       () => import("./NumericResponseStatistics.vue")
     ),
   },
-  props: ["sessions", "session", "question", "chimeId"],
+  props: {
+    sessions: {
+      type: Array as PropType<T.Session[]>,
+      required: true,
+    },
+    session: {
+      type: Object as PropType<T.Session | null>,
+      default: null,
+    },
+    question: {
+      type: Object as PropType<T.Question>,
+      required: true,
+    },
+    chimeId: {
+      type: Number,
+      required: true,
+    },
+    userLookup: {
+      type: Object as PropType<Map<number, T.User>>,
+      required: true,
+    },
+  },
   emits: ["reload"],
   data: function () {
     return {
-      selected: null,
+      selectedSessionId: 0,
     };
   },
   computed: {
-    selected_session: function () {
-      if (this.selected === 0) {
-        var newSession = {};
-        var responses = this.question.sessions.map((s) => s.responses);
-        newSession.responses = Array.prototype.concat(...responses);
-        return newSession;
-      } else {
-        return this.question.sessions.find((s) => s.id == this.selected);
-      }
+    selected_session: function (): T.Session {
+      return (
+        this.question.sessions.find((s) => s.id == this.selectedSessionId) ?? {
+          id: 0,
+          responses: this.question.sessions.flatMap((s) => s.responses),
+          question: this.question,
+        }
+      );
     },
   },
   watch: {
-    question: function () {
-      this.updateSelected();
+    question: {
+      handler() {
+        this.selectedSessionId = 0;
+      },
+      immediate: true,
     },
-  },
-  mounted() {
-    this.updateSelected();
   },
   methods: {
-    updateSelected() {
-      this.selected = 0;
-    },
     removeResponse(response) {
       const url =
         "/api/chime/" +
