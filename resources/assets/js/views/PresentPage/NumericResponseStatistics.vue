@@ -17,7 +17,6 @@
       :data="rangeChartData"
       :xAxisLabel="questionOptions.x_axis_label"
     />
-    {{ userLookup }}
   </div>
 </template>
 <script setup lang="ts">
