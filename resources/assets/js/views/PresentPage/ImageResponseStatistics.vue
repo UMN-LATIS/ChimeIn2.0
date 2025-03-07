@@ -80,17 +80,21 @@
   </div>
 </template>
 
-<script>
-// import Lightbox from "vue-simple-lightbox";
+<script lang="ts">
 import VueEasyLightbox from "vue-easy-lightbox";
+import * as T from "@/types";
+import { PropType } from "vue";
 
 export default {
   components: {
     VueEasyLightbox,
   },
   props: {
-    responses: { type: Array, required: true },
-    question: { type: Object, required: true },
+    responses: { type: Array as PropType<T.ImageResponse[]>, required: true },
+    question: {
+      type: Object as PropType<T.ImageResponseQuestion>,
+      required: true,
+    },
     chimeId: { type: Number, required: true },
   },
   emits: ["removeResponse"],
