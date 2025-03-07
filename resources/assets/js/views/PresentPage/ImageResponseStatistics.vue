@@ -63,7 +63,11 @@
                 {{ response.response_info.image_alt || "" }}
               </td>
               <td>
-                {{ question.anonymous ? "Anonymous" : response.user.name }}
+                {{
+                  question.anonymous
+                    ? "Anonymous"
+                    : userLookup.get(response.user_id)?.name
+                }}
               </td>
               <td>
                 <button class="btn btn-danger" @click="removeImage(response)">
@@ -96,6 +100,10 @@ export default {
       required: true,
     },
     chimeId: { type: Number, required: true },
+    userLookup: {
+      type: Object as PropType<Map<number, T.User>>,
+      required: true,
+    },
   },
   emits: ["removeResponse"],
   data: function () {
