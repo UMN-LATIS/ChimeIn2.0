@@ -30,7 +30,15 @@
       >
     </td>
     <td class="text-right text-monospace text-muted text-sm align-middle">
-      {{ total }}
+      <div class="tw-flex tw-flex-col tw-items-end tw-justify-center tw-gap-1">
+        <div>
+          <span class="tw-text-lg tw-font-bold">{{ totalQuestionScores }}</span
+          ><span class="tw-text-xs tw-text-neutral-400"
+            >/{{ numberOfActiveQuestions }}</span
+          >
+        </div>
+        <div class="tw-text-xs tw-text-neutral-400">{{ percentScore }}</div>
+      </div>
     </td>
   </tr>
 </template>
@@ -67,22 +75,27 @@ function userHasResponseForQuestion(
   );
 }
 
-const total = computed((): string => {
-  if (props.numberOfActiveQuestions === 0) {
-    return "-";
-  }
-
-  const questionScores: number[] = props.questions.map((question) =>
+const questionScores = computed((): number[] =>
+  props.questions.map((question) =>
     getQuestionScoreForUser({
       userId: props.user.id,
       questionId: question.id,
       responses: props.responses,
       valueForIncorrect: props.valueForIncorrect,
     })
-  );
+  )
+);
 
-  const percent = (sum(questionScores) / props.numberOfActiveQuestions) * 100;
-  return `${percent.toFixed(2)}%`;
+const totalQuestionScores = computed((): number => sum(questionScores.value));
+
+const percentScore = computed((): string => {
+  if (props.numberOfActiveQuestions === 0) {
+    return "-";
+  }
+
+  const percent =
+    (totalQuestionScores.value / props.numberOfActiveQuestions) * 100;
+  return `${Math.round(percent)}%`;
 });
 </script>
 <style scoped>
