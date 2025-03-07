@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChimeChannelController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\HomeController;
@@ -98,6 +99,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
 
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
+    Route::get('/api/chime/{chime}/channels/{channelName}', [ChimeChannelController::class, 'show']);
     
     Route::get('/impersonate/stop', [ImpersonateController::class, 'stop'])->name('impersonate.stop');
 
