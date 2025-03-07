@@ -17,28 +17,24 @@
       :data="rangeChartData"
       :xAxisLabel="questionOptions.x_axis_label"
     />
+    {{ userLookup }}
   </div>
 </template>
 <script setup lang="ts">
 import BarChart from "@/components/NumericResponse/BarChart.vue";
 import ScatterPlot from "@/components/NumericResponse/ScatterPlot.vue";
 import RangeChart from "@/components/NumericResponse/RangeChart.vue";
-import type {
-  NumericResponseResponseInfo,
-  NumericResponseQuestionInfo,
-  Question,
-  Response,
-  NormalizedNumericQuestionOptions,
-} from "@/types";
+import * as T from "@/types";
 import { computed } from "vue";
 import { normalizeNumericQuestionOptions } from "@/helpers/getNormedNumericQuestionOptions";
 
 const props = defineProps<{
-  responses: Response<NumericResponseResponseInfo>[];
-  question: Question<NumericResponseQuestionInfo>;
+  responses: T.Response<T.NumericResponseResponseInfo>[];
+  question: T.Question<T.NumericResponseQuestionInfo>;
+  userLookup: Map<number, T.User>;
 }>();
 
-const questionOptions = computed((): NormalizedNumericQuestionOptions => {
+const questionOptions = computed((): T.NormalizedNumericQuestionOptions => {
   return normalizeNumericQuestionOptions(
     props.question.question_info.question_responses
   );
@@ -49,10 +45,11 @@ const chartType = computed(() => questionOptions.value.chart_type);
 const barChartData = computed((): [label: string, value: number][] => {
   return props.responses.map((response, index) => {
     // is this question anonymous? If so, then just label
-    // with the response id, otherwise use username
+    // with the response id, otherwise use name
+    const user = props.userLookup.get(response.user_id);
     const label = props.question.anonymous
       ? `Response ${index + 1}`
-      : response.user.name;
+      : user?.name ?? "Unknown";
 
     return [label, response.response_info.x ?? 0];
   });
