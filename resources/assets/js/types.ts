@@ -331,3 +331,11 @@ export type PartialNested<T> = {
 };
 
 export type AsyncActionState = "idle" | "inProgress" | "success" | "error";
+
+export interface SubmitResponseEvent {
+  chime: Chime;
+  response: Response;
+  session: Session;
+  user: User;
+  isEdit: boolean;
+}
