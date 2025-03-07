@@ -30,14 +30,11 @@
       >
     </td>
     <td class="text-right text-monospace text-muted text-sm align-middle">
-      <div class="tw-flex tw-flex-col tw-items-end tw-justify-center tw-gap-1">
+      <div class="tw-flex tw-flex-col  tw-justify-center tw-gap-1">
         <div>
-          <span class="tw-text-lg tw-font-bold">{{ totalQuestionScores }}</span
-          ><span class="tw-text-xs tw-text-neutral-400"
-            >/{{ numberOfActiveQuestions }}</span
-          >
+          <div class="tw-font-bold">{{ percentScore }}</div>
+          <div class="tw-text-xs tw-text-neutral-400">{{ totalQuestionScores }}/{{ numberOfActiveQuestions }}</div>
         </div>
-        <div class="tw-text-xs tw-text-neutral-400">{{ percentScore }}</div>
       </div>
     </td>
   </tr>
