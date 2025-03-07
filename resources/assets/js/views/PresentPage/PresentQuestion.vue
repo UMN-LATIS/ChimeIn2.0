@@ -12,7 +12,10 @@
           <PresentResults
             v-if="isShowingResults"
             :question="question"
+            :sessions="question.sessions"
+            :currentSession="current_session"
             :chimeId="chime.id"
+            :userLookup="userLookup"
             @reload="$emit('reload')"
           />
           <PresentPrompt
@@ -123,6 +126,10 @@ export default {
     usersCount: { type: Number, required: true },
     isShowingResults: { type: Boolean, required: false, default: false },
     isStudentView: { type: Boolean, required: true },
+    userLookup: {
+      type: Object as PropType<Map<number, T.User>>,
+      required: true,
+    },
   },
   emits: ["nextQuestion", "previousQuestion", "toggle", "reload"],
   computed: {

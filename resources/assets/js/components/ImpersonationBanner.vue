@@ -21,9 +21,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { CurrentUser } from "@/types";
+import { CurrentUser, User } from "@/types";
 defineProps<{
-  user?: CurrentUser | null;
+  user?: CurrentUser | User | null;
 }>();
 </script>
 <style scoped>

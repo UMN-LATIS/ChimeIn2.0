@@ -33,6 +33,10 @@ export interface Response<T extends ResponseInfo = ResponseInfo> {
   session_id: number;
   user_id: number;
   response_info: T;
+}
+
+export interface ResponseWithUser<T extends ResponseInfo = ResponseInfo>
+  extends Response<T> {
   user: User;
 }
 
@@ -332,3 +336,10 @@ export type PartialNested<T> = {
 };
 
 export type AsyncActionState = "idle" | "inProgress" | "success" | "error";
+
+export interface SubmitResponseEvent {
+  chime: Chime;
+  response: ResponseWithUser;
+  session: Session;
+  isEdit: boolean;
+}

@@ -19,6 +19,7 @@
             :chime="chime"
             :folder="folder"
             :questionIndex="questionIndex"
+            :userLookup="userLookup"
             :isShowingResults="isShowingResults"
             :isStudentView="isStudentView"
             @nextQuestion="nextQuestion"
@@ -66,6 +67,7 @@ const {
   questions,
   usersCount,
   refresh: refreshQuestions,
+  userLookup,
 } = useQuestionListener({
   chimeId: props.chimeId,
   folderId: props.folderId,

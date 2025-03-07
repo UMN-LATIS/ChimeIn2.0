@@ -24,11 +24,8 @@ class FolderController extends Controller
                 if($chime->students_can_view && $chime->pivot->permission_number < 300) {
                     $folder->student_view = true;
                 }
-                // $folder->load("questions");
                 $folder->load("questions.folder");
-                // $folder->load("questions.sessions");
                 $folder->load("questions.sessions.responses");
-                $folder->load("questions.sessions.responses.user");
             }
             return response()->json($folder);
         }

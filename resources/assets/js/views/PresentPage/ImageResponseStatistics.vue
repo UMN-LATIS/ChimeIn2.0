@@ -63,7 +63,11 @@
                 {{ response.response_info.image_alt || "" }}
               </td>
               <td>
-                {{ question.anonymous ? "Anonymous" : response.user.name }}
+                {{
+                  question.anonymous
+                    ? "Anonymous"
+                    : userLookup.get(response.user_id)?.name
+                }}
               </td>
               <td>
                 <button class="btn btn-danger" @click="removeImage(response)">
@@ -80,18 +84,26 @@
   </div>
 </template>
 
-<script>
-// import Lightbox from "vue-simple-lightbox";
+<script lang="ts">
 import VueEasyLightbox from "vue-easy-lightbox";
+import * as T from "@/types";
+import { PropType } from "vue";
 
 export default {
   components: {
     VueEasyLightbox,
   },
   props: {
-    responses: { type: Array, required: true },
-    question: { type: Object, required: true },
+    responses: { type: Array as PropType<T.ImageResponse[]>, required: true },
+    question: {
+      type: Object as PropType<T.ImageResponseQuestion>,
+      required: true,
+    },
     chimeId: { type: Number, required: true },
+    userLookup: {
+      type: Object as PropType<Map<number, T.User>>,
+      required: true,
+    },
   },
   emits: ["removeResponse"],
   data: function () {
