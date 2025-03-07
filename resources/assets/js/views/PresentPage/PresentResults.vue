@@ -70,7 +70,7 @@ export default {
       type: Array as PropType<T.Session[]>,
       required: true,
     },
-    session: {
+    currentSession: {
       type: Object as PropType<T.Session | null>,
       default: null,
     },

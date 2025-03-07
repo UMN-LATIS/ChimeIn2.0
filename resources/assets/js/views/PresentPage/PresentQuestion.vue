@@ -13,7 +13,7 @@
             v-if="isShowingResults"
             :question="question"
             :sessions="question.sessions"
-            :session="current_session"
+            :currentSession="current_session"
             :chimeId="chime.id"
             :userLookup="userLookup"
             @reload="$emit('reload')"
