@@ -21,6 +21,16 @@ class ChimeChannelController extends Controller
 
         $redisEntry = "presence-{$channelName}.{$chime->id}:members";
         $membersJson = Redis::get($redisEntry);
+
+        if (!$membersJson) {
+            return response()->json([
+                'chime_id' => $chime->id,
+                'channel_name' => $channelName,
+                'user_ids' => [],
+                'user_count' => 0,
+            ]);
+        }
+
         $members = json_decode($membersJson, true);
 
         $uniqUserIds = collect($members)
@@ -31,6 +41,8 @@ class ChimeChannelController extends Controller
             ->toArray();
 
         return response()->json([
+            'chime_id' => $chime->id,
+            'channel_name' => $channelName,
             'user_ids' => $uniqUserIds,
             'user_count' => count($uniqUserIds),
         ]);
