@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
-import { getFolderWithQuestions, getChime, getChimeUsers } from "../common/api";
+import { getFolderWithQuestions, getChime, getChimeUsers, getChimeChannel } from "../common/api";
 import echoClient from "../common/echoClient.js";
 import * as T from "@/types";
 
@@ -41,6 +41,19 @@ export default function useQuestionListener({ chimeId, folderId }) {
     } catch (error) {
       fetchError.value = error as Error;
     }
+  }
+
+  let resyncUserCountTimeoutId = null as ReturnType<typeof setTimeout> | null;
+  async function resyncSessionUserCount(interval = 10 * 60 * 1000) {
+      resyncUserCountTimeoutId = setTimeout(async () => {
+        const {
+          user_count
+        } = await getChimeChannel(chimeId, "session-status");
+
+        usersCount.value = user_count;
+
+        resyncSessionUserCount(interval);
+      }, interval);
   }
 
   onMounted(async () => {
@@ -136,11 +149,17 @@ export default function useQuestionListener({ chimeId, folderId }) {
           session.responses[responseIndexToUpdate] = event.response;
         }
       );
+
+      // resync user count every 10 minutes
+      resyncSessionUserCount(10 * 60 * 1000);
   });
 
   onUnmounted(() => {
     echoClient.leave(`session-status.${chimeId}`);
     echoClient.leave(`session-response.${chimeId}`);
+    if (resyncUserCountTimeoutId) {
+      clearTimeout(resyncUserCountTimeoutId);
+    }
   });
 
   return {
