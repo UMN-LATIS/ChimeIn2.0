@@ -45,15 +45,20 @@ export default function useQuestionListener({ chimeId, folderId }) {
 
   let resyncUserCountTimeoutId = null as ReturnType<typeof setTimeout> | null;
   async function resyncSessionUserCount(interval = 10 * 60 * 1000) {
-      resyncUserCountTimeoutId = setTimeout(async () => {
-        const {
-          user_count
-        } = await getChimeChannel(chimeId, "session-status");
+    // Clear any existing timeout to prevent multiple timers
+    if (resyncUserCountTimeoutId) {
+      clearTimeout(resyncUserCountTimeoutId);
+    }
 
-        usersCount.value = user_count;
+    resyncUserCountTimeoutId = setTimeout(async () => {
+      const {
+        user_count
+      } = await getChimeChannel(chimeId, "session-status");
 
-        resyncSessionUserCount(interval);
-      }, interval);
+      usersCount.value = user_count;
+
+      resyncSessionUserCount(interval);
+    }, interval);
   }
 
   onMounted(async () => {
