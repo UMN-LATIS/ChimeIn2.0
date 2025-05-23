@@ -1,23 +1,38 @@
 import http from "k6/http";
-import { check, sleep } from "k6";
+import { check, sleep, group } from "k6";
 import ws from "k6/ws";
+import { Trend } from "k6/metrics";
 // @ts-ignore
 import { randomIntBetween } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
+
+export const wsHandshake = new Trend("ws_connecting_time");
 
 const JOIN_URL = `http://localhost/join/52204`;
 const ECHO_SERVER_URL_HTTP = `http://localhost:6001/socket.io/`;
 const ECHO_SERVER_URL_WS = `ws://localhost:6001/socket.io/`;
+const SESSION_MIN_MS = 30_000;
+const SESSION_MAX_MS = 60_000;
 
 export const options = {
-  stages: [{ iterations: 1, target: 1 }],
-  thresholds: {
-    // 95% of requests must complete below time
-    http_req_duration: ["p(95)<300"],
-    // http errors should be less than 1%
-    http_req_failed: ["rate<0.01"],
+  scenarios: {
+    spike: {
+      executor: "ramping-arrival-rate", // spike of new connections
+      startRate: 0, // start at zero new iterations/sec
+      timeUnit: "1s",
+      preAllocatedVUs: 200, // initial pool; tune higher if you need more
+      maxVUs: 2000, // absolute cap on concurrent VUs
+      stages: [
+        { target: 50, duration: "10s" }, // ramp to 50 new users/sec over 10s
+        { target: 200, duration: "20s" }, // ramp to 200 new users/sec over 20s
+        { target: 200, duration: "2m" }, // hold 200 users/sec for 1m
+        { target: 0, duration: "20s" }, // ramp down
+      ],
+    },
   },
-  // Add explicit duration to ensure the test ends
-  // duration: "15s",
+  thresholds: {
+    http_req_failed: ["rate<0.01"],
+    ws_connecting_time: ["p(95)<2000"], // custom metric, see below
+  },
 };
 
 function getJoinPage() {
@@ -112,83 +127,96 @@ function parseSocketIoMessage(data: string) {
 export default function () {
   console.log("=== TEST STARTING ===");
 
-  const totalSessionDuration = randomIntBetween(3000, 6000); // milliseconds
-  const numSleeps = 2;
-  const sleepDuration = totalSessionDuration / numSleeps / 1000; // seconds
-
-  // 1: visit join page to get necessary cookies
-  const { res: joinRes, chimeId, csrfToken } = getJoinPage();
-
-  // 2: get echo session to get sid and csrf token
-  const { sid } = getEchoSession();
-
-  // connect with websockets
-  const wsUrl = `${ECHO_SERVER_URL_WS}?EIO=3&transport=websocket&sid=${sid}`;
-
-  const wsParams = {
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-    cookies: joinRes.cookies,
-  };
-
-  const wsRes = ws.connect(wsUrl, wsParams, (socket) => {
-    console.log("=== CONNECTING TO WEBSOCKET ===");
-    const socketSend = (msg: string) => {
-      socket.send(msg);
-      console.log("[client]", msg);
-    };
-
-    socket.on("open", () => {
-      console.log("=== WEBSOCKET OPEN ===");
-
-      // socket.io has a handshake protocol where it sends `2probe`
-      // and expects `3probe` in return
-      socketSend("2probe");
-    });
-
-    socket.on("message", (data) => {
-      if (data === "3probe") {
-        // after receiving 3probe, we send 5 to complete the handshake
-        socketSend("5");
-
-        console.log("=== WEBSOCKET HANDSHAKE COMPLETE ===");
-        subscribeToChimePresenceChannel(socketSend, chimeId, csrfToken);
-
-        // set up regular pings to the server
-        socket.setInterval(() => socketSend("2"), randomIntBetween(1000, 2000));
-
-        return;
-      }
-
-      // Parse Socket.IO messages
-      if (data.startsWith("42")) {
-        console.log("[server]", parseSocketIoMessage(data));
-        return;
-      }
-
-      // log other messages
-      console.log("[server]", data);
-    });
-
-    socket.on("close", () => {
-      console.log("=== WEBSOCKET CONNECTION CLOSED ===");
-    });
-
-    socket.on("error", function (e) {
-      console.error("=== WEBSOCKET ERROR ===", e.error());
-    });
-
-    const SOCKET_TIMEOUT = totalSessionDuration + 2000;
-    socket.setTimeout(function () {
-      console.log(`=== CLOSING SOCKET ===`);
-      socket.close();
-    }, SOCKET_TIMEOUT);
+  // visit join page, which will create a user, return
+  // session cookie, and csrf token
+  let joinRes, chimeId, csrfToken;
+  group("Join page → tokens", () => {
+    ({ res: joinRes, chimeId, csrfToken } = getJoinPage());
   });
 
-  sleep(sleepDuration);
+  // get echo session to get sid and csrf token
+  let sid;
+  group("Polling handshake", () => {
+    ({ sid } = getEchoSession());
+  });
 
-  check(wsRes, {
-    "status is 101": (r) => r.status === 101,
+  // connect with websockets
+  group("Websocket subscribe", () => {
+    const wsUrl = `${ECHO_SERVER_URL_WS}?EIO=3&transport=websocket&sid=${sid}`;
+
+    const wsParams = {
+      headers: {
+        "X-CSRF-TOKEN": csrfToken,
+      },
+      cookies: joinRes.cookies,
+    };
+
+    const start = new Date().getTime();
+    const wsRes = ws.connect(wsUrl, wsParams, (socket) => {
+      console.log("=== CONNECTING TO WEBSOCKET ===");
+      const socketSend = (msg: string) => {
+        socket.send(msg);
+        console.log("[client]", msg);
+      };
+
+      socket.on("open", () => {
+        // record connection time
+        wsHandshake.add(new Date().getTime() - start);
+        console.log("=== WEBSOCKET OPEN ===");
+
+        // socket.io has a handshake protocol where it sends `2probe`
+        // and expects `3probe` in return
+        socketSend("2probe");
+      });
+
+      socket.on("message", (data) => {
+        if (data === "3probe") {
+          // after receiving 3probe, we send 5 to complete the handshake
+          socketSend("5");
+
+          console.log("=== WEBSOCKET HANDSHAKE COMPLETE ===");
+          subscribeToChimePresenceChannel(socketSend, chimeId, csrfToken);
+
+          // set up regular pings to the server
+          socket.setInterval(
+            () => socketSend("2"),
+            randomIntBetween(500, 1500)
+          );
+
+          return;
+        }
+
+        // Parse Socket.IO messages
+        if (data.startsWith("42")) {
+          console.log("[server]", parseSocketIoMessage(data));
+          return;
+        }
+
+        // log other messages
+        console.log("[server]", data);
+      });
+
+      socket.on("close", () => {
+        console.log("=== WEBSOCKET CONNECTION CLOSED ===");
+      });
+
+      socket.on("error", function (e) {
+        console.error("=== WEBSOCKET ERROR ===", e.error());
+      });
+
+      socket.setTimeout(
+        function () {
+          console.log(`=== CLOSING SOCKET ===`);
+          socket.close();
+        },
+        randomIntBetween(SESSION_MAX_MS, SESSION_MIN_MS)
+      );
+    });
+
+    // sleep(randomIntBetween(5, 10));
+
+    check(wsRes, {
+      "status is 101": (r) => r.status === 101,
+    });
   });
 }
