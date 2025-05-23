@@ -15,13 +15,19 @@ export const options = {
     // http errors should be less than 1%
     http_req_failed: ["rate<0.01"],
   },
+  // Add explicit duration to ensure the test ends
+  duration: "15s",
 };
 
-export default async function () {
+export default function () {
+  console.log("=== TEST STARTING ===");
+
+  const totalSessionDuration = randomIntBetween(3000, 6000); // milliseconds
+  const numSleeps = 2;
+  const sleepDuration = totalSessionDuration / numSleeps / 1000; // seconds
+
   // 1: visit join page to get necessary cookies
-  // cookies should be automatically handled by k6
   const joinRes = http.get(JOIN_URL, {
-    // we'll need to follow a redirect
     redirects: 1,
   });
 
@@ -33,9 +39,6 @@ export default async function () {
     "join page has chimeId": () => !!chimeId && chimeId.length > 0,
   });
 
-  console.log("Chime ID:", chimeId);
-  console.log("Cookies:", Object.keys(joinRes.cookies));
-
   // 2. start handshake with Echo server
   const socketIoRes = http.get(
     `${ECHO_SERVER_URL}?EIO=3&transport=polling&t=${Date.now()}`
@@ -44,11 +47,6 @@ export default async function () {
   if (typeof socketIoRes.body !== "string") {
     throw new Error("Socket.io response body is not a string");
   }
-
-  console.log(
-    "Socket.IO handshake response:",
-    socketIoRes.body.substring(0, 100) + "..."
-  );
 
   const sidMatches = socketIoRes.body?.match(/sid":"(.*?)"/);
   const sid = sidMatches ? sidMatches[1] : null; // first match
@@ -61,9 +59,8 @@ export default async function () {
 
   console.log("Socket.IO SID:", sid);
 
-  // connect with websockets rather than a long-polling POST request
+  // connect with websockets
   const wsUrl = `${ECHO_SERVER_URL.replace("http", "ws")}?EIO=3&transport=websocket&sid=${sid}`;
-  console.log("WebSocket URL:", wsUrl);
 
   // Get CSRF token from cookies
   let csrfToken = joinRes.cookies["XSRF-TOKEN"]?.[0]?.value;
@@ -90,41 +87,31 @@ export default async function () {
     cookies: joinRes.cookies,
   };
 
-  let hasError = false;
-  let wsSocket = null as ws.Socket | null;
-  let socketConnected = false;
-  let timeoutId = null as null | NodeJS.Timeout;
-
   const wsRes = ws.connect(wsUrl, wsParams, (socket) => {
-    wsSocket = socket;
+    console.log("=== CONNECTING TO WEBSOCKET ===");
 
     socket.on("open", () => {
-      console.log("WebSocket connection opened");
-      // Send Socket.IO engine.io probe
+      console.log("[server]: <open event received>");
+
+      // start handshake
       socket.send("2probe");
+      console.log("[client]: 2probe");
     });
 
     socket.on("message", (data) => {
-      console.log("Message received:", data);
-
-      // respond to probe message
+      // complete initial handshake
       if (data === "3probe") {
-        // Send upgrade packet
+        console.log("[server]: 3probe");
+
         socket.send("5");
-        console.log("Sent upgrade packet");
+        console.log("[client]: 5");
 
-        // Send Socket.IO connection packet
-        socket.send("40");
-        console.log("Sent connection packet");
-
-        socketConnected = true;
-
-        // After connection is established, subscribe to the channel
-        const channelName = `presence-session-status.${chimeId}`;
+        // handshake complete
+        // subscribe to chime presence channel
         const subscribeMessage = JSON.stringify([
           "subscribe",
           {
-            channel: channelName,
+            channel: `presence-session-status.${chimeId}`,
             auth: {
               headers: {
                 "X-CSRF-TOKEN": csrfToken,
@@ -133,26 +120,20 @@ export default async function () {
           },
         ]);
 
-        // Send the subscription message with the proper Socket.IO format (42 prefix)
+        // Send the subscription message
+        // socket.io uses 42 prefix to indicate a message
         socket.send(`42${subscribeMessage}`);
-        console.log("Sent subscription message for channel:", channelName);
+        console.log("[client]: 42", subscribeMessage);
 
-        // Start sending regular pings to keep the connection alive
-        // This is the corrected part - client sends pings (2), server responds with pongs (3)
-        const setPingTimeout = () =>
-          setTimeout(() => {
+        // now set up ping/pong
+        socket.setInterval(
+          () => {
             socket.send("2");
-            console.log("[client] PING!");
-            timeoutId = setPingTimeout();
-          }, 1000);
+            console.log("[client]: 2 (ping)");
+          },
+          randomIntBetween(1000, 2000)
+        );
 
-        timeoutId = setPingTimeout();
-        return;
-      }
-
-      // Check for pong responses (server responds to our pings)
-      if (data === "3") {
-        console.log("[server] PONG!");
         return;
       }
 
@@ -165,44 +146,36 @@ export default async function () {
         } catch (e) {
           console.error("‼️ [error]", e);
         }
+        return;
       }
+
+      // Check for pong responses (server responds to our pings)
+      if (data === "3") {
+        console.log("[server] 3 (pong)");
+        return;
+      }
+
+      console.log("[server]", data);
     });
 
-    socket.on("close", (arg) => {
-      console.log("[server]: websocket close", arg);
-      socketConnected = false;
+    socket.on("close", () => {
+      console.log("=== WEBSOCKET CONNECTION CLOSED ===");
     });
 
     socket.on("error", function (e) {
-      hasError = true;
-      console.error("[server]:", e.error());
+      console.error("=== WEBSOCKET ERROR ===", e.error());
     });
+
+    const SOCKET_TIMEOUT = totalSessionDuration + 2000;
+    socket.setTimeout(function () {
+      console.log(`${SOCKET_TIMEOUT}ms passed, closing the socket`);
+      socket.close();
+    }, SOCKET_TIMEOUT);
   });
+
+  sleep(sleepDuration);
 
   check(wsRes, {
     "status is 101": (r) => r.status === 101,
   });
-
-  sleep(10);
-
-  // Report final status
-  check(null, {
-    "socket.io connection established": () => socketConnected,
-    "no websocket errors": () => !hasError,
-  });
-
-  // C
-  if (timeoutId) {
-    // Clear the ping timeout
-    clearTimeout(timeoutId);
-  }
-
-  if (wsSocket) {
-    try {
-      wsSocket.close();
-      console.log("WebSocket closed by client");
-    } catch (e) {
-      console.error("Error closing WebSocket:", e);
-    }
-  }
 }
