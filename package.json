@@ -20,6 +20,7 @@
     "@rushstack/eslint-patch": "^1.10.3",
     "@simonsmith/cypress-image-snapshot": "^8.1.2",
     "@types/jest": "^29.5.12",
+    "@types/k6": "^1.0.2",
     "@types/quill": "^2.0.14",
     "@types/ramda": "^0.30.0",
     "@types/stopword": "^2.0.3",
