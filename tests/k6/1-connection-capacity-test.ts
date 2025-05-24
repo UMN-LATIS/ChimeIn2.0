@@ -10,8 +10,8 @@ export const wsHandshake = new Trend("ws_connecting_time");
 const JOIN_URL = `http://localhost/join/52204`;
 const ECHO_SERVER_URL_HTTP = `http://localhost:6001/socket.io/`;
 const ECHO_SERVER_URL_WS = `ws://localhost:6001/socket.io/`;
-const SESSION_MIN_MS = 30_000;
-const SESSION_MAX_MS = 60_000;
+const SESSION_MIN_MS = 3_000;
+const SESSION_MAX_MS = 6_000;
 
 export const options = {
   scenarios: {
@@ -19,12 +19,12 @@ export const options = {
       executor: "ramping-arrival-rate", // spike of new connections
       startRate: 0, // start at zero new iterations/sec
       timeUnit: "1s",
-      preAllocatedVUs: 200, // initial pool; tune higher if you need more
+      preAllocatedVUs: 400, // initial pool; tune higher if you need more
       maxVUs: 2000, // absolute cap on concurrent VUs
       stages: [
-        { target: 50, duration: "10s" }, // ramp to 50 new users/sec over 10s
-        { target: 200, duration: "20s" }, // ramp to 200 new users/sec over 20s
-        { target: 200, duration: "2m" }, // hold 200 users/sec for 1m
+        { target: 50, duration: "10s" },
+        { target: 200, duration: "20s" },
+        { target: 400, duration: "40s" },
         { target: 0, duration: "20s" }, // ramp down
       ],
     },
@@ -59,7 +59,7 @@ function getJoinPage() {
   return { res, chimeId, csrfToken };
 }
 
-function getEchoSession() {
+function getEchoSessionId() {
   const res = http.get(
     `${ECHO_SERVER_URL_HTTP}?EIO=3&transport=polling&t=${crypto.randomUUID()}`,
     {
@@ -68,21 +68,28 @@ function getEchoSession() {
   );
 
   if (typeof res.body !== "string") {
+    console.error(
+      "Response body is not a string:",
+      JSON.stringify(res, null, 2)
+    );
     throw new Error("Socket.io response body is not a string");
   }
 
   const sidMatches = res.body?.match(/sid":"(.*?)"/);
   const sid = sidMatches ? sidMatches[1] : null; // first match
-  const csrfToken = res.cookies["XSRF-TOKEN"]?.[0]?.value;
+
+  if (!sid) {
+    console.error("SID not found in the response body:", res.body);
+    throw new Error("Socket.io SID not found in the response body");
+  }
 
   check(res, {
     "socket.io page status is 200": (r) => r.status === 200,
     "socket.io page has cookies": (r) => Object.entries(r.cookies).length > 0,
     "socket.io page has sid": () => !!sid && sid.length > 0,
-    "socket.io page has csrfToken": () => !!csrfToken && csrfToken.length > 0,
   });
 
-  return { sid, csrfToken };
+  return sid;
 }
 
 function subscribeToChimePresenceChannel(
@@ -125,7 +132,7 @@ function parseSocketIoMessage(data: string) {
 }
 
 export default function () {
-  console.log("=== TEST STARTING ===");
+  // console.log("=== TEST STARTING ===");
 
   // visit join page, which will create a user, return
   // session cookie, and csrf token
@@ -135,9 +142,9 @@ export default function () {
   });
 
   // get echo session to get sid and csrf token
-  let sid;
+  let sid: string;
   group("Polling handshake", () => {
-    ({ sid } = getEchoSession());
+    sid = getEchoSessionId();
   });
 
   // connect with websockets
@@ -156,13 +163,13 @@ export default function () {
       console.log("=== CONNECTING TO WEBSOCKET ===");
       const socketSend = (msg: string) => {
         socket.send(msg);
-        console.log("[client]", msg);
+        // console.log("[client]", msg);
       };
 
       socket.on("open", () => {
         // record connection time
         wsHandshake.add(new Date().getTime() - start);
-        console.log("=== WEBSOCKET OPEN ===");
+        // console.log("=== WEBSOCKET OPEN ===");
 
         // socket.io has a handshake protocol where it sends `2probe`
         // and expects `3probe` in return
@@ -174,7 +181,7 @@ export default function () {
           // after receiving 3probe, we send 5 to complete the handshake
           socketSend("5");
 
-          console.log("=== WEBSOCKET HANDSHAKE COMPLETE ===");
+          // console.log("=== WEBSOCKET HANDSHAKE COMPLETE ===");
           subscribeToChimePresenceChannel(socketSend, chimeId, csrfToken);
 
           // set up regular pings to the server
@@ -188,12 +195,12 @@ export default function () {
 
         // Parse Socket.IO messages
         if (data.startsWith("42")) {
-          console.log("[server]", parseSocketIoMessage(data));
+          // console.log("[server]", parseSocketIoMessage(data));
           return;
         }
 
         // log other messages
-        console.log("[server]", data);
+        // console.log("[server]", data);
       });
 
       socket.on("close", () => {
@@ -206,14 +213,14 @@ export default function () {
 
       socket.setTimeout(
         function () {
-          console.log(`=== CLOSING SOCKET ===`);
+          // console.log(`=== CLOSING SOCKET ===`);
           socket.close();
         },
-        randomIntBetween(SESSION_MAX_MS, SESSION_MIN_MS)
+        randomIntBetween(SESSION_MIN_MS, SESSION_MAX_MS)
       );
     });
 
-    // sleep(randomIntBetween(5, 10));
+    sleep(randomIntBetween(1, 13));
 
     check(wsRes, {
       "status is 101": (r) => r.status === 101,
