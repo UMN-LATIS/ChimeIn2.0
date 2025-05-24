@@ -13,8 +13,8 @@ if (!__ENV.JOIN_CODE) {
 const JOIN_URL = `https://chimein2.cla.umn.edu/join/${__ENV.JOIN_CODE}`;
 const ECHO_SERVER_URL_HTTP = `https://chimein2.cla.umn.edu:6001/socket.io/`;
 const ECHO_SERVER_URL_WS = ECHO_SERVER_URL_HTTP.replace("http", "ws");
-const SESSION_MIN_MS = 3_000;
-const SESSION_MAX_MS = 6_000;
+const SESSION_MIN_MS = 120_000;
+const SESSION_MAX_MS = 240_000;
 const PING_INTERVAL_MS = 25_000;
 
 export const options = {
@@ -26,19 +26,8 @@ export const options = {
       preAllocatedVUs: 1000, // Increased initial pool
       maxVUs: 3000, // Increased max to handle thousands of users
       stages: [
-        // VUs = workers used to generate load
-        // they are NOT the same as concurrent users
-        // to calculate concurrent users look at results:
-        // concurrent users = session/sec * avg session duration
-        // ex. 10u/s * 4.5s = 45 concurrent users
-        { target: 10, duration: "30s" },
-        { target: 50, duration: "30s" },
-        // { target: 100, duration: "30s" },
-
-        // plateau at this load
-        // { target: 100, duration: "1m" },
-
-        // Gradual ramp-down
+        { target: 10, duration: "30s" }, //target is vus per second
+        { target: 30, duration: "2m" },
         { target: 0, duration: "1m" },
       ],
     },
