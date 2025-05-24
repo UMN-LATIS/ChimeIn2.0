@@ -7,25 +7,39 @@ import { randomIntBetween } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 
 export const wsHandshake = new Trend("ws_connecting_time");
 
-const JOIN_URL = `http://localhost/join/52204`;
-const ECHO_SERVER_URL_HTTP = `http://localhost:6001/socket.io/`;
-const ECHO_SERVER_URL_WS = `ws://localhost:6001/socket.io/`;
+if (!__ENV.JOIN_CODE) {
+  throw new Error("JOIN_CODE environment variable is required");
+}
+const JOIN_URL = `https://chimein2.cla.umn.edu/join/${__ENV.JOIN_CODE}`;
+const ECHO_SERVER_URL_HTTP = `https://chimein2.cla.umn.edu:6001/socket.io/`;
+const ECHO_SERVER_URL_WS = ECHO_SERVER_URL_HTTP.replace("http", "ws");
 const SESSION_MIN_MS = 3_000;
 const SESSION_MAX_MS = 6_000;
+const PING_INTERVAL_MS = 25_000;
 
 export const options = {
   scenarios: {
     spike: {
-      executor: "ramping-arrival-rate", // spike of new connections
-      startRate: 0, // start at zero new iterations/sec
+      executor: "ramping-arrival-rate",
+      startRate: 0,
       timeUnit: "1s",
-      preAllocatedVUs: 400, // initial pool; tune higher if you need more
-      maxVUs: 2000, // absolute cap on concurrent VUs
+      preAllocatedVUs: 1000, // Increased initial pool
+      maxVUs: 3000, // Increased max to handle thousands of users
       stages: [
-        { target: 50, duration: "10s" },
-        { target: 200, duration: "20s" },
-        { target: 400, duration: "40s" },
-        { target: 0, duration: "20s" }, // ramp down
+        // VUs = workers used to generate load
+        // they are NOT the same as concurrent users
+        // to calculate concurrent users look at results:
+        // concurrent users = session/sec * avg session duration
+        // ex. 10u/s * 4.5s = 45 concurrent users
+        { target: 10, duration: "30s" },
+        { target: 50, duration: "30s" },
+        // { target: 100, duration: "30s" },
+
+        // plateau at this load
+        // { target: 100, duration: "1m" },
+
+        // Gradual ramp-down
+        { target: 0, duration: "1m" },
       ],
     },
   },
@@ -184,10 +198,10 @@ export default function () {
           // console.log("=== WEBSOCKET HANDSHAKE COMPLETE ===");
           subscribeToChimePresenceChannel(socketSend, chimeId, csrfToken);
 
-          // set up regular pings to the server
+          // set up regular pings to the server with a little jitter
           socket.setInterval(
             () => socketSend("2"),
-            randomIntBetween(500, 1500)
+            randomIntBetween(PING_INTERVAL_MS - 500, PING_INTERVAL_MS + 500)
           );
 
           return;
@@ -220,10 +234,10 @@ export default function () {
       );
     });
 
-    sleep(randomIntBetween(1, 13));
-
     check(wsRes, {
       "status is 101": (r) => r.status === 101,
     });
+
+    sleep(randomIntBetween(2, 5));
   });
 }
