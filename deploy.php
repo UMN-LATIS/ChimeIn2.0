@@ -61,7 +61,7 @@ task('assets:generate', function () {
     cd('{{release_path}}');
     run('npm run build');
 })->desc('Assets generation');
-after('deploy:env', 'assets:generate');
+after('deploy:vendors', 'assets:generate');
 
 task('deploy:makecache', function () {
     cd('{{release_path}}');
