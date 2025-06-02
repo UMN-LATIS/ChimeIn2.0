@@ -20,26 +20,31 @@ add('shared_dirs', []);
 add('writable_dirs', []);
 
 // Servers
+// Servers
+$devHost = 'cla-chimein-r9-dev.oit.umn.edu';
+$tstHost = 'cla-chimein-r9-tst.oit.umn.edu';
+$prodHost = 'cla-chimein-r9-prd.oit.umn.edu';
+
+
 host('dev')
-    ->set('hostname', "cla-chimein-dev.oit.umn.edu")
-    ->set('remote_user', 'swadm')
-    ->set('labels', ['stage' => 'development'])
-    ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
-    ->set('deploy_path', '/swadm/var/www/html/');
+  ->set('hostname', $devHost)
+  ->set('remote_user', 'latis_deploy')
+  ->set('labels', ['stage' => 'development'])
+  // ->identityFile()
+  ->set('deploy_path', '/var/www/chimein/');
 
 host('stage')
-    ->set('hostname', "cla-chimein-tst.oit.umn.edu")
-    ->set('remote_user', 'swadm')
-    ->set('labels', ['stage' => 'stage'])
-    ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
-    ->set('deploy_path', '/swadm/var/www/html/');
+  ->set('hostname', $tstHost)
+  ->set('remote_user', 'latis_deploy')
+  ->set('labels', ['stage' => 'stage'])
+  // ->identityFile()
+  ->set('deploy_path', '/var/www/chimein/');
 
 host('prod')
-    ->set('hostname', "cla-chimein-prd.oit.umn.edu")
-    ->set('remote_user', 'swadm')
-    ->set('labels', ['stage' => 'production'])
-    ->set('bin/php', '/opt/remi/php81/root/usr/bin/php')
-    ->set('deploy_path', '/swadm/var/www/html/');
+  ->set('hostname', $prodHost)
+  ->set('remote_user', 'latis_deploy')
+  ->set('labels', ['stage' => 'production'])
+  ->set('deploy_path', '/var/www/chimein/');
 
 // LARAVEL RECIPE
 // https://deployer.org/docs/7.x/recipe/laravel
@@ -56,7 +61,7 @@ task('assets:generate', function () {
     cd('{{release_path}}');
     run('npm run build');
 })->desc('Assets generation');
-after('npm:install', 'assets:generate');
+after('deploy:env', 'assets:generate');
 
 task('deploy:makecache', function () {
     cd('{{release_path}}');
@@ -74,13 +79,20 @@ after('npm:install', 'deploy:makecache');
 // artisan:event:cache
 // artisan:migrate
 after('artisan:migrate', 'artisan:queue:restart');
-
-task('composer:private', function() {
+task('composer:private', function () {
     cd('{{release_path}}');
-    run('source .env && /swadm/var/www/html/.dep/composer.phar config "http-basic.nova.laravel.com" "$NOVA_USERNAME" "$NOVA_LICENSE_KEY"');
+    run('source .env && {{bin/composer}} config "http-basic.nova.laravel.com" "$NOVA_USERNAME" "$NOVA_LICENSE_KEY"');
 });
   
 before('deploy:vendors', 'composer:private');
+
+#add a task to restart the queue-worker and laravel-reverb systemd services
+task('restart:services', function () {
+    run('sudo service laravel-reverb restart');
+    run('sudo service queue-worker restart');
+})->desc('Restart services');
+after('deploy:symlink', 'restart:services');
+
 
 // deploy:publish
 // - deploy:symlink
