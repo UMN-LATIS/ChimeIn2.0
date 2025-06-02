@@ -5,7 +5,7 @@
     "sort-packages": true,
     "optimize-autoloader": true,
     "platform": {
-      "php": "8.1"
+      "php": "8.4"
     },
     "allow-plugins": {
       "symfony/thanks": false,
@@ -38,38 +38,36 @@
     }
   ],
   "require": {
-    "php": "^8.1",
+    "php": "^8.4",
     "doctrine/dbal": "^3.3",
     "dyrynda/laravel-cascade-soft-deletes": "^4.1",
     "fakerphp/faker": "^1.19",
     "imsglobal/lti": "dev-master",
     "intervention/image": "^2.4",
-    "laravel/framework": "^10.0",
+    "laravel/framework": "^12.0",
     "laravel/helpers": "^1.4",
     "laravel/tinker": "~2.0",
-    "laravelcollective/html": "^6.1",
     "orangehill/iseed": "^3.0",
     "packbackbooks/lti-1p3-tool": "dev-upstream-merge-2",
     "predis/predis": "^1.1",
-    "razorbacks/laravel-shibboleth": "dev-umn#c76b00864b3c586e7ca0d3a59b3df258870c3964",
-    "sentry/sentry-laravel": "^3.1",
+    "razorbacks/laravel-shibboleth": "dev-umn",
+    "sentry/sentry-laravel": "^4.1",
     "symfony/http-client": "^6.0",
     "symfony/mailgun-mailer": "^6.0",
     "yadahan/laravel-authentication-log": "^1.3",
-    "laravel/nova": "^4.0"
+    "laravel/nova": "^5.0"
   },
   "require-dev": {
     "spatie/laravel-ignition": "^2.0",
-    "appzcoder/crud-generator": "^3.0",
     "barryvdh/laravel-debugbar": "^3.2",
     "barryvdh/laravel-ide-helper": "^3.0",
     "deployer/deployer": "^7.0",
     "filp/whoops": "~2.0",
     "laracasts/cypress": "^3.0",
-    "laravel/sail": "^1.10",
+    "laravel/sail": "^1.40",
     "mockery/mockery": "~1.0",
-    "nunomaduro/collision": "^7.0",
-    "phpunit/phpunit": "^10.0",
+    "nunomaduro/collision": "^8.0",
+    "phpunit/phpunit": "^12.0",
     "symfony/thanks": "^1.0"
   },
   "autoload": {

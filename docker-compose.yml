@@ -3,11 +3,11 @@ version: "3"
 services:
   app:
     build:
-      context: ./docker/8.1
+      context: ./docker/8.4
       dockerfile: Dockerfile
       args:
         WWWGROUP: "${WWWGROUP}"
-    image: sail-8.1/app
+    image: sail-8.4/app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -32,7 +32,7 @@ services:
       - redis
     entrypoint: "./docker/start.sh"
   scheduler:
-    image: sail-8.1/app
+    image: sail-8.4/app
     container_name: laravel-scheduler
     depends_on:
       - app
@@ -44,7 +44,7 @@ services:
       - sail
     entrypoint: "./docker/start.sh"
   queue:
-    image: sail-8.1/app
+    image: sail-8.4/app
     container_name: laravel-queue
     depends_on:
       - app

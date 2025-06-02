@@ -42,7 +42,7 @@ class ShibInjection
         if (config('shibboleth.emulate_idp') == true) {
             $users = config('shibboleth.emulate_idp_users');
             foreach($users as $userId => $userValues) {
-                if($userValues['umnDID'] == Auth::user()->umndid) {
+                if(isset($userValues['umnDID']) && $userValues['umnDID'] == Auth::user()->umndid) {
                     return $userValues[$variableName];
                 }
             }
