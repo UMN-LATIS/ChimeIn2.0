@@ -39,9 +39,12 @@ return [
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
-                'cluster' => env('PUSHER_APP_CLUSTER'),
-                'encrypted' => false,
-            ],
+        'cluster' => env('PUSHER_APP_CLUSTER'),
+        'encrypted' => true,
+        'host' => env('REVERB_HOST', '127.0.0.1'),
+        'port' => env('REVERB_PORT', 6001),
+        'scheme' => 'http',
+    ],
         ],
 
         'redis' => [

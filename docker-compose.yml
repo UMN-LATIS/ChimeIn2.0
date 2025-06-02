@@ -87,25 +87,39 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       retries: 3
       timeout: 5s
-  echo:
-    image: oanhnn/laravel-echo-server
-    container_name: laravel-echo
-    restart: unless-stopped
-    ports:
-      - 6001:6001
+  reverb:
+    image: sail-8.4/app
     depends_on:
-      - redis
-      - app
+    - app
+    - redis
+    volumes:
+        - ".:/var/www/html"
     environment:
-      LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app"
-      LARAVEL_ECHO_SERVER_DEBUG: "true"
+        CONTAINER_ROLE: reverb
     networks:
-      sail:
-        # Make it appear that echo and the app service
-        # are on the same host `app.test`, just running
-        # on different ports
-        aliases:
-          - app.test
+        - sail
+    ports:
+        - '${REVERB_PORT:-8080}:8080'
+    entrypoint: "./docker/start.sh"
+  # echo:
+  #   image: oanhnn/laravel-echo-server
+  #   container_name: laravel-echo
+  #   restart: unless-stopped
+  #   ports:
+  #     - 6001:6001
+  #   depends_on:
+  #     - redis
+  #     - app
+  #   environment:
+  #     LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app"
+  #     LARAVEL_ECHO_SERVER_DEBUG: "true"
+  #   networks:
+  #     sail:
+  #       # Make it appear that echo and the app service
+  #       # are on the same host `app.test`, just running
+  #       # on different ports
+  #       aliases:
+  #         - app.test
 networks:
   sail:
     driver: bridge
