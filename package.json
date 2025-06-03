@@ -51,6 +51,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@tailwindcss/forms": "^0.5.9",
+    "@types/k6": "^1.0.2",
     "@umn-latis/cla-vue-template": "^1.1.0",
     "@umn-latis/quill-better-image-module": "^0.2.2",
     "@vue-a11y/announcer": "^3.1.5",
