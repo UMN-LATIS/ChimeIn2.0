@@ -15,15 +15,23 @@ if (!REVERB_APP_KEY) {
   throw new Error("REVERB_APP_KEY environment variable is required");
 }
 
-const HTTP_BASE_URL = "http://localhost";
-const WS_BASE_URL = HTTP_BASE_URL.replace("http", "ws");
-const WS_PORT = 8080;
+const HTTP_BASE_URL = "https://chimein.cla.umn.edu";
+const WS_BASE_URL = "wss://chimein.cla.umn.edu";
 const SESSION_MIN_MS = 10_000;
 const SESSION_MAX_MS = 30_000;
+// const SESSION_MIN_MS = 120_000;
+// const SESSION_MAX_MS = 240_000;
 const PING_INTERVAL_MS = 25_000;
 
 export const wsConnectingTime = new Trend("ws_connecting_time");
 export const pingPongTime = new Trend("ws_ping_pong_time");
+export const subscribePresenceChannelTime = new Trend(
+  "ws_subscribe_presence_time"
+);
+export const subscribePrivateChannelTime = new Trend(
+  "ws_subscribe_private_time"
+);
+
 export const options = {
   // stages: [{ iterations: 1, target: 1 }],
   scenarios: {
@@ -45,10 +53,14 @@ export const options = {
     http_req_failed: ["rate<0.01"],
     ws_connecting_time: ["p(95)<2000"], // custom metric, see below
     ws_ping_pong_time: ["p(95)<1000"], // custom metric for ping-pong time
+    ws_subscribe_presence_time: ["p(95)<2000"], // custom metric for presence channel subscription time
+    ws_subscribe_private_time: ["p(95)<2000"], // custom metric for private channel subscription time
   },
 };
 
 export default function () {
+  console.log("=== TEST STARTING ===");
+
   const res = http.get(`${HTTP_BASE_URL}/join/${__ENV.JOIN_CODE}`, {
     redirects: 1,
   });
@@ -76,7 +88,7 @@ export default function () {
   });
 
   // now connect to the Reverb WebSocket server
-  const wsUrl = `${WS_BASE_URL}:${WS_PORT}/app/${REVERB_APP_KEY}?protocol=7&client=js&version=8.4.0&flash=false`;
+  const wsUrl = `${WS_BASE_URL}/app/${REVERB_APP_KEY}?protocol=7&client=js&version=8.4.0&flash=false`;
 
   const wsConnectStart = new Date().getTime();
   let pingStart: number | null = null;
@@ -93,21 +105,26 @@ export default function () {
       // record connection time
       wsConnectingTime.add(new Date().getTime() - wsConnectStart);
       console.log("=== WEBSOCKET OPEN ===");
-
-      // socket.io has a handshake protocol where it sends `2probe`
-      // and expects `3probe` in return
-      // socketSend("2probe");
     });
 
     socket.on("message", (rawData: string) => {
       const msg = JSON.parse(rawData);
 
       if (msg.event === "pusher:connection_established") {
-        // subscrib to presence change
+        const data = JSON.parse(msg.data);
+        const socketId: string | null = data.socket_id || null;
+
+        if (!socketId) {
+          throw new Error(
+            "Socket ID not found in the connection established message"
+          );
+        }
+
+        // subscribe to presence change
         const subscribeResponse = http.post(
           `${HTTP_BASE_URL}/broadcasting/auth`,
           {
-            socket_id: msg.data.socket_id,
+            socket_id: socketId,
             channel_name: `presence-session-status.${chimeId}`,
           }
         );
@@ -120,11 +137,43 @@ export default function () {
 
         const json = subscribeResponse.json() as Record<string, any>;
 
-        const userId = json?.channel_data?.user_id as number | null;
-
-        if (!userId) {
-          throw new Error("User ID not found in the subscription response");
+        const auth = json?.auth as string | null;
+        if (!auth) {
+          throw new Error("auth token not found in the response");
         }
+
+        const userId = json?.channel_data?.user_id as number | null;
+        if (!userId || userId <= 0) {
+          throw new Error("userId not found or invalid in the response");
+        }
+
+        // subscribe to the presence channel
+        socketSend(
+          JSON.stringify({
+            event: "pusher:subscribe",
+            data: {
+              channel: `presence-session-status.${chimeId}`,
+              auth: auth,
+              channel_data: {
+                user_id: userId,
+                user_info: {
+                  id: userId,
+                },
+              },
+            },
+          })
+        );
+
+        // subscribe to private channel
+        socketSend(
+          JSON.stringify({
+            event: "pusher:subscribe",
+            data: {
+              channel: `private-session-response.${chimeId}`,
+              auth,
+            },
+          })
+        );
 
         const sendPing = () => {
           pingStart = new Date().getTime();
@@ -142,8 +191,22 @@ export default function () {
         return;
       }
 
-      // parse pongs
+      if (msg.event === "pusher_internal:subscription_succeeded") {
+        if (msg.data.channel.startsWith("private-")) {
+          // record subscription time for private channel
+          subscribePrivateChannelTime.add(
+            new Date().getTime() - wsConnectStart
+          );
+        } else {
+          subscribePresenceChannelTime.add(
+            new Date().getTime() - wsConnectStart
+          );
+        }
+        return;
+      }
+
       if (msg.event === "pusher:pong") {
+        // parse pongs
         if (!pingStart) {
           console.warn("[client] pong received but no ping sent yet");
           return;
