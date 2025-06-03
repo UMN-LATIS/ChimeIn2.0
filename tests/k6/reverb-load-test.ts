@@ -17,19 +17,16 @@ if (!REVERB_APP_KEY) {
 
 const HTTP_BASE_URL = "https://chimein.cla.umn.edu";
 const WS_BASE_URL = "wss://chimein.cla.umn.edu";
-const SESSION_MIN_MS = 10_000;
-const SESSION_MAX_MS = 30_000;
-// const SESSION_MIN_MS = 120_000;
-// const SESSION_MAX_MS = 240_000;
+// const SESSION_MIN_MS = 10_000;
+// const SESSION_MAX_MS = 30_000;
+const SESSION_MIN_MS = 120_000;
+const SESSION_MAX_MS = 240_000;
 const PING_INTERVAL_MS = 25_000;
 
 export const wsConnectingTime = new Trend("ws_connecting_time");
 export const pingPongTime = new Trend("ws_ping_pong_time");
 export const subscribePresenceChannelTime = new Trend(
   "ws_subscribe_presence_time"
-);
-export const subscribePrivateChannelTime = new Trend(
-  "ws_subscribe_private_time"
 );
 
 export const options = {
@@ -54,7 +51,6 @@ export const options = {
     ws_connecting_time: ["p(95)<2000"], // custom metric, see below
     ws_ping_pong_time: ["p(95)<1000"], // custom metric for ping-pong time
     ws_subscribe_presence_time: ["p(95)<2000"], // custom metric for presence channel subscription time
-    ws_subscribe_private_time: ["p(95)<2000"], // custom metric for private channel subscription time
   },
 };
 
@@ -98,7 +94,7 @@ export default function () {
 
     const socketSend = (msg: string) => {
       socket.send(msg);
-      console.log("[client]", msg);
+      // console.log("[client]", msg);
     };
 
     socket.on("open", () => {
@@ -142,7 +138,8 @@ export default function () {
           throw new Error("auth token not found in the response");
         }
 
-        const userId = json?.channel_data?.user_id as number | null;
+        const channelData = JSON.parse(json?.channel_data || "{}");
+        const userId = Number.parseInt(channelData.user_id);
         if (!userId || userId <= 0) {
           throw new Error("userId not found or invalid in the response");
         }
@@ -153,31 +150,21 @@ export default function () {
             event: "pusher:subscribe",
             data: {
               channel: `presence-session-status.${chimeId}`,
-              auth: auth,
-              channel_data: {
-                user_id: userId,
-                user_info: {
-                  id: userId,
-                },
-              },
-            },
-          })
-        );
-
-        // subscribe to private channel
-        socketSend(
-          JSON.stringify({
-            event: "pusher:subscribe",
-            data: {
-              channel: `private-session-response.${chimeId}`,
               auth,
+              // pusher expects channel_data to be a stringified JSON object
+              channel_data: JSON.stringify({
+                user_id: userId.toString(), // needs to be string
+                user_info: {
+                  id: userId, // needs to be int
+                },
+              }),
             },
           })
         );
 
         const sendPing = () => {
           pingStart = new Date().getTime();
-          socketSend(`{"event":"pusher:ping","data":{}}`);
+          socketSend(JSON.stringify({ event: "pusher:ping", data: {} }));
         };
 
         // send immediate ping to server
@@ -192,12 +179,7 @@ export default function () {
       }
 
       if (msg.event === "pusher_internal:subscription_succeeded") {
-        if (msg.data.channel.startsWith("private-")) {
-          // record subscription time for private channel
-          subscribePrivateChannelTime.add(
-            new Date().getTime() - wsConnectStart
-          );
-        } else {
+        if (msg.channel.startsWith("presence-")) {
           subscribePresenceChannelTime.add(
             new Date().getTime() - wsConnectStart
           );
@@ -208,20 +190,20 @@ export default function () {
       if (msg.event === "pusher:pong") {
         // parse pongs
         if (!pingStart) {
-          console.warn("[client] pong received but no ping sent yet");
+          // console.warn("[client] pong received but no ping sent yet");
           return;
         }
 
         // record ping-pong time
         const pongTime = new Date().getTime() - pingStart;
         pingPongTime.add(pongTime);
-        console.log("[client] pong received, time:", pongTime, "ms");
+        // console.log("[client] pong received, time:", pongTime, "ms");
         pingStart = null; // reset for next ping
         return;
       }
 
       // log other messages
-      console.log("[server]", msg);
+      // console.log("[server]", msg);
     });
 
     socket.on("close", () => {
