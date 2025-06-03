@@ -17,8 +17,6 @@ if (!REVERB_APP_KEY) {
 
 const HTTP_BASE_URL = "https://chimein.cla.umn.edu";
 const WS_BASE_URL = "wss://chimein.cla.umn.edu";
-// const SESSION_MIN_MS = 10_000;
-// const SESSION_MAX_MS = 30_000;
 const SESSION_MIN_MS = 120_000;
 const SESSION_MAX_MS = 240_000;
 const PING_INTERVAL_MS = 25_000;
@@ -55,8 +53,6 @@ export const options = {
 };
 
 export default function () {
-  console.log("=== TEST STARTING ===");
-
   const res = http.get(`${HTTP_BASE_URL}/join/${__ENV.JOIN_CODE}`, {
     redirects: 1,
   });
