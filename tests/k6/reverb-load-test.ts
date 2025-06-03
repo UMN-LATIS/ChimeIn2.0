@@ -15,11 +15,31 @@ if (!REVERB_APP_KEY) {
   throw new Error("REVERB_APP_KEY environment variable is required");
 }
 
+const HTTP_BASE_URL = "http://localhost";
+const WS_BASE_URL = HTTP_BASE_URL.replace("http", "ws");
+const WS_PORT = 8080;
+const SESSION_MIN_MS = 10_000;
+const SESSION_MAX_MS = 30_000;
+const PING_INTERVAL_MS = 25_000;
+
 export const wsConnectingTime = new Trend("ws_connecting_time");
 export const pingPongTime = new Trend("ws_ping_pong_time");
-
 export const options = {
-  stages: [{ iterations: 1, target: 1 }],
+  // stages: [{ iterations: 1, target: 1 }],
+  scenarios: {
+    spike: {
+      executor: "ramping-arrival-rate",
+      startRate: 0,
+      timeUnit: "1s",
+      preAllocatedVUs: 1000, // Increased initial pool
+      maxVUs: 3000, // Increased max to handle thousands of users
+      stages: [
+        { target: 10, duration: "30s" }, //target is vus per second
+        { target: 30, duration: "2m" },
+        { target: 0, duration: "1m" },
+      ],
+    },
+  },
 
   thresholds: {
     http_req_failed: ["rate<0.01"],
@@ -28,13 +48,8 @@ export const options = {
   },
 };
 
-const BASE_URL = "http://localhost";
-const SESSION_MIN_MS = 10_000;
-const SESSION_MAX_MS = 30_000;
-const PING_INTERVAL_MS = 25_000;
-
 export default function () {
-  const res = http.get(`${BASE_URL}/join/${__ENV.JOIN_CODE}`, {
+  const res = http.get(`${HTTP_BASE_URL}/join/${__ENV.JOIN_CODE}`, {
     redirects: 1,
   });
 
@@ -61,8 +76,6 @@ export default function () {
   });
 
   // now connect to the Reverb WebSocket server
-  const WS_BASE_URL = BASE_URL.replace("http", "ws");
-  const WS_PORT = 8080;
   const wsUrl = `${WS_BASE_URL}:${WS_PORT}/app/${REVERB_APP_KEY}?protocol=7&client=js&version=8.4.0&flash=false`;
 
   const wsConnectStart = new Date().getTime();
@@ -91,10 +104,13 @@ export default function () {
 
       if (msg.event === "pusher:connection_established") {
         // subscrib to presence change
-        const subscribeResponse = http.post(`${BASE_URL}/broadcasting/auth`, {
-          socket_id: msg.data.socket_id,
-          channel_name: `presence-session-status.${chimeId}`,
-        });
+        const subscribeResponse = http.post(
+          `${HTTP_BASE_URL}/broadcasting/auth`,
+          {
+            socket_id: msg.data.socket_id,
+            channel_name: `presence-session-status.${chimeId}`,
+          }
+        );
 
         if (!subscribeResponse || subscribeResponse.status !== 200) {
           throw new Error(
