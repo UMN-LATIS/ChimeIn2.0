@@ -12,6 +12,6 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        'lti', 'lti/*', 'lti13/*', 'lti13'
+        'lti', 'lti/*', 'lti13/*', 'lti13', '/local-sp/ACS'
     ];
 }

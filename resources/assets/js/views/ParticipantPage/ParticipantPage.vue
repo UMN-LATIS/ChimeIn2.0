@@ -294,6 +294,34 @@ function loadChime() {
     });
 }
 
+const pusher = (echoClient.connector as any).pusher;
+if (pusher) {
+  pusher.connection.bind('connected', () => {
+    console.log("reconnect: participant");
+
+    if (timeout.value) clearTimeout(timeout.value);
+
+    if (!loadTime.value) {
+      throw new Error("loadTime should be set before reconnect");
+    }
+
+    const hoursSinceLoad =
+      (new Date().getTime() - loadTime.value.getTime()) / 1000 / 60 / 60;
+    if (hoursSinceLoad >= 8) {
+      echoClient.leave(`session-status.${props.chimeId}`);
+      pusher.connection.unbind('connected');
+      error.value = "Your session has expired.  Please refresh the page.";
+      sessions.value = [];
+      announcer.polite("Your session has expired. Please refresh the page.");
+      return;
+    }
+
+    timeout.value = setTimeout(() => {
+      loadChime();
+    }, 500);
+  });
+}
+
 onMounted(() => {
   loadChime();
   loadTime.value = new Date();
@@ -321,31 +349,6 @@ onMounted(() => {
           " questions open"
       );
     });
-
-  echoClient.connector.socket.on("reconnect", (event) => {
-    console.log("reconnect: participant", { event });
-
-    if (timeout.value) clearTimeout(timeout.value);
-
-    if (!loadTime.value) {
-      throw new Error("loadTime should be set before reconnect");
-    }
-
-    const hoursSinceLoad =
-      (new Date().getTime() - loadTime.value.getTime()) / 1000 / 60 / 60;
-    if (hoursSinceLoad >= 8) {
-      echoClient.leave(`session-status.${props.chimeId}`);
-      echoClient.connector.socket.off("reconnect");
-      error.value = "Your session has expired.  Please refresh the page.";
-      sessions.value = [];
-      announcer.polite("Your session has expired. Please refresh the page.");
-      return;
-    }
-
-    timeout.value = setTimeout(() => {
-      loadChime();
-    }, 500);
-  });
 });
 
 function setActiveTab(tabId) {
@@ -354,7 +357,10 @@ function setActiveTab(tabId) {
 
 onUnmounted(() => {
   echoClient.leave(`session-status.props.${props.chimeId}`);
-  echoClient.connector.socket.off("reconnect");
+  const pusher = (echoClient.connector as any).pusher;
+  if (pusher) {
+    pusher.connection.unbind('connected');
+  }
 });
 </script>
 <style scoped>

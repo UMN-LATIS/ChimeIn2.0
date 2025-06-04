@@ -38,6 +38,9 @@ elif [ "$role" = "scheduler" ]; then
       php /var/www/html/artisan schedule:run --verbose --no-interaction &
       sleep 60
     done
+elif [ "$role" = "reverb" ]; then
+    echo "Running the reverb..."
+    php /var/www/html/artisan reverb:start
 else
     echo "Could not match the container role \"$role\""
     exit 1
