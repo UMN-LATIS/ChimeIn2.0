@@ -114,7 +114,7 @@ return [
 
     'redis' => [
 
-        'client' => 'redis',
+        'client' => 'phpredis',
         'options' => [
             'prefix' => env('REDIS_PREFIX', ''),
         ],
