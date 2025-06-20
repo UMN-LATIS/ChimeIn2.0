@@ -8,10 +8,13 @@
 
 <default-layout :user="{{Auth::user()}}">
 <div class="container-fluid">
-    {{ Form::model($chime, array('route'=> [$saveTarget, $chime->id], 'method'=> 'put')) }}
-    {{ Form::hidden("lti_resource_title", $lti_resource_title) }}
-    {{ Form::hidden("resource_link_pk", $resource_link_pk) }}
-    <lti-launch :lti_details='@json($ltiLaunch)'></lti-launch>
+    <form method="POST" action="{{ route($saveTarget, $chime->id) }}">
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="lti_resource_title" value="{{ $lti_resource_title }}">
+        <input type="hidden" name="resource_link_pk" value="{{ $resource_link_pk }}">
+        <lti-launch :lti_details='@json($ltiLaunch)'></lti-launch>
+    </form>
 </div>   
 </default-layout>
 @endsection

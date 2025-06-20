@@ -17,7 +17,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
-
         Nova::userTimezone(function (Request $request) {
             return $request->user()?->timezone ?? 'America/Chicago';
         });
@@ -50,6 +49,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         return Gate::check('viewNova', [$request->user()]);
         });
     }
+
+
 
     /**
      * Register the Nova gate.
@@ -87,13 +88,4 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         return [];
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
 }
