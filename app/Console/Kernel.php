@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             Log::warning("Schedule: Running prune");
             DB::delete('DELETE FROM users WHERE NOT EXISTS (SELECT * FROM chime_user WHERE chime_user.user_id = users.id) AND  NOT EXISTS (SELECT * FROM responses WHERE responses.user_id=users.id) and DATEDIFF( CURDATE(), updated_at ) > 15');
-        })->daily();
+        })->dailyAt('8:00');
 
 
         $schedule->call(function () {
