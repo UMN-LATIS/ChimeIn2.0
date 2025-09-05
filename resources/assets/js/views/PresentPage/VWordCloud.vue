@@ -51,7 +51,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, computed, watch, shallowRef } from "vue";
-import { useDebounceFn } from "@vueuse/core";
+import { useThrottleFn } from "@vueuse/core";
 import { Chart, ChartEvent, LinearScale } from "chart.js";
 import {
   IWordElementProps,
@@ -123,6 +123,8 @@ function renderWordcloud() {
   const words = Object.keys(wordFreqLookup);
   const wordFontSizes = words.map((word) => fontSizeLookup.value[word]);
 
+  console.log({ wordFreqLookup, fontSizeLookup: fontSizeLookup.value });
+
   // create a new Canvas element and attach to root
   const canvas = document.createElement("canvas");
   canvas.setAttribute("role", "img");
@@ -168,17 +170,15 @@ function renderWordcloud() {
   });
 }
 
-const renderWordcloudDebounced = useDebounceFn(renderWordcloud, 1000, {
-  maxWait: 2000,
-});
+const renderWordcloudThrottled = useThrottleFn(renderWordcloud, 500);
 
 function handleReloadPage() {
   // in case the websocket connection breaks, reload the page
   window.location.reload();
 }
 
-watch([truncatedWordFreqLookup], renderWordcloudDebounced);
-onMounted(renderWordcloudDebounced);
+watch([truncatedWordFreqLookup], renderWordcloudThrottled);
+onMounted(renderWordcloudThrottled);
 </script>
 <style>
 .wordcloud {
