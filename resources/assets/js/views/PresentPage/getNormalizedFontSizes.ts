@@ -44,6 +44,8 @@ function getBaseFontSize({
     // calculate the area needed for each word
     .map(([word, freq]) => word.length * freq ** 2)
     .reduce((acc, size) => acc + size, 0);
+
+  console.log({ sumOfWordSizes, canvasArea, wordFreqLookup });
   const base_squared = (WHITESPACE_TUNING * canvasArea) / sumOfWordSizes;
 
   // sqrt to convert from area to linear dimension
@@ -84,14 +86,13 @@ export function getFontSizeLookup({
       canvasArea,
     });
 
-    const isValidFontSize =
-      baseFontSize >= MIN_BASE_FONT_SIZE && baseFontSize <= MAX_BASE_FONT_SIZE;
+    const isValidFontSize = baseFontSize >= MIN_BASE_FONT_SIZE;
     const isLastNormalizer = index === normalizers.length - 1;
 
     if (isValidFontSize || isLastNormalizer) {
       return scaleFreqLookup(
         normalizedFreqLookup,
-        (freq) => freq * baseFontSize
+        (freq) => freq * Math.min(MAX_BASE_FONT_SIZE, baseFontSize) // cap the base font size
       );
     }
   }
