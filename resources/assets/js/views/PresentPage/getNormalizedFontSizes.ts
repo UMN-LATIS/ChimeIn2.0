@@ -45,7 +45,6 @@ function getBaseFontSize({
     .map(([word, freq]) => word.length * freq ** 2)
     .reduce((acc, size) => acc + size, 0);
 
-  console.log({ sumOfWordSizes, canvasArea, wordFreqLookup });
   const base_squared = (WHITESPACE_TUNING * canvasArea) / sumOfWordSizes;
 
   // sqrt to convert from area to linear dimension

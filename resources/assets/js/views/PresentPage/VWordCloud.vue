@@ -50,7 +50,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, computed, watch, shallowRef } from "vue";
+import { onMounted, computed, watch, ref } from "vue";
 import { useThrottleFn } from "@vueuse/core";
 import { Chart, ChartEvent, LinearScale } from "chart.js";
 import {
@@ -71,7 +71,7 @@ const emit = defineEmits<{
   (e: "click:word", word: string): void;
 }>();
 
-const canvasRoot = shallowRef<HTMLDivElement | null>(null);
+const canvasRoot = ref<HTMLDivElement | null>(null);
 const wordColors = [
   "#693EA6",
   "#8B3DAF",
@@ -122,8 +122,6 @@ function renderWordcloud() {
 
   const words = Object.keys(wordFreqLookup);
   const wordFontSizes = words.map((word) => fontSizeLookup.value[word]);
-
-  console.log({ wordFreqLookup, fontSizeLookup: fontSizeLookup.value });
 
   // create a new Canvas element and attach to root
   const canvas = document.createElement("canvas");
