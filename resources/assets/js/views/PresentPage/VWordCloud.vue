@@ -25,7 +25,7 @@
       </div>
     </div>
     <table
-      class="sr-only table table-small table-hover word-freq-section__table"
+      class="table table-small table-hover word-freq-section__table sr-only"
     >
       <caption>
         Words within WordCloud ranked by frequency
@@ -84,7 +84,6 @@ const wordColors = [
 const MAX_RENDERED_WORDS = 500;
 
 const truncatedWordFreqLookup = computed(() => {
-  console.log({ wordFreqLookup: props.wordFreqLookup });
   const wordCount = Object.keys(props.wordFreqLookup).length;
 
   if (wordCount < MAX_RENDERED_WORDS) {
