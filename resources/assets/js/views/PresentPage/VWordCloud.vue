@@ -26,6 +26,7 @@
     </div>
     <table
       class="table table-small table-hover word-freq-section__table sr-only"
+      data-cy="word-frequency-table"
     >
       <caption>
         Words within WordCloud ranked by frequency
