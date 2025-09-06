@@ -5895,12 +5895,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/UMN-LATIS/laravel-shibboleth.git",
-                "reference": "17e6da660c3345d8305990026ffd1080c454d09b"
+                "reference": "e3fc5e425c2f3fca818de087d869c3729d32d7e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UMN-LATIS/laravel-shibboleth/zipball/17e6da660c3345d8305990026ffd1080c454d09b",
-                "reference": "17e6da660c3345d8305990026ffd1080c454d09b",
+                "url": "https://api.github.com/repos/UMN-LATIS/laravel-shibboleth/zipball/e3fc5e425c2f3fca818de087d869c3729d32d7e2",
+                "reference": "e3fc5e425c2f3fca818de087d869c3729d32d7e2",
                 "shasum": ""
             },
             "require": {
@@ -5956,7 +5956,7 @@
                 "source": "https://github.com/UMN-LATIS/laravel-shibboleth/tree/umn",
                 "issues": "https://github.com/UMN-LATIS/laravel-shibboleth/issues"
             },
-            "time": "2025-06-17T23:25:42+00:00"
+            "time": "2025-06-20T22:06:38+00:00"
         },
         {
             "name": "react/cache",

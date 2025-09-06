@@ -88,4 +88,12 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         return [];
     }
 
+      /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register() {
+        parent::register();
+    }
 }

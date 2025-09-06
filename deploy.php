@@ -4,7 +4,9 @@ namespace Deployer;
 
 require 'recipe/laravel.php';
 require 'contrib/npm.php';
+require 'contrib/cachetool.php';
 
+set('cachetool_args', '--tmp-dir=/var/www/chimein');
 // Configuration
 
 set('ssh_type', 'native');
@@ -102,3 +104,4 @@ after('deploy:symlink', 'restart:services');
 
 // [Optional] if deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
+after('deploy:symlink', 'cachetool:clear:opcache');

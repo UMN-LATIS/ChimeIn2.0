@@ -130,4 +130,7 @@ Route::post('lti13/login', 'LTI13Handler@login');
 Route::post('lti13/launch', 'LTI13Handler@launch');
 Route::get('lti13/config', 'LTI13Handler@config');
 Route::put('lti13/saveLTISettings/{chime}', 'LTI13Handler@saveLTISettings')->name("ltisettings13.update");
-Route::any('{all}','HomeController@index')->where(['all' => '.*']);
+
+
+Route::fallback('HomeController@index');
+
