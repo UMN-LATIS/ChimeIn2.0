@@ -78,9 +78,12 @@ describe("free response question", () => {
         cy.visit(`/chime/${testChime.id}/folder/${testFolder.id}`);
         cy.get("[data-cy=present-question-button]").click();
         cy.get("[data-cy=show-results-button]").click();
-        cy.get("[data-cy=word-cloud] canvas")
-          .invoke("attr", "aria-label")
-          .should("eq", "guest: 1, response: 1");
+
+        // get the sr-only table with word frequencies
+        cy.get("[data-cy=word-frequency-table] tbody tr").should(
+          "have.length",
+          2
+        );
       });
   });
 

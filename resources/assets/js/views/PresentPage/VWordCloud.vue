@@ -26,6 +26,7 @@
     </div>
     <table
       class="table table-small table-hover word-freq-section__table sr-only"
+      data-cy="word-frequency-table"
     >
       <caption>
         Words within WordCloud ranked by frequency
@@ -50,29 +51,28 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, watchEffect, computed } from "vue";
+import { onMounted, computed, watch, ref } from "vue";
+import { useThrottleFn } from "@vueuse/core";
 import { Chart, ChartEvent, LinearScale } from "chart.js";
 import {
   IWordElementProps,
   WordCloudController,
   WordElement,
 } from "chartjs-chart-wordcloud";
-import getBaseFontSize from "./getBaseFontSize";
+import { getFontSizeLookup } from "./getNormalizedFontSizes";
 import type { WordFrequencyLookup } from "../../types";
 
 Chart.register(WordCloudController, WordElement, LinearScale);
 
-interface Props {
+const props = defineProps<{
   wordFreqLookup: WordFrequencyLookup;
-}
-const props = defineProps<Props>();
+}>();
 
-interface Emits {
+const emit = defineEmits<{
   (e: "click:word", word: string): void;
-}
-const emit = defineEmits<Emits>();
+}>();
 
-const canvasRoot = ref<HTMLElement | null>(null);
+const canvasRoot = ref<HTMLDivElement | null>(null);
 const wordColors = [
   "#693EA6",
   "#8B3DAF",
@@ -82,36 +82,52 @@ const wordColors = [
   "#F18E44",
 ];
 
+const MAX_RENDERED_WORDS = 500;
+
+const truncatedWordFreqLookup = computed(() => {
+  const wordCount = Object.keys(props.wordFreqLookup).length;
+
+  if (wordCount < MAX_RENDERED_WORDS) {
+    return props.wordFreqLookup;
+  }
+
+  const sortedEntries = Object.entries(props.wordFreqLookup).sort(
+    ([, a], [, b]) => b - a
+  );
+
+  return Object.fromEntries(sortedEntries.slice(0, MAX_RENDERED_WORDS));
+}, {});
+
 const orderedWordList = computed(() =>
-  Object.entries(props.wordFreqLookup)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    .sort(([word1, freq1], [word2, freq2]) => freq2 - freq1)
+  Object.entries(truncatedWordFreqLookup.value).sort(
+    ([, freq1], [, freq2]) => freq2 - freq1
+  )
 );
+
+const fontSizeLookup = computed(() => {
+  if (!canvasRoot.value) return {};
+
+  const canvasArea =
+    canvasRoot.value.clientWidth * canvasRoot.value.clientHeight;
+
+  const fontSizeLookup = getFontSizeLookup({
+    wordFreqLookup: truncatedWordFreqLookup.value,
+    canvasArea,
+  });
+  return fontSizeLookup;
+});
 
 function renderWordcloud() {
   if (!canvasRoot.value) return;
+  const wordFreqLookup = truncatedWordFreqLookup.value;
 
-  const words = Object.keys(props.wordFreqLookup);
-
-  const baseFontSize = getBaseFontSize({
-    canvasRoot: canvasRoot.value,
-    wordFreqLookup: props.wordFreqLookup,
-  });
-  const wordFontSizes = Object.values(props.wordFreqLookup).map(
-    (freq) => freq * baseFontSize
-  );
+  const words = Object.keys(wordFreqLookup);
+  const wordFontSizes = words.map((word) => fontSizeLookup.value[word]);
 
   // create a new Canvas element and attach to root
   const canvas = document.createElement("canvas");
   canvas.setAttribute("role", "img");
   canvasRoot.value.replaceChildren(canvas);
-
-  canvas.setAttribute(
-    "aria-label",
-    // add an ordered wordlist to the alt text for the canvas to help
-    // with accessibility
-    orderedWordList.value.map(([word, freq]) => `${word}: ${freq}`).join(", ")
-  );
 
   // if there's no words, skip rendering the chart
   if (!words.length) return;
@@ -153,13 +169,15 @@ function renderWordcloud() {
   });
 }
 
+const renderWordcloudThrottled = useThrottleFn(renderWordcloud, 500);
+
 function handleReloadPage() {
   // in case the websocket connection breaks, reload the page
   window.location.reload();
 }
 
-watchEffect(renderWordcloud);
-onMounted(renderWordcloud);
+watch([truncatedWordFreqLookup], renderWordcloudThrottled);
+onMounted(renderWordcloudThrottled);
 </script>
 <style>
 .wordcloud {
