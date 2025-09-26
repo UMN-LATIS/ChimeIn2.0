@@ -33,6 +33,7 @@ class Response extends Resource
      */
     public static $search = [
         'id',
+        'user.email',
     ];
 
     /**
