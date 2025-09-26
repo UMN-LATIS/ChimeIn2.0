@@ -82,14 +82,16 @@ class Chime extends Resource
 
             HasMany::make('Folders'),
 
-            BelongsToMany::make('Users')->fields(function () {
-                return [
-                    Select::make('Role', 'permission_number')->options([
-                        100 => 'Participant',
-                        300 => 'Presenter',
-                    ])->displayUsingLabels()->sortable()->filterable(),
-                ];
-            }),
+            BelongsToMany::make('Users')
+                ->searchable()
+                ->fields(function () {
+                    return [
+                        Select::make('Role', 'permission_number')->options([
+                            100 => 'Participant',
+                            300 => 'Presenter',
+                        ])->displayUsingLabels()->sortable()->filterable(),
+                    ];
+                }),
             DateTime::make('Created At')->sortable(),
             DateTime::make('Updated At')->sortable(),
         ];
