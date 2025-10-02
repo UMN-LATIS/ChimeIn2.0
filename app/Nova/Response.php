@@ -33,6 +33,7 @@ class Response extends Resource
      */
     public static $search = [
         'id',
+        'user.email',
     ];
 
     /**
@@ -46,10 +47,10 @@ class Response extends Resource
             ID::make()->sortable(),
             BelongsTo::make('Session')->searchable(),
             BelongsTo::make('Question'),
-            BelongsTo::make('User')->searchable(),
+            BelongsTo::make('User')->searchable()->filterable(),
             Code::make('Response Info')->json(),
-            DateTime::make('Created At'),
-            DateTime::make('Updated At'),
+            DateTime::make('Created At')->filterable(),
+            DateTime::make('Updated At')->filterable(),
             DateTime::make('Deleted At'),
         ];
     }
