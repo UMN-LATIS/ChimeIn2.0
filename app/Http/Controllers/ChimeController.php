@@ -436,7 +436,7 @@ class ChimeController extends Controller
     private function getValuesForFolder($chime, $folder, $user, $correctOnly) {
         $result = [];
 
-        foreach($folder["folder"]->questions->sortBy('questions.order') as $question) {
+        foreach($folder["folder"]->questions->sortBy('order') as $question) {
             $userResponses = $question->sessions->flatmap(function($value) use ($user) {
                 return $value->responses->where("user_id", $user->id);
             });
