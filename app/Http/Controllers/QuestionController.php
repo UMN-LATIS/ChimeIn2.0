@@ -103,7 +103,7 @@ class QuestionController extends Controller
         $question->delete();
 
         // Reorder remaining questions in the folder
-        $folder->questions->sortBy('order')->each(function ($q, $i) {
+        $folder->questions->sortBy('order')->values()->each(function ($q, $i) {
             $q->order = $i + 1;
             $q->save();
         });
