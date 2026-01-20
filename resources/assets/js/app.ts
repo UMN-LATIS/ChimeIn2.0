@@ -9,7 +9,7 @@ import router from "./router";
 import store from "./store";
 import axiosClient from "./common/axiosClient";
 import echoClient from "./common/echoClient";
-import "@umn-latis/cla-vue-template/dist/style.css";
+import "@umn-latis/cla-vue-template/dist/index.css";
 import "../sass/app.scss";
 import "../sass/utils.css";
 
