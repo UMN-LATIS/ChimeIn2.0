@@ -1,25 +1,34 @@
 <template>
   <div>
     <div v-if="responses.length > 0">
-      <VWordCloud
-        v-if="!hideWordcloud"
-        :wordFreqLookup="wordFreqLookup"
-        @click:word="handleWordClick"
-      >
-        <small class="m-0"> Click a word to filter it out. </small>
-      </VWordCloud>
-      <p>
-        <label>
-          <input
-            type="checkbox"
-            :checked="processWithNLP"
-            @click="processWithNLP = !processWithNLP"
-          />
+      <div class="tw-mb-2 tw-flex md:tw-justify-end md:-tw-mt-12">
+        <button
+          class="tw-bg-neutral-100 tw-border tw-border-neutral-300 tw-inline-block tw-rounded-md tw-px-3 tw-py-1 tw-text-sm hover:tw-bg-neutral-400"
+          @click="isWordcloudHidden = !isWordcloudHidden"
+        >
+          {{ isWordcloudHidden ? "Show" : "Hide" }} Word Cloud
+        </button>
+      </div>
+      <template v-if="!isWordcloudHidden">
+        <VWordCloud
+          :wordFreqLookup="wordFreqLookup"
+          @click:word="handleWordClick"
+        >
+          <small class="m-0"> Click a word to filter it out. </small>
+        </VWordCloud>
+        <p>
+          <label>
+            <input
+              type="checkbox"
+              :checked="processWithNLP"
+              @click="processWithNLP = !processWithNLP"
+            />
 
-          <strong>Experimental</strong> Use Natural Language Processing to group
-          names, places, and other entities.
-        </label>
-      </p>
+            <strong>Experimental</strong> Use Natural Language Processing to
+            group names, places, and other entities.
+          </label>
+        </p>
+      </template>
 
       <div v-if="filteredWords.length > 0" class="filter-list">
         <h2 class="filter-list__title">Filtered Words</h2>
@@ -78,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
 import type {
@@ -88,6 +97,7 @@ import type {
   WordFrequencyLookup,
 } from "../../types";
 import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
+import { is } from "ramda";
 
 interface Props {
   responses: FreeResponse[];
@@ -97,10 +107,14 @@ interface Props {
 
 const props = defineProps<Props>();
 const filteredWords = ref<string[]>([]);
-const hideWordcloud = computed(() => {
-  const question_responses = props.question.question_info.question_responses;
-  return !Array.isArray(question_responses) && question_responses.hideWordcloud;
-});
+const isHiddenByDefault = computed(
+  () =>
+    !Array.isArray(props.question.question_info.question_responses) &&
+    props.question.question_info.question_responses.hideWordcloud
+);
+
+const isWordcloudHidden = ref(isHiddenByDefault.value);
+
 const responsesByMostRecent = computed(() => [...props.responses].reverse());
 
 const processWithNLP = ref(false);
