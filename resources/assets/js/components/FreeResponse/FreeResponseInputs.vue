@@ -1,44 +1,14 @@
 <template>
   <div>
-    <div class="form-group tw-mt-2">
-      <div class="tw-flex tw-justify-end tw-mb-1">
-        <fieldset
-          class="tw-inline-flex tw-items-center tw-gap-1 tw-border tw-border-neutral-600 tw-rounded-md tw-p-0.5"
-        >
-          <legend class="tw-sr-only">Editor Mode</legend>
-          <label
-            v-for="{ value, label } in editorModes"
-            :key="value"
-            class="tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer text-xs mb-0 has-[:focus]:tw-ring-2 has-[:focus]:tw-ring-blue-500"
-            :class="{
-              'tw-bg-neutral-900 tw-text-neutral-100':
-                value === activeEditorMode,
-            }"
-          >
-            <input
-              v-model="activeEditorMode"
-              type="radio"
-              :name="`editorMode-${question.id}`"
-              :value="value"
-              class="tw-appearance-none tw-w-0 tw-h-0 tw-m-0 tw-p-0"
-            />
-            {{ label }}
-          </label>
-        </fieldset>
-      </div>
-
+    <div class="form-group mt-2">
       <textarea
         v-model="response_text"
         :aria-labelledby="`question-${question.id}-heading`"
         data-cy="free-response-textarea"
-        class="form-control"
+        class="form-control tw-whitespace-pre-wrap tw-font-mono tw-text-sm"
         placeholder="Type your response"
-        :rows="activeEditorMode === 'code' ? 8 : 3"
+        :rows="3"
         :disabled="disabled"
-        :class="{
-          'tw-font-mono text-sm tw-whitespace-pre-wrap tw-bg-neutral-900 focus:tw-bg-neutral-900 tw-text-neutral-400 focus:tw-text-neutral-300':
-            activeEditorMode === 'code',
-        }"
       >
       </textarea>
       <small
@@ -90,83 +60,70 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref, computed, watch } from "vue";
+<script lang="ts">
+import { PropType } from "vue";
 import * as T from "@/types";
 
 const MAX_CHARS = 10000;
 
-const props = withDefaults(
-  defineProps<{
-    question: T.Question<T.FreeResponseQuestionInfo>;
-    response?: T.Response<T.FreeResponseResponseInfo> | null;
-    disabled?: boolean;
-  }>(),
-  {
-    response: null,
-    disabled: false,
-  }
-);
-
-const emit = defineEmits<{
-  (
-    e: "recordresponse",
-    response: T.FreeResponseResponseInfo,
-    create_new_response: boolean
-  ): void;
-}>();
-
-const response_text = ref("");
-const create_new_response = ref(false);
-
-type EditorMode = "text" | "code";
-
-interface EditorModeOption {
-  label: string;
-  value: EditorMode;
-}
-
-const editorModes: EditorModeOption[] = [
-  { label: "Text", value: "text" },
-  { label: "Code", value: "code" },
-];
-
-const activeEditorMode = ref<EditorMode>("text");
-
-const isLargerThanMaxChars = computed(() => {
-  return response_text.value.length > MAX_CHARS;
-});
-
-const isEmpty = computed(() => {
-  return response_text.value.length === 0;
-});
-
-watch(
-  () => props.response,
-  (newResponse) => {
-    if (newResponse && newResponse.response_info) {
-      response_text.value = newResponse.response_info.text;
-      activeEditorMode.value = newResponse.response_info.editorMode ?? "text";
-    }
+export default {
+  props: {
+    question: {
+      type: Object as PropType<T.Question<T.FreeResponseQuestionInfo>>,
+      required: true,
+    },
+    response: {
+      type: Object as PropType<T.Response<T.FreeResponseResponseInfo> | null>,
+      required: false,
+      default: null,
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+    },
   },
-  { immediate: true }
-);
+  emits: ["recordresponse"],
+  data() {
+    return {
+      response_text: "",
+      create_new_response: false,
+      MAX_CHARS,
+    };
+  },
+  computed: {
+    isLargerThanMaxChars() {
+      return this.response_text.length > MAX_CHARS;
+    },
+    isEmpty() {
+      return this.response_text.length === 0;
+    },
+  },
+  watch: {
+    response() {
+      if (this.response && this.response.response_info) {
+        this.response_text = this.response.response_info.text;
+      }
+    },
+  },
+  mounted() {
+    this.response_text = this.response?.response_info.text ?? "";
+  },
+  methods: {
+    record_response: function () {
+      const response = {
+        question_type: "free_response",
+        text: this.response_text,
+      };
 
-function record_response() {
-  const response: T.FreeResponseResponseInfo = {
-    question_type: "free_response",
-    text: response_text.value,
-    editorMode: activeEditorMode.value,
-  };
-
-  emit("recordresponse", response, create_new_response.value);
-  create_new_response.value = false;
-}
-
-function new_response() {
-  create_new_response.value = true;
-  response_text.value = "";
-}
+      this.$emit("recordresponse", response, this.create_new_response);
+      this.create_new_response = false;
+    },
+    new_response: function () {
+      this.create_new_response = true;
+      this.response_text = "";
+    },
+  },
+};
 </script>
 <style scoped>
 button[disabled],
