@@ -53,6 +53,7 @@ export interface MultipleChoiceResponseInfo extends ResponseInfo {
 export interface FreeResponseResponseInfo extends ResponseInfo {
   question_type: "free_response";
   text: string;
+  editorMode?: "text" | "code";
 }
 
 export type StringifiedNumber = string;
