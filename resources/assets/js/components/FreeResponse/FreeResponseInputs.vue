@@ -5,7 +5,7 @@
         v-model="response_text"
         :aria-labelledby="`question-${question.id}-heading`"
         data-cy="free-response-textarea"
-        class="form-control tw-whitespace-pre-wrap tw-font-mono tw-text-sm"
+        class="form-control"
         placeholder="Type your response"
         :rows="3"
         :disabled="disabled"
