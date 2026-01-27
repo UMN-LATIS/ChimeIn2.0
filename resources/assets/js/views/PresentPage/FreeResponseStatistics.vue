@@ -53,10 +53,19 @@
             <TransitionGroup name="fade">
               <tr v-for="response in responsesByMostRecent" :key="response.id">
                 <th scope="row">
-                  {{ question.anonymous ? "Anonymous" : userLookup.get(response.user_id)?.name ?? "-" }}
+                  {{
+                    question.anonymous
+                      ? "Anonymous"
+                      : userLookup.get(response.user_id)?.name ?? "-"
+                  }}
                 </th>
                 <td>
-                  <p>{{ response.response_info.text }}</p>
+                  <code v-if="response.response_info.editorMode === 'code'">
+                    <pre class="tw-whitespace-pre-wrap">{{
+                      response.response_info.text
+                    }}</pre>
+                  </code>
+                  <p v-else>{{ response.response_info.text }}</p>
                 </td>
               </tr>
             </TransitionGroup>
