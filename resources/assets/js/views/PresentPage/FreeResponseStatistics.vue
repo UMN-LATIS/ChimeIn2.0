@@ -51,12 +51,12 @@
       <section class="page-section">
         <h2 class="section-header">Responses</h2>
 
-        <table class="table table-striped response-table">
+        <table class="table table-striped response-table !tw-max-w-[60rem]">
           <thead>
             <tr
               class="[&>th]:!tw-border-t-0 [&>th]:tw-p-1 [&>th]:!tw-align-baseline tw-text-xs tw-text-neutral-400"
             >
-              <th scope="col">User</th>
+              <th scope="col" class="tw-w-36">User</th>
               <th scope="col">
                 <div
                   class="tw-flex tw-gap-4 tw-justify-between tw-items-center"
@@ -65,9 +65,9 @@
                   <fieldset
                     class="tw-inline-flex tw-items-center tw-gap-1 tw-border tw-border-neutral-600 tw-rounded-md tw-p-0.5"
                   >
-                    <legend class="tw-sr-only">Editor Mode</legend>
+                    <legend class="tw-sr-only">Response Format</legend>
                     <label
-                      v-for="format in ['text', 'code']"
+                      v-for="format in allResponseFormats"
                       :key="format"
                       class="tw-inline-block tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer text-xs mb-0 has-[:focus]:tw-ring-2 has-[:focus]:tw-ring-blue-500 relative"
                       :class="{
@@ -78,7 +78,7 @@
                       <input
                         v-model="responseFormat"
                         type="radio"
-                        :name="`editorMode-${question.id}`"
+                        :name="`text-format-${question.id}`"
                         :value="format"
                         class="tw-appearance-none tw-w-0 tw-h-0 tw-m-0 tw-p-0 tw-absolute"
                       />
@@ -101,7 +101,7 @@
                 </th>
                 <td>
                   <pre
-                    v-if="responseFormat === 'code'"
+                    v-if="responseFormat === 'monospace'"
                     class="tw-whitespace-pre-wrap tw-m-0"
                   ><code>{{ response.response_info.text }}</code></pre>
                   <p v-else class="tw-m-0">{{ response.response_info.text }}</p>
@@ -151,8 +151,9 @@ const processWithNLP = ref(false);
 const responseTexts = computed(() =>
   props.responses.map((r) => r.response_info.text)
 );
-
-const responseFormat = ref<"text" | "code">("text");
+type ResponseFormat = "default" | "monospace";
+const responseFormat = ref<ResponseFormat>("default");
+const allResponseFormats = ["default", "monospace"];
 
 const wordFreqLookup = computed<WordFrequencyLookup>(() => {
   return processWithNLP.value
@@ -208,6 +209,7 @@ function handleWordClick(word: string) {
 
 .response-table {
   max-width: 40rem;
+  table-layout: fixed;
 }
 
 input[type="checkbox"] {
