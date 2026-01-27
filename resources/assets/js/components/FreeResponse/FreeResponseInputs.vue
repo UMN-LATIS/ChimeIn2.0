@@ -9,19 +9,18 @@
           <label
             v-for="{ value, label } in editorModes"
             :key="value"
-            class="tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer text-xs mb-0"
+            class="tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer text-xs mb-0 has-[:focus]:tw-ring-2 has-[:focus]:tw-ring-blue-500"
             :class="{
               'tw-bg-neutral-900 tw-text-neutral-100':
                 value === activeEditorMode,
             }"
-            @click="activeEditorMode = value"
           >
             <input
-              :id="value"
+              v-model="activeEditorMode"
               type="radio"
-              name="editorMode"
-              :checked="value === activeEditorMode"
-              class="tw-absolute tw-opacity-0 tw-pointer-events-none"
+              :name="`editorMode-${question.id}`"
+              :value="value"
+              class="tw-appearance-none tw-w-0 tw-h-0 tw-m-0 tw-p-0"
             />
             {{ label }}
           </label>
@@ -34,9 +33,8 @@
         data-cy="free-response-textarea"
         class="form-control"
         placeholder="Type your response"
-        :rows="3"
+        :rows="activeEditorMode === 'code' ? 8 : 3"
         :disabled="disabled"
-        :max-rows="6"
         :class="{
           'tw-font-mono text-sm tw-whitespace-pre-wrap tw-bg-neutral-900 focus:tw-bg-neutral-900 tw-text-neutral-400 focus:tw-text-neutral-300':
             activeEditorMode === 'code',
