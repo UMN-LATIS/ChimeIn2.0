@@ -148,6 +148,7 @@ watch(
   (newResponse) => {
     if (newResponse && newResponse.response_info) {
       response_text.value = newResponse.response_info.text;
+      activeEditorMode.value = newResponse.response_info.editorMode ?? "text";
     }
   },
   { immediate: true }

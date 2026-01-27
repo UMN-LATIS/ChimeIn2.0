@@ -60,12 +60,11 @@
                   }}
                 </th>
                 <td>
-                  <code v-if="response.response_info.editorMode === 'code'">
-                    <pre class="tw-whitespace-pre-wrap">{{
-                      response.response_info.text
-                    }}</pre>
-                  </code>
-                  <p v-else>{{ response.response_info.text }}</p>
+                  <pre
+                    v-if="response.response_info.editorMode === 'code'"
+                    class="tw-whitespace-pre-wrap tw-m-0"
+                  ><code>{{ response.response_info.text }}</code></pre>
+                  <p v-else class="tw-m-0">{{ response.response_info.text }}</p>
                 </td>
               </tr>
             </TransitionGroup>
@@ -115,7 +114,7 @@ const wordFreqLookup = computed<WordFrequencyLookup>(() => {
     : toWordFrequencyLookup(responseTexts.value, filteredWords.value);
 });
 
-function handleWordClick(word) {
+function handleWordClick(word: string) {
   filteredWords.value.push(word);
 }
 </script>
