@@ -171,6 +171,7 @@ export interface FreeResponseQuestionInfo extends QuestionInfo {
     | [] // default until hideWordcloud is checked
     | {
         hideWordcloud: boolean;
+        displayType?: "default" | "code";
       };
 }
 
