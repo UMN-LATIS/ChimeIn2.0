@@ -99,7 +99,7 @@ import type {
   WordFrequencyLookup,
 } from "../../types";
 import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
-import { toNormedFreeResponseQuestionOptions } from "../QuestionForm/toNormedFreeResponseQuestionOptions";
+import { toNormedFreeResponseQuestionOptions } from "../../helpers/toNormedFreeResponseQuestionOptions";
 
 interface Props {
   responses: FreeResponse[];

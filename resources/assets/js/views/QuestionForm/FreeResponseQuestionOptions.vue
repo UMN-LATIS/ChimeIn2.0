@@ -90,7 +90,7 @@ import {
   NormedFreeResponseQuestionOptions,
 } from "@/types";
 import { computed, onMounted, ref } from "vue";
-import { toNormedFreeResponseQuestionOptions } from "./toNormedFreeResponseQuestionOptions";
+import { toNormedFreeResponseQuestionOptions } from "../../helpers/toNormedFreeResponseQuestionOptions";
 
 const props = defineProps<{
   /**
