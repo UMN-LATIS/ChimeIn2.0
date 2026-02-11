@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
 import type {
@@ -110,19 +110,20 @@ interface Props {
 const props = defineProps<Props>();
 const filteredWords = ref<string[]>([]);
 
-interface NormedQuestionOptions {
-  displayType: "default" | "code";
-  hideWordcloud: boolean;
-}
-
-const normedQuestionOptions = computed(
-  (): NormedQuestionOptions =>
-    toNormedFreeResponseQuestionOptions(
-      props.question.question_info.question_responses
-    )
+const normedQuestionOptions = computed(() =>
+  toNormedFreeResponseQuestionOptions(
+    props.question.question_info.question_responses
+  )
 );
 
 const isWordcloudHidden = ref(normedQuestionOptions.value.hideWordcloud);
+
+watch(
+  () => normedQuestionOptions.value.hideWordcloud,
+  (newVal) => {
+    isWordcloudHidden.value = newVal;
+  }
+);
 
 const responsesByMostRecent = computed(() => [...props.responses].reverse());
 
