@@ -112,11 +112,15 @@ const emit = defineEmits<{
   ): void;
 }>();
 
-const isOpen = ref(false);
-
 const normedQuestionOptions = computed(() =>
   toNormedFreeResponseQuestionOptions(props.question_responses)
 );
+
+const hasNonDefaultOptions =
+  normedQuestionOptions.value.displayType !== "default" ||
+  normedQuestionOptions.value.hideWordcloud;
+
+const isOpen = ref(hasNonDefaultOptions);
 
 onMounted(() => {
   // initialize the question options in case they're set to `[]`
