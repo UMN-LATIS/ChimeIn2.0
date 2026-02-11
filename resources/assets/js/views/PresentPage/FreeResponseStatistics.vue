@@ -72,7 +72,7 @@
                 </th>
                 <td>
                   <pre
-                    v-if="displayType === 'code'"
+                    v-if="normedQuestionOptions.displayType === 'code'"
                     class="tw-whitespace-pre-wrap tw-m-0"
                   ><code>{{ response.response_info.text }}</code></pre>
                   <p v-else class="tw-m-0">{{ response.response_info.text }}</p>
@@ -108,13 +108,33 @@ interface Props {
 
 const props = defineProps<Props>();
 const filteredWords = ref<string[]>([]);
-const isHiddenByDefault = computed(
-  () =>
-    !Array.isArray(props.question.question_info.question_responses) &&
-    props.question.question_info.question_responses.hideWordcloud
-);
 
-const isWordcloudHidden = ref(isHiddenByDefault.value);
+interface NormedQuestionOptions {
+  displayType: "default" | "code";
+  hideWordcloud: boolean;
+} 
+
+const normedQuestionOptions = computed((): NormedQuestionOptions => {
+  const questionOptionDefaults = {
+    displayType: "default",
+    hideWordcloud: false,
+  } satisfies NormedQuestionOptions;
+
+  const questionOptions = props.question.question_info.question_responses;
+
+  // handle the legacy case where question responses were just an
+  // array of strings
+  if (Array.isArray(questionOptions)) {
+    return questionOptionDefaults;
+  }
+
+  return {
+    ...questionOptionDefaults,
+    ...questionOptions,
+  };
+});
+
+const isWordcloudHidden = ref(normedQuestionOptions.value.hideWordcloud);
 
 const responsesByMostRecent = computed(() => [...props.responses].reverse());
 
@@ -122,16 +142,6 @@ const processWithNLP = ref(false);
 const responseTexts = computed(() =>
   props.responses.map((r) => r.response_info.text)
 );
-
-const displayType = computed(() => {
-  if (
-    !Array.isArray(props.question.question_info.question_responses) &&
-    props.question.question_info.question_responses.display_type
-  ) {
-    return props.question.question_info.question_responses.display_type;
-  }
-  return "default";
-});
 
 const wordFreqLookup = computed<WordFrequencyLookup>(() => {
   return processWithNLP.value
