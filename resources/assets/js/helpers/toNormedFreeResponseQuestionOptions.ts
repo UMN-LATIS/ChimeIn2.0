@@ -1,35 +1,31 @@
 import type { FreeResponseQuestionInfo, NormedFreeResponseQuestionOptions } from "@/types";
 
+const VALID_DISPLAY_TYPES = ["default", "code"] as const;
+
+const DEFAULT_OPTIONS: NormedFreeResponseQuestionOptions = {
+  displayType: "default",
+  hideWordcloud: false,
+};
+
 /**
- * Normalizes the question_responses for a free
- * response question to ensure it has the
- * expected structure and default values.
+ * Normalizes the question_responses for a free response question
+ * to ensure it has the expected structure and default values.
+ *
+ * question_responses may be `[]` instead of an object
+ * if it's never been edited.
  */
 export function toNormedFreeResponseQuestionOptions(
-  rawQuestionOptions: FreeResponseQuestionInfo["question_responses"]
+  raw: FreeResponseQuestionInfo["question_responses"]
 ): NormedFreeResponseQuestionOptions {
-  const defaultOptions = {
-    displayType: "default",
-    hideWordcloud: false,
-  } satisfies NormedFreeResponseQuestionOptions;
-
-  // question_responses may be an empty array
-  // instead of an object if it's never been
-  // edited, so check for that and return the
-  // default options
-  if (Array.isArray(rawQuestionOptions) || typeof rawQuestionOptions !== "object") {
-    return defaultOptions;
+  if (Array.isArray(raw) || typeof raw !== "object") {
+    return DEFAULT_OPTIONS;
   }
 
-  // handle unexpected or unset displayType values by falling back to the default
-  const validDisplayTypes = ["default", "code"];
-  if (!rawQuestionOptions.displayType || !validDisplayTypes.includes(rawQuestionOptions.displayType)) {
-    rawQuestionOptions.displayType = defaultOptions.displayType;
-  }
-  
   return {
-    ...defaultOptions,
-    ...rawQuestionOptions,
+    displayType: VALID_DISPLAY_TYPES.includes(raw.displayType as typeof VALID_DISPLAY_TYPES[number])
+      ? raw.displayType!
+      : DEFAULT_OPTIONS.displayType,
+    hideWordcloud: raw.hideWordcloud ?? DEFAULT_OPTIONS.hideWordcloud,
   };
 }
 
