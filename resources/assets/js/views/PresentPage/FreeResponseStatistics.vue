@@ -99,6 +99,7 @@ import type {
   WordFrequencyLookup,
 } from "../../types";
 import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
+import { toNormedFreeResponseQuestionOptions } from "../QuestionForm/toNormedFreeResponseQuestionOptions";
 
 interface Props {
   responses: FreeResponse[];
@@ -112,27 +113,14 @@ const filteredWords = ref<string[]>([]);
 interface NormedQuestionOptions {
   displayType: "default" | "code";
   hideWordcloud: boolean;
-} 
+}
 
-const normedQuestionOptions = computed((): NormedQuestionOptions => {
-  const questionOptionDefaults = {
-    displayType: "default",
-    hideWordcloud: false,
-  } satisfies NormedQuestionOptions;
-
-  const questionOptions = props.question.question_info.question_responses;
-
-  // handle the legacy case where question responses were just an
-  // array of strings
-  if (Array.isArray(questionOptions)) {
-    return questionOptionDefaults;
-  }
-
-  return {
-    ...questionOptionDefaults,
-    ...questionOptions,
-  };
-});
+const normedQuestionOptions = computed(
+  (): NormedQuestionOptions =>
+    toNormedFreeResponseQuestionOptions(
+      props.question.question_info.question_responses
+    )
+);
 
 const isWordcloudHidden = ref(normedQuestionOptions.value.hideWordcloud);
 
