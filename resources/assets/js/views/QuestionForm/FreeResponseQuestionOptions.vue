@@ -3,6 +3,8 @@
     <button
       type="button"
       class="tw-cursor-pointer tw-text-xs tw-font-medium tw-tracking-wide tw-uppercase tw-select-none tw-bg-transparent tw-border-none tw-p-0 tw-flex tw-items-center tw-gap-1 tw-text-neutral-600"
+      :aria-expanded="isOpen"
+      aria-controls="free-response-more-options"
       @click="isOpen = !isOpen"
     >
       <span
@@ -15,6 +17,7 @@
     <Transition name="slide">
       <div
         v-show="isOpen"
+        id="free-response-more-options"
         class="tw-grid tw-grid-cols-[auto_1fr_1fr] tw-items-center tw-justify-items-start tw-gap-4 mt-2 tw-bg-neutral-100 tw-rounded-lg tw-p-2"
       >
         <div
@@ -67,7 +70,8 @@
           >Hide wordcloud</label
         >
         <input
-          :value="normedQuestionOptions.hideWordcloud"
+          id="hideWordcloud"
+          :checked="normedQuestionOptions.hideWordcloud"
           type="checkbox"
           class="tw-col-span-2"
           @change="
