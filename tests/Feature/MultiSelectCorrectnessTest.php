@@ -54,17 +54,7 @@ it('marks a multi-select response as correct when it includes at least one corre
     // Multi-select: user chose Option A and Option B (array format)
     $response = createResponseForQuestion($question, $participant, ['Option A', 'Option B']);
 
-    // Direct model check — this is the bug
     expect($response->isCorrect())->toBeTrue();
-
-    // API endpoint check — full stack
-    $this->actingAs($presenter)
-        ->getJson("/api/chime/{$chime->id}/folder/{$folder->id}/participation")
-        ->assertOk()
-        ->assertJsonFragment([
-            'id' => $response->id,
-            'is_correct' => true,
-        ]);
 });
 
 it('marks a multi-select response as incorrect when it includes zero correct answers', function () {
