@@ -18,6 +18,9 @@ cp .env.example .env
 # The default `.env.example` will probably be sufficient,
 # but if you're a Safari user, change SESSION_SAME_SITE="none"
 
+# add credentials for laravel nova
+cp auth.json.example auth.json 
+
 # Install php deps
 docker run --rm \
     -u "$(id -u):$(id -g)" \
