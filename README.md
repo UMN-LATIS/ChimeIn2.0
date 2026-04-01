@@ -8,7 +8,7 @@ Chime-In is a web-based "clicker" tool for doing live polling in interactive pre
 
 ## Setting up ChimeIn Locally
 
-Chime in uses Laravel's docker environment, [Laravel Sail](https://laravel.com/docs/8.x/sail) for development. To get sarted:
+Chime in uses Laravel's docker environment, [Laravel Sail](https://laravel.com/docs/12.x/sail) for development. To get started:
 
 ```sh
 # Create a .env file
@@ -23,7 +23,8 @@ docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v $(pwd):/var/www/html \
     -w /var/www/html \
-    laravelsail/php81-composer:latest \
+    -e COMPOSER_HOME=/var/www/html/vendor/.composer \
+    laravelsail/php84-composer:latest \
     composer install --ignore-platform-reqs
 
 # Build docker image
@@ -42,10 +43,10 @@ sail artisan migrate:fresh
 sail artisan db:seed
 
 # Install node modules
-yarn install
+npm ci
 
 # Start Vite to compile Vue
-yarn dev
+npm run dev
 ```
 
 The application will be running on <http://localhost>.
@@ -54,7 +55,7 @@ The application will be running on <http://localhost>.
 
 ```sh
 sail up
-yarn dev
+npm run dev
 ```
 
 Load <http://localhost> in your browser.
@@ -71,7 +72,7 @@ Stop the application: `sail down`.
 ## Running Tests Locally
 
 ```sh
-yarn run cypress
+npm run test
 ```
 
 ## Deploy
@@ -100,20 +101,20 @@ To develop locally:
 
 ```sh
 cd docs
-yarn install
-yarn docs:dev
+npm install
+npm run docs:dev
 ```
 
 Building the documentation:
 
 ```sh
 cd docs
-yarn docs:build
+npm run docs:build
 ```
 
 and publishing:
 
 ```sh
 cd docs
-yarn docs:publish
+npm run docs:publish
 ```
