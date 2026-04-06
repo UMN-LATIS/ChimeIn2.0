@@ -46,6 +46,10 @@ export default defineConfig({
             text: "Accessibility",
             link: "/accessibility",
           },
+          { 
+            text: "LTI 1.1 to 1.3 migration",
+            link: "/lti11-migration",
+          }
         ],
       },
       {
