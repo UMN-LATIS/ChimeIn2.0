@@ -9,7 +9,8 @@ use App\User;
 use App\Chime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Validator;
 use Auth;
 use App\Events\EndSession;
@@ -258,15 +259,16 @@ class ChimeController extends Controller
    
   
     public function getImage(Request $req) {
-        $path = Storage::get('image/'. $req->route('image_name'));
+        $data = Storage::get('image/'. $req->route('image_name'));
+        $manager = new ImageManager(ImagickDriver::class);
+        $encoded = $manager->read($data)->toJpeg();
 
-        return Image::make($path)->response();
+        return response($encoded, 200)->header('Content-Type', $encoded->mediaType());
     }
 
     public function uploadImage(Request $req) {
         $user = Auth::user();
         $chime = $user->chimes()->find($req->route('chime_id'));
-        Image::configure(array('driver' => 'imagick'));
         $validator = Validator::make($req->all(), [
              'image'  => 'required|max:24576',
          ]);
@@ -281,26 +283,24 @@ class ChimeController extends Controller
                 return response()->json(["message" => "Unable to Store Image"], 400);
             }
 
+            $manager = new ImageManager(ImagickDriver::class);
+
             try {
-                $image_resize = Image::make($image);
+                $resized = $manager->read($image->getPathname());
             }
             catch (\Exception $e) {
                 return response()->json(["message" => "Image Could Not be Read", "rawError"=>$e], 400);
             }
-           
 
-            $image_resize->resize(2048, 2048, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            $image_resize->save(null, 70, 'jpg');
-            $path = $image->store('public');
+            $encoded = $resized->scaleDown(2048, 2048)->toJpeg(70);
+            $filename = $image->hashName();
+            $stored = Storage::put('public/' . $filename, (string) $encoded);
 
-            if(!$path) {
+            if(!$stored) {
                 return response()->json(["error" => "unableToStore"]);
             }
 
-            return response()->json(["image" => basename($path)]);
+            return response()->json(["image" => $filename]);
         } else {
             return response('Chime not found', 400);
         }
