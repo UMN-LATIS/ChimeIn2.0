@@ -259,11 +259,7 @@ class ChimeController extends Controller
    
   
     public function getImage(Request $req) {
-        $data = Storage::get('image/'. $req->route('image_name'));
-        $manager = new ImageManager(ImagickDriver::class);
-        $encoded = $manager->read($data)->toJpeg();
-
-        return response($encoded, 200)->header('Content-Type', $encoded->mediaType());
+        return Storage::response('image/' . $req->route('image_name'));
     }
 
     public function uploadImage(Request $req) {
@@ -286,21 +282,22 @@ class ChimeController extends Controller
             $manager = new ImageManager(ImagickDriver::class);
 
             try {
-                $resized = $manager->read($image->getPathname());
+                $manager->decodePath($image->getPathname())
+                    ->scaleDown(2048, 2048)
+                    ->toJpeg(70)
+                    ->save($image->getPathname());
             }
             catch (\Exception $e) {
-                return response()->json(["message" => "Image Could Not be Read", "rawError"=>$e], 400);
+                return response()->json(["message" => "Image Could Not be Read"], 400);
             }
 
-            $encoded = $resized->scaleDown(2048, 2048)->toJpeg(70);
-            $filename = $image->hashName();
-            $stored = Storage::put('public/' . $filename, (string) $encoded);
+            $path = $image->store('public');
 
-            if(!$stored) {
+            if(!$path) {
                 return response()->json(["error" => "unableToStore"]);
             }
 
-            return response()->json(["image" => $filename]);
+            return response()->json(["image" => basename($path)]);
         } else {
             return response('Chime not found', 400);
         }

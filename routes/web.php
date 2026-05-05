@@ -53,7 +53,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
     Route::delete('/api/chime/{chime_id}/users/{user_id}', [ChimeController::class, 'removeChimeUser']);
 
     Route::get('/api/chime/{chime_id}/response', 'ChimeController@getPastResponses');
-    Route::get('/api/chime/{chime_id}/image/{image_name}', 'ChimeController@getImage');
+    Route::get('/api/chime/{chime_id}/image/{image_name}', 'ChimeController@getImage')->where('image_name', '[\w\-\.]+');
     Route::post('/api/chime/{chime_id}/image', 'ChimeController@uploadImage');
     Route::post('/api/chime/{chime_id}/folder', 'ChimeController@createFolder');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}', 'ChimeController@editFolder');
