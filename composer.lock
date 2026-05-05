@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e7deb0837a145a79a9675357bae634f",
+    "content-hash": "6b4cbd6c80af5f571c4ddbf442a5631f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -10797,25 +10797,25 @@
         },
         {
             "name": "laracasts/cypress",
-            "version": "3.03",
+            "version": "3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laracasts/cypress.git",
-                "reference": "acb651413be8f29b597c6043a71c571c80c378c6"
+                "reference": "0b3d864b7db68c6dc8055cfa715f6d73c86b6939"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laracasts/cypress/zipball/acb651413be8f29b597c6043a71c571c80c378c6",
-                "reference": "acb651413be8f29b597c6043a71c571c80c378c6",
+                "url": "https://api.github.com/repos/laracasts/cypress/zipball/0b3d864b7db68c6dc8055cfa715f6d73c86b6939",
+                "reference": "0b3d864b7db68c6dc8055cfa715f6d73c86b6939",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
                 "php": "^8.0"
             },
             "require-dev": {
-                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0",
-                "phpunit/phpunit": "^8.0|^9.5.10|^10.5|^11.5.3",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "phpunit/phpunit": "^8.0|^9.5.10|^10.5|^11.5.3|^12.5.12",
                 "spatie/laravel-ray": "^1.29"
             },
             "type": "library",
@@ -10850,9 +10850,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laracasts/cypress/issues",
-                "source": "https://github.com/laracasts/cypress/tree/3.03"
+                "source": "https://github.com/laracasts/cypress/tree/3.0.4"
             },
-            "time": "2025-02-27T15:15:08+00:00"
+            "time": "2026-04-06T14:15:41+00:00"
         },
         {
             "name": "laravel/sail",
@@ -14063,11 +14063,11 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.4"
+        "php": "^8.5"
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.4"
+        "php": "8.5"
     },
     "plugin-api-version": "2.9.0"
 }
