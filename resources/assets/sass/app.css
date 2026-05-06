@@ -1,10 +1,10 @@
-// Vendor
-@use "bootstrap/dist/css/bootstrap.min.css";
-@use "katex/dist/katex.min.css";
+/* Vendor */
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "katex/dist/katex.min.css";
 
-// Variables
-@use "variables";
-@use "footer";
+/* Variables */
+@import "variables.css";
+@import "footer.css";
 
 .fade-enter-active,
 .fade-leave-active {
@@ -116,7 +116,7 @@ h5 {
   cursor: move;
 }
 
-// draggable: style while dragging
+/* draggable: style while dragging */
 .ghost {
   opacity: 0.5;
   background: #ccc;
@@ -126,13 +126,8 @@ img {
   max-width: 100%;
 }
 
-.visually-hidden {
-  position: absolute !important;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  width: 1px;
-  height: 1px;
-  word-wrap: normal;
+.form-group {
+  margin-bottom: 1rem;
 }
 
 .container-fluid {
@@ -149,27 +144,6 @@ img {
     align-items: flex-start;
     margin: 1rem 0;
   }
-}
-
-/* Bootstrap 5 Gap Utils */
-.gap-0 {
-  gap: 0;
-}
-
-.gap-1 {
-  gap: 0.25rem;
-}
-
-.gap-2 {
-  gap: 0.5rem;
-}
-
-.gap-3 {
-  gap: 1rem;
-}
-
-.gap-4 {
-  gap: 1.5rem;
 }
 
 .max-w-fit {
@@ -245,10 +219,12 @@ ul {
   min-height: 100%;
 }
 
-// This is a fix for unordered lists appearing as ordered lists
-// in the quill editor. Quill v2 always uses ordered lists.
-// when rendering, make sure the bullet style is disc,
-// but let the quill editor handle it's own bullet style
+/*
+ * Fix for unordered lists appearing as ordered lists
+ * in the quill editor. Quill v2 always uses ordered lists.
+ * when rendering, make sure the bullet style is disc,
+ * but let the quill editor handle its own bullet style
+ */
 li[data-list="bullet"]:not(.ql-editor li[data-list="bullet"]) {
   list-style-type: disc;
 }
