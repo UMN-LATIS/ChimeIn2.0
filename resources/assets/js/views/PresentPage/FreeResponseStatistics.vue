@@ -43,7 +43,7 @@
             @click="filteredWords.splice(index, 1)"
           >
             <i class="material-icons md-18 md-dark">close</i>
-            <span class="sr-only">remove word from filter</span>
+            <span class="visually-hidden">remove word from filter</span>
           </button>
         </div>
       </div>

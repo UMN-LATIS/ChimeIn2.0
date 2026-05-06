@@ -53,7 +53,7 @@
             data-cy="confirm-delete-button"
             @click="handleDeleteFolder"
           >
-            <i class="material-icons modal__button-icon mr-2">delete</i>
+            <i class="material-icons modal__button-icon me-2">delete</i>
             Delete Folder
           </button>
         </div>

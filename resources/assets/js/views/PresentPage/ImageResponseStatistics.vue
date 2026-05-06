@@ -4,7 +4,7 @@
       <div class="col">
         <button
           class="btn btn-warning"
-          data-toggle="button"
+          data-bs-toggle="button"
           :class="{ active: filterImages }"
           @click="filterImages = !filterImages"
         >
@@ -35,7 +35,7 @@
             :visible="isLightboxOpen"
             :imgs="images"
             :index="activeImageIndex"
-            image_class="img-responsive img-rounded"
+            image_class="img-fluid rounded"
             @hide="isLightboxOpen = false"
           >
           </VueEasyLightbox>

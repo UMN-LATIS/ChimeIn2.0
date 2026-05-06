@@ -8,7 +8,7 @@
             :aria-labelledby="`question-${question.id}-heading`"
             type="range"
             :disabled="disabled"
-            class="form-control-range custom-range range"
+            class="form-range range"
             :value="sliderValue"
             min="0"
             max="100"
@@ -28,7 +28,7 @@
       <div class="col-sm-2">
         <b>{{ left_choice_text }}</b>
       </div>
-      <div class="col-sm-2 text-right">
+      <div class="col-sm-2 text-end">
         <b>{{ right_choice_text }}</b>
       </div>
     </div>

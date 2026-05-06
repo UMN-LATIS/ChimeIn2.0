@@ -32,7 +32,7 @@
             <input
               id="display-default"
               type="radio"
-              class="sr-only"
+              class="visually-hidden"
               name="display-type"
               value="default"
               :checked="normedQuestionOptions.displayType === 'default'"
@@ -53,7 +53,7 @@
               type="radio"
               name="display-type"
               value="code"
-              class="sr-only"
+              class="visually-hidden"
               :checked="normedQuestionOptions.displayType === 'code'"
               @change="
                 $emit('update:question_responses', {

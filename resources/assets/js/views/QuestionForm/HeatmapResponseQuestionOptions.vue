@@ -11,7 +11,7 @@
       <input
         type="file"
         accept="image/jpeg, image/heic, image/png"
-        class="form-control-file input-file"
+        class="input-file"
         data-cy="image-dropzone"
         @change="attachFile($event.target.name, $event.target.files)"
       />

@@ -56,14 +56,14 @@
       <div class="dropdown question-card__dropdown">
         <button
           type="button"
-          data-toggle="dropdown"
+          data-bs-toggle="dropdown"
           aria-expanded="false"
           class="question-card__dropdown-button"
         >
           <i class="material-icons">more_vert</i>
         </button>
         <ul
-          class="dropdown-menu dropdown-menu-right question-card__dropdown-list"
+          class="dropdown-menu dropdown-menu-end question-card__dropdown-list"
           aria-labelledby="moreOptionsDropdownButton"
         >
           <li>

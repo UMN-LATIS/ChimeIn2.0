@@ -19,7 +19,7 @@
     >
       {{ currentStatusIcon.icon }}
     </span>
-    <span class="sr-only">{{ currentStatusIcon.alt }}</span>
+    <span class="visually-hidden">{{ currentStatusIcon.alt }}</span>
   </button>
 </template>
 

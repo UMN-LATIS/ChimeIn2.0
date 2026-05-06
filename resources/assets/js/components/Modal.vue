@@ -4,7 +4,7 @@
       <div class="modal-container" @mousedown.stop>
         <button v-if="closeable" class="modal__close-button" @click="close">
           <i class="material-icons">close</i>
-          <span class="sr-only">Close</span>
+          <span class="visually-hidden">Close</span>
         </button>
         <slot></slot>
       </div>

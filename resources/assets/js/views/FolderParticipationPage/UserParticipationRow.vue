@@ -29,7 +29,7 @@
         >-</span
       >
     </td>
-    <td class="text-right text-monospace text-muted text-sm align-middle">
+    <td class="text-end font-monospace text-muted text-sm align-middle">
       <div v-if="numberOfActiveQuestions > 0" class="tw:flex tw:flex-col  tw:justify-center tw:gap-1">
         <div>
           <div class="tw:font-bold">{{ percentScore }}</div>

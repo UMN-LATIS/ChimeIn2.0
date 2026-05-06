@@ -9,7 +9,7 @@
           :style="getPinDropStyle(response)"
           class="pin"
         >
-          <span class="sr-only">
+          <span class="visually-hidden">
             {{ response.response_info.image_coordinates.coordinate_x }},
             {{ response.response_info.image_coordinates.coordinate_y }}
           </span>
@@ -190,7 +190,7 @@ watch(
 useResizeObserver(targetImage, renderHeatMap);
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .heatmap-target-image {
   display: block;
   max-width: 100%;
@@ -224,7 +224,7 @@ canvas {
   border-radius: 50%;
   width: 0.25rem;
   height: 0.125rem;
-  background: rgba(#000, 0.25);
+  background: rgb(0 0 0 / 0.25);
 }
 
 .pin-icon {

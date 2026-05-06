@@ -12,7 +12,7 @@
           >
             Q{{ (index as number) + 1 }}
           </th>
-          <th scope="col" class="text-right">Total</th>
+          <th scope="col" class="text-end">Total</th>
         </tr>
       </thead>
       <tbody>

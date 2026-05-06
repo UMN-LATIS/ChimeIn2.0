@@ -9,14 +9,14 @@
           @click="renderWordcloud"
         >
           <i class="material-icons">shuffle</i>
-          <span class="sr-only">Shuffle Wordcloud</span>
+          <span class="visually-hidden">Shuffle Wordcloud</span>
         </button>
         <button
           class="tw:p-2 tw:bg-black/5 tw:backdrop-blur-sm tw:hover:bg-black/10 tw:transition-colors tw:rounded tw:inline-flex tw:items-center tw:justify-center tw:border tw:border-neutral-200"
           @click="handleReloadPage"
         >
           <i class="material-icons">refresh</i>
-          <span class="sr-only">Refresh Page</span>
+          <span class="visually-hidden">Refresh Page</span>
         </button>
       </div>
       <div ref="canvasRoot" class="canvas-container"></div>
@@ -25,7 +25,7 @@
       </div>
     </div>
     <table
-      class="table table-small table-hover word-freq-section__table sr-only"
+      class="table table-small table-hover word-freq-section__table visually-hidden"
       data-cy="word-frequency-table"
     >
       <caption>

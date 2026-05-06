@@ -6,7 +6,7 @@
       <div class="spinner-border" role="status"></div>
 
       <div class="mt-3">
-        <slot><span class="sr-only">Loading...</span></slot>
+        <slot><span class="visually-hidden">Loading...</span></slot>
       </div>
     </div>
   </div>

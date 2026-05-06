@@ -7,8 +7,8 @@
     <button
       class="navbar-toggler"
       type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent"
       aria-expanded="false"
       aria-label="Toggle navigation"
@@ -16,7 +16,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div id="navbarSupportedContent" class="collapse navbar-collapse">
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav ms-auto">
         <li class="nav-item">
           <a
             class="nav-link align-items-center d-flex"
@@ -60,7 +60,7 @@ export default {
   margin-left: 2px;
 }
 
-.ml-auto li {
+.ms-auto li {
   margin-left: 2px;
   margin-right: 2px;
 }

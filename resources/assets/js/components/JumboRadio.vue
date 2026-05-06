@@ -43,7 +43,7 @@ defineEmits<{
 }>();
 </script>
 
-<style lang="scss">
+<style>
 .jumbo-radio {
   padding: 2rem;
   border-radius: 0.5rem;

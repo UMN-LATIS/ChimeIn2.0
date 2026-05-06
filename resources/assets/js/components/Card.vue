@@ -35,7 +35,7 @@ export default {
 
 <style></style>
 
-<style lang="scss">
+<style>
 .chime-card {
   border: 1px solid #ddd;
   border-radius: 0.25rem;

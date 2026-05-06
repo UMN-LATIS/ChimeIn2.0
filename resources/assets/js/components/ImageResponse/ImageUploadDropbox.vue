@@ -49,7 +49,7 @@
           class="spinner-border text-secondary"
           role="status"
         >
-          <span class="sr-only">Loading...</span>
+          <span class="visually-hidden">Loading...</span>
         </div>
       </div>
     </div>

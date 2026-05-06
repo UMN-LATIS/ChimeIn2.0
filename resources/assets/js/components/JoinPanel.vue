@@ -7,7 +7,7 @@
         <span
           v-if="isCanvasChime"
           data-cy="canvas-badge"
-          class="badge badge-pill badge-gold"
+          class="badge rounded-pill badge-gold"
         >
           Canvas
         </span>

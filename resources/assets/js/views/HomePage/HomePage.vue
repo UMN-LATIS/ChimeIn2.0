@@ -46,15 +46,13 @@
                     placeholder="Access Code"
                     @keyup.enter="join_chime"
                   />
-                  <div class="input-group-append">
-                    <button
-                      class="btn btn-secondary"
-                      type="button"
-                      @click="join_chime"
-                    >
-                      Join
-                    </button>
-                  </div>
+                  <button
+                    class="btn btn-secondary"
+                    type="button"
+                    @click="join_chime"
+                  >
+                    Join
+                  </button>
                   <div
                     v-if="requires_login"
                     class="alert alert-danger"

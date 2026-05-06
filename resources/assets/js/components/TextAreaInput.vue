@@ -4,7 +4,7 @@
       :for="name"
       class="form-group__label"
       :class="{
-        'sr-only': visuallyHideLabel,
+        'visually-hidden': visuallyHideLabel,
       }"
       >{{ label }}</label
     >

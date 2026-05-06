@@ -115,30 +115,28 @@
                     @input="handleFolderNameInput"
                   />
 
-                  <div class="input-group-append">
-                    <button
-                      class="btn btn-outline-primary align-items-center d-flex"
-                      @click="edit_folder"
-                    >
-                      <span class="material-icons pointer">save</span> Save
-                    </button>
-                  </div>
+                  <button
+                    class="btn btn-outline-primary align-items-center d-flex"
+                    @click="edit_folder"
+                  >
+                    <span class="material-icons pointer">save</span> Save
+                  </button>
                 </div>
               </div>
-              <div class="ml-auto col-12 btn-toolbar justify-content-end">
+              <div class="ms-auto col-12 btn-toolbar justify-content-end">
                 <ForceSyncButton
                   v-if="
                     isCanvasChime && chime.lti_grade_mode === 'multiple_grades'
                   "
                   :forceSyncState="forceSyncState"
-                  class="mr-2 btn btn-sm align-items-center d-flex"
+                  class="me-2 btn btn-sm align-items-center d-flex"
                   @click="sync"
                 >
                   Force Sync with Canvas
                 </ForceSyncButton>
 
                 <button
-                  class="mr-2 btn btn-warning btn-sm align-items-center d-flex"
+                  class="me-2 btn btn-warning btn-sm align-items-center d-flex"
                   @click="reset"
                 >
                   Reset Folder

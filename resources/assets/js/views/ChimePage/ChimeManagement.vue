@@ -3,7 +3,7 @@
     <h2 class="chime-management__heading">Chime Settings</h2>
     <div class="chime-management__contents">
       <div class="form-group">
-        <label class="sr-only" for="chimeName"
+        <label class="visually-hidden" for="chimeName"
           ><strong>Chime Name:</strong></label
         >
         <div class="input-group">
@@ -14,16 +14,14 @@
             class="form-control"
             data-cy="chime-name-input"
           />
-          <div class="input-group-append">
-            <button
-              class="btn btn-outline-primary align-items-center d-flex btn-sm"
-              data-cy="save-chime-name-button"
-              @click="saveChime()"
-            >
-              <span class="material-icons pointer md-18">save</span> Update
-              Chime Name
-            </button>
-          </div>
+          <button
+            class="btn btn-outline-primary align-items-center d-flex btn-sm"
+            data-cy="save-chime-name-button"
+            @click="saveChime()"
+          >
+            <span class="material-icons pointer md-18">save</span> Update
+            Chime Name
+          </button>
         </div>
       </div>
 

@@ -6,7 +6,7 @@
         <input
           id="bar-chart"
           type="radio"
-          class="sr-only"
+          class="visually-hidden"
           name="chart-type"
           value="bar"
           :checked="normedQuestionOptions.chart_type === 'bar'"
@@ -27,7 +27,7 @@
           type="radio"
           name="chart-type"
           value="scatter"
-          class="sr-only"
+          class="visually-hidden"
           :checked="normedQuestionOptions.chart_type === 'scatter'"
           @change="
             $emit('update:question_responses', {
@@ -46,7 +46,7 @@
           type="radio"
           name="chart-type"
           value="range"
-          class="sr-only"
+          class="visually-hidden"
           :checked="normedQuestionOptions.chart_type === 'range'"
           @change="
             $emit('update:question_responses', {

@@ -73,7 +73,7 @@
                   <h1 class="text-center">
                     Whoops! You Didn't Follow the Link in Canvas
                   </h1>
-                  <p class="text-left">
+                  <p class="text-start">
                     This chime is linked to Canvas. To participate, join this
                     chime by clicking the assignment link in your Canvas course.
                   </p>

@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="col-sm-3">
-        <div class="float-right">
+        <div class="float-end">
           <PrettyCheck
             v-model="check"
             name="check"
