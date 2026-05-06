@@ -2,16 +2,12 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    // this enables stricter inference for data properties on `this`
     "strict": true,
     "jsx": "preserve",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noImplicitAny": false,
     "allowJs": true,
-    "esModuleInterop": true,
     "outDir": "./public/build",
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./resources/assets/js/*"]
     },
