@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         php-version: ["8.5"]
-        node-version: ["22"]
+        node-version: ["24"]
     name: PHP ${{ matrix.php-version }} + Node ${{ matrix.node-version }}
     steps:
       - name: Checkout code
