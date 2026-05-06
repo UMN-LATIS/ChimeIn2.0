@@ -7,6 +7,7 @@ import * as comboApi from "./combo";
 import * as userApi from "./user";
 import * as chimeUserApi from "./chimeUser";
 import * as responseApi from "./response";
+import * as imageApi from "./image";
 
 export default {
   ...chimeApi,
@@ -16,4 +17,5 @@ export default {
   ...chimeUserApi,
   ...userApi,
   ...responseApi,
+  ...imageApi,
 };

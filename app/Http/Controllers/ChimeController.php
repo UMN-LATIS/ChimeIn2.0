@@ -9,7 +9,9 @@ use App\User;
 use App\Chime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\Encoders\JpegEncoder;
 use Validator;
 use Auth;
 use App\Events\EndSession;
@@ -259,7 +261,6 @@ class ChimeController extends Controller
     public function uploadImage(Request $req) {
         $user = Auth::user();
         $chime = $user->chimes()->find($req->route('chime_id'));
-        Image::configure(array('driver' => 'imagick'));
         $validator = Validator::make($req->all(), [
              'image'  => 'required|max:24576',
          ]);
@@ -274,19 +275,18 @@ class ChimeController extends Controller
                 return response()->json(["message" => "Unable to Store Image"], 400);
             }
 
+            $manager = new ImageManager(ImagickDriver::class);
+
             try {
-                $image_resize = Image::make($image);
+                $manager->decodePath($image->getPathname())
+                    ->scaleDown(2048, 2048)
+                    ->encode(new JpegEncoder(70))
+                    ->save($image->getPathname());
             }
             catch (\Exception $e) {
-                return response()->json(["message" => "Image Could Not be Read", "rawError"=>$e], 400);
+                return response()->json(["message" => "Image Could Not be Read"], 400);
             }
-           
 
-            $image_resize->resize(2048, 2048, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            $image_resize->save(null, 70, 'jpg');
             $path = $image->store('public');
 
             if(!$path) {
