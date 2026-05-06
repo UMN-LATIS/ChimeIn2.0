@@ -257,11 +257,6 @@ class ChimeController extends Controller
       $chime->users()->detach($userId);
       return response('Removed user from Chime', 200);
     }
-   
-  
-    public function getImage(Request $req) {
-        return Storage::response('image/' . $req->route('image_name'));
-    }
 
     public function uploadImage(Request $req) {
         $user = Auth::user();
