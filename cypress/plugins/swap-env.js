@@ -1,21 +1,19 @@
-let fs = require("fs");
+import fs from "node:fs";
 
-module.exports = {
-  activateCypressEnvFile() {
-    if (fs.existsSync(".env.cypress")) {
-      fs.renameSync(".env", ".env.backup");
-      fs.renameSync(".env.cypress", ".env");
-    }
+export function activateCypressEnvFile() {
+  if (fs.existsSync(".env.cypress")) {
+    fs.renameSync(".env", ".env.backup");
+    fs.renameSync(".env.cypress", ".env");
+  }
 
-    return null;
-  },
+  return null;
+}
 
-  activateLocalEnvFile() {
-    if (fs.existsSync(".env.backup")) {
-      fs.renameSync(".env", ".env.cypress");
-      fs.renameSync(".env.backup", ".env");
-    }
+export function activateLocalEnvFile() {
+  if (fs.existsSync(".env.backup")) {
+    fs.renameSync(".env", ".env.cypress");
+    fs.renameSync(".env.backup", ".env");
+  }
 
-    return null;
-  },
-};
+  return null;
+}
