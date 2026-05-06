@@ -6,6 +6,14 @@
 @import "variables.css";
 @import "footer.css";
 
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: all 1s;
