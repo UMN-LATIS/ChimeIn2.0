@@ -17,7 +17,7 @@ describe("image api", () => {
   it("uploads an image and returns a filename", () => {
     api
       .uploadImage({ chimeId: chime.id, fixturePath: "goldy-650x435.jpg" })
-      .then((body) => {
+      .then(({ body }) => {
         expect(body).to.have.property("image");
         expect(body.image).to.be.a("string").and.not.be.empty;
       });
@@ -26,8 +26,8 @@ describe("image api", () => {
   it("serves an uploaded image", () => {
     api
       .uploadImage({ chimeId: chime.id, fixturePath: "goldy-650x435.jpg" })
-      .then(({ image }) => {
-        return api.getImage({ chimeId: chime.id, imageName: image });
+      .then(({ body }) => {
+        return api.getImage({ chimeId: chime.id, imageName: body.image });
       })
       .then((response) => {
         expect(response.status).to.equal(200);
@@ -38,16 +38,19 @@ describe("image api", () => {
   it("rejects upload from a non-owner", () => {
     cy.login("student");
     api
-      .uploadImage({ chimeId: chime.id, fixturePath: "goldy-650x435.jpg" })
-      .then((body) => {
-        // Should not return an image key — chime not found for this user
+      .uploadImage({
+        chimeId: chime.id,
+        fixturePath: "goldy-650x435.jpg",
+        failOnStatusCode: false,
+      })
+      .then(({ status, body }) => {
+        expect(status).to.equal(400);
         expect(body).to.not.have.property("image");
       });
   });
 
   it("rejects images over 24mb", () => {
     cy.csrfToken().then((_token) => {
-      // Build a blob that exceeds the 24576 KB limit
       const oversizedBlob = new Blob([new Uint8Array(25 * 1024 * 1024)], {
         type: "image/jpeg",
       });
@@ -55,15 +58,17 @@ describe("image api", () => {
       formData.append("image", oversizedBlob, "big.jpg");
       formData.append("_token", _token);
 
-      cy.request({
-        method: "POST",
-        url: `/api/chime/${chime.id}/image`,
-        body: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-        failOnStatusCode: false,
-      })
-        .its("status")
-        .should("equal", 400);
+      cy.window({ log: false }).then((win) =>
+        win
+          .fetch(`/api/chime/${chime.id}/image`, {
+            method: "POST",
+            body: formData,
+            credentials: "same-origin",
+          })
+          .then((res) => {
+            expect(res.status).to.equal(400);
+          }),
+      );
     });
   });
 });
