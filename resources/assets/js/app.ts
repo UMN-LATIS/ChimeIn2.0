@@ -28,12 +28,34 @@ const app = createApp({});
 
 app.use(VueAnnouncer);
 
-app.directive("tooltip", (el, binding) => {
-  new Tooltip(el, {
-    title: binding.value,
-    placement: binding.arg,
-    trigger: "hover",
-  });
+const tooltipInstances = new WeakMap<HTMLElement, Tooltip>();
+
+app.directive("tooltip", {
+  mounted(el, binding) {
+    tooltipInstances.set(
+      el,
+      new Tooltip(el, {
+        title: binding.value,
+        placement: binding.arg,
+        trigger: "hover",
+      })
+    );
+  },
+  updated(el, binding) {
+    tooltipInstances.get(el)?.dispose();
+    tooltipInstances.set(
+      el,
+      new Tooltip(el, {
+        title: binding.value,
+        placement: binding.arg,
+        trigger: "hover",
+      })
+    );
+  },
+  unmounted(el) {
+    tooltipInstances.get(el)?.dispose();
+    tooltipInstances.delete(el);
+  },
 });
 
 app.component("LtiLaunch", ltilaunch);
