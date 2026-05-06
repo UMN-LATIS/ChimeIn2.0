@@ -292,7 +292,7 @@ class ChimeController extends Controller
                 return response()->json(["message" => "Image Could Not be Read"], 400);
             }
 
-            $path = $image->store('public');
+            $path = $image->store('image');
 
             if(!$path) {
                 return response()->json(["error" => "unableToStore"]);
