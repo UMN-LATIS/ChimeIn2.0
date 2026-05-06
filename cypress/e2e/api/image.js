@@ -1,5 +1,3 @@
-import { GET } from "./methods";
-
 export function uploadImage({ chimeId, fixturePath, failOnStatusCode = true }) {
   if (!chimeId) throw Error("chimeId is required");
   if (!fixturePath) throw Error("fixturePath is required");
@@ -36,13 +34,3 @@ export function uploadImage({ chimeId, fixturePath, failOnStatusCode = true }) {
   });
 }
 
-export function getImage({ chimeId, imageName }) {
-  if (!chimeId) throw Error("chimeId is required");
-  if (!imageName) throw Error("imageName is required");
-
-  return cy.request({
-    method: GET,
-    url: `/api/chime/${chimeId}/image/${imageName}`,
-    encoding: "binary",
-  });
-}

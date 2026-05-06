@@ -23,11 +23,11 @@ describe("image api", () => {
       });
   });
 
-  it("serves an uploaded image", () => {
+  it("serves an uploaded image via the storage symlink", () => {
     api
       .uploadImage({ chimeId: chime.id, fixturePath: "goldy-650x435.jpg" })
       .then(({ body }) => {
-        return api.getImage({ chimeId: chime.id, imageName: body.image });
+        return cy.request({ url: `/storage/${body.image}` });
       })
       .then((response) => {
         expect(response.status).to.equal(200);
