@@ -1,15 +1,15 @@
 import { createApp } from "vue";
 import VueAnnouncer from "@vue-a11y/announcer";
 import "@vue-a11y/announcer/dist/style.css";
-import $ from "jquery";
 import "bootstrap";
+import { Tooltip } from "bootstrap";
 import ltilaunch from "./components/lti/ltiLaunch.vue";
 import DefaultLayout from "./layouts/DefaultLayout.vue";
 import router from "./router";
 import store from "./store";
 import axiosClient from "./common/axiosClient";
 import echoClient from "./common/echoClient";
-import "../sass/app.scss";
+import "../sass/app.css";
 import "../sass/utils.css";
 import "@umn-latis/cla-vue-template/dist/index.css";
 
@@ -28,13 +28,13 @@ const app = createApp({});
 
 app.use(VueAnnouncer);
 
-app.directive("tooltip", (el, binding) =>
-  $(el).tooltip({
+app.directive("tooltip", (el, binding) => {
+  new Tooltip(el, {
     title: binding.value,
     placement: binding.arg,
     trigger: "hover",
-  })
-);
+  });
+});
 
 app.component("LtiLaunch", ltilaunch);
 app.component("DefaultLayout", DefaultLayout);
