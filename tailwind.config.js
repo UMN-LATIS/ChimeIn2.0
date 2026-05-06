@@ -1,3 +1,5 @@
+import forms from "@tailwindcss/forms";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   prefix: "tw-",
@@ -27,7 +29,7 @@ export default {
     },
   },
   plugins: [
-    require("@tailwindcss/forms")({
+    forms({
       strategy: "class", // only generate classes
     }),
   ],
