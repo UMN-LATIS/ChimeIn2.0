@@ -1,7 +1,7 @@
 <template>
   <article
     v-if="question.question_info.question_type"
-    class="participant-prompt tw-relative tw-mb-8 sm:tw-px-8"
+    class="participant-prompt tw:relative tw:mb-8 tw:sm:px-8"
     :aria-label="`${questionTypeString} Question`"
     :class="{
       'save-succeeded': hasPreviouslySaved || saveStatus === 'success',
@@ -10,12 +10,12 @@
     }"
   >
     <div
-      class="tw-flex tw-gap-2 tw-items-center tw-mb-2"
+      class="tw:flex tw:gap-2 tw:items-center tw:mb-2"
       :class="{
-        'tw-text-green-600': saveStatus === 'success',
-        'tw-text-red-500': saveStatus === 'error',
-        'tw-text-amber-600': saveStatus === 'saving',
-        'tw-text-neutral-400': !saveStatus,
+        'tw:text-green-600': saveStatus === 'success',
+        'tw:text-red-500': saveStatus === 'error',
+        'tw:text-amber-600': saveStatus === 'saving',
+        'tw:text-neutral-400': !saveStatus,
       }"
     >
       <IconCheckboxChecked v-if="saveStatus === 'success'" />
@@ -23,22 +23,22 @@
       <IconWarningSquare v-else-if="saveStatus === 'error'" />
       <span
         v-else
-        class="tw-size-4 tw-inline-flex tw-items-center tw-justify-center"
+        class="tw:size-4 tw:inline-flex tw:items-center tw:justify-center"
         >•</span
       >
-      <span class="tw-text-xs tw-uppercase tw-font-bold">{{
+      <span class="tw:text-xs tw:uppercase tw:font-bold">{{
         saveStatusMessage || questionTypeString
       }}</span>
 
       <Chip
         v-if="saveStatus !== 'success'"
-        class="!tw-text-umn-maroon !tw-border-umn-maroon"
+        class="tw:text-umn-maroon! tw:border-umn-maroon!"
       >
         Unanswered
       </Chip>
     </div>
-    <div class="tw-pl-6">
-      <div class="prompt-question-container tw-mb-2">
+    <div class="tw:pl-6">
+      <div class="prompt-question-container tw:mb-2">
         <div
           :id="`question-${question.id}-heading`"
           role="heading"

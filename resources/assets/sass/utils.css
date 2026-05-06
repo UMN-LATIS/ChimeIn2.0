@@ -1,8 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/theme' prefix(tw);
+@import 'tailwindcss/utilities' prefix(tw);
 
-.tw-border {
-  border-width: 1px;
-  border-style: solid;
+@plugin '@tailwindcss/forms' {
+  strategy: 'class';
+}
+
+@theme {
+  --color-umn-maroon: #7a0019;
+  --color-umn-gold: #ffcc33;
+  --color-umn-gold-light: #ffde7a;
+  --color-umn-neutral-50: #f9f7f6;
+  --color-umn-neutral-100: #f0efee;
+  --color-umn-neutral-200: #d5d6d2;
+  --color-umn-neutral-500: #737487;
+  --color-umn-neutral-700: #5a5a5a;
+  --color-umn-neutral-800: #262626;
+  --color-umn-neutral-900: #1a1a1a;
+  --color-bs-blue: #3490dc;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }

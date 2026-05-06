@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="responses.length > 0">
-      <div class="tw-mb-2 tw-flex md:tw-justify-end md:-tw-mt-12">
+      <div class="tw:mb-2 tw:flex tw:md:justify-end tw:md:-mt-12">
         <button
-          class="tw-bg-neutral-100 tw-border tw-border-neutral-300 tw-inline-block tw-rounded-md tw-px-3 tw-py-1 tw-text-sm hover:tw-bg-neutral-400"
+          class="tw:bg-neutral-100 tw:border tw:border-neutral-300 tw:inline-block tw:rounded-md tw:px-3 tw:py-1 tw:text-sm tw:hover:bg-neutral-400"
           @click="isWordcloudHidden = !isWordcloudHidden"
         >
           {{ isWordcloudHidden ? "Show" : "Hide" }} Word Cloud
@@ -51,12 +51,12 @@
       <section class="page-section">
         <h2 class="section-header">Responses</h2>
 
-        <table class="table table-striped response-table !tw-max-w-[60rem]">
+        <table class="table table-striped response-table tw:max-w-240!">
           <thead>
             <tr
-              class="[&>th]:!tw-border-t-0 [&>th]:tw-p-1 [&>th]:!tw-align-baseline tw-text-xs tw-text-neutral-400"
+              class="tw:[&>th]:border-t-0! tw:[&>th]:p-1 tw:[&>th]:align-baseline! tw:text-xs tw:text-neutral-400"
             >
-              <th scope="col" class="tw-w-36">User</th>
+              <th scope="col" class="tw:w-36">User</th>
               <th scope="col">Response</th>
             </tr>
           </thead>
@@ -73,9 +73,9 @@
                 <td>
                   <pre
                     v-if="normedQuestionOptions.displayType === 'code'"
-                    class="tw-whitespace-pre-wrap tw-m-0"
+                    class="tw:whitespace-pre-wrap tw:m-0"
                   ><code>{{ response.response_info.text }}</code></pre>
-                  <p v-else class="tw-m-0">{{ response.response_info.text }}</p>
+                  <p v-else class="tw:m-0">{{ response.response_info.text }}</p>
                 </td>
               </tr>
             </TransitionGroup>

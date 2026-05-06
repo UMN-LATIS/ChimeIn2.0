@@ -1,15 +1,15 @@
 <template>
-  <div class="tw-my-4">
+  <div class="tw:my-4">
     <button
       type="button"
-      class="tw-cursor-pointer tw-text-xs tw-font-medium tw-tracking-wide tw-uppercase tw-select-none tw-bg-transparent tw-border-none tw-p-0 tw-flex tw-items-center tw-gap-1 tw-text-neutral-600"
+      class="tw:cursor-pointer tw:text-xs tw:font-medium tw:tracking-wide tw:uppercase tw:select-none tw:bg-transparent tw:border-none tw:p-0 tw:flex tw:items-center tw:gap-1 tw:text-neutral-600"
       :aria-expanded="isOpen"
       aria-controls="free-response-more-options"
       @click="isOpen = !isOpen"
     >
       <span
-        class="material-icons tw-text-base tw-transition-transform tw-duration-200"
-        :class="isOpen ? 'tw-rotate-90' : ''"
+        class="material-icons tw:text-base tw:transition-transform tw:duration-200"
+        :class="isOpen ? 'tw:rotate-90' : ''"
         >chevron_right</span
       >
       More Options
@@ -18,14 +18,14 @@
       <div
         v-show="isOpen"
         id="free-response-more-options"
-        class="tw-grid tw-grid-cols-[auto_1fr_1fr] tw-items-center tw-justify-items-start tw-gap-4 mt-2 tw-bg-neutral-100 tw-rounded-lg tw-p-2"
+        class="tw:grid tw:grid-cols-[auto_1fr_1fr] tw:items-center tw:justify-items-start tw:gap-4 mt-2 tw:bg-neutral-100 tw:rounded-lg tw:p-2"
       >
         <div
-          class="tw-col-span-full tw-grid tw-grid-cols-subgrid tw-items-center"
+          class="tw:col-span-full tw:grid tw:grid-cols-subgrid tw:items-center"
           role="group"
           aria-labelledby="display-type-label"
         >
-          <div id="display-type-label" class="tw-text-sm tw-text-neutral-600">
+          <div id="display-type-label" class="tw:text-sm tw:text-neutral-600">
             Response Type
           </div>
           <label for="display-default" class="type-option">
@@ -66,14 +66,14 @@
             Code
           </label>
         </div>
-        <label for="hideWordcloud" class="tw-m-0 tw-text-sm tw-text-neutral-600"
+        <label for="hideWordcloud" class="tw:m-0 tw:text-sm tw:text-neutral-600"
           >Hide wordcloud</label
         >
         <input
           id="hideWordcloud"
           :checked="normedQuestionOptions.hideWordcloud"
           type="checkbox"
-          class="tw-col-span-2"
+          class="tw:col-span-2"
           @change="
             $emit('update:question_responses', {
               ...normedQuestionOptions,

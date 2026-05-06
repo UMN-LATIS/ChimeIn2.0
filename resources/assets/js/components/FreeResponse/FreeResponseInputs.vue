@@ -7,7 +7,7 @@
         data-cy="free-response-textarea"
         class="form-control"
         :class="{
-          'tw-font-mono tw-text-sm':
+          'tw:font-mono tw:text-sm':
             normedQuestionOptions.displayType === 'code',
         }"
         placeholder="Type your response"

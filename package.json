@@ -18,13 +18,13 @@
   },
   "devDependencies": {
     "@simonsmith/cypress-image-snapshot": "^10.0.3",
+    "@tailwindcss/postcss": "^4.2.4",
     "@types/jest": "^29.5.12",
     "@types/quill": "^2.0.14",
     "@types/ramda": "^0.31.1",
     "@types/stopword": "^2.0.3",
     "@vitejs/plugin-vue": "^6.0.6",
     "@vue/eslint-config-typescript": "^14.7.0",
-    "autoprefixer": "^10.4.20",
     "cross-env": "^10.1.0",
     "cypress": "^15.14.2",
     "cypress-file-upload": "^5.0.8",
@@ -40,7 +40,7 @@
     "postcss": "^8.4.47",
     "prettier": "^3.2.5",
     "sass": "^1.77.4",
-    "tailwindcss": "^3.4.13",
+    "tailwindcss": "^4.2.4",
     "ts-jest": "^29.1.2",
     "typescript": "^6.0.3",
     "vite": "^8.0.10",
@@ -78,5 +78,7 @@
     "vuedraggable": "^4.1.0",
     "vuex": "^4.1.0"
   },
-  "browserslist": ["defaults"]
+  "browserslist": [
+    "defaults"
+  ]
 }

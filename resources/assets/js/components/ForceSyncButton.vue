@@ -1,6 +1,6 @@
 <template>
   <button
-    class="btn btn-sm tw-flex tw-items-center tw-justify-center gap-1"
+    class="btn btn-sm tw:flex tw:items-center tw:justify-center gap-1"
     type="button"
     :class="{
       'btn-outline-secondary': props.forceSyncState === 'error',
