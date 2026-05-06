@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
+use Intervention\Image\Encoders\JpegEncoder;
 use Validator;
 use Auth;
 use App\Events\EndSession;
@@ -284,7 +285,7 @@ class ChimeController extends Controller
             try {
                 $manager->decodePath($image->getPathname())
                     ->scaleDown(2048, 2048)
-                    ->toJpeg(70)
+                    ->encode(new JpegEncoder(70))
                     ->save($image->getPathname());
             }
             catch (\Exception $e) {
