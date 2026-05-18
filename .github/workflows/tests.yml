@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ["8.4"]
-        node-version: ["22"]
+        php-version: ["8.4", "8.5"]
+        node-version: ["22", "24", "26"]
     name: PHP ${{ matrix.php-version }} + Node ${{ matrix.node-version }}
     steps:
       - name: Checkout code
@@ -22,7 +22,7 @@ jobs:
 
       - run: cp .env.example .env
 
-      - name: Setup PHP 8.4 to match server
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
@@ -70,14 +70,14 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: cypress-screenshots-php${{ matrix.php-version }}-node${{ matrix.node-version }}
           path: cypress/screenshots
 
       - name: Upload snapshots
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-snapshots
+          name: cypress-snapshots-php${{ matrix.php-version }}-node${{ matrix.node-version }}
           path: cypress/snapshots
 
       - name: Execute Unit tests via PHPUnit

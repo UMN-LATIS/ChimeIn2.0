@@ -71,18 +71,16 @@ class Question extends Model {
             return true;
         }
 
-        $correctChoices = collect($this->getResponseChoices())
-            ->filter(fn ($choice) => $choice['correct']);
+        $correctTexts = collect($this->getResponseChoices())
+            ->filter(fn ($choice) => $choice['correct'])
+            ->pluck('text')
+            ->all();
 
-        // if question choice set has no correct answers
-        // then any choice is correct
-        if ($correctChoices->isEmpty()) return true;
+        if (empty($correctTexts)) return true;
 
-        // otherwise the answer is correct only if the response
-        // matches some correct choice
-        return $correctChoices->contains(
-            fn ($choice) =>
-            $choice['text'] === $response->getResponseTextAttribute()
-        );
+        $userChoices = $response->response_info['choice'];
+        $userChoices = is_array($userChoices) ? $userChoices : [$userChoices];
+
+        return count(array_intersect($userChoices, $correctTexts)) > 0;
     }
 }

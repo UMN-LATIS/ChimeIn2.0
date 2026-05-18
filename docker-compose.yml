@@ -1,13 +1,12 @@
 # For more information: https://laravel.com/docs/sail
-version: "3"
 services:
   app:
     build:
-      context: ./docker/8.4
+      context: ./docker/8.5
       dockerfile: Dockerfile
       args:
         WWWGROUP: "${WWWGROUP}"
-    image: sail-8.4/app
+    image: sail-8.5/app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
@@ -32,7 +31,7 @@ services:
       - redis
     entrypoint: "./docker/start.sh"
   scheduler:
-    image: sail-8.4/app
+    image: sail-8.5/app
     container_name: laravel-scheduler
     depends_on:
       - app
@@ -44,7 +43,7 @@ services:
       - sail
     entrypoint: "./docker/start.sh"
   queue:
-    image: sail-8.4/app
+    image: sail-8.5/app
     container_name: laravel-queue
     depends_on:
       - app
@@ -71,7 +70,7 @@ services:
     networks:
       - sail
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
       retries: 3
       timeout: 5s
       interval: 10s
@@ -84,42 +83,23 @@ services:
     networks:
       - sail
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       retries: 3
       timeout: 5s
   reverb:
-    image: sail-8.4/app
+    image: sail-8.5/app
     depends_on:
-    - app
-    - redis
+      - app
+      - redis
     volumes:
-        - ".:/var/www/html"
+      - ".:/var/www/html"
     environment:
-        CONTAINER_ROLE: reverb
+      CONTAINER_ROLE: reverb
     networks:
-        - sail
+      - sail
     ports:
-        - '${REVERB_PORT:-8080}:8080'
+      - "${REVERB_PORT:-8080}:8080"
     entrypoint: "./docker/start.sh"
-  # echo:
-  #   image: oanhnn/laravel-echo-server
-  #   container_name: laravel-echo
-  #   restart: unless-stopped
-  #   ports:
-  #     - 6001:6001
-  #   depends_on:
-  #     - redis
-  #     - app
-  #   environment:
-  #     LARAVEL_ECHO_SERVER_AUTH_HOST: "http://app"
-  #     LARAVEL_ECHO_SERVER_DEBUG: "true"
-  #   networks:
-  #     sail:
-  #       # Make it appear that echo and the app service
-  #       # are on the same host `app.test`, just running
-  #       # on different ports
-  #       aliases:
-  #         - app.test
 networks:
   sail:
     driver: bridge

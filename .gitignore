@@ -23,4 +23,7 @@ dist
 .temp
 /cypress/**/routes.json
 /cypress/**/__diff_output__
+/cypress/snapshots
 auth.json
+.mise.local.toml
+!.tool-versions

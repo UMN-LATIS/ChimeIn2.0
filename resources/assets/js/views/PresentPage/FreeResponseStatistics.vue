@@ -1,25 +1,34 @@
 <template>
   <div>
     <div v-if="responses.length > 0">
-      <VWordCloud
-        v-if="!hideWordcloud"
-        :wordFreqLookup="wordFreqLookup"
-        @click:word="handleWordClick"
-      >
-        <small class="m-0"> Click a word to filter it out. </small>
-      </VWordCloud>
-      <p>
-        <label>
-          <input
-            type="checkbox"
-            :checked="processWithNLP"
-            @click="processWithNLP = !processWithNLP"
-          />
+      <div class="tw-mb-2 tw-flex md:tw-justify-end md:-tw-mt-12">
+        <button
+          class="tw-bg-neutral-100 tw-border tw-border-neutral-300 tw-inline-block tw-rounded-md tw-px-3 tw-py-1 tw-text-sm hover:tw-bg-neutral-400"
+          @click="isWordcloudHidden = !isWordcloudHidden"
+        >
+          {{ isWordcloudHidden ? "Show" : "Hide" }} Word Cloud
+        </button>
+      </div>
+      <template v-if="!isWordcloudHidden">
+        <VWordCloud
+          :wordFreqLookup="wordFreqLookup"
+          @click:word="handleWordClick"
+        >
+          <small class="m-0"> Click a word to filter it out. </small>
+        </VWordCloud>
+        <p>
+          <label>
+            <input
+              type="checkbox"
+              :checked="processWithNLP"
+              @click="processWithNLP = !processWithNLP"
+            />
 
-          <strong>Experimental</strong> Use Natural Language Processing to group
-          names, places, and other entities.
-        </label>
-      </p>
+            <strong>Experimental</strong> Use Natural Language Processing to
+            group names, places, and other entities.
+          </label>
+        </p>
+      </template>
 
       <div v-if="filteredWords.length > 0" class="filter-list">
         <h2 class="filter-list__title">Filtered Words</h2>
@@ -42,10 +51,12 @@
       <section class="page-section">
         <h2 class="section-header">Responses</h2>
 
-        <table class="table table-striped response-table">
+        <table class="table table-striped response-table !tw-max-w-[60rem]">
           <thead>
-            <tr>
-              <th scope="col">User</th>
+            <tr
+              class="[&>th]:!tw-border-t-0 [&>th]:tw-p-1 [&>th]:!tw-align-baseline tw-text-xs tw-text-neutral-400"
+            >
+              <th scope="col" class="tw-w-36">User</th>
               <th scope="col">Response</th>
             </tr>
           </thead>
@@ -53,10 +64,18 @@
             <TransitionGroup name="fade">
               <tr v-for="response in responsesByMostRecent" :key="response.id">
                 <th scope="row">
-                  {{ question.anonymous ? "Anonymous" : userLookup.get(response.user_id)?.name ?? "-" }}
+                  {{
+                    question.anonymous
+                      ? "Anonymous"
+                      : userLookup.get(response.user_id)?.name ?? "-"
+                  }}
                 </th>
                 <td>
-                  <p>{{ response.response_info.text }}</p>
+                  <pre
+                    v-if="normedQuestionOptions.displayType === 'code'"
+                    class="tw-whitespace-pre-wrap tw-m-0"
+                  ><code>{{ response.response_info.text }}</code></pre>
+                  <p v-else class="tw-m-0">{{ response.response_info.text }}</p>
                 </td>
               </tr>
             </TransitionGroup>
@@ -70,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import VWordCloud from "./VWordCloud.vue";
 import toWordFrequencyLookup from "./toWordFrequencyLookup";
 import type {
@@ -80,6 +99,7 @@ import type {
   WordFrequencyLookup,
 } from "../../types";
 import getWordFreqLookupNLP from "../../helpers/getWordFreqLookupNLP";
+import { toNormedFreeResponseQuestionOptions } from "../../helpers/toNormedFreeResponseQuestionOptions";
 
 interface Props {
   responses: FreeResponse[];
@@ -89,10 +109,22 @@ interface Props {
 
 const props = defineProps<Props>();
 const filteredWords = ref<string[]>([]);
-const hideWordcloud = computed(() => {
-  const question_responses = props.question.question_info.question_responses;
-  return !Array.isArray(question_responses) && question_responses.hideWordcloud;
-});
+
+const normedQuestionOptions = computed(() =>
+  toNormedFreeResponseQuestionOptions(
+    props.question.question_info.question_responses
+  )
+);
+
+const isWordcloudHidden = ref(normedQuestionOptions.value.hideWordcloud);
+
+watch(
+  () => normedQuestionOptions.value.hideWordcloud,
+  (newVal) => {
+    isWordcloudHidden.value = newVal;
+  }
+);
+
 const responsesByMostRecent = computed(() => [...props.responses].reverse());
 
 const processWithNLP = ref(false);
@@ -106,7 +138,7 @@ const wordFreqLookup = computed<WordFrequencyLookup>(() => {
     : toWordFrequencyLookup(responseTexts.value, filteredWords.value);
 });
 
-function handleWordClick(word) {
+function handleWordClick(word: string) {
   filteredWords.value.push(word);
 }
 </script>
@@ -154,6 +186,7 @@ function handleWordClick(word) {
 
 .response-table {
   max-width: 40rem;
+  table-layout: fixed;
 }
 
 input[type="checkbox"] {

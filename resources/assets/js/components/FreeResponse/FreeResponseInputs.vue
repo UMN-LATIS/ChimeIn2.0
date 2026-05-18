@@ -6,10 +6,13 @@
         :aria-labelledby="`question-${question.id}-heading`"
         data-cy="free-response-textarea"
         class="form-control"
+        :class="{
+          'tw-font-mono tw-text-sm':
+            normedQuestionOptions.displayType === 'code',
+        }"
         placeholder="Type your response"
         :rows="3"
         :disabled="disabled"
-        :max-rows="6"
       >
       </textarea>
       <small
@@ -64,6 +67,7 @@
 <script lang="ts">
 import { PropType } from "vue";
 import * as T from "@/types";
+import { toNormedFreeResponseQuestionOptions } from "@/helpers/toNormedFreeResponseQuestionOptions";
 
 const MAX_CHARS = 10000;
 
@@ -97,6 +101,11 @@ export default {
     },
     isEmpty() {
       return this.response_text.length === 0;
+    },
+    normedQuestionOptions() {
+      return toNormedFreeResponseQuestionOptions(
+        this.question.question_info.question_responses
+      );
     },
   },
   watch: {

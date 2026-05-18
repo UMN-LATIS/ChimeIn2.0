@@ -165,12 +165,19 @@ export interface MultipleChoiceQuestionInfo extends QuestionInfo {
   question_responses: ChoiceForMultipleChoiceQuestionInfo[];
 }
 
+
+export interface NormedFreeResponseQuestionOptions {
+  hideWordcloud: boolean;
+  displayType: "default" | "code";
+}
+
 export interface FreeResponseQuestionInfo extends QuestionInfo {
   question_type: "free_response";
   question_responses:
     | [] // default until hideWordcloud is checked
     | {
         hideWordcloud: boolean;
+        displayType?: "default" | "code";
       };
 }
 
