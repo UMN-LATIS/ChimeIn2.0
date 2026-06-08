@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
         User::factory()
             ->create([
                 "name" => "Admin User",
-                "email" => "chimein+admin@umn.edu",
+                "email" => "latistecharch+admin@umn.edu",
                 "global_admin" => true,
                 "umndid" => "admin",
                 "password" => "shibboleth",
