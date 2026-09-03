@@ -38,6 +38,7 @@
           :currentSession="currentSession"
           :chimeId="chimeId"
           :userLookup="userLookup"
+          :showQuestionText="false"
           @reload="refresh"
         />
         <PresentPrompt v-else :session="currentSession ?? undefined" :question="question" />
@@ -161,7 +162,10 @@ watch(
 
 <style scoped>
 .chimein-bound {
-  min-height: calc(100vh - 1.5rem);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 1.5rem);
+  min-height: 0;
 }
 
 .chimein-controls {
@@ -191,6 +195,8 @@ watch(
 }
 
 .chimein-stage {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
   padding: 0.85rem;
   background: #fff;
@@ -200,7 +206,7 @@ watch(
 }
 
 .chimein-stage.is-results {
-  min-height: 12rem;
+  min-height: 0;
 }
 
 .chimein-stage :deep(.row) {
@@ -219,6 +225,19 @@ watch(
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.3;
+}
+
+.chimein-stage :deep(.questionDisplay) {
+  font-size: 1rem;
+}
+
+.chimein-stage :deep(.mult-choice-display) {
+  margin-left: 0;
+  padding-left: 2rem;
+}
+
+.chimein-stage.is-results :deep(.chartContainer) {
+  height: max(14rem, calc(100vh - 11.5rem));
 }
 
 .chimein-stage :deep(.form-control) {

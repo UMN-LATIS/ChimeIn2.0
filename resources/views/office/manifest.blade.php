@@ -20,8 +20,8 @@
   </Hosts>
   <DefaultSettings>
     <SourceLocation DefaultValue="{{ route('office.content') }}" />
-    <RequestedWidth>640</RequestedWidth>
-    <RequestedHeight>480</RequestedHeight>
+    <RequestedWidth>960</RequestedWidth>
+    <RequestedHeight>540</RequestedHeight>
   </DefaultSettings>
   <Permissions>ReadWriteDocument</Permissions>
 </OfficeApp>
