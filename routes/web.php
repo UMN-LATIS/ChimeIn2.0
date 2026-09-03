@@ -122,13 +122,26 @@ if (config('shibboleth.emulate_idp') ) {
     });
 }
 
-Route::post('lti', 'LTIHandler@launch');
-Route::put('lti/saveLTISettings/{chime}', 'LTIHandler@saveLTISettings')->name("ltisettings.update");
+Route::post('lti', 'LTIHandler@launch');Route::put('lti/saveLTISettings/{chime}', 'LTIHandler@saveLTISettings')->name("ltisettings.update");
 Route::get('ltiConfig', 'LTIHandler@configInfo');
 Route::post('lti13/login', 'LTI13Handler@login');
 Route::post('lti13/launch', 'LTI13Handler@launch');
 Route::get('lti13/config', 'LTI13Handler@config');
 Route::put('lti13/saveLTISettings/{chime}', 'LTI13Handler@saveLTISettings')->name("ltisettings13.update");
+
+// PowerPoint add-in: the sign-in dialog needs session auth, the add-in surface itself does not.
+Route::group(['middleware' => ['shibinjection']], function () {
+    Route::get('office/auth/start', 'Office\OfficeAuthController@start')->name('office.auth.start');
+    Route::get('office/auth/finish', 'Office\OfficeAuthController@finish')->name('office.auth.finish');
+});
+Route::view('office/content', 'office.content')->name('office.content');
+
+// Built per-environment so SourceLocation matches the host actually serving the add-in.
+Route::get('office/manifest.xml', function () {
+    return response()
+        ->view('office.manifest')
+        ->header('Content-Type', 'application/xml');
+})->name('office.manifest');
 
 
 Route::fallback('HomeController@index');

@@ -58,5 +58,8 @@ class Kernel extends HttpKernel {
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'shibinjection' => \App\Http\Middleware\ShibInjection::class,
         'limit.json.size'  => \App\Http\Middleware\LimitJsonSize::class,
+        'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+        'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+        'office.scope' => \App\Http\Middleware\EnsureOfficeTokenScope::class,
     ];
 }

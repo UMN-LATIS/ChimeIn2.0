@@ -54,6 +54,7 @@
     "laravel/helpers": "^1.4",
     "laravel/nova": "^5.8",
     "laravel/reverb": "^1.10",
+    "laravel/sanctum": "^4.3",
     "laravel/tinker": "^3.0",
     "orangehill/iseed": "^3.0",
     "packbackbooks/lti-1p3-tool": "dev-upstream-merge-2",

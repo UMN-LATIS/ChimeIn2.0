@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Events\StartSession;
 use App\Events\EndSession;
 use App\Events\ChangeSessionStatus;
+use App\Library\QuestionSessionManager;
 use Auth;
 
 class PresentController extends Controller
@@ -25,18 +26,7 @@ class PresentController extends Controller
         $sortedQuestions = $folder->questions()->orderBy('order', 'desc')->get();
 
         foreach($sortedQuestions as $question) {
-            // don't start a session if we've already got one
-            if(!$question->current_session) {
-                $new_session = $question->sessions()->create();
-
-                $question->current_session()->associate($new_session);
-                $question->save();
-
-                // $question->save();
-                event(new StartSession($chime, $new_session));
-            }
-            
-
+            QuestionSessionManager::open($chime, $question);
         }
         return response('Sessions Started');
     }
@@ -52,14 +42,7 @@ class PresentController extends Controller
         }
 
         foreach($folder->questions as $question) {
-            $currentSession = $question->current_session;
-            if($currentSession) {
-                $currentSession->touch();
-                $question->current_session()->dissociate();
-                $question->save();
-                event(new EndSession($chime, $currentSession));
-            }
-            
+            QuestionSessionManager::close($chime, $question);
         }
         return response('Sessions Stopped');
 
@@ -77,15 +60,7 @@ class PresentController extends Controller
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
 
-            $new_session = $question->sessions()->create();
-
-            $question->current_session()->associate($new_session);
-            $question->save();
-
-            // $question->save();
-            event(new StartSession($chime, $new_session));
-
-            return response()->json($new_session);
+            return response()->json(QuestionSessionManager::open($chime, $question));
         } else {
             return response('Invalid Permissions to Start Session', 403);
         }
@@ -103,13 +78,7 @@ class PresentController extends Controller
             $folder = $chime->folders()->find($req->route('folder_id'));
             
             $question = $folder->questions()->find($req->route('question_id'));
-            $currentSession = $question->current_session;
-            if($currentSession) {
-                $currentSession->touch();
-                $question->current_session()->dissociate();
-                $question->save();
-                event(new EndSession($chime, $currentSession));
-            }
+            QuestionSessionManager::close($chime, $question);
 
             return response()->json($question);
         } else {
