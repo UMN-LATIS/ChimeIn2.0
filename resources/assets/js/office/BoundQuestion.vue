@@ -8,18 +8,7 @@
     </div>
 
     <template v-else-if="question">
-      <PresentResults
-        v-if="showingResults"
-        :question="question"
-        :sessions="question.sessions"
-        :currentSession="currentSession"
-        :chimeId="chimeId"
-        :userLookup="userLookup"
-        @reload="refresh"
-      />
-      <PresentPrompt v-else :session="currentSession ?? undefined" :question="question" />
-
-      <div v-if="isEditView" class="chimein-controls mt-2">
+      <div v-if="isEditView" class="chimein-controls">
         <button
           v-if="!currentSession"
           class="btn btn-sm btn-outline-primary"
@@ -30,7 +19,7 @@
         <button v-else class="btn btn-sm btn-outline-primary" @click="onClose">
           Close Question
         </button>
-        <button class="btn btn-sm btn-outline-secondary" @click="showingResults = !showingResults">
+        <button class="btn btn-sm btn-outline-secondary" @click="toggleResults">
           {{ showingResults ? "Hide Results" : "Show Results" }}
         </button>
         <button class="btn btn-sm btn-link" @click="$emit('reconnect')">
@@ -40,12 +29,25 @@
           Responses: {{ currentSession?.responses?.length ?? 0 }}
         </span>
       </div>
+
+      <div ref="stageEl" class="chimein-stage" :class="{ 'is-results': showingResults }">
+        <PresentResults
+          v-if="showingResults"
+          :question="question"
+          :sessions="question.sessions"
+          :currentSession="currentSession"
+          :chimeId="chimeId"
+          :userLookup="userLookup"
+          @reload="refresh"
+        />
+        <PresentPrompt v-else :session="currentSession ?? undefined" :question="question" />
+      </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import type Echo from "laravel-echo";
 import * as T from "@/types";
 import PresentPrompt from "../views/PresentPage/PresentPrompt.vue";
@@ -67,6 +69,7 @@ const userLookup = ref<Map<number, T.User>>(new Map());
 const error = ref<string | null>(null);
 const showingResults = ref(false);
 const isEditView = ref(true);
+const stageEl = ref<HTMLElement | null>(null);
 
 let echo: Echo<"reverb"> | null = null;
 let pollTimer: number | null = null;
@@ -98,6 +101,13 @@ async function onOpen() {
 
 async function onClose() {
   question.value = await closeQuestion(props.token, props.chimeId, props.questionId);
+}
+
+async function toggleResults() {
+  showingResults.value = !showingResults.value;
+  await nextTick();
+  stageEl.value?.scrollTo({ top: 0 });
+  window.scrollTo({ top: 0 });
 }
 
 function startPolling() {
@@ -148,3 +158,77 @@ watch(
   () => refresh()
 );
 </script>
+
+<style scoped>
+.chimein-bound {
+  min-height: calc(100vh - 1.5rem);
+}
+
+.chimein-controls {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: -0.75rem -0.75rem 0.75rem;
+  padding: 0.65rem 0.75rem;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #d9e0e8;
+  box-shadow: 0 2px 8px rgba(35, 49, 66, 0.08);
+}
+
+.chimein-controls .btn {
+  border-radius: 0.35rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.chimein-controls .text-muted {
+  margin-left: 0;
+  white-space: nowrap;
+}
+
+.chimein-stage {
+  overflow: auto;
+  padding: 0.85rem;
+  background: #fff;
+  border: 1px solid #d9e0e8;
+  border-radius: 0.45rem;
+  box-shadow: 0 1px 3px rgba(35, 49, 66, 0.06);
+}
+
+.chimein-stage.is-results {
+  min-height: 12rem;
+}
+
+.chimein-stage :deep(.row) {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.chimein-stage :deep(.col) {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.chimein-stage :deep(h1) {
+  margin-bottom: 0.85rem;
+  color: #172331;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.chimein-stage :deep(.form-control) {
+  width: 100%;
+  max-width: 100%;
+}
+
+.chimein-stage :deep(svg),
+.chimein-stage :deep(canvas),
+.chimein-stage :deep(img) {
+  max-width: 100%;
+}
+</style>

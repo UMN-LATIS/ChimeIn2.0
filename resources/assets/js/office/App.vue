@@ -119,3 +119,26 @@ async function onQuestionChosen(choice: { folderId: number; questionId: number }
   state.value = "bound";
 }
 </script>
+
+<style>
+html,
+body,
+#office-content {
+  min-height: 100%;
+}
+
+body.chimein-office {
+  margin: 0;
+  background: #f6f8fb;
+  color: #233142;
+  font-size: 14px;
+}
+
+.chimein-office-content {
+  min-height: 100vh;
+}
+
+.chimein-office-content.p-3 {
+  padding: 0.75rem !important;
+}
+</style>
