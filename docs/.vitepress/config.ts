@@ -35,6 +35,10 @@ export default defineConfig({
             link: "/canvas",
           },
           {
+            text: "PowerPoint Add-in",
+            link: "/powerpoint-addin",
+          },
+          {
             text: "Canvas Grading FAQ",
             link: "/grading-faq",
           },

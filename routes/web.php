@@ -122,7 +122,8 @@ if (config('shibboleth.emulate_idp') ) {
     });
 }
 
-Route::post('lti', 'LTIHandler@launch');Route::put('lti/saveLTISettings/{chime}', 'LTIHandler@saveLTISettings')->name("ltisettings.update");
+Route::post('lti', 'LTIHandler@launch');
+Route::put('lti/saveLTISettings/{chime}', 'LTIHandler@saveLTISettings')->name("ltisettings.update");
 Route::get('ltiConfig', 'LTIHandler@configInfo');
 Route::post('lti13/login', 'LTI13Handler@login');
 Route::post('lti13/launch', 'LTI13Handler@launch');
