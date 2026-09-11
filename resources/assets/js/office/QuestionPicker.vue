@@ -7,12 +7,7 @@
     <template v-else>
       <div class="mb-3">
         <label class="form-label" for="chimein-folder">Folder</label>
-        <select
-          id="chimein-folder"
-          v-model.number="selectedFolderId"
-          class="form-select"
-          @change="onFolderChange"
-        >
+        <select id="chimein-folder" v-model.number="selectedFolderId" class="form-select" @change="onFolderChange">
           <option v-for="folder in folders" :key="folder.id" :value="folder.id">
             {{ folder.name }}
           </option>
@@ -20,14 +15,9 @@
       </div>
 
       <ul class="list-group">
-        <li
-          v-for="question in questions"
-          :key="question.id"
-          class="list-group-item list-group-item-action"
-          :class="{ 'list-group-item-secondary': usedQuestionIds.has(question.id) }"
-          role="button"
-          @click="selectedFolderId !== null && $emit('chosen', { folderId: selectedFolderId, questionId: question.id })"
-        >
+        <li v-for="question in questions" :key="question.id" class="list-group-item list-group-item-action"
+          :class="{ 'list-group-item-secondary': usedQuestionIds.has(question.id) }" role="button"
+          @click="selectedFolderId !== null && $emit('chosen', { folderId: selectedFolderId, questionId: question.id })">
           <span v-html="question.text"></span>
           <span v-if="usedQuestionIds.has(question.id)" class="badge bg-secondary ms-2">
             already on a slide

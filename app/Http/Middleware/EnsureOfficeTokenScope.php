@@ -9,14 +9,12 @@ use Illuminate\Http\Request;
 use Laravel\Sanctum\PersonalAccessToken;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureOfficeTokenScope
-{
+class EnsureOfficeTokenScope {
     /**
      * Assert the bearer token is scoped to the chime in the route, and that the
      * token's owner is still a presenter for it.
      */
-    public function handle(Request $request, Closure $next, string $scope): Response
-    {
+    public function handle(Request $request, Closure $next, string $scope): Response {
         $user = $request->user();
         $token = $user?->currentAccessToken();
 

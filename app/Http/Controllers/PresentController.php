@@ -9,8 +9,7 @@ use App\Events\ChangeSessionStatus;
 use App\Library\QuestionSessionManager;
 use Auth;
 
-class PresentController extends Controller
-{
+class PresentController extends Controller {
 
 
     public function startAllQuestions(Request $req, $chime, $folder) {
@@ -19,13 +18,13 @@ class PresentController extends Controller
             ->chimes()
             ->where('chime_id', $chime->id)
             ->first());
-        if ($chime == null || $chime->pivot->permission_number < 300) { 
+        if ($chime == null || $chime->pivot->permission_number < 300) {
             return response('Invalid Permissions to Start Sessions', 403);
         }
 
         $sortedQuestions = $folder->questions()->orderBy('order', 'desc')->get();
 
-        foreach($sortedQuestions as $question) {
+        foreach ($sortedQuestions as $question) {
             QuestionSessionManager::open($chime, $question);
         }
         return response('Sessions Started');
@@ -37,15 +36,14 @@ class PresentController extends Controller
             ->chimes()
             ->where('chime_id', $chime->id)
             ->first());
-        if ($chime == null || $chime->pivot->permission_number < 300) { 
+        if ($chime == null || $chime->pivot->permission_number < 300) {
             return response('Invalid Permissions to Stop Sessions', 403);
         }
 
-        foreach($folder->questions as $question) {
+        foreach ($folder->questions as $question) {
             QuestionSessionManager::close($chime, $question);
         }
         return response('Sessions Stopped');
-
     }
 
     public function startSession(Request $req) {
@@ -55,7 +53,7 @@ class PresentController extends Controller
             ->chimes()
             ->where('chime_id', $req->route('chime_id'))
             ->first());
-        
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
@@ -73,10 +71,10 @@ class PresentController extends Controller
             ->chimes()
             ->where('chime_id', $req->route('chime_id'))
             ->first());
-        
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
-            
+
             $question = $folder->questions()->find($req->route('question_id'));
             QuestionSessionManager::close($chime, $question);
 
@@ -85,5 +83,4 @@ class PresentController extends Controller
             return response('Invalid Permissions to Stop Session', 403);
         }
     }
-
 }

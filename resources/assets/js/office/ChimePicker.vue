@@ -4,13 +4,8 @@
     <p v-if="loading">Loading your chimes&hellip;</p>
     <p v-else-if="error" class="text-danger">{{ error }}</p>
     <ul v-else class="list-group">
-      <li
-        v-for="chime in chimes"
-        :key="chime.id"
-        class="list-group-item list-group-item-action"
-        role="button"
-        @click="$emit('chosen', chime)"
-      >
+      <li v-for="chime in chimes" :key="chime.id" class="list-group-item list-group-item-action" role="button"
+        @click="$emit('chosen', chime)">
         {{ chime.name }}
       </li>
       <li v-if="chimes.length === 0" class="list-group-item text-muted">

@@ -6,29 +6,25 @@ use App\Folder;
 use App\Question;
 use App\User;
 
-function presenterOf(Chime $chime): User
-{
+function presenterOf(Chime $chime): User {
     $presenter = User::factory()->create();
     $chime->users()->attach($presenter, ['permission_number' => CHIMEIN_PRESENTER]);
 
     return $presenter;
 }
 
-function browseToken(User $user): string
-{
+function browseToken(User $user): string {
     return $user->createToken(OfficeScope::BROWSE_TOKEN_NAME, [OfficeScope::BROWSE])->plainTextToken;
 }
 
-function chimeToken(User $user, Chime $chime): string
-{
+function chimeToken(User $user, Chime $chime): string {
     return $user->createToken(
         OfficeScope::tokenNameForChime($chime),
         OfficeScope::allForChime($chime->id)
     )->plainTextToken;
 }
 
-function questionIn(Chime $chime): Question
-{
+function questionIn(Chime $chime): Question {
     $folder = Folder::factory()->create(['chime_id' => $chime->id]);
 
     return Question::factory()->create(['folder_id' => $folder->id]);

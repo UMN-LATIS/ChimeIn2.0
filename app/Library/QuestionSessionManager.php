@@ -11,13 +11,11 @@ use App\Session;
 /**
  * Opening and closing a question, shared by the web presenter and the Office add-in.
  */
-class QuestionSessionManager
-{
+class QuestionSessionManager {
     /**
      * Returns the existing session if the question is already open.
      */
-    public static function open(Chime $chime, Question $question): Session
-    {
+    public static function open(Chime $chime, Question $question): Session {
         if ($question->current_session) {
             return $question->current_session;
         }
@@ -32,8 +30,7 @@ class QuestionSessionManager
         return $session;
     }
 
-    public static function close(Chime $chime, Question $question): ?Session
-    {
+    public static function close(Chime $chime, Question $question): ?Session {
         $session = $question->current_session;
 
         if (! $session) {

@@ -14,10 +14,8 @@ use Illuminate\Support\Facades\Auth;
  * normal browser login, then `finish` hands a browse token back to the add-in with
  * `Office.context.ui.messageParent` and the dialog closes.
  */
-class OfficeAuthController extends Controller
-{
-    public function start(Request $request)
-    {
+class OfficeAuthController extends Controller {
+    public function start(Request $request) {
         // AuthIfNecessary hands us a throwaway guest rather than a 401, so check explicitly.
         if (! Auth::check() || Auth::user()->guest_user) {
             return redirect()->guest(route('login'));
@@ -26,8 +24,7 @@ class OfficeAuthController extends Controller
         return redirect()->route('office.auth.finish');
     }
 
-    public function finish(Request $request)
-    {
+    public function finish(Request $request) {
         if (! Auth::check() || Auth::user()->guest_user) {
             return view('office.auth-callback', [
                 'payload' => ['status' => 'error', 'message' => 'Sign in did not complete.'],
