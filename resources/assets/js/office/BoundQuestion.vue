@@ -8,7 +8,7 @@
     </div>
 
     <template v-else-if="question">
-      <div v-if="isEditView" class="chimein-controls">
+      <div class="chimein-controls">
         <button v-if="!currentSession" class="btn btn-sm btn-outline-primary" @click="onOpen">
           Open Question
         </button>
@@ -46,7 +46,6 @@ import PresentPrompt from "../views/PresentPage/PresentPrompt.vue";
 import PresentResults from "../views/PresentPage/PresentResults.vue";
 import { closeQuestion, getChimeUsers, getQuestion, openQuestion, UnauthorizedError } from "./lib/api";
 import { createOfficeEchoClient } from "./lib/echo";
-import { getActiveView } from "./lib/storage";
 
 const props = defineProps<{
   token: string;
@@ -60,7 +59,6 @@ const question = ref<T.Question | null>(null);
 const userLookup = ref<Map<number, T.User>>(new Map());
 const error = ref<string | null>(null);
 const showingResults = ref(false);
-const isEditView = ref(true);
 const stageEl = ref<HTMLElement | null>(null);
 
 let echo: Echo<"reverb"> | null = null;
@@ -108,7 +106,6 @@ function startPolling() {
 }
 
 onMounted(async () => {
-  isEditView.value = (await getActiveView()) === "edit";
   await refresh();
 
   try {

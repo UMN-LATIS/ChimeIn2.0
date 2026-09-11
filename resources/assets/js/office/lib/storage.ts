@@ -172,17 +172,3 @@ export function clearInstance(): Promise<void> {
 export function newWidgetId(): string {
   return "w" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
-
-/**
- * "read" means Slide Show or Reading View. PowerPoint on the web never fires
- * ActiveViewChanged, so callers must re-check this on load rather than rely on it.
- */
-export function getActiveView(): Promise<"edit" | "read"> {
-  return new Promise((resolve) => {
-    Office.context.document.getActiveViewAsync((result) => {
-      resolve(result.status === Office.AsyncResultStatus.Succeeded && result.value === "read"
-        ? "read"
-        : "edit");
-    });
-  });
-}
