@@ -1,5 +1,8 @@
 <template>
-  <div class="chimein-bound">
+  <div
+    class="chimein-bound"
+    :class="{ 'is-open': currentSession, 'is-closed': !currentSession }"
+  >
     <div v-if="error" class="alert alert-danger">
       {{ error }}
       <button class="btn btn-sm btn-outline-danger ms-2" @click="$emit('reconnect')">
@@ -28,6 +31,10 @@
         <span class="text-muted ms-2">
           Responses: {{ currentSession?.responses?.length ?? 0 }}
         </span>
+      </div>
+
+      <div class="chimein-session-divider" aria-live="polite">
+        <span>{{ currentSession ? "Question open" : "Question closed" }}</span>
       </div>
 
       <div ref="stageEl" class="chimein-stage" :class="{ 'is-results': showingResults }">
@@ -192,6 +199,36 @@ watch(
 .chimein-controls .text-muted {
   margin-left: 0;
   white-space: nowrap;
+}
+
+.chimein-session-divider {
+  display: flex;
+  align-items: center;
+  margin: -0.75rem -0.75rem 0.75rem;
+  border-top: 6px solid #b7c0ca;
+}
+
+.chimein-session-divider span {
+  margin-left: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  transform: translateY(-50%);
+  background: #fff;
+  border: 1px solid #d9e0e8;
+  border-radius: 999px;
+  color: #526173;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.chimein-bound.is-open .chimein-session-divider {
+  border-top-color: green;
+}
+
+.chimein-bound.is-open .chimein-session-divider span {
+  border-color: green;
+  color: green;
 }
 
 .chimein-stage {
