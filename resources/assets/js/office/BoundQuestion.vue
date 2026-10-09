@@ -111,7 +111,7 @@ onMounted(async () => {
   try {
     echo = createOfficeEchoClient(props.token);
     echo
-      .private(`session-status.${props.chimeId}`)
+      .join(`session-status.${props.chimeId}`)
       .listen("StartSession", (event: { session: T.Session & { question: { id: number } } }) => {
         if (event.session.question.id !== props.questionId || !question.value) return;
         question.value.current_session_id = event.session.id;
