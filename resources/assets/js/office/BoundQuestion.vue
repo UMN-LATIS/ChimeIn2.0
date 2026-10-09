@@ -115,7 +115,9 @@ onMounted(async () => {
       .listen("StartSession", (event: { session: T.Session & { question: { id: number } } }) => {
         if (event.session.question.id !== props.questionId || !question.value) return;
         question.value.current_session_id = event.session.id;
-        question.value.sessions.push({ ...event.session, responses: [] });
+        if (!question.value.sessions.some((session) => session.id === event.session.id)) {
+          question.value.sessions.push({ ...event.session, responses: [] });
+        }
       })
       .listen("EndSession", (event: { session: { question_id: number } }) => {
         if (event.session.question_id !== props.questionId || !question.value) return;
