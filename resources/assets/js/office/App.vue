@@ -7,8 +7,8 @@
     <QuestionPicker v-else-if="state === 'needsQuestion'" :token="chimeToken!" :chimeId="chimeId!" :widgetId="widgetId"
       @chosen="onQuestionChosen" />
 
-    <BoundQuestion v-else-if="state === 'bound'" :token="chimeToken!" :chimeId="chimeId!" :questionId="questionId!"
-      @reconnect="onReconnect" @changeQuestion="onChangeQuestion" />
+    <BoundQuestion v-else-if="state === 'bound'" :key="chimeToken" :token="chimeToken!" :chimeId="chimeId!"
+      :questionId="questionId!" @reconnect="onReconnect" @changeQuestion="onChangeQuestion" />
 
     <p v-else-if="state === 'error'" class="text-danger">
       {{ connectionError }}
