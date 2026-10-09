@@ -140,7 +140,8 @@ Route::view('office/content', 'office.content')->name('office.content');
 Route::get('office/manifest.xml', function () {
     return response()
         ->view('office.manifest')
-        ->header('Content-Type', 'application/xml');
+        ->header('Content-Type', 'application/xml')
+        ->header('Content-Disposition', 'attachment; filename="chimein.xml"');
 })->name('office.manifest');
 
 

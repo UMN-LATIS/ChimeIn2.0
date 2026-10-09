@@ -41,17 +41,13 @@ Because this add-in isn't in the Microsoft store yet, it must be sideloaded - a 
 
 Sideloading on Windows requires trusting a shared folder that contains the add-in's manifest file. Ask your ChimeIn administrator for the manifest file and a shared network folder path, or set one up yourself:
 
-1. Get the `manifest.xml` file for the ChimeIn add-in (download it from `https://<your-chimein-domain>/office/manifest.xml`) and save it into a folder that's shared on your network with at least Read/Write access. See Microsoft's [Share a folder](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins#share-a-folder) instructions if you need to create the share.
-2. In PowerPoint, open the **File** tab, choose **Options > Trust Center > Trust Center Settings > Trusted Add-in Catalogs**.
-3. Enter the full network path to that shared folder (for example, `\\your-server\ChimeInAddin`) in **Catalog Url**, choose **Add catalog**, check **Show in Menu**, then **OK** out of both dialogs.
-4. Restart PowerPoint.
-5. Open a presentation, go to **Insert > My Add-ins > SHARED FOLDER**, select **ChimeIn Question**, and choose **Add**.
+*** Windows Docs To Come ***
 
 Full details, including a registry-script option for deploying this to many computers at once, are in Microsoft's [Sideload Office Add-ins on Windows from a network share](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins) article.
 
 ### Mac
 
-1. Get the `manifest.xml` file for the ChimeIn add-in (download it from `https://<your-chimein-domain>/office/manifest.xml`).
+1. Get the `manifest.xml` file for the ChimeIn add-in (download it from `[https://chimein.cla.umn.edu/office/manifest.xml](https://chimein.cla.umn.edu/office/manifest.xml)`).
 2. In Finder, press <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd> and go to:
    ```
    /Users/<your-username>/Library/Containers/com.microsoft.Powerpoint/Data/Documents/wef

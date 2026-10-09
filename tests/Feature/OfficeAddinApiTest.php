@@ -31,6 +31,14 @@ function questionIn(Chime $chime): Question {
     return Question::factory()->create(['folder_id' => $folder->id]);
 }
 
+it('downloads the add-in manifest as chimein.xml', function () {
+    $this->get('/office/manifest.xml')
+        ->assertOk()
+        ->assertHeader('Content-Type', 'application/xml')
+        ->assertHeader('Content-Disposition', 'attachment; filename="chimein.xml"')
+        ->assertSee('<OfficeApp', false);
+});
+
 it('rejects an unauthenticated request instead of creating a guest user', function () {
     $before = User::count();
 
