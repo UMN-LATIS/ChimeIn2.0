@@ -126,7 +126,10 @@ class OfficeApiController extends Controller {
      */
     public function users(Request $request, Chime $chime): JsonResponse {
         return response()->json(
-            $chime->users()->get(['users.id', 'users.name', 'users.email'])
+            $chime->users()
+                ->get(['users.id', 'users.name'])
+                ->map->only(['id', 'name'])
+                ->values()
         );
     }
 
