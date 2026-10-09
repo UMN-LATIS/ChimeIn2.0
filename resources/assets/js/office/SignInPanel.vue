@@ -16,7 +16,7 @@
 import { ref } from "vue";
 import { signIn } from "./lib/auth";
 
-const emit = defineEmits<{ (e: "signed-in", token: string): void }>();
+const emit = defineEmits<{ (e: "signedIn", token: string): void }>();
 
 const signingIn = ref(false);
 const error = ref<string | null>(null);
@@ -26,7 +26,7 @@ async function onSignIn() {
   error.value = null;
   try {
     const stored = await signIn();
-    emit("signed-in", stored.token);
+    emit("signedIn", stored.token);
   } catch (e) {
     error.value = (e as Error).message;
   } finally {

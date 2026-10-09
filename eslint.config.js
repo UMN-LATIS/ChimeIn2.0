@@ -10,6 +10,8 @@ export default [
       "vendor/**",
       "public/**",
       "node_modules/**",
+      "docs/.vitepress/cache/**",
+      "docs/.vitepress/dist/**",
       "resources/assets/cla-vue-template/**",
     ],
   },

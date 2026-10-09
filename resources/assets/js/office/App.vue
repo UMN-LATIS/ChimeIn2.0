@@ -1,13 +1,13 @@
 <template>
   <div class="chimein-office-content p-3">
-    <SignInPanel v-if="state === 'needsAuth'" @signed-in="onSignedIn" />
+    <SignInPanel v-if="state === 'needsAuth'" @signedIn="onSignedIn" />
 
-    <ChimePicker v-else-if="state === 'needsChime'" :browse-token="browseToken!" @chosen="onChimeChosen" />
+    <ChimePicker v-else-if="state === 'needsChime'" :browseToken="browseToken!" @chosen="onChimeChosen" />
 
-    <QuestionPicker v-else-if="state === 'needsQuestion'" :token="chimeToken!" :chime-id="chimeId!"
-      :widget-id="widgetId" @chosen="onQuestionChosen" />
+    <QuestionPicker v-else-if="state === 'needsQuestion'" :token="chimeToken!" :chimeId="chimeId!"
+      :widgetId="widgetId" @chosen="onQuestionChosen" />
 
-    <BoundQuestion v-else-if="state === 'bound'" :token="chimeToken!" :chime-id="chimeId!" :question-id="questionId!"
+    <BoundQuestion v-else-if="state === 'bound'" :token="chimeToken!" :chimeId="chimeId!" :questionId="questionId!"
       @reconnect="state = 'needsQuestion'" />
 
     <p v-else>Loading&hellip;</p>
