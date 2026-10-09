@@ -8,7 +8,7 @@
       :widgetId="widgetId" @chosen="onQuestionChosen" />
 
     <BoundQuestion v-else-if="state === 'bound'" :token="chimeToken!" :chimeId="chimeId!" :questionId="questionId!"
-      @reconnect="state = 'needsQuestion'" />
+      @reconnect="onReconnect" />
 
     <p v-else>Loading&hellip;</p>
   </div>
@@ -23,6 +23,7 @@ import BoundQuestion from "./BoundQuestion.vue";
 import { OfficeChime, issueChimeToken } from "./lib/api";
 import { getStoredBrowseToken, rememberLastChimeId } from "./lib/auth";
 import {
+  clearDeckBinding,
   readDeckBinding,
   writeDeckBinding,
   readInstance,
@@ -75,6 +76,17 @@ onMounted(async () => {
 function onSignedIn(token: string) {
   browseToken.value = token;
   state.value = "needsChime";
+}
+
+async function onReconnect() {
+  await clearDeckBinding();
+
+  const stored = getStoredBrowseToken();
+  browseToken.value = stored?.token ?? null;
+  chimeToken.value = null;
+  chimeId.value = null;
+  questionId.value = null;
+  state.value = stored ? "needsChime" : "needsAuth";
 }
 
 async function onChimeChosen(chime: OfficeChime) {
