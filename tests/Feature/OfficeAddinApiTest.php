@@ -75,6 +75,33 @@ it('issues a chime token scoped to a single chime', function () {
     expect($token->abilities)->toBe(OfficeScope::allForChime($chime->id));
 });
 
+it('keeps previously issued presentation tokens when minting another', function () {
+    $chime = Chime::factory()->create();
+    $presenter = presenterOf($chime);
+    $browseToken = browseToken($presenter);
+
+    $firstToken = $this->withToken($browseToken)
+        ->postJson("/api/office/chimes/{$chime->id}/token")
+        ->assertOk()
+        ->json('token');
+
+    $secondToken = $this->withToken($browseToken)
+        ->postJson("/api/office/chimes/{$chime->id}/token")
+        ->assertOk()
+        ->json('token');
+
+    $firstRecord = Laravel\Sanctum\PersonalAccessToken::findToken($firstToken);
+    $secondRecord = Laravel\Sanctum\PersonalAccessToken::findToken($secondToken);
+
+    expect($firstRecord)->not->toBeNull()
+        ->and($secondRecord)->not->toBeNull()
+        ->and($firstRecord->name)->not->toBe($secondRecord->name);
+
+    $this->withToken($firstToken)
+        ->getJson("/api/office/chimes/{$chime->id}")
+        ->assertOk();
+});
+
 it('refuses a chime token used against a different chime', function () {
     $chime = Chime::factory()->create();
     $otherChime = Chime::factory()->create();

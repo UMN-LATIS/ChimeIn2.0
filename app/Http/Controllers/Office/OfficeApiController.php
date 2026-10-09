@@ -10,6 +10,7 @@ use App\Library\QuestionSessionManager;
 use App\Question;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 
 /**
@@ -63,10 +64,7 @@ class OfficeApiController extends Controller {
             return response()->json(['message' => 'You are not a presenter for this chime.'], 403);
         }
 
-        $name = OfficeScope::tokenNameForChime($chime);
-
-        // One live token per presenter per chime keeps the revoke story simple.
-        $request->user()->tokens()->where('name', $name)->delete();
+        $name = OfficeScope::tokenNameForChime($chime) . '-' . Str::uuid();
 
         $token = $request->user()->createToken(
             $name,
