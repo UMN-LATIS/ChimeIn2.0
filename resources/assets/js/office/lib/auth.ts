@@ -3,7 +3,7 @@ import { clearMachine, readMachine, writeMachine } from "./storage";
 const BROWSE_TOKEN_KEY = "chimein:browseToken";
 const LAST_CHIME_KEY = "chimein:lastChimeId";
 
-interface StoredBrowseToken {
+export interface StoredBrowseToken {
   token: string;
   expiresAt: string | null;
   user: { id: number; name: string; email: string };

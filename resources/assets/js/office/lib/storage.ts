@@ -1,20 +1,24 @@
 /**
  * The three places the add-in keeps state.
  *
- * - machine:  localStorage, never written to the .pptx. Holds the browse token.
+ * - machine:  localStorage, never written to the .pptx. Holds both token types.
  * - deck:     PowerPoint presentation tags, shared by every widget in the file.
  * - instance: this widget's own settings bag, private to it.
  */
 
 const DECK_HOST = "CHIMEIN_HOST";
 const DECK_CHIME_ID = "CHIMEIN_CHIME_ID";
-const DECK_TOKEN = "CHIMEIN_TOKEN";
 const DECK_WIDGET_PREFIX = "CHIMEIN_WIDGET_";
+const CHIME_TOKEN_PREFIX = "chimein:chimeToken";
 
 export interface DeckBinding {
   host: string;
   chimeId: number;
+}
+
+export interface StoredChimeToken {
   token: string;
+  expiresAt: string | null;
 }
 
 export interface InstanceBinding {
@@ -70,19 +74,18 @@ async function withTags<T>(
 
 export async function readDeckBinding(): Promise<DeckBinding | null> {
   try {
-    const tags = await PowerPoint.run(async (context) => {
+    return await PowerPoint.run(async (context) => {
       const collection = context.presentation.tags;
       collection.load("items/key,items/value");
       await context.sync();
-      return new Map(collection.items.map((t) => [t.key, t.value]));
+      const tags = new Map(collection.items.map((tag) => [tag.key, tag.value]));
+
+      const chimeId = Number(tags.get(DECK_CHIME_ID));
+      const host = tags.get(DECK_HOST);
+
+      if (!chimeId || !host) return null;
+      return { host, chimeId };
     });
-
-    const chimeId = Number(tags.get(DECK_CHIME_ID));
-    const token = tags.get(DECK_TOKEN);
-    const host = tags.get(DECK_HOST);
-
-    if (!chimeId || !token || !host) return null;
-    return { host, chimeId, token };
   } catch {
     return null;
   }
@@ -92,14 +95,36 @@ export async function writeDeckBinding(binding: DeckBinding): Promise<void> {
   await withTags((tags) => {
     tags.add(DECK_HOST, binding.host);
     tags.add(DECK_CHIME_ID, String(binding.chimeId));
-    tags.add(DECK_TOKEN, binding.token);
   });
 }
 
-export async function clearDeckBinding(): Promise<void> {
-  await withTags((tags) => {
-    [DECK_HOST, DECK_CHIME_ID, DECK_TOKEN].forEach((key) => tags.delete(key));
-  });
+function chimeTokenKey(userId: number, chimeId: number): string {
+  return `${CHIME_TOKEN_PREFIX}:${userId}:${chimeId}`;
+}
+
+export function getStoredChimeToken(userId: number, chimeId: number): StoredChimeToken | null {
+  const key = chimeTokenKey(userId, chimeId);
+  const stored = readMachine<StoredChimeToken>(key);
+  if (!stored?.token) return null;
+
+  if (stored.expiresAt && new Date(stored.expiresAt) <= new Date()) {
+    clearMachine(key);
+    return null;
+  }
+
+  return stored;
+}
+
+export function rememberChimeToken(
+  userId: number,
+  chimeId: number,
+  stored: StoredChimeToken
+): void {
+  writeMachine(chimeTokenKey(userId, chimeId), stored);
+}
+
+export function forgetChimeToken(userId: number, chimeId: number): void {
+  clearMachine(chimeTokenKey(userId, chimeId));
 }
 
 /**

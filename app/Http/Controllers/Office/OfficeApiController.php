@@ -55,7 +55,7 @@ class OfficeApiController extends Controller {
     }
 
     /**
-     * Mint the chime-scoped token that gets embedded in the .pptx.
+     * Mint the chime-scoped token that stays in Office client storage.
      */
     public function issueChimeToken(Request $request, Chime $chime): JsonResponse {
         $membership = $request->user()->chimes()->where('chime_id', $chime->id)->first();

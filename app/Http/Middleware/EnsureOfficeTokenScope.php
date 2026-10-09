@@ -32,7 +32,7 @@ class EnsureOfficeTokenScope {
             return response()->json(['message' => 'This token is not scoped to that chime.'], 403);
         }
 
-        // The token outlives the deck it is embedded in, so re-check access every request.
+        // Re-check presenter access on every request, even while the token is valid.
         $membership = $user->chimes()->where('chime_id', $chime->id)->first();
 
         if ($membership === null || $membership->pivot->permission_number < CHIMEIN_PRESENTER) {

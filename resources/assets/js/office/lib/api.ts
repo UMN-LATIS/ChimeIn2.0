@@ -7,7 +7,11 @@ export interface OfficeChime {
   access_code: string;
 }
 
-export class UnauthorizedError extends Error {}
+export class UnauthorizedError extends Error {
+  constructor(message: string, readonly status: number) {
+    super(message);
+  }
+}
 
 function client(token: string): AxiosInstance {
   const instance = axios.create({
@@ -21,7 +25,8 @@ function client(token: string): AxiosInstance {
       const status = error?.response?.status;
       if (status === 401 || status === 403) {
         throw new UnauthorizedError(
-          error.response?.data?.message ?? "This ChimeIn connection is no longer valid."
+          error.response?.data?.message ?? "This ChimeIn connection is no longer valid.",
+          status
         );
       }
       throw error;

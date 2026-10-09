@@ -8,9 +8,9 @@ use Laravel\Sanctum\PersonalAccessToken;
 /**
  * Token abilities for the PowerPoint add-in.
  *
- * Two token shapes exist. A "browse" token stays on the presenter's machine and
- * only lists the chimes they present. A chime token is embedded in the .pptx and
- * travels with the file, so it is deliberately limited to a single chime.
+ * A "browse" token stays on the presenter's machine and only lists the chimes
+ * they present. Chime tokens stay in Office client storage; presentations
+ * contain selection metadata, not credentials.
  */
 class OfficeScope {
     public const BROWSE = 'office:browse';

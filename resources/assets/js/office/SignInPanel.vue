@@ -15,8 +15,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { signIn } from "./lib/auth";
+import type { StoredBrowseToken } from "./lib/auth";
 
-const emit = defineEmits<{ (e: "signedIn", token: string): void }>();
+const emit = defineEmits<{ (e: "signedIn", stored: StoredBrowseToken): void }>();
 
 const signingIn = ref(false);
 const error = ref<string | null>(null);
@@ -26,7 +27,7 @@ async function onSignIn() {
   error.value = null;
   try {
     const stored = await signIn();
-    emit("signedIn", stored.token);
+    emit("signedIn", stored);
   } catch (e) {
     error.value = (e as Error).message;
   } finally {

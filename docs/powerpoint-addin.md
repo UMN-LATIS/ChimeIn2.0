@@ -8,10 +8,10 @@ The PowerPoint add-in isn't published to the Microsoft store yet, so it has to b
 
 ## How it works
 
-- **Sign in once per computer.** The first time you insert a ChimeIn question on a given computer, you'll be asked to sign in. After that, PowerPoint remembers you.
+- **Sign in once per computer.** The first time you use the add-in on a given computer, you'll be asked to sign in. After that, PowerPoint remembers you. On another computer, sign in there and the saved chime and question are restored.
 - **Pick a chime once per file.** The first ChimeIn question you add to a presentation asks which chime to use. Every question you add after that, in the same file, skips straight to picking a question.
 - **Everything happens in the widget.** Opening and closing the question, and showing results, are all buttons right on the slide - there's no separate control panel to manage.
-- **Sharing the file shares access to that chime.** The add-in only ever grants access to the one chime you picked for that presentation, not your whole ChimeIn account. See [Security notes](#security-notes).
+- **Sharing the file does not share ChimeIn access.** The presentation remembers which chime and question to show, but credentials stay on the computer. See [Security notes](#security-notes).
 
 ## Adding a question to a slide
 
@@ -29,9 +29,9 @@ Start the slideshow as usual. When you reach a slide with a ChimeIn question, us
 
 ## Security notes
 
-- The chime access embedded in a presentation only allows reading and presenting questions in *that one chime* - not your other chimes, and not chime settings, editing, or grading.
-- If you share a presentation file, whoever opens it can present and view results for that chime, the same as sharing a login link. Don't share ChimeIn presentation files outside your co-instructors.
-- You can revoke a presentation's access at any time from **Chime settings > PowerPoint add-in** without affecting your other presentations or your ChimeIn login.
+- The presentation contains the selected chime and question IDs, not an access token. Tokens stay in that computer's Office add-in storage and are scoped to one chime.
+- On each computer, the add-in requires a ChimeIn sign-in before it can use the selection. The server checks that the signed-in account still has presenter permission for the chime, so downloading a shared deck does not grant students the creator's access.
+- Presenter permission is checked on every request. Removing a user's presenter permission for the selected chime immediately blocks add-in access, even if a token remains on that computer.
 
 ## Installing the add-in
 

@@ -5,6 +5,7 @@ use App\Constants\OfficeScope;
 use App\Folder;
 use App\Question;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 function presenterOf(Chime $chime): User {
     $presenter = User::factory()->create();
@@ -19,7 +20,7 @@ function browseToken(User $user): string {
 
 function chimeToken(User $user, Chime $chime): string {
     return $user->createToken(
-        OfficeScope::tokenNameForChime($chime),
+        OfficeScope::tokenNameForChime($chime) . '-' . Illuminate\Support\Str::uuid(),
         OfficeScope::allForChime($chime->id)
     )->plainTextToken;
 }
@@ -73,6 +74,7 @@ it('issues a chime token scoped to a single chime', function () {
     $token = Laravel\Sanctum\PersonalAccessToken::findToken($response->json('token'));
 
     expect($token->abilities)->toBe(OfficeScope::allForChime($chime->id));
+    expect($token->name)->toStartWith(OfficeScope::tokenNameForChime($chime) . '-');
 });
 
 it('keeps previously issued presentation tokens when minting another', function () {
@@ -96,6 +98,8 @@ it('keeps previously issued presentation tokens when minting another', function 
     expect($firstRecord)->not->toBeNull()
         ->and($secondRecord)->not->toBeNull()
         ->and($firstRecord->name)->not->toBe($secondRecord->name);
+
+    Auth::forgetGuards();
 
     $this->withToken($firstToken)
         ->getJson("/api/office/chimes/{$chime->id}")

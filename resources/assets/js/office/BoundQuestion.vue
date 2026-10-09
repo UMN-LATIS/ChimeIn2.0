@@ -18,7 +18,7 @@
         <button class="btn btn-sm btn-outline-secondary" @click="toggleResults">
           {{ showingResults ? "Hide Results" : "Show Results" }}
         </button>
-        <button class="btn btn-sm btn-link" @click="$emit('reconnect')">
+        <button class="btn btn-sm btn-link" @click="$emit('changeQuestion')">
           Change question
         </button>
         <span class="text-muted ms-2">
@@ -53,7 +53,7 @@ const props = defineProps<{
   questionId: number;
 }>();
 
-defineEmits<{ (e: "reconnect"): void }>();
+defineEmits<{ (e: "reconnect"): void; (e: "changeQuestion"): void }>();
 
 const question = ref<T.Question | null>(null);
 const userLookup = ref<Map<number, T.User>>(new Map());

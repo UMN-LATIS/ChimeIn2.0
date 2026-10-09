@@ -7,9 +7,8 @@ return [
     | PowerPoint Add-in
     |--------------------------------------------------------------------------
     |
-    | Settings for the ChimeIn content add-in. The chime token is embedded in the
-    | .pptx and travels with the file, so it is given an explicit lifetime and can
-    | be revoked from the chime's settings.
+    | Settings for the ChimeIn content add-in. Chime tokens stay in Office client
+    | storage and are never written to the presentation file.
     |
     */
 
