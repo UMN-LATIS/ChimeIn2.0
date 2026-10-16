@@ -13,13 +13,13 @@ beforeEach(function () {
     $this->withoutMiddleware(PreventRequestForgery::class);
     Event::fake([SubmitResponse::class]);
 
-    $this->author = User::factory()->create();
+    $this->responseOwner = User::factory()->create();
     $this->otherParticipant = User::factory()->create();
     $this->nonMember = User::factory()->create();
 
     $this->chime = Chime::factory()
         ->withPresenter(User::factory()->create())
-        ->hasAttached($this->author, ['permission_number' => CHIMEIN_PARTICIPANT])
+        ->hasAttached($this->responseOwner, ['permission_number' => CHIMEIN_PARTICIPANT])
         ->hasAttached($this->otherParticipant, ['permission_number' => CHIMEIN_PARTICIPANT])
         ->withContent(['folders' => 1, 'questions' => 2])
         ->create();
@@ -33,18 +33,22 @@ beforeEach(function () {
 
     $this->openResponse = Response::factory()->create([
         'session_id' => $this->openSession->id,
-        'user_id' => $this->author->id,
+        'user_id' => $this->responseOwner->id,
         'response_info' => ['question_type' => Question::MULTIPLE_CHOICE_TYPE, 'choice' => 'original'],
     ]);
     $this->closedResponse = Response::factory()->create([
         'session_id' => $closedSession->id,
-        'user_id' => $this->author->id,
+        'user_id' => $this->responseOwner->id,
         'response_info' => ['question_type' => Question::MULTIPLE_CHOICE_TYPE, 'choice' => 'original'],
     ]);
 });
 
-function responseUrl(Chime $chime, Session $session, ?Response $response = null): string {
-    return "/api/chime/{$chime->id}/session/{$session->id}/response" . ($response ? "/{$response->id}" : '');
+function sessionResponsesUrl(Chime $chime, Session $session): string {
+    return "/api/chime/{$chime->id}/session/{$session->id}/response";
+}
+
+function responseUrl(Chime $chime, Session $session, Response $response): string {
+    return sessionResponsesUrl($chime, $session) . "/{$response->id}";
 }
 
 function changedAnswer(): array {
@@ -60,7 +64,7 @@ it("rejects a participant overwriting another participant's response", function 
 });
 
 it('rejects editing a closed-session response through an open session', function () {
-    $this->actingAs($this->author)
+    $this->actingAs($this->responseOwner)
         ->putJson(responseUrl($this->chime, $this->openSession, $this->closedResponse), changedAnswer())
         ->assertForbidden();
 
@@ -69,12 +73,12 @@ it('rejects editing a closed-session response through an open session', function
 
 it('rejects a non-member submitting a response', function () {
     $this->actingAs($this->nonMember)
-        ->putJson(responseUrl($this->chime, $this->openSession), changedAnswer())
+        ->putJson(sessionResponsesUrl($this->chime, $this->openSession), changedAnswer())
         ->assertForbidden();
 });
 
 it('lets a participant edit their own response in an open session', function () {
-    $this->actingAs($this->author)
+    $this->actingAs($this->responseOwner)
         ->putJson(responseUrl($this->chime, $this->openSession, $this->openResponse), changedAnswer())
         ->assertOk();
 
@@ -83,8 +87,9 @@ it('lets a participant edit their own response in an open session', function () 
 
 it('lets a participant create a response in an open session', function () {
     $this->actingAs($this->otherParticipant)
-        ->putJson(responseUrl($this->chime, $this->openSession), changedAnswer())
+        ->putJson(sessionResponsesUrl($this->chime, $this->openSession), changedAnswer())
         ->assertOk();
 
-    expect($this->openSession->responses()->where('user_id', $this->otherParticipant->id)->exists())->toBeTrue();
+    $hasCreatedResponse = $this->openSession->responses()->where('user_id', $this->otherParticipant->id)->exists();
+    expect($hasCreatedResponse)->toBeTrue();
 });

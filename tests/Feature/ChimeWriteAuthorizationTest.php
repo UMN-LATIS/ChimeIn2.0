@@ -3,6 +3,7 @@
 use App\Chime;
 use App\Http\Middleware\PreventRequestForgery;
 use App\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
@@ -19,22 +20,26 @@ beforeEach(function () {
         ->create(['require_login' => true]);
 });
 
-function folderOrderSwap(Chime $chime): array {
-    [$first, $second] = $chime->folders;
+function foldersById(Chime $chime): Collection {
+    return $chime->folders->sortBy('id')->values();
+}
+
+function reversedFolderOrder(Chime $chime): array {
+    [$firstFolder, $secondFolder] = foldersById($chime);
 
     return ['folders' => [
-        ['id' => $first->id, 'order' => 1],
-        ['id' => $second->id, 'order' => 0],
+        ['id' => $firstFolder->id, 'order' => 2],
+        ['id' => $secondFolder->id, 'order' => 0],
     ]];
 }
 
-function linkToLti13(Chime $chime): void {
+function linkChimeAndFirstFolderToLti13(Chime $chime): void {
     $resourceLinkId = DB::table('lti13_resource_links')->insertGetId([
         'resource_link' => 'test-resource-link',
         'endpoint' => '{}',
     ]);
     $chime->forceFill(['lti13_resource_link_id' => $resourceLinkId])->save();
-    $chime->folders->first()->forceFill(['lti_lineitem' => 'https://lms.test/lineitem/1'])->save();
+    foldersById($chime)->first()->forceFill(['lti_lineitem' => 'https://lms.test/lineitem/1'])->save();
 }
 
 it('rejects a participant changing chime settings', function () {
@@ -65,7 +70,7 @@ it('rejects a participant reordering folders', function () {
     $ordersBefore = $this->chime->folders->pluck('order', 'id');
 
     $this->actingAs($this->participant)
-        ->putJson("/api/chime/{$this->chime->id}", folderOrderSwap($this->chime))
+        ->putJson("/api/chime/{$this->chime->id}", reversedFolderOrder($this->chime))
         ->assertForbidden();
 
     expect($this->chime->fresh()->folders->pluck('order', 'id'))->toEqual($ordersBefore);
@@ -73,16 +78,16 @@ it('rejects a participant reordering folders', function () {
 
 it('lets a presenter reorder folders', function () {
     $this->actingAs($this->presenter)
-        ->putJson("/api/chime/{$this->chime->id}", folderOrderSwap($this->chime))
+        ->putJson("/api/chime/{$this->chime->id}", reversedFolderOrder($this->chime))
         ->assertOk();
 
-    [$first, $second] = $this->chime->fresh()->folders;
-    expect($first->order)->toEqual(1)
-        ->and($second->order)->toEqual(0);
+    [$firstFolder, $secondFolder] = foldersById($this->chime->fresh());
+    expect($firstFolder->order)->toEqual(2)
+        ->and($secondFolder->order)->toEqual(0);
 });
 
 it('rejects a participant syncing chime grades to the LMS', function () {
-    linkToLti13($this->chime);
+    linkChimeAndFirstFolderToLti13($this->chime);
 
     $this->actingAs($this->participant)
         ->postJson("/api/chime/{$this->chime->id}/sync")
@@ -90,10 +95,11 @@ it('rejects a participant syncing chime grades to the LMS', function () {
 });
 
 it('rejects a participant syncing folder grades to the LMS', function () {
-    linkToLti13($this->chime);
-    $folder = $this->chime->folders->first();
+    linkChimeAndFirstFolderToLti13($this->chime);
+    $folder = foldersById($this->chime)->first();
 
     $this->actingAs($this->participant)
         ->postJson("/api/chime/{$this->chime->id}/folder/{$folder->id}/sync")
-        ->assertForbidden();
+        ->assertForbidden()
+        ->assertDontSee('Failed to sync');
 });
