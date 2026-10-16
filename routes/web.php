@@ -23,12 +23,6 @@ use App\Http\Controllers\QuestionController;
 |
 */
 
-Route::get("/ltiSelectionPromptDemo", function() {
-    $chime = \App\Chime::first();
-    $chimes = \App\Chime::all();
-    return view("ltiSelectionPrompt", ["saveTarget"=>"ltisettings13.update", "ltiLaunch"=>["similar_chimes"=>$chimes], "lti_resource_title"=>"test course", "resource_link_pk"=>"1111", "chime"=>$chime]);
-});
-
 Route::group(['middleware' => ['shibinjection']], function () {
 
     Route::get('/api/users/self', 'UsersController@getCurrentUser');

@@ -280,7 +280,12 @@ class LTI13Handler extends Controller
     }
 
     public function saveLTISettings(Request $req, Chime $chime) {
-        
+        abort_unless($req->user()->canEditChime($chime->id), 403);
+        $importChimeId = $req->get("import_chime");
+        if($importChimeId && is_numeric($importChimeId)) {
+            abort_unless($req->user()->canEditChime($importChimeId), 403);
+        }
+
         $chime->fill($req->all());
         $chime->lti_setup_complete = true;
         $chime->save();

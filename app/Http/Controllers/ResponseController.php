@@ -59,6 +59,7 @@ class ResponseController extends Controller
         ]);
 
         $chime = $user->chimes()->find($chime->id);
+        abort_unless($chime, 403, "You aren't a participant in this chime.");
 
         if(!$chime->sessions()->contains($session)) {
             return response()->json(["message"=>'Session not found.'], 403);
@@ -69,6 +70,8 @@ class ResponseController extends Controller
         }
         
         if($response) {
+            abort_unless($response->user()->is($user), 403, 'You can only edit your own response.');
+            abort_unless($response->session()->is($session), 403, 'This response belongs to a different question.');
             $response->response_info = $request->get('response_info');
         }
         else {

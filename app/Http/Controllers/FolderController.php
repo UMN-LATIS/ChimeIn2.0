@@ -103,6 +103,8 @@ class FolderController extends Controller
     }
 
     public function forceSync(Request $req, $chime, $folder) {
+        abort_unless($req->user()->canEditChime($chime->id), 403);
+        abort_unless($folder->chime()->is($chime), 404);
         if($folder->resource_link_pk > 0) {
             if(\App\Library\LTIProcessor::syncFolder($folder)) {
                 return response()->json(["success"=>"success"]);
