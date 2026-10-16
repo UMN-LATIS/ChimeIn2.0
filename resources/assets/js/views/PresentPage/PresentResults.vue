@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col">
-      <h1 v-html="question.text"></h1>
+      <h1 v-if="showQuestionText" v-html="question.text"></h1>
 
       <template v-if="question.sessions.length > 0">
         <select v-model="selectedSessionId" class="mb-3 form-control col-6">
@@ -81,6 +81,10 @@ export default {
     chimeId: {
       type: Number,
       required: true,
+    },
+    showQuestionText: {
+      type: Boolean,
+      default: true,
     },
     userLookup: {
       type: Object as PropType<Map<number, T.User>>,

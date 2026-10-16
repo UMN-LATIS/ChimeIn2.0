@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use App\Events\StartSession;
 use App\Events\EndSession;
 use App\Events\ChangeSessionStatus;
+use App\Library\QuestionSessionManager;
 use Auth;
 
-class PresentController extends Controller
-{
+class PresentController extends Controller {
 
 
     public function startAllQuestions(Request $req, $chime, $folder) {
@@ -18,25 +18,14 @@ class PresentController extends Controller
             ->chimes()
             ->where('chime_id', $chime->id)
             ->first());
-        if ($chime == null || $chime->pivot->permission_number < 300) { 
+        if ($chime == null || $chime->pivot->permission_number < 300) {
             return response('Invalid Permissions to Start Sessions', 403);
         }
 
         $sortedQuestions = $folder->questions()->orderBy('order', 'desc')->get();
 
-        foreach($sortedQuestions as $question) {
-            // don't start a session if we've already got one
-            if(!$question->current_session) {
-                $new_session = $question->sessions()->create();
-
-                $question->current_session()->associate($new_session);
-                $question->save();
-
-                // $question->save();
-                event(new StartSession($chime, $new_session));
-            }
-            
-
+        foreach ($sortedQuestions as $question) {
+            QuestionSessionManager::open($chime, $question);
         }
         return response('Sessions Started');
     }
@@ -47,22 +36,14 @@ class PresentController extends Controller
             ->chimes()
             ->where('chime_id', $chime->id)
             ->first());
-        if ($chime == null || $chime->pivot->permission_number < 300) { 
+        if ($chime == null || $chime->pivot->permission_number < 300) {
             return response('Invalid Permissions to Stop Sessions', 403);
         }
 
-        foreach($folder->questions as $question) {
-            $currentSession = $question->current_session;
-            if($currentSession) {
-                $currentSession->touch();
-                $question->current_session()->dissociate();
-                $question->save();
-                event(new EndSession($chime, $currentSession));
-            }
-            
+        foreach ($folder->questions as $question) {
+            QuestionSessionManager::close($chime, $question);
         }
         return response('Sessions Stopped');
-
     }
 
     public function startSession(Request $req) {
@@ -72,20 +53,12 @@ class PresentController extends Controller
             ->chimes()
             ->where('chime_id', $req->route('chime_id'))
             ->first());
-        
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
             $question = $folder->questions()->find($req->route('question_id'));
 
-            $new_session = $question->sessions()->create();
-
-            $question->current_session()->associate($new_session);
-            $question->save();
-
-            // $question->save();
-            event(new StartSession($chime, $new_session));
-
-            return response()->json($new_session);
+            return response()->json(QuestionSessionManager::open($chime, $question));
         } else {
             return response('Invalid Permissions to Start Session', 403);
         }
@@ -98,23 +71,16 @@ class PresentController extends Controller
             ->chimes()
             ->where('chime_id', $req->route('chime_id'))
             ->first());
-        
+
         if ($chime != null && $chime->pivot->permission_number >= 300) {
             $folder = $chime->folders()->find($req->route('folder_id'));
-            
+
             $question = $folder->questions()->find($req->route('question_id'));
-            $currentSession = $question->current_session;
-            if($currentSession) {
-                $currentSession->touch();
-                $question->current_session()->dissociate();
-                $question->save();
-                event(new EndSession($chime, $currentSession));
-            }
+            QuestionSessionManager::close($chime, $question);
 
             return response()->json($question);
         } else {
             return response('Invalid Permissions to Stop Session', 403);
         }
     }
-
 }

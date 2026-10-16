@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Nova\Auth\Impersonatable;
+use Laravel\Sanctum\HasApiTokens;
 use Yadahan\AuthenticationLog\AuthenticationLogable;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use HasFactory;
+    use HasApiTokens;
     use Notifiable;
     use AuthenticationLogable;
     use Impersonatable;
@@ -21,7 +22,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'permission_number', 'umndid', 'userType', 'guest_user', 'global_admin'
+        'name',
+        'email',
+        'password',
+        'permission_number',
+        'umndid',
+        'userType',
+        'guest_user',
+        'global_admin'
     ];
 
     /**
@@ -30,7 +38,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     protected $casts = [
@@ -49,18 +58,18 @@ class User extends Authenticatable
     }
 
     public function isPresenter($chimeId) {
-      return $this->chimes()->findOrFail($chimeId)->pivot->permission_number === CHIMEIN_PRESENTER;
+        return $this->chimes()->findOrFail($chimeId)->pivot->permission_number === CHIMEIN_PRESENTER;
     }
 
     public function canEditChime($chimeId) {
-      return $this->isPresenter($chimeId) || $this->global_admin;
+        return $this->isPresenter($chimeId) || $this->global_admin;
     }
 }
 
-User::deleting(function($user) {
+User::deleting(function ($user) {
     $chimes = $user->chimes()->get();
 
-    foreach($chimes as $c) {
+    foreach ($chimes as $c) {
         $c->detach($user);
     }
 });

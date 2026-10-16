@@ -23,10 +23,10 @@ use App\Http\Controllers\QuestionController;
 |
 */
 
-Route::get("/ltiSelectionPromptDemo", function() {
+Route::get("/ltiSelectionPromptDemo", function () {
     $chime = \App\Chime::first();
     $chimes = \App\Chime::all();
-    return view("ltiSelectionPrompt", ["saveTarget"=>"ltisettings13.update", "ltiLaunch"=>["similar_chimes"=>$chimes], "lti_resource_title"=>"test course", "resource_link_pk"=>"1111", "chime"=>$chime]);
+    return view("ltiSelectionPrompt", ["saveTarget" => "ltisettings13.update", "ltiLaunch" => ["similar_chimes" => $chimes], "lti_resource_title" => "test course", "resource_link_pk" => "1111", "chime" => $chime]);
 });
 
 Route::group(['middleware' => ['shibinjection']], function () {
@@ -62,7 +62,7 @@ Route::group(['middleware' => ['shibinjection']], function () {
 
     Route::patch('/api/chime/{chime}', 'ChimeController@update');
     Route::put('/api/chime/{chime}', 'ChimeController@updateFolders');
-    
+
 
     Route::post('/api/chime/{chime}/export/', 'ChimeController@exportChime');
 
@@ -87,8 +87,8 @@ Route::group(['middleware' => ['shibinjection']], function () {
         ->middleware('limit.json.size');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/save_order', 'FolderController@saveOrder');
     Route::delete('/api/chime/{chime}/folder/{folder}/question/{question}', [QuestionController::class, 'destroy']);
-    Route::delete('/api/chime/{chime}/folder/{folder}/question/{question}/responses', [QuestionController::class, 'reset'] );
-    
+    Route::delete('/api/chime/{chime}/folder/{folder}/question/{question}/responses', [QuestionController::class, 'reset']);
+
     Route::delete('/api/chime/{chime}/folder/{folder}/response/{response}', 'ResponseController@deleteResponse');
 
     // Presentation Routes
@@ -97,15 +97,14 @@ Route::group(['middleware' => ['shibinjection']], function () {
 
     Route::post('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}', 'PresentController@startSession');
     Route::put('/api/chime/{chime_id}/folder/{folder_id}/question/{question_id}/stopSession', 'PresentController@stopSession');
-    
+
     Route::get('/impersonate/stop', [ImpersonateController::class, 'stop'])->name('impersonate.stop');
-
 });
-    // Auth::routes();
+// Auth::routes();
 
 
 
-if (config('shibboleth.emulate_idp') ) {
+if (config('shibboleth.emulate_idp')) {
     Route::name('login')->get("login", '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@emulateLogin');
     Route::group(['middleware' => 'web'], function () {
         Route::get('emulated/idp', 'StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@emulateIdp');
@@ -130,6 +129,30 @@ Route::post('lti13/launch', 'LTI13Handler@launch');
 Route::get('lti13/config', 'LTI13Handler@config');
 Route::put('lti13/saveLTISettings/{chime}', 'LTI13Handler@saveLTISettings')->name("ltisettings13.update");
 
+// PowerPoint add-in: the sign-in dialog needs session auth, the add-in surface itself does not.
+Route::group(['middleware' => ['shibinjection']], function () {
+    Route::get('office/auth/start', 'Office\OfficeAuthController@start')->name('office.auth.start');
+    Route::get('office/auth/finish', 'Office\OfficeAuthController@finish')->name('office.auth.finish');
+});
+Route::view('office/content', 'office.content')->name('office.content');
+
+// Built per-environment so SourceLocation matches the host actually serving the add-in.
+Route::get('office/manifest.xml', function () {
+    return response()
+        ->view('office.manifest')
+        ->header('Content-Type', 'application/xml')
+        ->header('Content-Disposition', 'attachment; filename="chimein.xml"');
+})->name('office.manifest');
+
+// Windows can only sideload from a trusted catalog, so emulate just enough SharePoint REST
+// for PowerPoint to find and download the manifest above.
+Route::any('office/catalog/{path?}', 'Office\OfficeCatalogController@handle')
+    ->where('path', '.*')
+    ->withoutMiddleware([
+        \App\Http\Middleware\PreventRequestForgery::class,
+        \App\Http\Middleware\AuthIfNecessary::class,
+    ])
+    ->name('office.catalog');
+
 
 Route::fallback('HomeController@index');
-
