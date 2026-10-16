@@ -144,5 +144,15 @@ Route::get('office/manifest.xml', function () {
         ->header('Content-Disposition', 'attachment; filename="chimein.xml"');
 })->name('office.manifest');
 
+// Windows can only sideload from a trusted catalog, so emulate just enough SharePoint REST
+// for PowerPoint to find and download the manifest above.
+Route::any('office/catalog/{path?}', 'Office\OfficeCatalogController@handle')
+    ->where('path', '.*')
+    ->withoutMiddleware([
+        \App\Http\Middleware\PreventRequestForgery::class,
+        \App\Http\Middleware\AuthIfNecessary::class,
+    ])
+    ->name('office.catalog');
+
 
 Route::fallback('HomeController@index');

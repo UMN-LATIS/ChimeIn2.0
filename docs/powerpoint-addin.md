@@ -39,11 +39,20 @@ Because this add-in isn't in the Microsoft store yet, it must be sideloaded - a 
 
 ### Windows
 
-Sideloading on Windows requires trusting a shared folder that contains the add-in's manifest file. Ask your ChimeIn administrator for the manifest file and a shared network folder path, or set one up yourself:
+On Windows, PowerPoint installs add-ins from a *trusted catalog* rather than from a file you copy into a folder. ChimeIn publishes its own catalog, so you only need to paste in a URL:
 
-*** Windows Docs To Come ***
+1. In PowerPoint, go to **File > Options > Trust Center > Trust Center Settings > Trusted Add-in Catalogs**.
+2. In the **Catalog Url** box, enter:
+   ```
+   https://chimein.cla.umn.edu/office/catalog
+   ```
+3. Select **Add catalog**, then check **Show in Menu** next to the new entry.
+4. Select **OK** twice, then close and reopen PowerPoint.
+5. Go to **Insert > My Add-ins**, open the **SHARED FOLDER** tab, and select **ChimeIn Question**.
 
-Full details, including a registry-script option for deploying this to many computers at once, are in Microsoft's [Sideload Office Add-ins on Windows from a network share](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins) article.
+If the add-in doesn't appear, confirm the URL has no trailing slash and that the computer can reach `https://chimein.cla.umn.edu/office/catalog` in a browser.
+
+Full details on trusted catalogs are in Microsoft's [Sideload Office Add-ins on Windows from a network share](https://learn.microsoft.com/en-us/office/dev/add-ins/testing/create-a-network-shared-folder-catalog-for-task-pane-and-content-add-ins) article.
 
 ### Mac
 
