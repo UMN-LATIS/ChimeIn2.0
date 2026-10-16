@@ -141,6 +141,7 @@
                   :key="i"
                   :chime="chime"
                   :response="response"
+                  :activeSessions="filteredSession"
                 />
               </div>
             </Transition>

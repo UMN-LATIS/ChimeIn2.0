@@ -4,30 +4,21 @@
       <div role="heading" aria-level="3">
         <div class="questionText" v-html="response.session.question.text" />
       </div>
-      <component
-        :is="response.session.question.question_info.question_type"
-        :question="response.session.question"
-        :disabled="true"
-        :response="response"
-        :chime="chime"
-      >
+      <component :is="response.session.question.question_info.question_type" :question="response.session.question"
+        :disabled="true" :response="response" :chime="chime">
       </component>
-      <RouterLink
-        v-if="chime.students_can_view"
-        class="pointer"
-        :to="
-          '/chime/' +
-          chime.id +
-          '/folder/' +
-          response.session.question.folder_id +
-          '/present/' +
-          (response.session.question.order - 1)
-        "
-        >View Responses
+
+      <RouterLink v-if="chime.students_can_view && !isResponseSessionActive" class="pointer" :to="'/chime/' +
+        chime.id +
+        '/folder/' +
+        response.session.question.folder_id +
+        '/present/' +
+        (response.session.question.order - 1)
+        ">View Responses
       </RouterLink>
 
-      <small v-if="chime.show_folder_title_to_participants" class="text-muted"
-        ><strong>Folder</strong>: {{ response.session.question.folder.name }}
+      <small v-if="chime.show_folder_title_to_participants" class="text-muted"><strong>Folder</strong>: {{
+        response.session.question.folder.name }}
       </small>
       <hr />
     </div>
@@ -63,6 +54,19 @@ export default {
     chime: {
       type: Object,
       required: true,
+    },
+    activeSessions: {
+      type: Array,
+      required: true,
+    }
+  },
+  computed: {
+    isResponseSessionActive() {
+      const session = this.response.session;
+      const activeSessions = this.activeSessions as { id: unknown }[];
+      return !!session && activeSessions.some(
+        (activeSession) => activeSession.id === session.id
+      );
     },
   },
 };
