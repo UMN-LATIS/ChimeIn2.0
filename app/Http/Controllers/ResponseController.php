@@ -59,6 +59,7 @@ class ResponseController extends Controller
         ]);
 
         $chime = $user->chimes()->find($chime->id);
+        abort_unless($chime, 403);
 
         if(!$chime->sessions()->contains($session)) {
             return response()->json(["message"=>'Session not found.'], 403);
@@ -69,6 +70,7 @@ class ResponseController extends Controller
         }
         
         if($response) {
+            abort_unless($response->user()->is($user) && $response->session()->is($session), 403);
             $response->response_info = $request->get('response_info');
         }
         else {

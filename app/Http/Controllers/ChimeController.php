@@ -54,12 +54,14 @@ class ChimeController extends Controller
     }
 
     public function update(Chime $chime, Request $req) {
+        abort_unless($req->user()->canEditChime($chime->id), 403);
         $chime->fill($req->all());
         $chime->save();
         return response()->json(["success"=>true]);
     }
 
     public function updateFolders(Chime $chime, Request $req) {
+        abort_unless($req->user()->canEditChime($chime->id), 403);
         $requestFolders = $req->get("folders");
         foreach($chime->folders as $folder) {
             foreach($requestFolders as $request) {
@@ -721,6 +723,7 @@ class ChimeController extends Controller
     }
 
     public function forceSync(Request $req, $chime) {
+        abort_unless($req->user()->canEditChime($chime->id), 403);
         if($chime->resource_link_pk > 0) {
             if(\App\Library\LTIProcessor::syncChime($chime)) {
                 return response()->json(["success"=>"success"]);
