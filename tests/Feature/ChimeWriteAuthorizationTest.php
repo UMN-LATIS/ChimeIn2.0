@@ -103,3 +103,13 @@ it('rejects a participant syncing folder grades to the LMS', function () {
         ->assertForbidden()
         ->assertDontSee('Failed to sync');
 });
+
+it("rejects a presenter syncing another chime's folder through their own chime", function () {
+    $otherChime = Chime::factory()->withContent()->create();
+    linkChimeAndFirstFolderToLti13($otherChime);
+    $otherFolder = foldersById($otherChime)->first();
+
+    $this->actingAs($this->presenter)
+        ->postJson("/api/chime/{$this->chime->id}/folder/{$otherFolder->id}/sync")
+        ->assertNotFound();
+});
